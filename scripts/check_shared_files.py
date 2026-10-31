@@ -1,0 +1,36 @@
+"""커밋된 파일에서 비밀값과 로컬 절대경로를 찾으면 내용은 숨기고 위치만 출력한 뒤 실패한다."""
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+PATTERNS = [
+    re.compile(rb"sk-[A-Za-z0-9_-]{20,}"),  # OpenAI·Anthropic 형식 키
+    re.compile(rb"(?<![A-Za-z0-9])[A-Za-z]:[\\/]"),  # Windows 드라이브 경로
+    re.compile(rb"/(?:Users|home)/[^/\s]+/"),  # macOS·Linux 홈 경로
+]
+
+
+def main() -> int:
+    entries = subprocess.check_output(["git", "ls-files", "-s", "-z"])
+    failed = False
+    for entry in filter(None, entries.split(b"\0")):
+        meta, raw_path = entry.split(b"\t", 1)
+        if meta.startswith(b"160000"):  # 서브모듈(분석 대상)은 검사하지 않는다
+            continue
+        name = os.fsdecode(raw_path)
+        path = Path(name)
+        if path.name == ".env" or path.name.startswith(".env."):
+            print(f"{name}:1")
+            failed = True
+            continue
+        for number, line in enumerate(path.read_bytes().splitlines(), 1):
+            if any(pattern.search(line) for pattern in PATTERNS):
+                print(f"{name}:{number}")
+                failed = True
+    return int(failed)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
