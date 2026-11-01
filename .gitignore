@@ -7,6 +7,9 @@
 # 생성 결과물. 명령 하나로 다시 만든다
 out/
 
+# 개인 작업 파일
+.local/
+
 # 개인 도구 설정
 .claude/settings.local.json
 
