@@ -1,6 +1,6 @@
 # REST·Feign·게이트웨이·Kafka·설정 추출기
 
-저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
+HotDealWave 기준선(레거시)은 저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
 
 ```bash
 ./gradlew test
