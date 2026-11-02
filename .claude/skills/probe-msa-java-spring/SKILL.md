@@ -1,13 +1,13 @@
 ---
 name: probe-msa-java-spring
-description: 테스트 서버 주소, 테스트 계정, 추출 JSON을 받아 API 응답을 저장하고 추출한 응답 필드와 비교한 뒤 응답 근거로 추출을 고친다.
+description: 테스트 서버 주소, 테스트 계정, 추출 결과 디렉터리를 받아 API 응답을 저장하고 추출한 응답 필드와 비교한 뒤 응답 근거로 추출을 고친다.
 ---
 
 # 실행 중인 서비스 응답 확인
 
 ## 입력과 경계
 
-- 서버 주소, 테스트 계정, `analysis/<대상>/extracted.json` 경로를 받는다. 테스트 환경에서만 쓴다.
+- 서버 주소, 테스트 계정, 추출 결과 디렉터리 `analysis/<대상>/`를 받는다. 테스트 환경에서만 쓴다.
 - 넘겨받는 사람이 가진 것만 쓴다. `.env` 계열, 대상의 설정 값, 브로커·DB 직접 접근은 쓰지 않는다. 대상 코드는 요청을 만들거나 빠진 필드의 이유를 찾을 때만 읽는다.
 - 토큰·비밀번호·계정 정보는 어떤 파일에도 남기지 않는다.
 
@@ -39,12 +39,12 @@ description: 테스트 서버 주소, 테스트 계정, 추출 JSON을 받아 AP
 ## 2. 비교
 
 ```bash
-python scripts/compare_responses.py analysis/<대상>/extracted.json analysis/<대상>/responses
+python scripts/compare_responses.py analysis/<대상> analysis/<대상>/responses
 ```
 
 엔드포인트별로 "응답에만 있음", "추출에만 있음", "이름 다름"을 출력한다. 오류 응답·빈 배열·`null`은 비교하지 않으므로, 데이터를 만들 수 있으면 다시 부른다.
 
-## 3. 반영
+## 3. 해당 서비스 파일에 반영 (`analysis/<대상>/services/<spring.application.name>.json`)
 
 - 응답에만 있는 필드는 더한다. Java 타입은 만들어 내지 않는다.
 - 이름이 다른 필드는 `jsonName.value`를 실제 이름으로 바꾼다.

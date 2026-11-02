@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class CompareResponsesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        extracted = json.loads((ROOT / "analysis/hotdealwave/extracted.json").read_text(encoding="utf-8"))
+        extracted = json.loads((ROOT / "analysis/hotdealwave/services/coupon-service.json").read_text(encoding="utf-8"))
         cls.endpoint = next(
             endpoint for endpoint in extracted["endpoints"]
             if any(line.startswith("coupon/") and line.endswith("CouponController.java:39")
@@ -24,7 +24,9 @@ class CompareResponsesTest(unittest.TestCase):
         (ROOT / "out").mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT / "out") as directory:
             folder = Path(directory)
-            extracted = folder / "extracted.json"
+            services = folder / "services"
+            services.mkdir()
+            extracted = services / "coupon-service.json"
             extracted.write_text(json.dumps({"endpoints": [self.endpoint]}), encoding="utf-8")
             responses = folder / "responses"
             responses.mkdir()
@@ -42,7 +44,7 @@ class CompareResponsesTest(unittest.TestCase):
             (responses / (self.endpoint["id"] + ".json")).write_text(json.dumps(record), encoding="utf-8")
             return subprocess.run(
                 [sys.executable, "-X", "utf8", str(ROOT / "scripts/compare_responses.py"),
-                 str(extracted), str(responses)],
+                 str(folder), str(responses)],
                 capture_output=True, encoding="utf-8", cwd=ROOT,
             )
 

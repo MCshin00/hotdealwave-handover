@@ -274,7 +274,7 @@ class VerifierTest {
     }
 
     @Test void responseFileEvidenceSkipsLineChecksForCorrectedCouponField() throws Exception {
-        var input = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/extracted.json").toFile());
+        var input = new ExtractionInput().read(Path.of("analysis/hotdealwave"));
         var endpoint = Checks.items(input.path("endpoints")).stream()
                 .filter(e -> e.path("evidence").toString().contains("CouponController.java:39"))
                 .findFirst().orElseThrow();

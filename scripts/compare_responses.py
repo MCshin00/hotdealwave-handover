@@ -67,8 +67,10 @@ def compare(schema, samples, path="$"):
 
 
 def compare_files(extracted, responses):
-    analysis = json.loads(extracted.read_text(encoding="utf-8"))
-    for endpoint in analysis["endpoints"]:
+    endpoints = []
+    for service_file in sorted((extracted / "services").glob("*.json")):
+        endpoints.extend(json.loads(service_file.read_text(encoding="utf-8"))["endpoints"])
+    for endpoint in endpoints:
         endpoint_id = endpoint["id"]
         filename = responses / (endpoint_id + ".json")
         if not filename.is_file():
@@ -89,7 +91,7 @@ def compare_files(extracted, responses):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("extracted", type=Path, help="extracted.json 경로")
+    parser.add_argument("extracted", type=Path, help="추출 결과 디렉터리 (services/*.json)")
     parser.add_argument("responses", type=Path, help="엔드포인트별 응답 디렉터리")
     args = parser.parse_args()
     if not args.responses.is_dir():
