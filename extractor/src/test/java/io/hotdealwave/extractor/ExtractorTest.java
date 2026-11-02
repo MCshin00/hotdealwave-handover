@@ -111,13 +111,12 @@ class ExtractorTest {
         assertTrue(product.path("tokenRequired").path("evidence").toString().contains("AllowedPath.java:10"));
     }
 
-    @Test void independentDeclarationInventoryAndThreeChecksAreWritten() {
-        assertEquals(103, analysis.path("checks").path("declarations").path("mappingCount").asInt());
-        assertEquals(9, analysis.path("checks").path("declarations").path("feignClientCount").asInt());
+    @Test void parserWritesExtractedDeclarationsWithoutCrossChecks() {
+        assertEquals(102, analysis.path("declarations").size());
+        assertEquals(9, analysis.path("feignClients").size());
         assertEquals(6, analysis.path("gatewayRoutes").size());
-        assertTrue(analysis.path("checks").has("feign-targets"));
-        assertTrue(analysis.path("checks").has("gateway-routes"));
-        assertTrue(analysis.path("warnings").isArray());
+        assertTrue(analysis.path("checks").isEmpty());
+        assertTrue(analysis.path("warnings").isEmpty());
     }
 
     static JsonNode withEvidence(JsonNode nodes, String suffix) {
@@ -146,8 +145,6 @@ class ExtractorTest {
         assertFalse(StreamSupport.stream(analysis.path("kafkaLinks").spliterator(), false)
                 .anyMatch(n -> n.path("publicationId").asText().equals(request.path("id").asText())
                         || n.path("subscriptionId").asText().equals(reduce.path("id").asText())));
-        for (String line : new String[] {"OrderEventProducer.java:37", "ProductKafkaConsumer.java:29"})
-            assertEquals("kafka-topics", withEvidence(analysis.path("warnings"), line).path("check").asText());
     }
 
     @Test void kafkaArgumentsWrappersAndDlqKeepTheWholeEvidenceChain() {
@@ -177,17 +174,8 @@ class ExtractorTest {
             }
             assertFalse(StreamSupport.stream(analysis.path("kafkaLinks").spliterator(), false)
                     .anyMatch(n -> n.path("publicationId").asText().equals(literalDlq.path("id").asText())));
-            JsonNode warning = withEvidence(analysis.path("warnings"), line);
-            assertEquals("kafka-topics", warning.path("check").asText());
-            assertTrue(warning.path("reason").asText().contains(service + "-dlq"));
         }
-        JsonNode counts = analysis.path("checks").path("kafka-declarations");
-        for (String prefix : new String[] {"", "extracted"}) {
-            assertEquals(9, counts.path(prefix.isEmpty() ? "listenerCount" : prefix + "ListenerCount").asInt());
-            assertEquals(7, counts.path(prefix.isEmpty() ? "sendCount" : prefix + "SendCount").asInt());
-            assertEquals(3, counts.path(prefix.isEmpty() ? "dlqCount" : prefix + "DlqCount").asInt());
-        }
-        assertEquals(0, counts.path("warningCount").asInt());
+        assertEquals(19, analysis.path("kafkaDeclarations").size());
         assertFalse(analysis.path("kafkaDeclarations").toString().contains("MailServiceImpl.java:21"));
     }
 

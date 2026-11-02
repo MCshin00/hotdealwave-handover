@@ -5,9 +5,11 @@
 ## 하는 일
 
 ```
-target/HotDealWave --> extractor --> out/analysis.json --> server --+--> 문서 페이지      사람이 읽는다 (업무 규칙·함정 포함)
-   @cc43016             (Java)                         (Spring Boot) +--> 검색·질문 페이지  사람이 묻고, 고정 RAG가 답한다
-                                                                     +--> /mcp              Claude Code·Codex가 도구로 부른다
+target/HotDealWave --> extractor --> out/parser.json --> verifier --> out/analysis.json
+   @cc43016             (Java)                          (Java)             |
+                                                                         server --+--> 문서 페이지
+                                                                    (Spring Boot) +--> 검색·질문 페이지
+                                                                                  +--> /mcp
 ```
 
 모든 결과에는 근거 `파일:줄`과 상태가 붙는다. 저장소만으로 확정할 수 없는 연결은 추측하지 않는다.
@@ -26,7 +28,9 @@ hotdealwave-handover/
 +-- target/HotDealWave/     # 분석 대상 서브모듈 (팀 원본 저장소 cc43016, 읽기만)
 |
 +-- extractor/              # 추출기 (Java 17, JavaParser)
-|                           #   REST·Feign·Kafka·설정 -> out/analysis.json, 교차 검증 경고
+|                           #   REST·Feign·Kafka·설정 -> out/parser.json
+|
++-- verifier/               # 검증기 (Java 17, Jackson) -> out/analysis.json, 상태·경고
 |
 +-- server/                 # Spring Boot 서버 하나
 |                           #   조회: 관계 조회 3개 + search_docs(BM25), 모델 호출 없음
@@ -81,9 +85,12 @@ JDK 17 이상이 필요하다.
 ./gradlew build
 ./gradlew test
 ./gradlew :extractor:run
+./gradlew :verifier:run
+# 선택: 입력·대상·출력 경로 변경
+./gradlew :verifier:run --args="out/parser.json target/HotDealWave out/analysis.json"
 python scripts/check_shared_files.py
 ```
 
-추출 명령은 분석 대상을 빌드하지 않고 `out/analysis.json`을 만들며, 선언 목록·Feign 대상·게이트웨이 경로 검사의 경고 수를 출력한다. 결과 구조는 [extractor/README.md](extractor/README.md)에 있다.
+추출 명령은 분석 대상을 빌드하지 않고 `out/parser.json`을 만들며, [검증기](verifier/README.md)는 `out/analysis.json`을 만들고 근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 결과 구조는 [extractor/README.md](extractor/README.md)에 있다.
 
 공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 서버 실행 명령은 5단계에서 더한다.

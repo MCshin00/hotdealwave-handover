@@ -6,10 +6,10 @@
 ./gradlew test
 ./gradlew :extractor:run
 # 선택: 입력·출력 경로 변경 (작업 디렉터리는 항상 저장소 루트)
-./gradlew :extractor:run --args="target/HotDealWave out/analysis.json"
+./gradlew :extractor:run --args="target/HotDealWave out/parser.json"
 ```
 
-기본 입력은 `target/HotDealWave`, 출력은 `out/analysis.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`, `application-<프로필>.yml`, `src/main/java/**/*.java`와 루트 `docker-compose.yml`을 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다.
+기본 입력은 `target/HotDealWave`, 출력은 `out/parser.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`, `application-<프로필>.yml`, `src/main/java/**/*.java`와 루트 `docker-compose.yml`을 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다.
 
 ## analysis.json 계약 (schemaVersion: 1)
 
@@ -45,7 +45,7 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 | `kafkaLinks` | `publicationId`, `subscriptionId`, `environment`(환경변수 이름), 상태·양쪽 근거 |
 | `environmentVariables` | `service`, `profile`, `name`, `location`(설정 키 또는 참조 종류), `value: Fact<string>`, 상태·근거 |
 | `externalResources` | `service`, `kind`, `configurationEvidence`, `codeEvidence`, `details: {항목: Fact<string>}`, 상태·전체 근거 |
-| `checks` | `declarations`, `feign-targets`, `gateway-routes`, `kafka-declarations`, `kafka-topics`별 `warningCount`. 기존 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함. Kafka 선언 검사는 `listenerCount/sendCount/dlqCount`와 `extractedListenerCount/extractedSendCount/extractedDlqCount` 포함 |
+| `checks` | `evidence-lines`, `declarations`, `feign-targets`, `gateway-routes`, `kafka-declarations`, `kafka-topics`별 `warningCount`. 기존 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함. Kafka 선언 검사는 `listenerCount/sendCount/dlqCount`와 `extractedListenerCount/extractedSendCount/extractedDlqCount` 포함 |
 | `warnings` | `check`, `status`, `evidence`, `reason`. 판정 전 상태는 `확인 안 됨` |
 
 `httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
@@ -78,17 +78,9 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 
 ### 외부 경로와 토큰
 
-`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 교차 검증 경고를 낸다.
+`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 [검증기](../verifier/README.md)가 교차 검증 경고를 낸다.
 
 엔드포인트의 `tokenRequired`는 기본 API 경로의 판정이다. 외부 경로 자체가 없으면 `확인 안 됨`이다. 토큰 허용은 `AllowedPath.matches`의 `startsWith`와 메서드 비교를 따른다. 서비스 안의 역할별 권한 검사는 포함하지 않는다.
-
-### 교차 검증
-
-선언 검사는 JavaParser와 별도로 Java 파일을 줄 단위 정규식으로 읽는다. 매핑·Feign 선언의 종류와 `파일:줄`을 추출 결과와 대조하며, 주석 안의 선언도 단순 검색 결과로 유지한다. Feign 검사는 이름·HTTP 메서드·경로로 연결되지 않은 내부 호출을, 게이트웨이 검사는 어느 컨트롤러에도 닿지 않는 각 Path 패턴과 외부 경로가 없는 엔드포인트를 경고로 낸다. 경로 변수 이름은 연결에 영향을 주지 않는다.
-
-Kafka 선언 검사(`kafka-declarations`)도 JavaParser와 독립적인 정규식 검색으로 종류와 `파일:줄`을 대조한다. `@KafkaListener`, `kafkaTemplate.send(...)`, `new DeadLetterPublishingRecoverer(...)`를 세며 메일 등 다른 `send`는 세지 않는다. 같은 위치의 선언은 한 번만 센다. `kafka-topics`는 확인된 연결이 없는 발행·구독 항목마다 경고를 낸다. 같은 서비스·토픽이라도 서로 다른 발행 경로이면 경고도 별개다. 실행 끝에 다섯 검사 각각의 경고 수를 출력한다.
-
-경고는 실행 실패가 아니며 개발자가 판정한다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다.
 
 ### Kafka 토픽과 연결
 

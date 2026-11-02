@@ -2,10 +2,8 @@ package io.hotdealwave.extractor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.hotdealwave.extractor.check.CrossChecks;
 import io.hotdealwave.extractor.config.ConfigExtractor;
 import io.hotdealwave.extractor.kafka.KafkaExtractor;
-import io.hotdealwave.extractor.kafka.KafkaChecks;
 import io.hotdealwave.extractor.feign.FeignExtractor;
 import io.hotdealwave.extractor.gateway.GatewayExtractor;
 import io.hotdealwave.extractor.link.RestLinker;
@@ -30,12 +28,10 @@ public final class Extractor {
             if (service.model().directory().equals("gateway")) new GatewayExtractor().extract(root, source, analysis);
         }
         new RestLinker().link(analysis);
-        new CrossChecks().run(sources, analysis);
         var config = new ConfigExtractor();
         config.extract(root, sources, analysis);
         for (var source : sources) new KafkaExtractor(source, config).extract(analysis);
         KafkaExtractor.link(analysis);
-        new KafkaChecks().run(sources, analysis);
         return new ObjectMapper().valueToTree(analysis);
     }
 }
