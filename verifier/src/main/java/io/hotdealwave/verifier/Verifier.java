@@ -5,6 +5,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.nio.file.Path;
 
 public final class Verifier {
+    public JsonNode verify(Path input, Path target) throws Exception {
+        var extracted = new ExtractionInput().read(input);
+        var analysis = (ObjectNode) verify(extracted, target);
+        analysis.withArray("warnings").addAll(extracted.withArray("warnings"));
+        Checks.count(analysis, "schema");
+        return analysis;
+    }
+
     public JsonNode verify(JsonNode input, Path target) throws Exception {
         var analysis = (ObjectNode) input.deepCopy();
         analysis.putObject("checks");

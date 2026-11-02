@@ -1,0 +1,610 @@
+{
+  "schemaVersion": 1,
+  "service": {
+    "composeService": {
+      "value": "gateway-service",
+      "evidence": [
+        "docker-compose.yml:12",
+        "docker-compose.yml:13",
+        "docker-compose.yml:14",
+        "gateway/src/main/resources/application.yml:10"
+      ]
+    },
+    "directory": "gateway",
+    "name": {
+      "value": "gateway-service",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:10"
+      ],
+      "reason": null
+    },
+    "evidence": [
+      "gateway/build.gradle:3",
+      "gateway/src/main/resources/application.yml:10"
+    ]
+  },
+  "endpoints": [],
+  "feignClients": [],
+  "feignCalls": [],
+  "gatewayRoutes": [
+    {
+      "id": "user-service",
+      "uri": {
+        "value": "lb://user-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:15"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "user-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:15"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/user-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:19"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/auth/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:17"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/users/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:17"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/address/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:17"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/address-default/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:17"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/user-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:17"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:14",
+        "gateway/src/main/resources/application.yml:15",
+        "gateway/src/main/resources/application.yml:17",
+        "gateway/src/main/resources/application.yml:19"
+      ]
+    },
+    {
+      "id": "company-service",
+      "uri": {
+        "value": "lb://company-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:22"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "company-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:22"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/company-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:26"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/companies/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:24"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/company-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:24"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:21",
+        "gateway/src/main/resources/application.yml:22",
+        "gateway/src/main/resources/application.yml:24",
+        "gateway/src/main/resources/application.yml:26"
+      ]
+    },
+    {
+      "id": "product-service",
+      "uri": {
+        "value": "lb://product-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:29"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "product-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:29"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/product-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:33"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/products/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:31"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/promotions/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:31"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/reviews/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:31"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/product-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:31"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:28",
+        "gateway/src/main/resources/application.yml:29",
+        "gateway/src/main/resources/application.yml:31",
+        "gateway/src/main/resources/application.yml:33"
+      ]
+    },
+    {
+      "id": "coupon-service",
+      "uri": {
+        "value": "lb://coupon-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:36"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "coupon-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:36"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/coupon-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:40"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/coupons/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:38"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/coupon-infos/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:38"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/coupon-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:38"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:35",
+        "gateway/src/main/resources/application.yml:36",
+        "gateway/src/main/resources/application.yml:38",
+        "gateway/src/main/resources/application.yml:40"
+      ]
+    },
+    {
+      "id": "order-service",
+      "uri": {
+        "value": "lb://order-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:43"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "order-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:43"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/order-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:47"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/orders/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:45"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/api/v1/baskets/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:45"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/order-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:45"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:42",
+        "gateway/src/main/resources/application.yml:43",
+        "gateway/src/main/resources/application.yml:45",
+        "gateway/src/main/resources/application.yml:47"
+      ]
+    },
+    {
+      "id": "payment-service",
+      "uri": {
+        "value": "lb://payment-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:50"
+        ],
+        "reason": null
+      },
+      "targetService": {
+        "value": "payment-service",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:50"
+        ],
+        "reason": null
+      },
+      "rewritePath": {
+        "value": "/payment-service/(?<segment>.*), /$\\{segment}",
+        "evidence": [
+          "gateway/src/main/resources/application.yml:54"
+        ],
+        "reason": null
+      },
+      "paths": [
+        {
+          "value": "/api/v1/payments/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:52"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/payment-service/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:52"
+          ],
+          "reason": null
+        },
+        {
+          "value": "/payment/**",
+          "evidence": [
+            "gateway/src/main/resources/application.yml:52"
+          ],
+          "reason": null
+        }
+      ],
+      "evidence": [
+        "gateway/src/main/resources/application.yml:49",
+        "gateway/src/main/resources/application.yml:50",
+        "gateway/src/main/resources/application.yml:52",
+        "gateway/src/main/resources/application.yml:54"
+      ]
+    }
+  ],
+  "allowedPaths": [
+    {
+      "name": "SWAGGER",
+      "path": {
+        "value": "/swagger-ui/",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "*",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6"
+      ]
+    },
+    {
+      "name": "API_DOCS",
+      "path": {
+        "value": "/v3/api-docs",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "*",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7"
+      ]
+    },
+    {
+      "name": "AUTH",
+      "path": {
+        "value": "/api/v1/auth",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "*",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8"
+      ]
+    },
+    {
+      "name": "PAYMENT",
+      "path": {
+        "value": "/payment/",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "*",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9"
+      ]
+    },
+    {
+      "name": "PRODUCTS",
+      "path": {
+        "value": "/api/v1/products",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "GET",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10"
+      ]
+    },
+    {
+      "name": "PROMOTIONS",
+      "path": {
+        "value": "/api/v1/promotions",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "GET",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11"
+      ]
+    },
+    {
+      "name": "REVIEWS",
+      "path": {
+        "value": "/api/v1/reviews",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12"
+        ],
+        "reason": null
+      },
+      "httpMethod": {
+        "value": "GET",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12"
+      ]
+    }
+  ],
+  "declarations": [],
+  "kafkaDeclarations": [],
+  "kafkaPublications": [],
+  "kafkaSubscriptions": [],
+  "environmentVariables": [
+    {
+      "service": "gateway-service",
+      "profile": "compose",
+      "name": "ACTIVE_PROFILE",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:18"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:18"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "profile": "compose",
+      "name": "JWT_SECRET_KEY",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:19"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:19"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "profile": "compose",
+      "name": "HOST",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:20"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:20"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "profile": "base",
+      "name": "JWT_SECRET_KEY",
+      "location": "service.jwt.secret-key",
+      "value": {
+        "value": null,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:21",
+          "gateway/src/main/resources/application.yml:80"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:21",
+        "gateway/src/main/resources/application.yml:80"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "profile": "base",
+      "name": "ACTIVE_PROFILE",
+      "location": "spring.profiles.active",
+      "value": {
+        "value": null,
+        "evidence": [
+          "gateway/src/main/resources/application.yml:6"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "gateway/src/main/resources/application.yml:6"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "profile": "base",
+      "name": "JWT_SECRET_KEY",
+      "location": "service.jwt.secret-key",
+      "value": {
+        "value": null,
+        "evidence": [
+          "gateway/src/main/resources/application.yml:80"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "gateway/src/main/resources/application.yml:80"
+      ]
+    }
+  ],
+  "externalResources": []
+}

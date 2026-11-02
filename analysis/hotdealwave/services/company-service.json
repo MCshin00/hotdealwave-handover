@@ -1,0 +1,2679 @@
+{
+  "schemaVersion": 1,
+  "service": {
+    "composeService": {
+      "value": "company-service",
+      "evidence": [
+        "docker-compose.yml:53",
+        "docker-compose.yml:54",
+        "docker-compose.yml:55",
+        "company/src/main/resources/application.yml:3"
+      ]
+    },
+    "directory": "company",
+    "name": {
+      "value": "company-service",
+      "evidence": [
+        "company/src/main/resources/application.yml:3"
+      ],
+      "reason": null
+    },
+    "evidence": [
+      "company/build.gradle:3",
+      "company/src/main/resources/application.yml:3"
+    ]
+  },
+  "endpoints": [
+    {
+      "id": "company-service.CompanyController.createCompany",
+      "service": "company-service",
+      "controller": "CompanyController",
+      "handler": "createCompany",
+      "httpMethod": {
+        "value": "POST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40"
+        ],
+        "reason": null
+      },
+      "path": {
+        "value": "/api/v1/companies",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40"
+        ],
+        "reason": null
+      },
+      "parameters": [
+        {
+          "name": "reqPostCompanyDto",
+          "kind": "본문",
+          "binding": "RequestBody",
+          "schema": {
+            "type": "ReqPostCompanyDto",
+            "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ReqPostCompanyDto",
+            "kind": "object",
+            "fields": [
+              {
+                "name": "businessRegistrationNumber",
+                "schema": {
+                  "type": "Long",
+                  "qualifiedName": "java.lang.Long",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:16"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {},
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:14"
+                    ]
+                  },
+                  {
+                    "name": "Digits",
+                    "arguments": {
+                      "integer": {
+                        "value": "10",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:15"
+                        ],
+                        "reason": null
+                      },
+                      "fraction": {
+                        "value": "0",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:15"
+                        ],
+                        "reason": null
+                      },
+                      "message": {
+                        "value": "10자리 숫자만 가능합니다.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:15"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:15"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "businessRegistrationNumber",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:16",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:16"
+                ]
+              },
+              {
+                "name": "companyPhoneNumber",
+                "schema": {
+                  "type": "Long",
+                  "qualifiedName": "java.lang.Long",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:18"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "업체 번호를 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:17"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:17"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "companyPhoneNumber",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:18",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:18"
+                ]
+              },
+              {
+                "name": "managerId",
+                "schema": {
+                  "type": "UUID",
+                  "qualifiedName": "java.util.UUID",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:20"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "관리자 ID를 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:19"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:19"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "managerId",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:20",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:20"
+                ]
+              },
+              {
+                "name": "brandName",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:22"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "브랜드이름을 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:21"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:21"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "brandName",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:22",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:22"
+                ]
+              },
+              {
+                "name": "companyEmail",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:24"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "업체 이메일을 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:23"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:23"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "companyEmail",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:24",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:24"
+                ]
+              },
+              {
+                "name": "status",
+                "schema": {
+                  "type": "CompanyStatusEnum",
+                  "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                  "kind": "enum",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [
+                    "REQUESTED",
+                    "PENDING",
+                    "APPROVED",
+                    "REJECTED"
+                  ],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {},
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:25"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "status",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:26",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:11"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:26"
+                ]
+              }
+            ],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPostCompanyDto.java:13"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "RequestBody",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:45"
+              ]
+            },
+            {
+              "name": "Valid",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:45"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:45"
+          ]
+        }
+      ],
+      "response": {
+        "type": "ResponseDto<Void>",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+            ]
+          },
+          {
+            "name": "data",
+            "schema": {
+              "type": "Void",
+              "qualifiedName": "java.lang.Void",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:44"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "data",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10"
+            ]
+          }
+        ],
+        "arguments": [
+          {
+            "type": "Void",
+            "qualifiedName": "java.lang.Void",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:44"
+            ],
+            "reason": null
+          }
+        ],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:8"
+        ],
+        "reason": null
+      },
+      "externalPaths": [
+        {
+          "routeId": "company-service",
+          "path": "/api/v1/companies",
+          "tokenRequired": {
+            "value": true,
+            "evidence": [
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+            ],
+            "reason": null
+          },
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40",
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+            "gateway/src/main/resources/application.yml:21",
+            "gateway/src/main/resources/application.yml:22",
+            "gateway/src/main/resources/application.yml:24",
+            "gateway/src/main/resources/application.yml:26"
+          ]
+        }
+      ],
+      "tokenRequired": {
+        "value": true,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:44"
+      ]
+    },
+    {
+      "id": "company-service.CompanyController.updateCompany",
+      "service": "company-service",
+      "controller": "CompanyController",
+      "handler": "updateCompany",
+      "httpMethod": {
+        "value": "PATCH",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50"
+        ],
+        "reason": null
+      },
+      "path": {
+        "value": "/api/v1/companies/{companyId}",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50"
+        ],
+        "reason": null
+      },
+      "parameters": [
+        {
+          "name": "companyId",
+          "kind": "경로",
+          "binding": "PathVariable",
+          "schema": {
+            "type": "UUID",
+            "qualifiedName": "java.util.UUID",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:54"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "PathVariable",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:54"
+              ]
+            },
+            {
+              "name": "Valid",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:54"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:54"
+          ]
+        },
+        {
+          "name": "reqPatchCompanyByIdDto",
+          "kind": "본문",
+          "binding": "RequestBody",
+          "schema": {
+            "type": "ReqPatchCompanyByIdDto",
+            "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ReqPatchCompanyByIdDto",
+            "kind": "object",
+            "fields": [
+              {
+                "name": "companyPhoneNumber",
+                "schema": {
+                  "type": "Long",
+                  "qualifiedName": "java.lang.Long",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:13"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "업체 번호를 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:12"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:12"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "companyPhoneNumber",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:13",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:13"
+                ]
+              },
+              {
+                "name": "managerId",
+                "schema": {
+                  "type": "UUID",
+                  "qualifiedName": "java.util.UUID",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:15"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "관리자 ID를 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:14"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:14"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "managerId",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:15",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:15"
+                ]
+              },
+              {
+                "name": "brandName",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:17"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "브랜드이름을 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:16"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:16"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "brandName",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:17",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:17"
+                ]
+              },
+              {
+                "name": "companyEmail",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:19"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "업체 이메일을 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:18"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:18"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "companyEmail",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:19",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:19"
+                ]
+              }
+            ],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:11"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "RequestBody",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:55"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:55"
+          ]
+        }
+      ],
+      "response": {
+        "type": "ResponseDto<Void>",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+            ]
+          },
+          {
+            "name": "data",
+            "schema": {
+              "type": "Void",
+              "qualifiedName": "java.lang.Void",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:53"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "data",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10"
+            ]
+          }
+        ],
+        "arguments": [
+          {
+            "type": "Void",
+            "qualifiedName": "java.lang.Void",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:53"
+            ],
+            "reason": null
+          }
+        ],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:8"
+        ],
+        "reason": null
+      },
+      "externalPaths": [
+        {
+          "routeId": "company-service",
+          "path": "/api/v1/companies/{companyId}",
+          "tokenRequired": {
+            "value": true,
+            "evidence": [
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+            ],
+            "reason": null
+          },
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50",
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+            "gateway/src/main/resources/application.yml:21",
+            "gateway/src/main/resources/application.yml:22",
+            "gateway/src/main/resources/application.yml:24",
+            "gateway/src/main/resources/application.yml:26"
+          ]
+        }
+      ],
+      "tokenRequired": {
+        "value": true,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:53"
+      ]
+    },
+    {
+      "id": "company-service.CompanyController.updateCompanyStatus",
+      "service": "company-service",
+      "controller": "CompanyController",
+      "handler": "updateCompanyStatus",
+      "httpMethod": {
+        "value": "PATCH",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60"
+        ],
+        "reason": null
+      },
+      "path": {
+        "value": "/api/v1/companies/{companyId}/status",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60"
+        ],
+        "reason": null
+      },
+      "parameters": [
+        {
+          "name": "companyId",
+          "kind": "경로",
+          "binding": "PathVariable",
+          "schema": {
+            "type": "UUID",
+            "qualifiedName": "java.util.UUID",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:64"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "PathVariable",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:64"
+              ]
+            },
+            {
+              "name": "Valid",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:64"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:64"
+          ]
+        },
+        {
+          "name": "reqPatchCompanyByIdStatusDto",
+          "kind": "본문",
+          "binding": "RequestBody",
+          "schema": {
+            "type": "ReqPatchCompanyByIdStatusDto",
+            "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ReqPatchCompanyByIdStatusDto",
+            "kind": "object",
+            "fields": [
+              {
+                "name": "status",
+                "schema": {
+                  "type": "CompanyStatusEnum",
+                  "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                  "kind": "enum",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [
+                    "REQUESTED",
+                    "PENDING",
+                    "APPROVED",
+                    "REJECTED"
+                  ],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                  ],
+                  "reason": null
+                },
+                "annotations": [
+                  {
+                    "name": "NotNull",
+                    "arguments": {
+                      "message": {
+                        "value": "상태를 입력해주세요.",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:11"
+                        ],
+                        "reason": null
+                      }
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:11"
+                    ]
+                  }
+                ],
+                "jsonName": {
+                  "value": "status",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:12",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:8"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:12"
+                ]
+              }
+            ],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdStatusDto.java:10"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "RequestBody",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:65"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:65"
+          ]
+        }
+      ],
+      "response": {
+        "type": "ResponseDto<Void>",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+            ]
+          },
+          {
+            "name": "data",
+            "schema": {
+              "type": "Void",
+              "qualifiedName": "java.lang.Void",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:63"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "data",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10"
+            ]
+          }
+        ],
+        "arguments": [
+          {
+            "type": "Void",
+            "qualifiedName": "java.lang.Void",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:63"
+            ],
+            "reason": null
+          }
+        ],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:8"
+        ],
+        "reason": null
+      },
+      "externalPaths": [
+        {
+          "routeId": "company-service",
+          "path": "/api/v1/companies/{companyId}/status",
+          "tokenRequired": {
+            "value": true,
+            "evidence": [
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+            ],
+            "reason": null
+          },
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+            "gateway/src/main/resources/application.yml:21",
+            "gateway/src/main/resources/application.yml:22",
+            "gateway/src/main/resources/application.yml:24",
+            "gateway/src/main/resources/application.yml:26"
+          ]
+        }
+      ],
+      "tokenRequired": {
+        "value": true,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:63"
+      ]
+    },
+    {
+      "id": "company-service.CompanyController.getCompanyById",
+      "service": "company-service",
+      "controller": "CompanyController",
+      "handler": "getCompanyById",
+      "httpMethod": {
+        "value": "GET",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70"
+        ],
+        "reason": null
+      },
+      "path": {
+        "value": "/api/v1/companies/{companyId}",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70"
+        ],
+        "reason": null
+      },
+      "parameters": [
+        {
+          "name": "companyId",
+          "kind": "경로",
+          "binding": "PathVariable",
+          "schema": {
+            "type": "UUID",
+            "qualifiedName": "java.util.UUID",
+            "kind": "scalar",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:74"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "PathVariable",
+              "arguments": {},
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:74"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:74"
+          ]
+        }
+      ],
+      "response": {
+        "type": "ResponseDto<ResGetCompanyByIdDto>",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+            ]
+          },
+          {
+            "name": "data",
+            "schema": {
+              "type": "ResGetCompanyByIdDto",
+              "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ResGetCompanyByIdDto",
+              "kind": "object",
+              "fields": [
+                {
+                  "name": "businessRegistrationNumber",
+                  "schema": {
+                    "type": "Long",
+                    "qualifiedName": "java.lang.Long",
+                    "kind": "scalar",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "businessRegistrationNumber",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                  ]
+                },
+                {
+                  "name": "companyPhoneNumber",
+                  "schema": {
+                    "type": "Long",
+                    "qualifiedName": "java.lang.Long",
+                    "kind": "scalar",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "companyPhoneNumber",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                  ]
+                },
+                {
+                  "name": "managerId",
+                  "schema": {
+                    "type": "UUID",
+                    "qualifiedName": "java.util.UUID",
+                    "kind": "scalar",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "managerId",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                  ]
+                },
+                {
+                  "name": "brandName",
+                  "schema": {
+                    "type": "String",
+                    "qualifiedName": "java.lang.String",
+                    "kind": "scalar",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "brandName",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                  ]
+                },
+                {
+                  "name": "companyEmail",
+                  "schema": {
+                    "type": "String",
+                    "qualifiedName": "java.lang.String",
+                    "kind": "scalar",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "companyEmail",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                  ]
+                },
+                {
+                  "name": "status",
+                  "schema": {
+                    "type": "CompanyStatusEnum",
+                    "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                    "kind": "enum",
+                    "fields": [],
+                    "arguments": [],
+                    "enumValues": [
+                      "REQUESTED",
+                      "PENDING",
+                      "APPROVED",
+                      "REJECTED"
+                    ],
+                    "recursive": false,
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                      "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                      "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                      "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                      "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                    ],
+                    "reason": null
+                  },
+                  "annotations": [],
+                  "jsonName": {
+                    "value": "status",
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                    ],
+                    "reason": null
+                  },
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17"
+                  ]
+                }
+              ],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:11"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "data",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10"
+            ]
+          }
+        ],
+        "arguments": [
+          {
+            "type": "ResGetCompanyByIdDto",
+            "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ResGetCompanyByIdDto",
+            "kind": "object",
+            "fields": [
+              {
+                "name": "businessRegistrationNumber",
+                "schema": {
+                  "type": "Long",
+                  "qualifiedName": "java.lang.Long",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "businessRegistrationNumber",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                ]
+              },
+              {
+                "name": "companyPhoneNumber",
+                "schema": {
+                  "type": "Long",
+                  "qualifiedName": "java.lang.Long",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "companyPhoneNumber",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                ]
+              },
+              {
+                "name": "managerId",
+                "schema": {
+                  "type": "UUID",
+                  "qualifiedName": "java.util.UUID",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "managerId",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                ]
+              },
+              {
+                "name": "brandName",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "brandName",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                ]
+              },
+              {
+                "name": "companyEmail",
+                "schema": {
+                  "type": "String",
+                  "qualifiedName": "java.lang.String",
+                  "kind": "scalar",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "companyEmail",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                ]
+              },
+              {
+                "name": "status",
+                "schema": {
+                  "type": "CompanyStatusEnum",
+                  "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                  "kind": "enum",
+                  "fields": [],
+                  "arguments": [],
+                  "enumValues": [
+                    "REQUESTED",
+                    "PENDING",
+                    "APPROVED",
+                    "REJECTED"
+                  ],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                    "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                  ],
+                  "reason": null
+                },
+                "annotations": [],
+                "jsonName": {
+                  "value": "status",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                  ],
+                  "reason": null
+                },
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17"
+                ]
+              }
+            ],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:11"
+            ],
+            "reason": null
+          }
+        ],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:8"
+        ],
+        "reason": null
+      },
+      "externalPaths": [
+        {
+          "routeId": "company-service",
+          "path": "/api/v1/companies/{companyId}",
+          "tokenRequired": {
+            "value": true,
+            "evidence": [
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+            ],
+            "reason": null
+          },
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70",
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+            "gateway/src/main/resources/application.yml:21",
+            "gateway/src/main/resources/application.yml:22",
+            "gateway/src/main/resources/application.yml:24",
+            "gateway/src/main/resources/application.yml:26"
+          ]
+        }
+      ],
+      "tokenRequired": {
+        "value": true,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:73"
+      ]
+    },
+    {
+      "id": "company-service.CompanyController.getCompanyList",
+      "service": "company-service",
+      "controller": "CompanyController",
+      "handler": "getCompanyList",
+      "httpMethod": {
+        "value": "GET",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79"
+        ],
+        "reason": null
+      },
+      "path": {
+        "value": "/api/v1/companies",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79"
+        ],
+        "reason": null
+      },
+      "parameters": [
+        {
+          "name": "pageable",
+          "kind": "쿼리",
+          "binding": "Pageable",
+          "schema": {
+            "type": "Pageable",
+            "qualifiedName": "org.springframework.data.domain.Pageable",
+            "kind": "unresolved",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:83"
+            ],
+            "reason": "외부 타입의 내부 구조는 저장소에 정의되어 있지 않음"
+          },
+          "annotations": [],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:83"
+          ]
+        },
+        {
+          "name": "status",
+          "kind": "쿼리",
+          "binding": "RequestParam",
+          "schema": {
+            "type": "CompanyStatusEnum",
+            "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+            "kind": "enum",
+            "fields": [],
+            "arguments": [],
+            "enumValues": [
+              "REQUESTED",
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+              "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+              "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+              "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+              "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+            ],
+            "reason": null
+          },
+          "annotations": [
+            {
+              "name": "RequestParam",
+              "arguments": {
+                "required": {
+                  "value": "false",
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:84"
+                  ],
+                  "reason": null
+                }
+              },
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:84"
+              ]
+            }
+          ],
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:84"
+          ]
+        }
+      ],
+      "response": {
+        "type": "ResponseDto<Page<ResGetCompanyByIdDto>>",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+              ],
+              "reason": null
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:9"
+            ]
+          },
+          {
+            "name": "data",
+            "schema": {
+              "type": "Page<ResGetCompanyByIdDto>",
+              "qualifiedName": "org.springframework.data.domain.Page",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [
+                {
+                  "type": "ResGetCompanyByIdDto",
+                  "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ResGetCompanyByIdDto",
+                  "kind": "object",
+                  "fields": [
+                    {
+                      "name": "businessRegistrationNumber",
+                      "schema": {
+                        "type": "Long",
+                        "qualifiedName": "java.lang.Long",
+                        "kind": "scalar",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "businessRegistrationNumber",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                      ]
+                    },
+                    {
+                      "name": "companyPhoneNumber",
+                      "schema": {
+                        "type": "Long",
+                        "qualifiedName": "java.lang.Long",
+                        "kind": "scalar",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "companyPhoneNumber",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                      ]
+                    },
+                    {
+                      "name": "managerId",
+                      "schema": {
+                        "type": "UUID",
+                        "qualifiedName": "java.util.UUID",
+                        "kind": "scalar",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "managerId",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                      ]
+                    },
+                    {
+                      "name": "brandName",
+                      "schema": {
+                        "type": "String",
+                        "qualifiedName": "java.lang.String",
+                        "kind": "scalar",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "brandName",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                      ]
+                    },
+                    {
+                      "name": "companyEmail",
+                      "schema": {
+                        "type": "String",
+                        "qualifiedName": "java.lang.String",
+                        "kind": "scalar",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "companyEmail",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                      ]
+                    },
+                    {
+                      "name": "status",
+                      "schema": {
+                        "type": "CompanyStatusEnum",
+                        "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                        "kind": "enum",
+                        "fields": [],
+                        "arguments": [],
+                        "enumValues": [
+                          "REQUESTED",
+                          "PENDING",
+                          "APPROVED",
+                          "REJECTED"
+                        ],
+                        "recursive": false,
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                          "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                          "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                          "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                          "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                        ],
+                        "reason": null
+                      },
+                      "annotations": [],
+                      "jsonName": {
+                        "value": "status",
+                        "evidence": [
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
+                          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                        ],
+                        "reason": null
+                      },
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17"
+                      ]
+                    }
+                  ],
+                  "arguments": [],
+                  "enumValues": [],
+                  "recursive": false,
+                  "evidence": [
+                    "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:11"
+                  ],
+                  "reason": null
+                }
+              ],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:82"
+              ],
+              "reason": "외부 타입의 내부 구조는 저장소에 정의되어 있지 않음"
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "data",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6"
+              ],
+              "reason": null
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10"
+            ]
+          }
+        ],
+        "arguments": [
+          {
+            "type": "Page<ResGetCompanyByIdDto>",
+            "qualifiedName": "org.springframework.data.domain.Page",
+            "kind": "unresolved",
+            "fields": [],
+            "arguments": [
+              {
+                "type": "ResGetCompanyByIdDto",
+                "qualifiedName": "com.sparta.hotdeal.company.application.dtos.company.ResGetCompanyByIdDto",
+                "kind": "object",
+                "fields": [
+                  {
+                    "name": "businessRegistrationNumber",
+                    "schema": {
+                      "type": "Long",
+                      "qualifiedName": "java.lang.Long",
+                      "kind": "scalar",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "businessRegistrationNumber",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12"
+                    ]
+                  },
+                  {
+                    "name": "companyPhoneNumber",
+                    "schema": {
+                      "type": "Long",
+                      "qualifiedName": "java.lang.Long",
+                      "kind": "scalar",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "companyPhoneNumber",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13"
+                    ]
+                  },
+                  {
+                    "name": "managerId",
+                    "schema": {
+                      "type": "UUID",
+                      "qualifiedName": "java.util.UUID",
+                      "kind": "scalar",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "managerId",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14"
+                    ]
+                  },
+                  {
+                    "name": "brandName",
+                    "schema": {
+                      "type": "String",
+                      "qualifiedName": "java.lang.String",
+                      "kind": "scalar",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "brandName",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15"
+                    ]
+                  },
+                  {
+                    "name": "companyEmail",
+                    "schema": {
+                      "type": "String",
+                      "qualifiedName": "java.lang.String",
+                      "kind": "scalar",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "companyEmail",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16"
+                    ]
+                  },
+                  {
+                    "name": "status",
+                    "schema": {
+                      "type": "CompanyStatusEnum",
+                      "qualifiedName": "com.sparta.hotdeal.company.domain.entity.company.CompanyStatusEnum",
+                      "kind": "enum",
+                      "fields": [],
+                      "arguments": [],
+                      "enumValues": [
+                        "REQUESTED",
+                        "PENDING",
+                        "APPROVED",
+                        "REJECTED"
+                      ],
+                      "recursive": false,
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:6",
+                        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:7",
+                        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:8",
+                        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:9",
+                        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/CompanyStatusEnum.java:10"
+                      ],
+                      "reason": null
+                    },
+                    "annotations": [],
+                    "jsonName": {
+                      "value": "status",
+                      "evidence": [
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
+                        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9"
+                      ],
+                      "reason": null
+                    },
+                    "evidence": [
+                      "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17"
+                    ]
+                  }
+                ],
+                "arguments": [],
+                "enumValues": [],
+                "recursive": false,
+                "evidence": [
+                  "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:11"
+                ],
+                "reason": null
+              }
+            ],
+            "enumValues": [],
+            "recursive": false,
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:82"
+            ],
+            "reason": "외부 타입의 내부 구조는 저장소에 정의되어 있지 않음"
+          }
+        ],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:8"
+        ],
+        "reason": null
+      },
+      "externalPaths": [
+        {
+          "routeId": "company-service",
+          "path": "/api/v1/companies",
+          "tokenRequired": {
+            "value": true,
+            "evidence": [
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+              "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+            ],
+            "reason": null
+          },
+          "evidence": [
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79",
+            "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+            "gateway/src/main/resources/application.yml:21",
+            "gateway/src/main/resources/application.yml:22",
+            "gateway/src/main/resources/application.yml:24",
+            "gateway/src/main/resources/application.yml:26"
+          ]
+        }
+      ],
+      "tokenRequired": {
+        "value": true,
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:7",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:8",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:9",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:10",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:11",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:29",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28",
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ],
+        "reason": null
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:82"
+      ]
+    }
+  ],
+  "feignClients": [],
+  "feignCalls": [],
+  "gatewayRoutes": [],
+  "allowedPaths": [],
+  "declarations": [
+    {
+      "kind": "RequestMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:34"
+      ]
+    },
+    {
+      "kind": "PostMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40"
+      ]
+    },
+    {
+      "kind": "PatchMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50"
+      ]
+    },
+    {
+      "kind": "PatchMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60"
+      ]
+    },
+    {
+      "kind": "GetMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70"
+      ]
+    },
+    {
+      "kind": "GetMapping",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79"
+      ]
+    }
+  ],
+  "kafkaDeclarations": [],
+  "kafkaPublications": [],
+  "kafkaSubscriptions": [],
+  "environmentVariables": [
+    {
+      "service": "company-service",
+      "profile": "local",
+      "name": "LOCAL_DB_ENDPOINT",
+      "location": "spring.datasource.url",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-local.yml:3"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-local.yml:3"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "local",
+      "name": "LOCAL_DB_USERNAME",
+      "location": "spring.datasource.username",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-local.yml:4"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-local.yml:4"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "local",
+      "name": "LOCAL_DB_PASSWORD",
+      "location": "spring.datasource.password",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-local.yml:5"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-local.yml:5"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "prod",
+      "name": "PROD_DB_ENDPOINT",
+      "location": "spring.datasource.url",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-prod.yml:3"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-prod.yml:3"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "prod",
+      "name": "PROD_DB_USERNAME",
+      "location": "spring.datasource.username",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-prod.yml:4"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-prod.yml:4"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "prod",
+      "name": "PROD_DB_PASSWORD",
+      "location": "spring.datasource.password",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application-prod.yml:5"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application-prod.yml:5"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "base",
+      "name": "ACTIVE_PROFILE",
+      "location": "spring.profiles.active",
+      "value": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/application.yml:5"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "company/src/main/resources/application.yml:5"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "compose",
+      "name": "ACTIVE_PROFILE",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:59"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:59"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "compose",
+      "name": "PROD_DB_ENDPOINT",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:61"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:61"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "compose",
+      "name": "PROD_DB_USERNAME",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:62"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:62"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "compose",
+      "name": "PROD_DB_PASSWORD",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:63"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:63"
+      ]
+    },
+    {
+      "service": "company-service",
+      "profile": "compose",
+      "name": "HOST",
+      "location": "environment",
+      "value": {
+        "value": null,
+        "evidence": [
+          "docker-compose.yml:64"
+        ],
+        "reason": "환경변수의 실제 값은 대상 저장소에서 정하지 않음"
+      },
+      "evidence": [
+        "docker-compose.yml:64"
+      ]
+    }
+  ],
+  "externalResources": [
+    {
+      "service": "company-service",
+      "kind": "DB",
+      "configurationEvidence": [
+        "company/src/main/resources/application-local.yml:3",
+        "company/src/main/resources/application-local.yml:4",
+        "company/src/main/resources/application-local.yml:5",
+        "company/src/main/resources/application-local.yml:6",
+        "company/src/main/resources/application-local.yml:9",
+        "company/src/main/resources/application-local.yml:12",
+        "company/src/main/resources/application-local.yml:13",
+        "company/src/main/resources/application-prod.yml:3",
+        "company/src/main/resources/application-prod.yml:4",
+        "company/src/main/resources/application-prod.yml:5",
+        "company/src/main/resources/application-prod.yml:6",
+        "company/src/main/resources/application-prod.yml:9",
+        "company/src/main/resources/application-prod.yml:12",
+        "company/src/main/resources/application-prod.yml:13"
+      ],
+      "codeEvidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/Audit.java:15",
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:23",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/config/AuditConfig.java:7",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/repository/CompanyRepositoryImpl.java:8"
+      ],
+      "details": {
+        "connectionValues": {
+          "value": null,
+          "evidence": [
+            "company/src/main/resources/application-local.yml:3",
+            "company/src/main/resources/application-local.yml:4",
+            "company/src/main/resources/application-local.yml:5",
+            "company/src/main/resources/application-local.yml:6",
+            "company/src/main/resources/application-local.yml:9",
+            "company/src/main/resources/application-local.yml:12",
+            "company/src/main/resources/application-local.yml:13",
+            "company/src/main/resources/application-prod.yml:3",
+            "company/src/main/resources/application-prod.yml:4",
+            "company/src/main/resources/application-prod.yml:5",
+            "company/src/main/resources/application-prod.yml:6",
+            "company/src/main/resources/application-prod.yml:9",
+            "company/src/main/resources/application-prod.yml:12",
+            "company/src/main/resources/application-prod.yml:13",
+            "company/src/main/java/com/sparta/hotdeal/company/domain/entity/Audit.java:15",
+            "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:23",
+            "company/src/main/java/com/sparta/hotdeal/company/infrastructure/config/AuditConfig.java:7",
+            "company/src/main/java/com/sparta/hotdeal/company/infrastructure/repository/CompanyRepositoryImpl.java:8"
+          ],
+          "reason": "연결 값은 결과에 포함하지 않으며 실행 환경에서 결정됨"
+        }
+      },
+      "evidence": [
+        "company/src/main/resources/application-local.yml:3",
+        "company/src/main/resources/application-local.yml:4",
+        "company/src/main/resources/application-local.yml:5",
+        "company/src/main/resources/application-local.yml:6",
+        "company/src/main/resources/application-local.yml:9",
+        "company/src/main/resources/application-local.yml:12",
+        "company/src/main/resources/application-local.yml:13",
+        "company/src/main/resources/application-prod.yml:3",
+        "company/src/main/resources/application-prod.yml:4",
+        "company/src/main/resources/application-prod.yml:5",
+        "company/src/main/resources/application-prod.yml:6",
+        "company/src/main/resources/application-prod.yml:9",
+        "company/src/main/resources/application-prod.yml:12",
+        "company/src/main/resources/application-prod.yml:13",
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/Audit.java:15",
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:23",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/config/AuditConfig.java:7",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/repository/CompanyRepositoryImpl.java:8"
+      ]
+    }
+  ]
+}

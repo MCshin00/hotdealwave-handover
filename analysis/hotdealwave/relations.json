@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "kafkaLinks": [
+    {
+      "publicationId": "order-service.publishDlq",
+      "subscriptionId": "order-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:18",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:17",
+        "order/src/main/resources/application.yml:18",
+        "docker-compose.yml:154",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16"
+      ]
+    },
+    {
+      "publicationId": "order-service.publishDlq",
+      "subscriptionId": "payment-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:18",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:17",
+        "order/src/main/resources/application.yml:18",
+        "docker-compose.yml:154",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:16",
+        "payment/src/main/resources/application.yml:17",
+        "docker-compose.yml:192"
+      ]
+    },
+    {
+      "publicationId": "order-service.cancelPayment",
+      "subscriptionId": "payment-service.cancel",
+      "environment": "KAFKA_CANCEL_PAYMENT_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:44",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:27",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:26",
+        "order/src/main/resources/application.yml:19",
+        "docker-compose.yml:153",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "payment/src/main/resources/application.yml:19",
+        "docker-compose.yml:191"
+      ]
+    },
+    {
+      "publicationId": "order-service.refundPayment",
+      "subscriptionId": "payment-service.refund",
+      "environment": "KAFKA_REFUND_PAYMENT_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:29",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:28",
+        "order/src/main/resources/application.yml:20",
+        "docker-compose.yml:155",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/resources/application.yml:20",
+        "docker-compose.yml:194"
+      ]
+    },
+    {
+      "publicationId": "order-service.recoverDlq",
+      "subscriptionId": "order-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:30",
+        "order/src/main/resources/application.yml:18",
+        "docker-compose.yml:154",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16"
+      ]
+    },
+    {
+      "publicationId": "order-service.recoverDlq",
+      "subscriptionId": "payment-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:30",
+        "order/src/main/resources/application.yml:18",
+        "docker-compose.yml:154",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:16",
+        "payment/src/main/resources/application.yml:17",
+        "docker-compose.yml:192"
+      ]
+    },
+    {
+      "publicationId": "payment-service.publishDlq",
+      "subscriptionId": "order-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:18",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:17",
+        "payment/src/main/resources/application.yml:17",
+        "docker-compose.yml:192",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16",
+        "order/src/main/resources/application.yml:18",
+        "docker-compose.yml:154"
+      ]
+    },
+    {
+      "publicationId": "payment-service.publishDlq",
+      "subscriptionId": "payment-service.dlq",
+      "environment": "KAFKA_DLQ_TOPIC",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:18",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:17",
+        "payment/src/main/resources/application.yml:17",
+        "docker-compose.yml:192",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:16"
+      ]
+    },
+    {
+      "publicationId": "payment-service.updateOrderStatus",
+      "subscriptionId": "order-service.updateStatus",
+      "environment": "KAFKA_UPDATE_ORDER_STATUS_TOPIC",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:23",
+        "payment/src/main/resources/application.yml:18",
+        "docker-compose.yml:196",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/resources/application.yml:17",
+        "docker-compose.yml:157"
+      ]
+    }
+  ]
+}

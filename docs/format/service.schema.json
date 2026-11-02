@@ -1,0 +1,928 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "서비스 추출 결과",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "service": {
+      "$ref": "#/$defs/Service"
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Endpoint"
+      }
+    },
+    "feignClients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FeignClient"
+      }
+    },
+    "feignCalls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FeignCall"
+      }
+    },
+    "gatewayRoutes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GatewayRoute"
+      }
+    },
+    "allowedPaths": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AllowedPath"
+      }
+    },
+    "declarations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Declaration"
+      }
+    },
+    "kafkaDeclarations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/KafkaDeclaration"
+      }
+    },
+    "kafkaPublications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/KafkaPublication"
+      }
+    },
+    "kafkaSubscriptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/KafkaSubscription"
+      }
+    },
+    "environmentVariables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EnvironmentVariable"
+      }
+    },
+    "externalResources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExternalResource"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "service",
+    "endpoints",
+    "feignClients",
+    "feignCalls",
+    "gatewayRoutes",
+    "allowedPaths",
+    "declarations",
+    "kafkaDeclarations",
+    "kafkaPublications",
+    "kafkaSubscriptions",
+    "environmentVariables",
+    "externalResources"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(?!/)[^\\\\:\\r\\n]+:[1-9][0-9]*$"
+      }
+    },
+    "Status": {
+      "enum": [
+        "확인됨",
+        "확인 안 됨",
+        "저장소에 근거 없음"
+      ]
+    },
+    "Fact": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "value",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "StringFact": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Fact"
+        },
+        {
+          "properties": {
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BooleanFact": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Fact"
+        },
+        {
+          "properties": {
+            "value": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Annotation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "arguments": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/StringFact"
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "arguments",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Field": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "$ref": "#/$defs/Type"
+        },
+        "annotations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Annotation"
+          }
+        },
+        "jsonName": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "schema",
+        "annotations",
+        "jsonName",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Type": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "qualifiedName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "object",
+            "enum",
+            "scalar",
+            "container",
+            "array",
+            "unresolved"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Field"
+          }
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Type"
+          }
+        },
+        "enumValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recursive": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "qualifiedName",
+        "kind",
+        "fields",
+        "arguments",
+        "enumValues",
+        "recursive",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Parameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "경로",
+            "쿼리",
+            "본문",
+            "헤더"
+          ]
+        },
+        "binding": {
+          "type": "string"
+        },
+        "schema": {
+          "$ref": "#/$defs/Type"
+        },
+        "annotations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Annotation"
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "kind",
+        "binding",
+        "schema",
+        "annotations",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalPath": {
+      "type": "object",
+      "properties": {
+        "routeId": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "tokenRequired": {
+          "$ref": "#/$defs/BooleanFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "routeId",
+        "path",
+        "tokenRequired",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "composeService": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "directory",
+        "name",
+        "composeService",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "httpMethod": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "path": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Parameter"
+          }
+        },
+        "response": {
+          "$ref": "#/$defs/Type"
+        },
+        "externalPaths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalPath"
+          }
+        },
+        "tokenRequired": {
+          "$ref": "#/$defs/BooleanFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "service",
+        "controller",
+        "handler",
+        "httpMethod",
+        "path",
+        "parameters",
+        "response",
+        "externalPaths",
+        "tokenRequired",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "FeignClient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "url": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "path": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "service",
+        "type",
+        "name",
+        "url",
+        "path",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "FeignCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "handler": {
+          "type": "string"
+        },
+        "httpMethod": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "path": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "target": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "external": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "clientId",
+        "service",
+        "handler",
+        "httpMethod",
+        "path",
+        "target",
+        "external",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "GatewayRoute": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "uri": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "targetService": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "rewritePath": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StringFact"
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "uri",
+        "targetService",
+        "rewritePath",
+        "paths",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "AllowedPath": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "httpMethod": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "path",
+        "httpMethod",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Declaration": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "RequestMapping",
+            "GetMapping",
+            "PostMapping",
+            "PutMapping",
+            "DeleteMapping",
+            "PatchMapping"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "KafkaDeclaration": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "KafkaListener",
+            "kafkaTemplate.send",
+            "DeadLetterPublishingRecoverer"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "KafkaPublication": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "kafkaTemplate.send",
+            "DeadLetterPublishingRecoverer"
+          ]
+        },
+        "profile": {
+          "const": "base"
+        },
+        "topicKey": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "topicName": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "environment": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "service",
+        "kind",
+        "profile",
+        "topicKey",
+        "topicName",
+        "environment",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "KafkaSubscription": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "KafkaListener"
+          ]
+        },
+        "profile": {
+          "const": "base"
+        },
+        "topicKey": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "topicName": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "environment": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "service",
+        "kind",
+        "profile",
+        "topicKey",
+        "topicName",
+        "environment",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "EnvironmentVariable": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "profile",
+        "name",
+        "location",
+        "value",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalResource": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "DB",
+            "Redis",
+            "Elasticsearch",
+            "Kafka",
+            "S3",
+            "KakaoPay"
+          ]
+        },
+        "configurationEvidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "codeEvidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "details": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/StringFact"
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "kind",
+        "configurationEvidence",
+        "codeEvidence",
+        "details",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
