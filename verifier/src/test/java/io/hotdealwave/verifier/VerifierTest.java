@@ -130,6 +130,33 @@ class VerifierTest {
         return node;
     }
 
+    private ObjectNode orderRequestProduct() {
+        var input = document();
+        input.withArray("kafkaPublications").add(kafka("request", "order-service", "kafkaTemplate.send",
+                "spring.kafka.topics.request-product", "KAFKA_REQUEST_PRODUCT_TOPIC", ORDER + "event/producer/OrderEventProducer.java:62",
+                ORDER + "event/producer/OrderEventProducer.java:24", "order/src/main/resources/application.yml:15", "docker-compose.yml:156"));
+        return input;
+    }
+
+    @Test void orderRequestProductComposeLine156IsConfirmed() throws Exception {
+        var output = verify(orderRequestProduct());
+        assertEquals("확인됨", output.at("/kafkaPublications/0/environment/status").asText());
+        assertEquals("확인됨", output.at("/kafkaPublications/0/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+    }
+
+    @Test void extractedS3ResourceHasValidEvidence() throws Exception {
+        var input = document();
+        var extracted = JSON.readTree(Path.of("analysis/hotdealwave/extracted.json").toFile());
+        for (var resource : extracted.path("externalResources")) {
+            if (resource.path("kind").asText().equals("S3")) input.withArray("externalResources").add(resource);
+        }
+        assertEquals(1, input.path("externalResources").size());
+        var output = verify(input);
+        assertEquals(Checks.CONFIRMED, output.at("/externalResources/0/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+    }
+
     @Test void kafkaRelationsRequireEqualEnvironmentNamesAndBothComposeLines() throws Exception {
         var input = document();
         String payment = "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java";

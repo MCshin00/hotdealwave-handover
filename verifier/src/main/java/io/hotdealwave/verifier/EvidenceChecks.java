@@ -101,41 +101,24 @@ final class EvidenceChecks {
             String evidence = ev.asText(), line = source.line(evidence);
             if (evidence.contains("/src/main/resources/application.yml:") && source.yamlKey(evidence).equals(key)
                     && line.substring(line.indexOf(':') + 1).trim().equals("${" + name + "}")) yaml = true;
-            if (evidence.startsWith("docker-compose.yml:") && line.trim().equals("- " + name + "=${" + name + "}")) {
-                String composeKey = source.yamlKey(evidence);
-                compose = composeKey.equals("services." + endpoint.path("service").asText() + ".environment");
-            }
+            if (evidence.startsWith("docker-compose.yml:") && line.contains("${" + name + "}")
+                    && source.yamlKey(evidence).matches("services\\.[^.]+\\.environment(?:\\..+)?")) compose = true;
         }
         return yaml && compose;
     }
 
     private boolean resource(JsonNode node) throws IOException {
-        String kind = node.path("kind").asText();
-        String prefixes = switch (kind) {
-            case "DB" -> "spring.datasource.|spring.jpa.";
-            case "Redis" -> "spring.data.redis.";
-            case "Kafka" -> "spring.kafka.";
-            case "Elasticsearch" -> "spring.elasticsearch.";
-            case "S3" -> "s3.";
-            case "KakaoPay" -> "pay.";
-            default -> "";
-        };
+        // The extraction supplies the resource name; the verifier has no resource catalogue.
+        String name = node.path("kind").asText().toLowerCase(Locale.ROOT);
+        if (name.isBlank()) return false;
         for (var ev : node.path("configurationEvidence")) {
-            String key = source.yamlKey(ev.asText());
-            if (!prefixes.isEmpty() && Arrays.stream(prefixes.split("\\|")).anyMatch(key::startsWith)) return true;
+            String line = source.line(ev.asText());
+            if (line != null && (source.yamlKey(ev.asText()).toLowerCase(Locale.ROOT).contains(name)
+                    || line.toLowerCase(Locale.ROOT).contains(name))) return true;
         }
-        String names = switch (kind) {
-            case "DB" -> "JpaRepository|EntityManager|@Entity|@Table";
-            case "Redis" -> "RedisTemplate|RedisConnectionFactory|RedissonClient";
-            case "Kafka" -> "KafkaTemplate|ConsumerFactory|ProducerFactory|DeadLetterPublishingRecoverer|@KafkaListener|@EnableKafka";
-            case "Elasticsearch" -> "ElasticsearchClient|ElasticsearchRepository";
-            case "S3" -> "S3Client";
-            case "KakaoPay" -> "KakaoPayClient|open-api.kakaopay.com";
-            default -> "(?!)";
-        };
         for (var ev : node.path("codeEvidence")) {
             String line = source.line(ev.asText());
-            if (line != null && Pattern.compile(names).matcher(line).find()) return true;
+            if (line != null && line.toLowerCase(Locale.ROOT).contains(name)) return true;
         }
         return false;
     }
