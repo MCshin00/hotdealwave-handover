@@ -62,6 +62,17 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 
 `annotations[]`는 `{name, arguments: {인자명: Fact<string>}, status, evidence}`다. 숫자·불리언도 소스 리터럴 문자열로 기록한다. DTO의 검증 어노테이션과 `JsonProperty`, `JsonIgnore`를 보존한다. `JsonIgnore` 필드도 삭제하지 않고 `jsonIgnored.value: true`로 표시한다. 같은 서비스의 상수만 따라가며, 다른 모듈의 상수·계산식은 근거와 함께 `확인 안 됨`으로 남긴다.
 
+`name`은 Java 필드 이름이다. `jsonName`은 다음 순서로 정하며, 이름을 확정할 수 없으면 `value: null`, `확인 안 됨`과 이유·근거를 남긴다.
+
+1. 필드의 `@JsonProperty` 값. 리터럴·같은 서비스의 상수로 해석되면 `확인됨`이다.
+2. 클래스나 필드에 `@JsonNaming`이 있으면 `확인 안 됨`이다. 이름 전략은 구현하지 않는다.
+3. 클래스나 필드의 Lombok `@Getter`·`@Data`로 getter 이름을 구하고 Jackson 속성 이름을 정한다(`확인됨`). 원시 `boolean isUsed`는 `isUsed()` → `used`, `Boolean isUsed`는 `getIsUsed()` → `isUsed`다. 원시 boolean의 `is` 접두사는 그 다음 글자가 대문자일 때만 이 규칙을 적용한다. 근거에는 필드와 Lombok 어노테이션 줄을 모두 넣는다.
+4. 같은 클래스에 직접 선언한 public 인스턴스 getter(인자 없는 `getX()` 또는 boolean·Boolean을 반환하는 `isX()`)가 있으면 그 이름에서 정한다(`확인됨`). 근거에는 getter 줄을 넣는다.
+5. public 필드면 필드 이름을 쓴다(`확인됨`).
+6. 나머지는 `확인 안 됨`이다.
+
+전역 ObjectMapper 설정 등 다른 Jackson 설정은 따라가지 않는다. 고정 소스에는 record 선언이 없으며, 현재 record 컴포넌트를 별도 필드로 전개하지 않는 동작은 유지한다.
+
 ### 외부 경로와 토큰
 
 `externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로와 서비스 접두사를 제거하는 별칭을 모두 내며, 실제 `Path` 조건 및 정방향 `RewritePath` 적용 결과를 확인한다. 역변환은 고정 소스의 `/<서비스>/(?<segment>.*), /$\{segment}` 형태만 지원한다. 확정하지 못한 외부 경로는 만들지 않고 교차 검증 경고를 낸다.

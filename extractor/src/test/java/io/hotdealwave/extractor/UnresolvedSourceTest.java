@@ -38,11 +38,17 @@ class UnresolvedSourceTest {
                     static final String BASE = "/local";
                     static final String ITEM = "/item";
                 }
-                class Wrapper<T> { T data; }
+                @Data class Wrapper<T> { T data; }
                 class Item {
-                    @JsonProperty("wire_name") @Size(min = 2, max = 8) String name;
+                    @JsonProperty("wire_name") @JsonNaming(Strategy.class) @Size(min = 2, max = 8) String name;
                     @JsonIgnore String secret;
                     Item next;
+                    @Getter private Boolean isUsed;
+                    @Getter private boolean isReady;
+                    private boolean isValid;
+                    public boolean isValid() { return isValid; }
+                    public String visible;
+                    @Getter @JsonNaming(Strategy.class) private String renamed;
                 }
                 @FeignClient(name = "sample-service")
                 interface Client {
@@ -57,6 +63,25 @@ class UnresolvedSourceTest {
         assertEquals("wire_name", find(item.path("fields"), "name", "name").path("jsonName").path("value").asText());
         assertTrue(find(item.path("fields"), "name", "secret").path("jsonIgnored").path("value").asBoolean());
         assertTrue(find(item.path("fields"), "name", "next").path("schema").path("recursive").asBoolean());
+        for (String name : new String[] {"isUsed", "isReady", "isValid", "visible"}) {
+            JsonNode jsonName = find(item.path("fields"), "name", name).path("jsonName");
+            String expected = switch (name) {
+                case "isReady" -> "ready";
+                case "isValid" -> "valid";
+                default -> name;
+            };
+            assertEquals(expected, jsonName.path("value").asText());
+            assertEquals("확인됨", jsonName.path("status").asText());
+        }
+        assertTrue(find(item.path("fields"), "name", "isValid").path("jsonName").path("evidence")
+                .toString().contains("Api.java:27"));
+        for (String name : new String[] {"next", "renamed"}) {
+            JsonNode jsonName = find(item.path("fields"), "name", name).path("jsonName");
+            assertEquals("확인 안 됨", jsonName.path("status").asText());
+            assertTrue(jsonName.path("value").isNull());
+            assertFalse(jsonName.path("reason").asText().isEmpty());
+            assertFalse(jsonName.path("evidence").isEmpty());
+        }
         for (String handler : new String[] {"computed", "externalConstant"}) {
             JsonNode path = find(analysis.path("endpoints"), "handler", handler).path("path");
             assertEquals("확인 안 됨", path.path("status").asText());

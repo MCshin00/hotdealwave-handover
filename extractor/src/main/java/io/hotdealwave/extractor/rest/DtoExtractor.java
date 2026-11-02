@@ -2,6 +2,9 @@ package io.hotdealwave.extractor.rest;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.type.Type;
 import io.hotdealwave.extractor.model.Analysis;
 import io.hotdealwave.extractor.model.Analysis.*;
@@ -78,13 +81,9 @@ public final class DtoExtractor {
                         .filter(a -> FIELD_ANNOTATIONS.contains(SourceValues.name(a))).map(values::annotation).toList();
                 for (var variable : field.getVariables()) {
                     var fieldEvidence = source.evidence(variable);
-                    Fact<String> jsonName = Fact.known(variable.getNameAsString(), fieldEvidence);
+                    Fact<String> jsonName = jsonName(declaration, field, variable);
                     Fact<Boolean> ignored = Fact.known(false, fieldEvidence);
                     for (var annotation : field.getAnnotations()) {
-                        if (SourceValues.name(annotation).equals("JsonProperty")) {
-                            var name = values.attribute(annotation, "value", "");
-                            jsonName = name.known() && name.value().isEmpty() ? jsonName : name;
-                        }
                         if (SourceValues.name(annotation).equals("JsonIgnore")) {
                             var value = values.attribute(annotation, "value", "true");
                             ignored = value.known() ? Fact.known(Boolean.valueOf(value.value()), value.evidence())
@@ -112,6 +111,58 @@ public final class DtoExtractor {
         result.status = Analysis.UNKNOWN;
         result.reason = "서비스 소스와 JDK에서 타입 구조를 해석할 수 없음; 제네릭 인자는 별도 표시";
         return result;
+    }
+
+    private Fact<String> jsonName(TypeDeclaration<?> declaration, FieldDeclaration field,
+                                  VariableDeclarator variable) {
+        var evidence = source.evidence(variable);
+        var property = field.getAnnotations().stream()
+                .filter(a -> SourceValues.name(a).equals("JsonProperty")).findFirst();
+        if (property.isPresent()) return values.attribute(property.get(), "value", "");
+
+        var annotations = new ArrayList<>(field.getAnnotations());
+        annotations.addAll(declaration.getAnnotations());
+        var naming = annotations.stream().filter(a -> SourceValues.name(a).equals("JsonNaming")).findFirst();
+        if (naming.isPresent()) return Fact.unknown(Analysis.evidence(evidence, source.evidence(naming.get())),
+                "@JsonNaming 이름 전략은 해석하지 않음");
+
+        String name = variable.getNameAsString();
+        String suffix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        boolean primitiveBoolean = variable.getType().isPrimitiveType()
+                && variable.getType().asString().equals("boolean");
+        String booleanGetter = name.startsWith("is") && name.length() > 2 && Character.isUpperCase(name.charAt(2))
+                ? name : "is" + suffix;
+        var lombok = annotations.stream()
+                .filter(a -> Set.of("Getter", "Data").contains(SourceValues.name(a))).findFirst();
+        if (lombok.isPresent()) {
+            String getter = primitiveBoolean ? booleanGetter : "get" + suffix;
+            return Fact.known(getterProperty(getter), Analysis.evidence(evidence, source.evidence(lombok.get())));
+        }
+
+        for (var method : declaration.getMethods()) {
+            if (!method.isPublic() || method.isStatic() || !method.getParameters().isEmpty()
+                    || method.getType().isVoidType()) continue;
+            String getter = method.getNameAsString();
+            boolean booleanResult = Set.of("boolean", "Boolean", "java.lang.Boolean").contains(method.getType().asString());
+            if (getter.equals("get" + suffix) || (booleanResult
+                    && (getter.equals("is" + suffix) || getter.equals(booleanGetter)))) {
+                return Fact.known(getterProperty(getter), Analysis.evidence(evidence, source.evidence(method)));
+            }
+        }
+        if (field.isPublic()) return Fact.known(name, evidence);
+        return Fact.unknown(evidence, "JSON 이름을 정할 @JsonProperty, Lombok getter, 직접 선언한 public getter 또는 public 필드가 없음");
+    }
+
+    private String getterProperty(String getter) {
+        String suffix = getter.substring(getter.startsWith("is") ? 2 : 3);
+        // Jackson's default getter naming lowercases the leading uppercase run (getURL -> url).
+        var property = new StringBuilder(suffix);
+        for (int i = 0; i < suffix.length(); i++) {
+            char lower = Character.toLowerCase(suffix.charAt(i));
+            if (lower == suffix.charAt(i)) break;
+            property.setCharAt(i, lower);
+        }
+        return property.toString();
     }
 
     private String display(Type type, Map<String, Binding> environment) {

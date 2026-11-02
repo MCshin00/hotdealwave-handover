@@ -1,6 +1,9 @@
 package io.hotdealwave.extractor;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.hotdealwave.extractor.rest.DtoExtractor;
+import io.hotdealwave.extractor.scan.ServiceScanner;
+import io.hotdealwave.extractor.source.SourceContext;
 import java.nio.file.Path;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,6 +58,20 @@ class ExtractorTest {
         assertEquals("15", size.path("arguments").path("max").path("value").asText());
     }
 
+    @Test void couponBooleanJsonNameComesFromLombokGetter() {
+        JsonNode response = endpoint("coupon-service", "GET", "/api/v1/coupons/{couponId}").path("response");
+        JsonNode dto = find(response.path("fields"), "name", "data").path("schema");
+        assertEquals("ResGetUserCouponsDto", dto.path("type").asText());
+        JsonNode field = find(dto.path("fields"), "name", "isUsed");
+        assertEquals("isUsed", field.path("name").asText());
+        JsonNode jsonName = field.path("jsonName");
+        assertEquals("used", jsonName.path("value").asText());
+        assertEquals("확인됨", jsonName.path("status").asText());
+        String file = "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResGetUserCouponsDto.java";
+        assertTrue(jsonName.path("evidence").toString().contains(file + ":11"));
+        assertTrue(jsonName.path("evidence").toString().contains(file + ":21"));
+    }
+
     @Test void feignUsesHttpPathInsteadOfJavaMethodName() {
         JsonNode call = StreamSupport.stream(analysis.path("feignCalls").spliterator(), false)
                 .filter(n -> n.path("evidence").toString().contains(ORDER + "infrastructure/client/ProductClient.java:26"))
@@ -66,6 +83,23 @@ class ExtractorTest {
         assertEquals("PUT", target.path("httpMethod").path("value").asText());
         assertEquals("/api/v1/products/restore-quantity", target.path("path").path("value").asText());
         assertTrue(call.path("target").path("evidence").toString().contains("ProductController.java:112"));
+    }
+
+    @Test void paymentJsonNamingRemainsUnknownDespiteLombokGetter() throws Exception {
+        Path root = Path.of("target/HotDealWave").toAbsolutePath().normalize();
+        var payment = new ServiceScanner().scan(root).stream()
+                .filter(s -> s.model().directory().equals("payment")).findFirst().orElseThrow();
+        var source = new SourceContext(root, payment);
+        var client = source.types.get("com.sparta.hotdeal.payment.infrastructure.client.KakaoPayClient");
+        var response = new DtoExtractor(source).extract(client.getMethodsByName("cancel").get(0).getType());
+        var jsonName = response.fields.stream().filter(f -> f.name().equals("partnerOrderId"))
+                .findFirst().orElseThrow().jsonName();
+        assertEquals("확인 안 됨", jsonName.status());
+        assertNull(jsonName.value());
+        assertTrue(jsonName.reason().contains("@JsonNaming"));
+        String file = "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/res/ResPostKakaoPayCancelDto.java";
+        assertTrue(jsonName.evidence().contains(file + ":11"));
+        assertTrue(jsonName.evidence().contains(file + ":17"));
     }
 
     @Test void explicitFeignUrlHasNoRepositoryTarget() {
