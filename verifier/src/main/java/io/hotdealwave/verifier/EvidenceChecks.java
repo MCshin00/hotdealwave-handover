@@ -10,6 +10,7 @@ import static io.hotdealwave.verifier.Checks.*;
 final class EvidenceChecks {
     private static final Pattern ENV = Pattern.compile("\\$\\{[A-Z][A-Z0-9_]*}");
     private static final Pattern QUOTED = Pattern.compile("\"((?:\\\\.|[^\"\\\\])*)\"");
+    private static final Pattern MAPPING = Pattern.compile("@(?:\\w*Mapping|FeignClient)\\b");
     private final SourceText source;
     private final ObjectNode analysis;
 
@@ -189,7 +190,7 @@ final class EvidenceChecks {
     private static boolean mappingPath(List<String> lines, String path) {
         var pieces = new ArrayList<String>();
         for (String line : lines) {
-            if (!(line.contains("Mapping") || line.contains("@FeignClient"))) continue;
+            if (!MAPPING.matcher(line).find()) return false;
             var matcher = QUOTED.matcher(line);
             while (matcher.find()) if (line.contains("Mapping") || matcher.group(1).startsWith("/")) pieces.add(matcher.group(1));
         }

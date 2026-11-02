@@ -70,6 +70,24 @@ class VerifierTest {
         assertEquals(1, output.at("/checks/evidence-lines/warningCount").asInt());
     }
 
+    @Test void pathRejectsNonMappingEvidenceEvenWhenTheClassPathStillMatches() throws Exception {
+        var input = document();
+        String file = ORDER + "presentation/controller/OrderController.java";
+        var endpoint = endpoint("order", "order-service", "/api/v1/orders", file + ":35", file + ":40");
+        input.withArray("endpoints").add(endpoint);
+        var output = verify(input);
+        assertEquals("확인됨", output.at("/endpoints/0/path/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+
+        ((ObjectNode) endpoint.path("path")).withArray("evidence")
+                .set(1, JSON.getNodeFactory().textNode(file + ":41"));
+        output = verify(input);
+        assertEquals("확인 안 됨", output.at("/endpoints/0/path/status").asText());
+        assertEquals("확인 안 됨", output.at("/endpoints/0/status").asText());
+        assertEquals(1, output.at("/checks/evidence-lines/warningCount").asInt());
+        assertTrue(output.path("warnings").toString().contains(file + ":41"));
+    }
+
     @Test void inventoryIncludesCommentedMapping() throws Exception {
         var output = verify(document());
         assertEquals(103, output.at("/checks/declarations/mappingCount").asInt());
