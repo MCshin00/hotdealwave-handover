@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "services": [
     {
+      "composeService": {
+        "value": "company-service",
+        "evidence": [
+          "docker-compose.yml:53",
+          "docker-compose.yml:54",
+          "docker-compose.yml:55",
+          "company/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "company",
       "name": {
         "value": "company-service",
@@ -16,6 +25,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "coupon-service",
+        "evidence": [
+          "docker-compose.yml:108",
+          "docker-compose.yml:109",
+          "docker-compose.yml:110",
+          "coupon/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "coupon",
       "name": {
         "value": "coupon-service",
@@ -30,6 +48,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "gateway-service",
+        "evidence": [
+          "docker-compose.yml:12",
+          "docker-compose.yml:13",
+          "docker-compose.yml:14",
+          "gateway/src/main/resources/application.yml:10"
+        ]
+      },
       "directory": "gateway",
       "name": {
         "value": "gateway-service",
@@ -44,6 +71,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "order-service",
+        "evidence": [
+          "docker-compose.yml:134",
+          "docker-compose.yml:135",
+          "docker-compose.yml:136",
+          "order/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "order",
       "name": {
         "value": "order-service",
@@ -58,6 +94,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "payment-service",
+        "evidence": [
+          "docker-compose.yml:169",
+          "docker-compose.yml:170",
+          "docker-compose.yml:171",
+          "payment/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "payment",
       "name": {
         "value": "payment-service",
@@ -72,6 +117,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "product-service",
+        "evidence": [
+          "docker-compose.yml:70",
+          "docker-compose.yml:71",
+          "docker-compose.yml:72",
+          "product/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "product",
       "name": {
         "value": "product-service",
@@ -86,6 +140,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "eureka-server",
+        "evidence": [
+          "docker-compose.yml:4",
+          "docker-compose.yml:5",
+          "docker-compose.yml:6",
+          "server/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "server",
       "name": {
         "value": "eureka-server",
@@ -100,6 +163,15 @@
       ]
     },
     {
+      "composeService": {
+        "value": "user-service",
+        "evidence": [
+          "docker-compose.yml:26",
+          "docker-compose.yml:27",
+          "docker-compose.yml:28",
+          "user/src/main/resources/application.yml:3"
+        ]
+      },
       "directory": "user",
       "name": {
         "value": "user-service",
