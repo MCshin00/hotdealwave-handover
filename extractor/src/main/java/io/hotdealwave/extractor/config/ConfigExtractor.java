@@ -18,7 +18,6 @@ import static io.hotdealwave.extractor.model.Analysis.evidence;
 public final class ConfigExtractor {
     private static final Pattern ENV = Pattern.compile("\\$\\{([A-Z][A-Z0-9_]*)(?::[^}]*)?}");
     private static final Pattern PROPERTY = Pattern.compile("\\$\\{([\\w.-]+)(?::[^}]*)?}");
-    private static final Pattern ACTION_REF = Pattern.compile("\\$\\{\\{\\s*(secrets|env)\\.([A-Z][A-Z0-9_]*)\\s*}}");
     private record Setting(String profile, String key, String text, List<String> evidence) {}
     private record Binding(String name, String text, List<String> evidence) {}
     private final Map<String, List<Setting>> settings = new LinkedHashMap<>();
@@ -47,11 +46,11 @@ public final class ConfigExtractor {
             for (var unit : source.units) {
                 for (var type : unit.findAll(ClassOrInterfaceType.class)) {
                     String kind = switch (type.getNameAsString()) {
-                        case "JpaRepository", "EntityManager", "DataSource" -> "DB";
-                        case "RedisTemplate", "StringRedisTemplate", "RedisConnectionFactory", "RedissonClient" -> "Redis";
+                        case "JpaRepository", "EntityManager" -> "DB";
+                        case "RedisTemplate", "RedisConnectionFactory", "RedissonClient" -> "Redis";
                         case "KafkaTemplate", "ConsumerFactory", "ProducerFactory", "DeadLetterPublishingRecoverer" -> "Kafka";
                         case "ElasticsearchClient", "ElasticsearchRepository" -> "Elasticsearch";
-                        case "S3Client", "AmazonS3" -> "S3";
+                        case "S3Client" -> "S3";
                         case "KakaoPayClient", "KakaoPayClientPort" -> "KakaoPay";
                         default -> null;
                     };
@@ -60,7 +59,6 @@ public final class ConfigExtractor {
                 for (var annotation : unit.findAll(AnnotationExpr.class)) {
                     String kind = switch (annotation.getName().getIdentifier()) {
                         case "Entity", "Table" -> "DB";
-                        case "RedisHash" -> "Redis";
                         case "KafkaListener", "EnableKafka" -> "Kafka";
                         default -> null;
                     };
@@ -75,8 +73,6 @@ public final class ConfigExtractor {
                         for (var entry : entries) if (entry.key.equals(key))
                             addEnvironment(analysis, source.serviceName(), entry.profile, key, entry.text,
                                     evidence(source.evidence(annotation), entry.evidence));
-                        if (key.matches("[A-Z][A-Z0-9_]*"))
-                            addEnvironment(analysis, source.serviceName(), "base", "@Value", "${" + key + "}", source.evidence(annotation));
                     }
                 }
             }
@@ -93,7 +89,6 @@ public final class ConfigExtractor {
                         configurationEvidence, codeEvidence, details, Analysis.CONFIRMED, all));
             }
         }
-        readDeployment(root, analysis);
     }
 
     /** A link is allowed only after the exact service-local YAML -> compose identity binding. */
@@ -140,17 +135,9 @@ public final class ConfigExtractor {
                 String[] pair = scalar.getValue().split("=", 2);
                 entries.add(new Binding(pair[0], pair.length == 2 ? pair[1] : "", yaml.evidence(item)));
             }
-            if (environment instanceof MappingNode mapping) for (var item : mapping.getValue()) {
-                if (item.getKeyNode() instanceof ScalarNode key && item.getValueNode() instanceof ScalarNode value)
-                    entries.add(new Binding(key.getValue(), value.getValue(), yaml.evidence(key)));
-            }
             bindings.put(service, entries);
-            for (var entry : entries) {
+            for (var entry : entries)
                 addVariable(analysis, service, "compose", entry.name, "environment", entry.evidence);
-                var refs = ENV.matcher(entry.text);
-                while (refs.find()) if (!refs.group(1).equals(entry.name))
-                    addVariable(analysis, service, "compose", refs.group(1), "environment-source", entry.evidence);
-            }
         }
     }
 
@@ -176,56 +163,5 @@ public final class ConfigExtractor {
     }
     private static void addVariable(Analysis analysis, String service, String profile, String name, String location, List<String> ev) {
         analysis.environmentVariables.add(new EnvironmentVariable(service, profile, name, location, absent(ev), Analysis.CONFIRMED, ev));
-    }
-
-    private static void readDeployment(Path root, Analysis analysis) throws IOException {
-        Path file = root.resolve(".github/workflows/actions.yml");
-        if (!Files.isRegularFile(file)) return;
-        var yaml = new YamlSource(root, file);
-        var lines = Files.readAllLines(file);
-        if (!(YamlSource.get(yaml.root, "jobs") instanceof MappingNode jobs)) return;
-        var stages = new LinkedHashMap<String, List<String>>();
-        var details = new LinkedHashMap<String, Fact<String>>();
-        for (var job : jobs.getValue()) for (Node step : YamlSource.items(YamlSource.get(job.getValueNode(), "steps"))) {
-            Node uses = YamlSource.get(step, "uses");
-            if (uses instanceof ScalarNode action) {
-                if (action.getValue().startsWith("aws-actions/amazon-ecr-login@")) add(stages, "ecr-login", yaml.evidence(uses));
-                if (action.getValue().startsWith("appleboy/ssh-action@")) {
-                    var ev = yaml.evidence(uses);
-                    for (String key : List.of("host", "username", "key")) {
-                        Node value = YamlSource.get(step, "with", key);
-                        if (value != null) {
-                            ev = evidence(ev, yaml.evidence(value));
-                            details.put(key.equals("host") ? "ec2Address" : key, absent(yaml.evidence(value)));
-                        }
-                    }
-                    Node needs = YamlSource.get(job.getValueNode(), "needs");
-                    if (needs != null) ev = evidence(ev, yaml.evidence(needs));
-                    add(stages, "ec2-connect", ev);
-                }
-            }
-            for (Node script : Arrays.asList(YamlSource.get(step, "run"), YamlSource.get(step, "with", "script"))) {
-                if (!(script instanceof ScalarNode)) continue;
-                // EOF without a trailing newline ends inside the final command's line.
-                int end = script.getEndMark().getLine() + (script.getEndMark().getColumn() > 0 ? 1 : 0);
-                for (int i = script.getStartMark().getLine(); i < end; i++) {
-                    String line = lines.get(i).strip();
-                    if (line.startsWith("#")) continue;
-                    String kind = line.startsWith("docker build ") ? "image-build"
-                            : line.startsWith("docker push ") ? "image-push"
-                            : line.startsWith("aws ecr get-login-password ") ? "ecr-login"
-                            : line.matches("docker-compose (down|pull|up)( .*)?") ? "compose-deploy" : null;
-                    add(stages, kind, List.of(".github/workflows/actions.yml:" + (i + 1)));
-                }
-            }
-        }
-        for (var stage : stages.entrySet()) analysis.deploymentSteps.add(new DeploymentStep(stage.getKey(),
-                stage.getKey().equals("ec2-connect") ? details : Map.of(), Analysis.CONFIRMED, stage.getValue()));
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).strip().startsWith("#")) continue;
-            var matcher = ACTION_REF.matcher(lines.get(i));
-            while (matcher.find()) addVariable(analysis, "deployment", "workflow", matcher.group(2), matcher.group(1),
-                    List.of(".github/workflows/actions.yml:" + (i + 1)));
-        }
     }
 }

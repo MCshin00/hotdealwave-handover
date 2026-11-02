@@ -25,7 +25,6 @@ public final class Analysis {
     public List<KafkaLink> kafkaLinks = new ArrayList<>();
     public List<EnvironmentVariable> environmentVariables = new ArrayList<>();
     public List<ExternalResource> externalResources = new ArrayList<>();
-    public List<DeploymentStep> deploymentSteps = new ArrayList<>();
     public Map<String, Map<String, Integer>> checks = new LinkedHashMap<>();
     public List<Warning> warnings = new ArrayList<>();
 
@@ -49,14 +48,12 @@ public final class Analysis {
     public record ExternalResource(String service, String kind, List<String> configurationEvidence,
                                    List<String> codeEvidence, Map<String, Fact<String>> details,
                                    String status, List<String> evidence) {}
-    public record DeploymentStep(String kind, Map<String, Fact<String>> details,
-                                 String status, List<String> evidence) {}
     public record Declaration(String kind, String status, List<String> evidence) {}
     public record Warning(String check, String status, List<String> evidence, String reason) {}
     public record AnnotationInfo(String name, Map<String, Fact<String>> arguments,
                                  String status, List<String> evidence) {}
     public record Field(String name, TypeView schema, List<AnnotationInfo> annotations,
-                        Fact<String> jsonName, Fact<Boolean> jsonIgnored, String status, List<String> evidence) {}
+                        Fact<String> jsonName, String status, List<String> evidence) {}
     public static final class TypeView {
         public String type;
         public String qualifiedName;
