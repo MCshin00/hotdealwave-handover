@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "service": {
+    "composeService": {
+      "value": "eureka-server",
+      "evidence": [
+        "docker-compose.yml:4",
+        "docker-compose.yml:5",
+        "docker-compose.yml:6",
+        "server/src/main/resources/application.yml:3"
+      ]
+    },
+    "directory": "server",
+    "name": {
+      "value": "eureka-server",
+      "evidence": [
+        "server/src/main/resources/application.yml:3"
+      ],
+      "reason": null
+    },
+    "evidence": [
+      "server/build.gradle:3",
+      "server/src/main/resources/application.yml:3"
+    ]
+  },
+  "endpoints": [],
+  "feignClients": [],
+  "feignCalls": [],
+  "gatewayRoutes": [],
+  "allowedPaths": [],
+  "declarations": [],
+  "kafkaDeclarations": [],
+  "kafkaPublications": [],
+  "kafkaSubscriptions": [],
+  "environmentVariables": [],
+  "externalResources": []
+}

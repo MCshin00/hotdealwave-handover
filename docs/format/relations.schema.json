@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "서비스 사이 관계",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "kafkaLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/KafkaLink"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kafkaLinks"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "KafkaLink": {
+      "type": "object",
+      "properties": {
+        "publicationId": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "publicationId",
+        "subscriptionId",
+        "environment",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

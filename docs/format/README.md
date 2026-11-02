@@ -1,60 +1,28 @@
-## analysis.json 계약 (schemaVersion: 1)
+# 추출 결과 형식
 
-UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 한 결과 파일 안에서만 참조한다. 시각·로컬 절대경로는 쓰지 않는다.
+필수 필드·타입·허용 값은 JSON Schema 2020-12의 [서비스 스키마](service.schema.json)와 [관계 스키마](relations.schema.json)를 따른다. 공통 사실 형식은 서비스 스키마의 `$defs.Fact`다.
 
-각 사실은 `status`, `evidence`를 가진다. `evidence`는 `target/HotDealWave` 기준 `/` 구분 상대경로의 `파일:줄` 배열이다. 줄은 1부터 센다. 선언의 확인 상태와 그 하위 타입·연결의 확인 상태는 별개다.
+UTF-8 JSON으로 `analysis/<대상>/services/<spring.application.name>.json`과 `analysis/<대상>/relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·Feign·Kafka), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, Feign 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, Feign 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
 
-값에 별도의 확인 상태가 필요한 곳은 다음 공통 형식(`Fact<T>`)을 쓴다.
+서비스는 `build.gradle`과 `src/main/java`가 있는 폴더이며, `service` 값은 YAML의 `spring.application.name`이다. `service` 필드가 없는 항목은 근거 경로의 첫 디렉터리와 `service.directory`를 대조해 소속을 정한다. 정할 수 없으면 멈추고 보고한다.
 
-```json
-{
-  "value": "/api/v1/orders",
-  "status": "확인됨",
-  "evidence": ["order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35"],
-  "reason": null
-}
-```
+근거 경로는 분석 대상 루트 기준이며, 그 줄에 실제 이름·값·타입이 있어야 한다. 선언의 확인 상태와 하위 타입·연결의 확인 상태는 별개다. 추출 결과에는 모든 깊이에서 `status`를 빼고 `checks`·`warnings`도 쓰지 않는다. 검증기가 스키마 검사와 근거·관계 검사를 거쳐 상태·경고를 정하고 `out/analysis.json` 하나로 합친다.
 
-`status`는 `확인됨`, `확인 안 됨`, `저장소에 근거 없음` 중 하나다. 뒤의 두 상태는 `value: null`과 `reason`을 가진다. 선언에 속성이 없다는 사실을 확인한 경우(Feign `url`·`path`, 없는 `RewritePath`)는 빈 문자열을 쓴다. 소비자는 빈 문자열과 확인할 수 없는 `null`을 구별해야 한다.
-
-| 최상위 키 | 내용 |
-|---|---|
-| `schemaVersion` | 정수 `1` |
-| `services` | `directory`, `name: Fact<string>`, `composeService: Fact<string>`, 상태·근거. `build.gradle`과 `src/main/java`가 있는 폴더이며 이름은 YAML의 `spring.application.name` |
-| `endpoints` | `id`, `service`, `controller`, `handler`, `httpMethod: Fact<string>`, `path: Fact<string>`, `parameters`, `response`, `externalPaths`, `tokenRequired: Fact<boolean>`, 상태·근거 |
-| `feignClients` | `id`, `service`, `type`, `name/url/path: Fact<string>`, 상태·근거 |
-| `feignCalls` | `id`, `clientId`, `service`, `handler`, `httpMethod/path: Fact<string>`, `external`, `target: Fact<string>`, 상태·근거 |
-| `gatewayRoutes` | `id`, `uri/targetService/rewritePath: Fact<string>`, `paths: Fact<string>[]`, 상태·근거 |
-| `allowedPaths` | enum 상수의 `name`, `path/httpMethod: Fact<string>`, 상태·근거 |
-| `declarations` | 추출한 매핑 선언의 `kind`, 상태·근거. Feign 클래스 선언은 `feignClients`에 있음 |
-| `kafkaDeclarations` | `KafkaListener`, `kafkaTemplate.send`, `DeadLetterPublishingRecoverer` 선언의 `kind`, 상태·근거. 래퍼의 호출 횟수와 무관한 원래 선언 위치 |
-| `kafkaPublications`, `kafkaSubscriptions` | `id`, `service`, `kind`, `profile`, `topicKey/topicName/environment: Fact<string>`, 상태·근거 |
-| `kafkaLinks` | `publicationId`, `subscriptionId`, `environment`(환경변수 이름), 상태·양쪽 근거 |
-| `environmentVariables` | `service`, `profile`, `name`, `location`(설정 키 또는 참조 종류), `value: Fact<string>`, 상태·근거 |
-| `externalResources` | `service`, `kind`, `configurationEvidence`, `codeEvidence`, `details: {항목: Fact<string>}`, 상태·전체 근거 |
-| `checks` | `evidence-lines`, `declarations`, `feign-targets`, `gateway-routes`, `kafka-declarations`, `kafka-topics`별 `warningCount`. 기존 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함. Kafka 선언 검사는 `listenerCount/sendCount/dlqCount`와 `extractedListenerCount/extractedSendCount/extractedDlqCount` 포함 |
-| `warnings` | `check`, `status`, `evidence`, `reason`. 판정 전 상태는 `확인 안 됨` |
+선언에 속성이 없다는 사실을 확인한 경우(Feign `url`·`path`, 없는 `RewritePath`)는 빈 문자열을 쓴다. 소비자는 빈 문자열과 확인할 수 없는 `null`을 구별해야 한다.
 
 `httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
 
-`services[].composeService`는 그 애플리케이션을 실행하는 compose 서비스 키다. 근거는 키 선언 줄과 대응을 정한 줄(같은 블록의 이름·빌드·이미지 등)이며, compose에 없거나 대응을 정할 수 없으면 `value: null`이다.
+`service.composeService`는 그 애플리케이션을 실행하는 compose 서비스 키다. 근거는 키 선언 줄과 대응을 정한 줄(같은 블록의 이름·빌드·이미지 등)이며, compose에 없거나 대응을 정할 수 없으면 `value: null`이다.
+
+`declarations`는 매핑 선언의 원래 위치이며 Feign 클래스 선언은 `feignClients`에 둔다. `kafkaDeclarations`도 래퍼 호출 횟수와 무관한 원래 선언 위치를 기록한다.
 
 ### 파라미터와 DTO
 
-`parameters[]`는 `name`, `kind`, `binding`, `schema`, `annotations`, 상태·근거다. `kind`는 `경로`, `쿼리`, `본문`(명시된 헤더가 있으면 `헤더`)이며 `binding`은 실제 바인딩 어노테이션 또는 `Pageable`이다. `ModelAttribute`는 쿼리·폼 바인딩으로 분류하며 JSON 본문을 뜻하지 않는다. `AuthenticationPrincipal`은 제외한다. `Pageable`은 쿼리 인자로 보존하되 프레임워크의 기본 필드·기본값을 만들어 내지 않는다.
+`binding`은 실제 바인딩 어노테이션 또는 `Pageable`이다. `ModelAttribute`는 쿼리·폼 바인딩으로 분류하며 JSON 본문을 뜻하지 않는다. `AuthenticationPrincipal`은 제외한다. `Pageable`은 쿼리 인자로 보존하되 프레임워크의 기본 필드·기본값을 만들어 내지 않는다.
 
-`schema`와 `response`의 공통 타입 구조:
+`schema`와 `response`의 `type`은 소스 타입 표기이며 제네릭 필드의 `T`는 실제 타입으로 바꾼다. `qualifiedName`은 해석한 클래스 이름, `arguments`는 제네릭 인자 또는 배열 원소, `enumValues`는 소스 enum 상수 이름이다. 같은 소스 클래스가 현재 탐색 경로에 다시 등장하면 `recursive: true`로 두고 필드 전개를 멈춘다. 타입의 근거는 소스 클래스면 클래스 이름 위치, 외부 타입이면 그 타입을 쓴 위치다. Spring 등 해석하지 못한 외부 타입은 `unresolved`·`확인 안 됨`으로 두고, 그 안의 로컬 제네릭 인자는 계속 전개한다.
 
-- `type`: 소스 타입 표기. 제네릭 필드의 `T`는 실제 타입으로 바뀐다.
-- `qualifiedName`: 해석된 클래스 이름 또는 `null`.
-- `kind`: `object`, `enum`, `scalar`, `container`, `array`, `unresolved`.
-- `fields`: `{name, schema, annotations, jsonName: Fact<string>, status, evidence}[]`.
-- `arguments`: 제네릭 인자 또는 배열 원소의 타입 구조 배열.
-- `enumValues`: 소스 enum 상수 이름 배열.
-- `recursive`: 같은 소스 클래스가 현재 탐색 경로에 다시 등장하면 `true`. 이 노드의 필드 전개를 멈춘다.
-- `status`, `evidence`, `reason`: 소스 클래스면 클래스 이름 위치, 외부 타입이면 그 타입을 쓴 위치. Spring 등 해석하지 못한 외부 타입은 `unresolved`·`확인 안 됨`으로 두고, 그 안의 로컬 제네릭 인자는 계속 전개한다.
-
-`annotations[]`는 `{name, arguments: {인자명: Fact<string>}, status, evidence}`다. 숫자·불리언도 소스 리터럴 문자열로 기록한다. DTO의 검증 어노테이션을 보존한다. 같은 서비스의 상수만 따라가며, 다른 모듈의 상수·계산식은 근거와 함께 `확인 안 됨`으로 남긴다.
+DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자·불리언도 소스 리터럴 문자열로 기록한다. 같은 서비스의 상수만 따라가며, 다른 모듈의 상수·계산식은 근거와 함께 `확인 안 됨`으로 남긴다.
 
 `name`은 Java 필드 이름이다. `jsonName`은 다음 순서로 정하며, 이름을 확정할 수 없으면 `value: null`, `확인 안 됨`과 이유·근거를 남긴다.
 
@@ -67,7 +35,7 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 
 ### 외부 경로와 토큰
 
-`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 [검증기](../../verifier/README.md)가 교차 검증 경고를 낸다.
+`externalPaths[]`는 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 [검증기](../../verifier/README.md)가 교차 검증 경고를 낸다.
 
 엔드포인트의 `tokenRequired`는 기본 API 경로의 판정이다. 외부 경로 자체가 없으면 `확인 안 됨`이다. 토큰 허용은 `AllowedPath.matches`의 `startsWith`와 메서드 비교를 따른다. 서비스 안의 역할별 권한 검사는 포함하지 않는다.
 
@@ -75,7 +43,7 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 
 구독은 `@KafkaListener(topics = "${spring.kafka.topics.x}")`, 발행은 `kafkaTemplate.send`의 첫 인자와 `DeadLetterPublishingRecoverer` 안의 `TopicPartition` 토픽을 출발점으로 삼는다. 하나의 `send`에 서로 다른 호출 경로로 토픽이 들어오면 경로별 발행 항목을 만든다.
 
-`topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 `application.yml` → compose `environment`까지 확인한 환경변수 이름이다. Kafka의 `profile`은 `base`이며 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `ENV=${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같을 때만 `kafkaLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
+`topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 `application.yml` → compose `environment`까지 확인한 환경변수 이름이다. 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `ENV=${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같을 때만 `kafkaLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
 
 문자열 리터럴 토픽(같은 서비스의 문자열 상수 포함)은 `topicName`에 이름·`확인됨`·근거 줄을 남기고, 해당 없는 `topicKey`·`environment`는 빈 문자열·`확인됨`으로 표시한다. 환경변수 사슬이 확인된 토픽의 실제 `topicName`은 `null`·`저장소에 근거 없음`이며, 문자열 토픽과 환경변수 토픽은 연결하지 않고 미연결 경고에 문자열 토픽 이름을 포함한다.
 

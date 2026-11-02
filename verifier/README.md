@@ -1,7 +1,9 @@
 # 검증기
 
+`./gradlew :verifier:run`은 기본 입력 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 [서비스 스키마](../docs/format/service.schema.json)·[관계 스키마](../docs/format/relations.schema.json)로 먼저 검사한다. 어긋남은 `schema` 경고로 내고, 파일들을 합쳐 기존 검사를 실행한다. 출력은 `out/analysis.json` 하나다. 입력·대상·출력은 `./gradlew :verifier:run --args="analysis/hotdealwave target/HotDealWave out/analysis.json"`으로 지정한다.
+
 선언 검사는 Java 파일을 줄 단위 정규식으로 읽는다. 매핑·Feign 선언의 종류와 `파일:줄`을 [추출 결과](../docs/format/README.md)와 대조하며, 주석 안의 선언도 단순 검색 결과로 유지한다. Feign 검사는 이름·HTTP 메서드·경로로 연결되지 않은 내부 호출을, 게이트웨이 검사는 어느 컨트롤러에도 닿지 않는 각 Path 패턴과 외부 경로가 없는 엔드포인트를 경고로 낸다. 경로 변수 이름은 연결에 영향을 주지 않는다.
 
-Kafka 선언 검사(`kafka-declarations`)도 정규식 검색으로 종류와 `파일:줄`을 대조한다. `@KafkaListener`, `kafkaTemplate.send(...)`, `new DeadLetterPublishingRecoverer(...)`를 세며 메일 등 다른 `send`는 세지 않는다. 같은 위치의 선언은 한 번만 센다. `kafka-topics`는 확인된 연결이 없는 발행·구독 항목마다 경고를 낸다. 같은 서비스·토픽이라도 서로 다른 발행 경로이면 경고도 별개다. 실행 끝에 근거 줄 검사와 다섯 교차 검사 각각의 경고 수를 출력한다.
+Kafka 선언 검사(`kafka-declarations`)도 정규식 검색으로 종류와 `파일:줄`을 대조한다. `@KafkaListener`, `kafkaTemplate.send(...)`, `new DeadLetterPublishingRecoverer(...)`를 세며 메일 등 다른 `send`는 세지 않는다. 같은 위치의 선언은 한 번만 센다. `kafka-topics`는 확인된 연결이 없는 발행·구독 항목마다 경고를 낸다. 같은 서비스·토픽이라도 서로 다른 발행 경로이면 경고도 별개다. 실행 끝에 스키마·근거 줄 검사와 다섯 교차 검사 각각의 경고 수를 출력한다.
 
 경고는 실행 실패가 아니며 개발자가 판정한다.

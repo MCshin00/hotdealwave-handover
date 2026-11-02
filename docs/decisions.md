@@ -27,8 +27,8 @@ HotDealWave는 첫 번째 경우다. 두 번째 경우는 고정 커밋을 띄�
 ## 구조
 
 ```
-target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/extracted.json
-떠 있는 서버(있을 때) ----> AI 호출(Skill) --> analysis/<대상>/responses/ --> 응답 비교 --> AI가 extracted.json 고침
+target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/services/*.json + relations.json
+떠 있는 서버(있을 때) ----> AI 호출(Skill) --> analysis/<대상>/responses/ --> 응답 비교 --> AI가 서비스 파일 고침
                                                      |
                                                      v
                                     verifier --> out/analysis.json (상태·경고)
@@ -61,7 +61,7 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/extrac
 | 부분 | 선택 | 이유 |
 |---|---|---|
 | 추출 | AI 세션(Claude Code·Codex)과 Skill | 프레임워크가 달라도 지시문으로 따라간다. 세션 작업이라 별도 유료 호출이 없다 |
-| 검증 | Java 17, SnakeYAML, Jackson | 서버와 같은 실행 환경이다. 확인 상태는 AI가 아니라 검증이 정한다 |
+| 검증 | Java 17, SnakeYAML, Jackson, JSON Schema Validator | 서버와 같은 실행 환경이다. 확인 상태는 AI가 아니라 검증이 정한다 |
 | 서버 | Spring Boot, Thymeleaf, Mermaid(흐름 그림) | 검증과 같은 실행 환경 하나로 빌드·테스트·배포한다. 개발자가 직접 읽고 판단할 수 있는 스택이다. 화면 모양은 중요하지 않다 |
 | MCP | MCP Java SDK(`mcp-core`의 서블릿용 Streamable HTTP 전송) | Spring Boot에 바로 붙는다. Claude Code·Codex 모두 HTTP 방식 MCP를 등록할 수 있어 표준 입출력 방식은 두지 않는다 |
 | 질의응답 | OpenAI Java SDK(정해진 형식의 출력) | rag-chatbot의 방식(BM25, 정해진 형식의 답·인용·보류, 보류 규칙)을 옮긴다. 인용 검사는 답의 `파일:줄`이 인용한 조각에 있는지까지 본다. 모델은 질의응답 단계에서 비용과 함께 정한다 |
@@ -79,6 +79,12 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/extrac
 ## 추출 방식
 
 AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/README.md)으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
+
+서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`를 담는다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
+
+ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka). ID 앞부분으로 `services/<spring.application.name>.json`을 찾을 수 있게 하며, 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. `service` 필드가 없는 항목은 근거 경로의 첫 디렉터리로 소속을 정하고, 정할 수 없으면 멈추고 보고한다.
+
+지금은 MSA만 다룬다. 모놀리식은 나누는 단위를 도메인으로 바꾼 별도 Skill로 대응한다.
 
 파서 추출기는 3단계에서 HotDealWave의 AI 추출 결과와 대조하는 기준선으로 썼다.
 
@@ -119,6 +125,7 @@ AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/R
 
 | 검증 | 보는 것 | 어긋나면 |
 |---|---|---|
+| 스키마 | 서비스·관계 파일의 필수 필드·타입·허용 값이 맞는가 | `schema` 경고 |
 | 근거 줄 | 근거 `파일:줄`이 고정 커밋에 있고, 그 줄에 항목의 경로·토픽·필드 이름이 있는가 | 그 항목은 "확인 안 됨" |
 | 선언 목록 | 정규식으로 센 선언(`@*Mapping`, `@FeignClient`, `@KafkaListener`, `send`) ↔ 추출 항목 | 빠뜨린 선언 경고 |
 | 관계 | 호출 대상 엔드포인트, 발행↔구독 환경변수 이름, 게이트웨이 경로가 결과 안에서 맞는가 | 끊긴 관계 경고 |
@@ -136,7 +143,7 @@ AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/R
 - 넘겨받는 사람이 가진 것만 쓴다: 서버 주소와 테스트 계정. `.env`, 로컬 설정, 브로커 직접 접근으로 판정하지 않는다.
 - AI 세션이 Skill을 따라 로그인하고, 조회 API 전부와 테스트 데이터로 부를 수 있는 쓰기 API를 부른다. 응답 JSON은 엔드포인트별로 `analysis/<대상>/responses/`에 저장하고, 토큰과 비밀번호는 저장하지 않는다. 테스트 환경에만 쓴다.
 - `scripts/compare_responses.py`가 저장된 응답의 키와 추출한 응답 필드의 JSON 이름을 비교해 "응답에만 있음", "추출에만 있음", "이름 다름"을 낸다. 검증기는 쓰지 않는다.
-- AI 세션이 그 결과대로 `extracted.json`을 고친다. 응답에만 있는 필드는 더하고, 이름이 다른 필드는 실제 이름으로 바꾸고, 추출에만 있는 필드는 응답에 빠진 이유를 코드에서 찾는다. 고친 곳의 근거는 응답 파일이고, 검증기는 이 근거를 근거 줄 검사에서 건너뛴다.
+- AI 세션이 그 결과대로 해당 서비스 파일을 고친다. 응답에만 있는 필드는 더하고, 이름이 다른 필드는 실제 이름으로 바꾸고, 추출에만 있는 필드는 응답에 빠진 이유를 코드에서 찾는다. 고친 곳의 근거는 응답 파일이고, 검증기는 이 근거를 근거 줄 검사에서 건너뛴다.
 - 호출하지 못한 엔드포인트는 이유와 함께 남긴다.
 - HotDealWave는 배포가 멈춰, 개발자가 고정 커밋을 띄워 배포된 서비스를 대신한다. 띄우는 데 쓰는 값은 개발자만 다룬다.
 

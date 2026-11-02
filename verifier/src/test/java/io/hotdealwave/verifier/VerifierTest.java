@@ -3,14 +3,35 @@ package io.hotdealwave.verifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VerifierTest {
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final String ORDER = "order/src/main/java/com/sparta/hotdeal/order/";
     private static final String COUPON = "coupon/src/main/java/com/sparta/hotdeal/coupon/";
+
+    @Test void missingEndpointHttpMethodProducesSchemaWarning(@TempDir Path temporary) throws Exception {
+        Path services = Files.createDirectories(temporary.resolve("services"));
+        var service = JSON.readTree(Path.of("analysis/hotdealwave/services/company-service.json").toFile());
+        ((ObjectNode) service.path("endpoints").get(0)).remove("httpMethod");
+        JSON.writeValue(services.resolve("company-service.json").toFile(), service);
+        Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[]}");
+        Path output = temporary.resolve("analysis.json");
+
+        Main.main(new String[]{temporary.toString(), "target/HotDealWave", output.toString()});
+
+        var analysis = JSON.readTree(output.toFile());
+        assertEquals(1, analysis.at("/checks/schema/warningCount").asInt());
+        var warnings = Checks.items(analysis.path("warnings")).stream()
+                .filter(warning -> warning.path("check").asText().equals("schema")).toList();
+        assertEquals(1, warnings.size());
+        assertTrue(warnings.get(0).path("reason").asText().contains("httpMethod"));
+        assertTrue(warnings.get(0).path("reason").asText().contains("services/company-service.json"));
+    }
 
     private ObjectNode document() {
         var root = JSON.createObjectNode().put("schemaVersion", 1);
@@ -166,7 +187,7 @@ class VerifierTest {
 
     @Test void extractedS3ResourceHasValidEvidence() throws Exception {
         var input = document();
-        var extracted = JSON.readTree(Path.of("analysis/hotdealwave/extracted.json").toFile());
+        var extracted = JSON.readTree(Path.of("analysis/hotdealwave/services/product-service.json").toFile());
         for (var resource : extracted.path("externalResources")) {
             if (resource.path("kind").asText().equals("S3")) input.withArray("externalResources").add(resource);
         }

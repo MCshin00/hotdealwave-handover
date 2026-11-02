@@ -6,12 +6,12 @@ import java.nio.file.Path;
 
 public final class Main {
     public static void main(String[] args) throws Exception {
-        if (args.length > 3) throw new IllegalArgumentException("사용법: [추출 JSON] [분석 대상] [출력 JSON]");
-        Path input = Path.of(args.length > 0 ? args[0] : "analysis/hotdealwave/extracted.json");
+        if (args.length > 3) throw new IllegalArgumentException("사용법: [추출 디렉터리] [분석 대상] [출력 JSON]");
+        Path input = Path.of(args.length > 0 ? args[0] : "analysis/hotdealwave");
         Path target = Path.of(args.length > 1 ? args[1] : "target/HotDealWave");
         Path output = Path.of(args.length > 2 ? args[2] : "out/analysis.json");
         var mapper = new ObjectMapper();
-        var analysis = new Verifier().verify(mapper.readTree(input.toFile()), target);
+        var analysis = new Verifier().verify(input, target);
         Files.createDirectories(output.toAbsolutePath().getParent());
         mapper.writerWithDefaultPrettyPrinter().writeValue(output.toFile(), analysis);
         analysis.path("checks").properties().forEach(e -> System.out.println(e.getKey() + ": 경고 "
