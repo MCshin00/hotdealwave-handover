@@ -1,15 +1,10 @@
 package io.hotdealwave.extractor;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.hotdealwave.extractor.rest.DtoExtractor;
-import io.hotdealwave.extractor.scan.ServiceScanner;
-import io.hotdealwave.extractor.source.SourceContext;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExtractorTest {
@@ -87,23 +82,6 @@ class ExtractorTest {
         assertTrue(call.path("target").path("evidence").toString().contains("ProductController.java:112"));
     }
 
-    @Test void paymentJsonNamingRemainsUnknownDespiteLombokGetter() throws Exception {
-        Path root = Path.of("target/HotDealWave").toAbsolutePath().normalize();
-        var payment = new ServiceScanner().scan(root).stream()
-                .filter(s -> s.model().directory().equals("payment")).findFirst().orElseThrow();
-        var source = new SourceContext(root, payment);
-        var client = source.types.get("com.sparta.hotdeal.payment.infrastructure.client.KakaoPayClient");
-        var response = new DtoExtractor(source).extract(client.getMethodsByName("cancel").get(0).getType());
-        var jsonName = response.fields.stream().filter(f -> f.name().equals("partnerOrderId"))
-                .findFirst().orElseThrow().jsonName();
-        assertEquals("확인 안 됨", jsonName.status());
-        assertNull(jsonName.value());
-        assertTrue(jsonName.reason().contains("@JsonNaming"));
-        String file = "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/res/ResPostKakaoPayCancelDto.java";
-        assertTrue(jsonName.evidence().contains(file + ":11"));
-        assertTrue(jsonName.evidence().contains(file + ":17"));
-    }
-
     @Test void explicitFeignUrlHasNoRepositoryTarget() {
         JsonNode client = find(analysis.path("feignClients"), "type", "KakaoPayClient");
         assertEquals("https://open-api.kakaopay.com/online/v1/payment", client.path("url").path("value").asText());
@@ -128,11 +106,9 @@ class ExtractorTest {
         assertTrue(order.path("tokenRequired").path("value").asBoolean());
         assertTrue(order.path("tokenRequired").path("evidence").toString().contains("AllowedPath.java:"));
         assertEquals("/api/v1/orders", order.path("externalPaths").get(0).path("path").asText());
-        assertEquals("/order-service/api/v1/orders", order.path("externalPaths").get(1).path("path").asText());
         JsonNode product = endpoint("product-service", "GET", "/api/v1/products/{productId}");
         assertFalse(product.path("tokenRequired").path("value").asBoolean());
         assertTrue(product.path("tokenRequired").path("evidence").toString().contains("AllowedPath.java:10"));
-        assertEquals("확인 안 됨", product.path("externalPaths").get(1).path("tokenRequired").path("status").asText());
     }
 
     @Test void independentDeclarationInventoryAndThreeChecksAreWritten() {
@@ -215,52 +191,7 @@ class ExtractorTest {
         assertFalse(analysis.path("kafkaDeclarations").toString().contains("MailServiceImpl.java:21"));
     }
 
-    @Test void literalTopicConstantsApplyToPublicationsAndSubscriptions(@TempDir Path root) throws Exception {
-        Path service = root.resolve("sample");
-        Files.createDirectories(service.resolve("src/main/java/sample"));
-        Files.createDirectories(service.resolve("src/main/resources"));
-        Files.writeString(service.resolve("build.gradle"), "");
-        Files.writeString(service.resolve("src/main/resources/application.yml"), """
-                spring:
-                  application:
-                    name: sample-service
-                  kafka:
-                    topics:
-                      event: ${EVENT_TOPIC}
-                """);
-        Files.writeString(root.resolve("docker-compose.yml"), """
-                services:
-                  sample-service:
-                    environment:
-                      EVENT_TOPIC: ${EVENT_TOPIC}
-                """);
-        Files.writeString(service.resolve("src/main/java/sample/Events.java"), """
-                package sample;
-                class Topics { static final String EVENT = "EVENT_TOPIC"; }
-                class Events {
-                    KafkaTemplate<String, String> kafkaTemplate;
-                    void publish() { kafkaTemplate.send(Topics.EVENT, "message"); }
-                    @KafkaListener(topics = Topics.EVENT) void literal() {}
-                    @KafkaListener(topics = "${spring.kafka.topics.event}") void configured() {}
-                }
-                """);
-        JsonNode result = new Extractor().analyze(root);
-        JsonNode publication = result.path("kafkaPublications").get(0);
-        JsonNode subscription = withEvidence(result.path("kafkaSubscriptions"), "Events.java:6");
-        for (JsonNode endpoint : new JsonNode[] {publication, subscription}) {
-            assertEquals("EVENT_TOPIC", endpoint.path("topicName").path("value").asText());
-            assertEquals("확인됨", endpoint.path("topicName").path("status").asText());
-            assertTrue(endpoint.path("topicName").path("evidence").toString().contains("Events.java:2"));
-            assertEquals("", endpoint.path("topicKey").path("value").asText());
-            assertEquals("", endpoint.path("environment").path("value").asText());
-        }
-        JsonNode configured = withEvidence(result.path("kafkaSubscriptions"), "Events.java:7");
-        assertEquals("EVENT_TOPIC", configured.path("environment").path("value").asText());
-        assertFalse(StreamSupport.stream(result.path("kafkaLinks").spliterator(), false)
-                .anyMatch(n -> n.path("subscriptionId").asText().equals(configured.path("id").asText())));
-    }
-
-    @Test void profilesResourcesAndDeploymentExposeEvidenceButNotValues() {
+    @Test void profilesAndResourcesExposeEvidenceButNotValues() {
         JsonNode env = withEvidence(analysis.path("environmentVariables"), "coupon/src/main/resources/application-prod.yml:16");
         assertEquals("REDIS_PROD_HOST", env.path("name").asText());
         assertEquals("prod", env.path("profile").asText());
@@ -275,20 +206,9 @@ class ExtractorTest {
         }
         assertTrue(find(analysis.path("externalResources"), "kind", "KakaoPay")
                 .path("codeEvidence").toString().contains("KakaoPayClient.java:14"));
-        for (String stage : new String[] {"ecr-login", "image-build", "image-push", "ec2-connect", "compose-deploy"}) {
-            JsonNode step = find(analysis.path("deploymentSteps"), "kind", stage);
-            assertEquals("확인됨", step.path("status").asText());
-            assertTrue(step.path("evidence").toString().contains(".github/workflows/actions.yml:"));
-        }
         for (JsonNode variable : analysis.path("environmentVariables")) {
             assertEquals("저장소에 근거 없음", variable.path("value").path("status").asText());
             assertTrue(variable.path("value").path("value").isNull());
         }
-        JsonNode ec2 = find(analysis.path("deploymentSteps"), "kind", "ec2-connect");
-        assertEquals("저장소에 근거 없음", ec2.path("details").path("ec2Address").path("status").asText());
-        assertTrue(ec2.path("evidence").toString().contains("actions.yml:74"));
-        assertTrue(find(analysis.path("deploymentSteps"), "kind", "image-build").path("evidence").toString().contains("actions.yml:57"));
-        assertTrue(find(analysis.path("deploymentSteps"), "kind", "image-push").path("evidence").toString().contains("actions.yml:60"));
-        assertTrue(find(analysis.path("deploymentSteps"), "kind", "compose-deploy").path("evidence").toString().contains("actions.yml:95"));
     }
 }

@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 public final class CrossChecks {
     // Intentionally independent from JavaParser. Comments are not silently filtered out.
     private static final Pattern DECLARATION = Pattern.compile("@(?:[\\w]+\\.)*([\\w$]*Mapping|FeignClient)\\b");
+    // Alias reachability is checked without publishing aliases or their token decisions.
+    private static final Pattern PREFIX_REWRITE = Pattern.compile("^(/[^\\s(),?*]+/)\\(\\?<segment>\\.\\*\\),\\s*/\\$\\\\?\\{segment}$");
 
     public void run(List<SourceContext> sources, Analysis analysis) throws IOException {
         var raw = new LinkedHashMap<String, Declaration>();
@@ -43,11 +45,22 @@ public final class CrossChecks {
         for (var endpoint : analysis.endpoints) if (endpoint.externalPaths.isEmpty())
             warn(analysis, "gateway-routes", endpoint.evidence, "확인된 게이트웨이 외부 경로 없음: "
                     + endpoint.httpMethod.value() + " " + endpoint.path.value());
-        for (var route : analysis.gatewayRoutes) for (var path : route.paths()) {
-            boolean connected = path.known() && analysis.endpoints.stream().flatMap(e -> e.externalPaths.stream())
-                    .anyMatch(p -> Objects.equals(p.routeId(), route.id()) && PathMatcher.matches(path.value(), p.path()));
-            if (!connected) warn(analysis, "gateway-routes", Analysis.evidence(route.evidence(), path.evidence()),
-                    "컨트롤러에 닿는 외부 경로를 확인하지 못함: " + path.value());
+        for (var route : analysis.gatewayRoutes) {
+            var inverse = PREFIX_REWRITE.matcher(route.rewritePath().value() == null ? "" : route.rewritePath().value());
+            String prefix = inverse.matches() ? inverse.group(1) : "";
+            for (var path : route.paths()) {
+                boolean connected = path.known() && route.targetService().known() && analysis.endpoints.stream()
+                        .filter(e -> e.path.known() && Objects.equals(e.service, route.targetService().value()))
+                        .anyMatch(e -> {
+                            var candidates = new LinkedHashSet<String>();
+                            candidates.add(e.path.value());
+                            if (!prefix.isEmpty()) candidates.add(prefix + e.path.value().substring(1));
+                            return candidates.stream().anyMatch(candidate -> PathMatcher.matches(path.value(), candidate)
+                                    && Objects.equals(e.path.value(), rewritten(route, candidate)));
+                        });
+                if (!connected) warn(analysis, "gateway-routes", Analysis.evidence(route.evidence(), path.evidence()),
+                        "컨트롤러에 닿는 외부 경로를 확인하지 못함: " + path.value());
+            }
         }
         for (String name : List.of("declarations", "feign-targets", "gateway-routes")) {
             Map<String, Integer> counts = new LinkedHashMap<>();
@@ -60,6 +73,14 @@ public final class CrossChecks {
             }
             analysis.checks.put(name, counts);
         }
+    }
+    private String rewritten(Route route, String path) {
+        if (!route.rewritePath().known()) return null;
+        String value = route.rewritePath().value();
+        if (value.isEmpty()) return path;
+        var rewrite = PREFIX_REWRITE.matcher(value);
+        if (!rewrite.matches()) return null;
+        return path.startsWith(rewrite.group(1)) ? "/" + path.substring(rewrite.group(1).length()) : path;
     }
     private static String key(Declaration d) { return d.kind() + "@" + d.evidence().get(0); }
     private static void warn(Analysis analysis, String check, List<String> evidence, String reason) {

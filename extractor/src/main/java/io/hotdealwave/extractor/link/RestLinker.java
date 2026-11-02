@@ -3,12 +3,8 @@ package io.hotdealwave.extractor.link;
 import io.hotdealwave.extractor.model.Analysis;
 import io.hotdealwave.extractor.model.Analysis.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public final class RestLinker {
-    // Invert only the prefix-stripping rewrite present in the pinned repository.
-    private static final Pattern PREFIX_REWRITE = Pattern.compile("^(/[^\\s(),?*]+/)\\(\\?<segment>\\.\\*\\),\\s*/\\$\\\\?\\{segment}$");
-
     public void link(Analysis analysis) {
         for (var call : analysis.feignCalls) {
             var client = analysis.feignClients.stream().filter(c -> c.id().equals(call.clientId)).findFirst().orElseThrow();
@@ -35,41 +31,18 @@ public final class RestLinker {
         for (var endpoint : analysis.endpoints) {
             if (endpoint.path.known()) for (var route : analysis.gatewayRoutes) {
                 if (!route.targetService().known() || !Objects.equals(route.targetService().value(), endpoint.service)) continue;
-                var candidates = new LinkedHashSet<String>();
-                candidates.add(endpoint.path.value());
-                var inverse = PREFIX_REWRITE.matcher(route.rewritePath().value() == null ? "" : route.rewritePath().value());
-                if (inverse.matches()) candidates.add(inverse.group(1) + endpoint.path.value().substring(1));
-                for (String candidate : candidates) for (var pattern : route.paths()) {
-                    if (!pattern.known() || !PathMatcher.matches(pattern.value(), candidate)) continue;
-                    var forward = rewritten(route, candidate);
-                    if (!Objects.equals(endpoint.path.value(), forward)) continue;
+                for (var pattern : route.paths()) {
+                    if (!pattern.known() || !PathMatcher.matches(pattern.value(), endpoint.path.value())) continue;
                     var evidence = Analysis.evidence(endpoint.evidence, route.evidence(), pattern.evidence(), route.rewritePath().evidence());
-                    var before = token(analysis, candidate, endpoint.httpMethod.value(), evidence);
-                    var after = token(analysis, forward, endpoint.httpMethod.value(), evidence);
-                    Fact<Boolean> required = before;
-                    if (!candidate.equals(forward) && (!before.known() || !after.known() || !Objects.equals(before.value(), after.value())))
-                        required = Fact.unknown(Analysis.evidence(before.evidence(), after.evidence()),
-                                "재작성 전·후의 토큰 판정이 다름; 필터 실행 순서는 추출 범위에서 확정하지 않음"
-                                        + " (재작성 전: " + before.value() + ", 후: " + after.value() + ")");
-                    if (endpoint.externalPaths.stream().noneMatch(p -> p.path().equals(candidate)))
-                        endpoint.externalPaths.add(new ExternalPath(route.id(), candidate, required, Analysis.CONFIRMED, evidence));
+                    var required = token(analysis, endpoint.path.value(), endpoint.httpMethod.value(), evidence);
+                    if (endpoint.externalPaths.stream().noneMatch(p -> p.path().equals(endpoint.path.value())))
+                        endpoint.externalPaths.add(new ExternalPath(route.id(), endpoint.path.value(), required, Analysis.CONFIRMED, evidence));
                 }
             }
-            // The direct API path is the representative path; retain per-alias token decisions too.
             endpoint.tokenRequired = endpoint.externalPaths.stream()
-                    .filter(p -> p.path().equals(endpoint.path.value())).findFirst()
-                    .or(() -> endpoint.externalPaths.stream().findFirst()).map(ExternalPath::tokenRequired)
+                    .findFirst().map(ExternalPath::tokenRequired)
                     .orElseGet(() -> Fact.unknown(endpoint.evidence, "확인된 외부 경로 없음"));
         }
-    }
-
-    private String rewritten(Route route, String path) {
-        if (!route.rewritePath().known()) return null;
-        String value = route.rewritePath().value();
-        if (value.isEmpty()) return path;
-        var rewrite = PREFIX_REWRITE.matcher(value);
-        if (!rewrite.matches()) return null;
-        return path.startsWith(rewrite.group(1)) ? "/" + path.substring(rewrite.group(1).length()) : path;
     }
 
     private Fact<Boolean> token(Analysis analysis, String path, String method, List<String> routeEvidence) {

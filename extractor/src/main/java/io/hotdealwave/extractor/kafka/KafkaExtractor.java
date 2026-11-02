@@ -36,14 +36,9 @@ public final class KafkaExtractor {
             for (var annotation : unit.findAll(AnnotationExpr.class)) {
                 if (!annotation.getName().getIdentifier().equals("KafkaListener")) continue;
                 declare(analysis, "KafkaListener", annotation);
-                Expression topics = annotation.isNormalAnnotationExpr() ? annotation.asNormalAnnotationExpr().getPairs().stream()
-                        .filter(p -> p.getNameAsString().equals("topics")).map(MemberValuePair::getValue).findFirst().orElse(null) : null;
-                List<Expression> values = topics == null ? List.of() : topics.isArrayInitializerExpr()
-                        ? new ArrayList<>(topics.asArrayInitializerExpr().getValues()) : List.of(topics);
-                if (values.isEmpty()) add(analysis, false, "KafkaListener", annotation,
-                        Fact.unknown(source.evidence(annotation), "topics 속성을 확인하지 못함"));
-                for (var value : values) add(analysis, false, "KafkaListener", annotation,
-                        property(value, evidence(source.evidence(annotation), source.evidence(value))));
+                Expression topics = SourceValues.argument(annotation, "topics").orElseThrow();
+                add(analysis, false, "KafkaListener", annotation,
+                        property(topics, evidence(source.evidence(annotation), source.evidence(topics))));
             }
             for (var call : unit.findAll(MethodCallExpr.class)) {
                 if (!call.getNameAsString().equals("send") || call.getScope().isEmpty()) continue;
@@ -53,71 +48,42 @@ public final class KafkaExtractor {
                         && scope.asFieldAccessExpr().getNameAsString().equals("kafkaTemplate");
                 if (!kafka) continue;
                 declare(analysis, "kafkaTemplate.send", call);
-                if (call.getArguments().isEmpty()) add(analysis, true, "kafkaTemplate.send", call,
-                        Fact.unknown(source.evidence(call), "토픽 인자 없음"));
-                else for (var key : trace(call.getArgument(0), source.evidence(call), new HashSet<>()))
+                for (var key : trace(call.getArgument(0), source.evidence(call)))
                     add(analysis, true, "kafkaTemplate.send", call, key);
             }
             for (var creation : unit.findAll(ObjectCreationExpr.class)) {
                 if (!creation.getType().getNameAsString().equals("DeadLetterPublishingRecoverer")) continue;
                 declare(analysis, "DeadLetterPublishingRecoverer", creation);
-                var partitions = creation.findAll(ObjectCreationExpr.class).stream()
-                        .filter(c -> c.getType().getNameAsString().equals("TopicPartition") && !c.getArguments().isEmpty()).toList();
-                if (partitions.size() != 1) {
-                    var ev = source.evidence(creation);
-                    for (var partition : partitions) ev = evidence(ev, source.evidence(partition));
-                    add(analysis, true, "DeadLetterPublishingRecoverer", creation,
-                            Fact.unknown(ev, "DLQ 토픽 반환을 하나로 확인하지 못함"));
-                } else for (var key : trace(partitions.get(0).getArgument(0),
-                        evidence(source.evidence(creation), source.evidence(partitions.get(0))), new HashSet<>()))
+                var partition = creation.findAll(ObjectCreationExpr.class).stream()
+                        .filter(c -> c.getType().getNameAsString().equals("TopicPartition")).findFirst().orElseThrow();
+                for (var key : trace(partition.getArgument(0),
+                        evidence(source.evidence(creation), source.evidence(partition))))
                     add(analysis, true, "DeadLetterPublishingRecoverer", creation, key);
             }
         }
     }
 
-    private List<Fact<String>> trace(Expression expression, List<String> chain, Set<String> visiting) {
+    private List<Fact<String>> trace(Expression expression, List<String> chain) {
         var ev = evidence(chain, source.evidence(expression));
-        if (!visiting.add(location(expression) + ":" + expression)) return unknown(ev, "토픽 인자 전달 순환");
-        if (expression.isEnclosedExpr()) return trace(expression.asEnclosedExpr().getInner(), ev, visiting);
+        if (expression.isEnclosedExpr()) return trace(expression.asEnclosedExpr().getInner(), ev);
         String name;
         boolean explicitField = expression.isFieldAccessExpr() && expression.asFieldAccessExpr().getScope().isThisExpr();
         if (expression.isStringLiteralExpr() || expression.isFieldAccessExpr() && !explicitField)
             return List.of(property(expression, ev));
         if (expression.isNameExpr()) name = expression.asNameExpr().getNameAsString();
         else if (explicitField) name = expression.asFieldAccessExpr().getNameAsString();
-        else return unknown(ev, "@Value 필드와 메서드 인자 이외의 토픽 식은 따라가지 않음");
+        else return List.of(unknown(ev));
 
         MethodDeclaration method = ancestor(expression, MethodDeclaration.class);
-        if (method != null) {
-            // Refuse reassigned values, including branch assignments, instead of guessing the reaching value.
-            var writes = method.findAll(AssignExpr.class).stream()
-                    .filter(a -> !explicitField && a.getTarget().isNameExpr()
-                            && a.getTarget().asNameExpr().getNameAsString().equals(name)
-                            || a.getTarget().isFieldAccessExpr() && a.getTarget().asFieldAccessExpr().getScope().isThisExpr()
-                            && a.getTarget().asFieldAccessExpr().getNameAsString().equals(name))
-                    .filter(a -> a.getBegin().orElseThrow().isBefore(expression.getBegin().orElseThrow())).toList();
-            if (!writes.isEmpty()) {
-                for (var write : writes) ev = evidence(ev, source.evidence(write));
-                return unknown(ev, "분기 또는 재할당된 토픽 값은 따라가지 않음");
-            }
-        }
         if (method != null && !explicitField) {
             for (int index = 0; index < method.getParameters().size(); index++) {
                 if (!method.getParameter(index).getNameAsString().equals(name)) continue;
                 var calls = callers.getOrDefault(location(method), List.of());
-                if (calls.isEmpty()) return unknown(ev, "같은 서비스 안에서 토픽 인자를 전달하는 호출을 확인하지 못함");
+                if (calls.isEmpty()) return List.of(unknown(ev));
                 var result = new ArrayList<Fact<String>>();
                 for (var call : calls) result.addAll(trace(call.getArgument(index),
-                        evidence(ev, source.evidence(call)), new HashSet<>(visiting)));
+                        evidence(ev, source.evidence(call))));
                 return result;
-            }
-            var locals = method.findAll(VariableDeclarator.class).stream()
-                    .filter(v -> v.getNameAsString().equals(name)
-                            && v.getBegin().orElseThrow().isBefore(expression.getBegin().orElseThrow())).toList();
-            if (!locals.isEmpty()) {
-                if (locals.size() != 1 || locals.get(0).getInitializer().isEmpty()) return unknown(ev, "지역 토픽 값을 확인하지 못함");
-                var local = locals.get(0);
-                return trace(local.getInitializer().get(), evidence(ev, source.evidence(local)), visiting);
             }
         }
         TypeDeclaration<?> owner = ancestor(expression, TypeDeclaration.class);
@@ -147,10 +113,10 @@ public final class KafkaExtractor {
                 // Only a resolved string constant can supply a literal topic name.
             }
         }
-        return Fact.unknown(ev, "spring.kafka.topics 설정 키 또는 같은 서비스의 문자열 리터럴·상수로 확인하지 못함");
+        return unknown(ev);
     }
-    private static List<Fact<String>> unknown(List<String> ev, String reason) {
-        return List.of(Fact.unknown(ev, reason));
+    private static Fact<String> unknown(List<String> ev) {
+        return Fact.unknown(ev, "토픽 값을 확인하지 못함");
     }
     private String location(Node node) { return source.evidence(node).get(0); }
     private void declare(Analysis analysis, String kind, Node node) {

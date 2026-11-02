@@ -13,10 +13,8 @@ import io.hotdealwave.extractor.source.SourceValues;
 import java.util.*;
 
 public final class DtoExtractor {
-    private static final Set<String> FIELD_ANNOTATIONS = Set.of("Null", "NotNull", "NotEmpty", "NotBlank",
-            "Size", "Min", "Max", "DecimalMin", "DecimalMax", "Digits", "Positive", "PositiveOrZero",
-            "Negative", "NegativeOrZero", "Past", "PastOrPresent", "Future", "FutureOrPresent",
-            "Pattern", "Email", "AssertTrue", "AssertFalse", "Valid", "JsonProperty", "JsonIgnore");
+    private static final Set<String> FIELD_ANNOTATIONS = Set.of("NotNull", "NotBlank", "Size", "Min", "Max",
+            "Digits", "Positive", "Pattern", "Valid");
     private final SourceContext source;
     private final SourceValues values;
     private record Binding(Type type, Map<String, Binding> environment) {}
@@ -82,16 +80,8 @@ public final class DtoExtractor {
                 for (var variable : field.getVariables()) {
                     var fieldEvidence = source.evidence(variable);
                     Fact<String> jsonName = jsonName(declaration, field, variable);
-                    Fact<Boolean> ignored = Fact.known(false, fieldEvidence);
-                    for (var annotation : field.getAnnotations()) {
-                        if (SourceValues.name(annotation).equals("JsonIgnore")) {
-                            var value = values.attribute(annotation, "value", "true");
-                            ignored = value.known() ? Fact.known(Boolean.valueOf(value.value()), value.evidence())
-                                    : Fact.unknown(value.evidence(), value.reason());
-                        }
-                    }
                     result.fields.add(new Field(variable.getNameAsString(), extract(variable.getType(), local, next),
-                            annotations, jsonName, ignored, Analysis.CONFIRMED, fieldEvidence));
+                            annotations, jsonName, Analysis.CONFIRMED, fieldEvidence));
                 }
             }
             return result;
@@ -116,15 +106,8 @@ public final class DtoExtractor {
     private Fact<String> jsonName(TypeDeclaration<?> declaration, FieldDeclaration field,
                                   VariableDeclarator variable) {
         var evidence = source.evidence(variable);
-        var property = field.getAnnotations().stream()
-                .filter(a -> SourceValues.name(a).equals("JsonProperty")).findFirst();
-        if (property.isPresent()) return values.attribute(property.get(), "value", "");
-
         var annotations = new ArrayList<>(field.getAnnotations());
         annotations.addAll(declaration.getAnnotations());
-        var naming = annotations.stream().filter(a -> SourceValues.name(a).equals("JsonNaming")).findFirst();
-        if (naming.isPresent()) return Fact.unknown(Analysis.evidence(evidence, source.evidence(naming.get())),
-                "@JsonNaming 이름 전략은 해석하지 않음");
 
         String name = variable.getNameAsString();
         String suffix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
@@ -150,7 +133,7 @@ public final class DtoExtractor {
             }
         }
         if (field.isPublic()) return Fact.known(name, evidence);
-        return Fact.unknown(evidence, "JSON 이름을 정할 @JsonProperty, Lombok getter, 직접 선언한 public getter 또는 public 필드가 없음");
+        return Fact.unknown(evidence, "JSON 이름을 정할 Lombok getter, 직접 선언한 public getter 또는 public 필드가 없음");
     }
 
     private String getterProperty(String getter) {
