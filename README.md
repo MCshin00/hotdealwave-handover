@@ -75,8 +75,15 @@ git clone --recurse-submodules https://github.com/MCshin00/hotdealwave-handover.
 
 ## 검사
 
+JDK 17 이상이 필요하다.
+
 ```bash
+./gradlew build
+./gradlew test
+./gradlew :extractor:run
 python scripts/check_shared_files.py
 ```
 
-커밋된 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 서버 실행과 테스트 명령은 각 단계에서 더한다.
+추출 명령은 분석 대상을 빌드하지 않고 `out/analysis.json`을 만들며, 선언 목록·Feign 대상·게이트웨이 경로 검사의 경고 수를 출력한다. 결과 구조는 [extractor/README.md](extractor/README.md)에 있다.
+
+공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 서버 실행 명령은 5단계에서 더한다.
