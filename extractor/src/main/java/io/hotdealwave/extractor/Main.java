@@ -16,5 +16,7 @@ public final class Main {
                 + e.getValue().path("warningCount").asInt() + "개"));
         System.out.printf("엔드포인트 %d개, Feign 호출 %d개, 게이트웨이 경로 규칙 %d개%n",
                 analysis.path("endpoints").size(), analysis.path("feignCalls").size(), analysis.path("gatewayRoutes").size());
+        System.out.printf("Kafka 발행 %d개, 구독 %d개, 연결 %d개%n", analysis.path("kafkaPublications").size(),
+                analysis.path("kafkaSubscriptions").size(), analysis.path("kafkaLinks").size());
     }
 }

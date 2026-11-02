@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.hotdealwave.extractor.rest.DtoExtractor;
 import io.hotdealwave.extractor.scan.ServiceScanner;
 import io.hotdealwave.extractor.source.SourceContext;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExtractorTest {
@@ -140,5 +142,153 @@ class ExtractorTest {
         assertTrue(analysis.path("checks").has("feign-targets"));
         assertTrue(analysis.path("checks").has("gateway-routes"));
         assertTrue(analysis.path("warnings").isArray());
+    }
+
+    static JsonNode withEvidence(JsonNode nodes, String suffix) {
+        return StreamSupport.stream(nodes.spliterator(), false)
+                .filter(n -> n.path("evidence").toString().contains(suffix)).findFirst().orElseThrow();
+    }
+
+    @Test void kafkaLinksRequireTheSameComposeEnvironmentName() {
+        JsonNode pub = withEvidence(analysis.path("kafkaPublications"), "PaymentEventProducer.java:23");
+        JsonNode sub = withEvidence(analysis.path("kafkaSubscriptions"), "OrderStatusUpdateEventConsumer.java:25");
+        assertEquals("spring.kafka.topics.update-order-status", pub.path("topicKey").path("value").asText());
+        assertEquals("KAFKA_UPDATE_ORDER_STATUS_TOPIC", pub.path("environment").path("value").asText());
+        JsonNode link = StreamSupport.stream(analysis.path("kafkaLinks").spliterator(), false)
+                .filter(n -> n.path("publicationId").asText().equals(pub.path("id").asText())
+                        && n.path("subscriptionId").asText().equals(sub.path("id").asText())).findFirst().orElseThrow();
+        assertEquals("확인됨", link.path("status").asText());
+        for (String line : new String[] {"docker-compose.yml:196", "docker-compose.yml:157"})
+            assertTrue(link.path("evidence").toString().contains(line));
+        assertTrue(pub.path("evidence").toString().contains("payment/src/main/resources/application.yml:18"));
+        assertTrue(sub.path("evidence").toString().contains("order/src/main/resources/application.yml:17"));
+
+        JsonNode request = withEvidence(analysis.path("kafkaPublications"), "OrderEventProducer.java:37");
+        JsonNode reduce = withEvidence(analysis.path("kafkaSubscriptions"), "ProductKafkaConsumer.java:29");
+        assertEquals("KAFKA_REQUEST_PRODUCT_TOPIC", request.path("environment").path("value").asText());
+        assertEquals("KAFKA_REDUCE_QUANTITY_TOPIC", reduce.path("environment").path("value").asText());
+        assertFalse(StreamSupport.stream(analysis.path("kafkaLinks").spliterator(), false)
+                .anyMatch(n -> n.path("publicationId").asText().equals(request.path("id").asText())
+                        || n.path("subscriptionId").asText().equals(reduce.path("id").asText())));
+        for (String line : new String[] {"OrderEventProducer.java:37", "ProductKafkaConsumer.java:29"})
+            assertEquals("kafka-topics", withEvidence(analysis.path("warnings"), line).path("check").asText());
+    }
+
+    @Test void kafkaArgumentsWrappersAndDlqKeepTheWholeEvidenceChain() {
+        JsonNode order = withEvidence(analysis.path("kafkaPublications"), "OrderEventProducer.java:37");
+        assertTrue(order.path("evidence").toString().contains("OrderEventProducer.java:62"));
+        JsonNode product = withEvidence(analysis.path("kafkaPublications"), "ProductKafkaConsumer.java:48");
+        for (String line : new String[] {"ProductKafkaConsumer.java:85", "ProductInventoryService.java:125",
+                "ProductKafkaProducer.java:14", "product/src/main/resources/application.yml:17", "docker-compose.yml:89"})
+            assertTrue(product.path("evidence").toString().contains(line), line);
+        assertEquals("KAFKA_REQUEST_ORDER_TOPIC", product.path("environment").path("value").asText());
+        JsonNode dlq = withEvidence(analysis.path("kafkaPublications"), ORDER + "infrastructure/config/ConsumerApplicationKafkaConfig.java:61");
+        assertEquals("DeadLetterPublishingRecoverer", dlq.path("kind").asText());
+        assertEquals("spring.kafka.topics.dlq", dlq.path("topicKey").path("value").asText());
+        assertTrue(dlq.path("evidence").toString().contains("ConsumerApplicationKafkaConfig.java:30"));
+        for (String service : new String[] {"payment", "product"}) {
+            String line = service + "/src/main/java/com/sparta/hotdeal/" + service
+                    + "/infrastructure/config/ConsumerApplicationKafkaConfig.java:61";
+            JsonNode literalDlq = withEvidence(analysis.path("kafkaPublications"), line);
+            assertEquals(service + "-dlq", literalDlq.path("topicName").path("value").asText());
+            assertEquals("확인됨", literalDlq.path("topicName").path("status").asText());
+            assertTrue(literalDlq.path("topicName").path("evidence").toString().contains(line));
+            assertEquals("확인됨", literalDlq.path("status").asText());
+            for (String field : new String[] {"topicKey", "environment"}) {
+                assertEquals("확인됨", literalDlq.path(field).path("status").asText());
+                assertEquals("", literalDlq.path(field).path("value").asText());
+                assertTrue(literalDlq.path(field).path("evidence").toString().contains(line));
+            }
+            assertFalse(StreamSupport.stream(analysis.path("kafkaLinks").spliterator(), false)
+                    .anyMatch(n -> n.path("publicationId").asText().equals(literalDlq.path("id").asText())));
+            JsonNode warning = withEvidence(analysis.path("warnings"), line);
+            assertEquals("kafka-topics", warning.path("check").asText());
+            assertTrue(warning.path("reason").asText().contains(service + "-dlq"));
+        }
+        JsonNode counts = analysis.path("checks").path("kafka-declarations");
+        for (String prefix : new String[] {"", "extracted"}) {
+            assertEquals(9, counts.path(prefix.isEmpty() ? "listenerCount" : prefix + "ListenerCount").asInt());
+            assertEquals(7, counts.path(prefix.isEmpty() ? "sendCount" : prefix + "SendCount").asInt());
+            assertEquals(3, counts.path(prefix.isEmpty() ? "dlqCount" : prefix + "DlqCount").asInt());
+        }
+        assertEquals(0, counts.path("warningCount").asInt());
+        assertFalse(analysis.path("kafkaDeclarations").toString().contains("MailServiceImpl.java:21"));
+    }
+
+    @Test void literalTopicConstantsApplyToPublicationsAndSubscriptions(@TempDir Path root) throws Exception {
+        Path service = root.resolve("sample");
+        Files.createDirectories(service.resolve("src/main/java/sample"));
+        Files.createDirectories(service.resolve("src/main/resources"));
+        Files.writeString(service.resolve("build.gradle"), "");
+        Files.writeString(service.resolve("src/main/resources/application.yml"), """
+                spring:
+                  application:
+                    name: sample-service
+                  kafka:
+                    topics:
+                      event: ${EVENT_TOPIC}
+                """);
+        Files.writeString(root.resolve("docker-compose.yml"), """
+                services:
+                  sample-service:
+                    environment:
+                      EVENT_TOPIC: ${EVENT_TOPIC}
+                """);
+        Files.writeString(service.resolve("src/main/java/sample/Events.java"), """
+                package sample;
+                class Topics { static final String EVENT = "EVENT_TOPIC"; }
+                class Events {
+                    KafkaTemplate<String, String> kafkaTemplate;
+                    void publish() { kafkaTemplate.send(Topics.EVENT, "message"); }
+                    @KafkaListener(topics = Topics.EVENT) void literal() {}
+                    @KafkaListener(topics = "${spring.kafka.topics.event}") void configured() {}
+                }
+                """);
+        JsonNode result = new Extractor().analyze(root);
+        JsonNode publication = result.path("kafkaPublications").get(0);
+        JsonNode subscription = withEvidence(result.path("kafkaSubscriptions"), "Events.java:6");
+        for (JsonNode endpoint : new JsonNode[] {publication, subscription}) {
+            assertEquals("EVENT_TOPIC", endpoint.path("topicName").path("value").asText());
+            assertEquals("확인됨", endpoint.path("topicName").path("status").asText());
+            assertTrue(endpoint.path("topicName").path("evidence").toString().contains("Events.java:2"));
+            assertEquals("", endpoint.path("topicKey").path("value").asText());
+            assertEquals("", endpoint.path("environment").path("value").asText());
+        }
+        JsonNode configured = withEvidence(result.path("kafkaSubscriptions"), "Events.java:7");
+        assertEquals("EVENT_TOPIC", configured.path("environment").path("value").asText());
+        assertFalse(StreamSupport.stream(result.path("kafkaLinks").spliterator(), false)
+                .anyMatch(n -> n.path("subscriptionId").asText().equals(configured.path("id").asText())));
+    }
+
+    @Test void profilesResourcesAndDeploymentExposeEvidenceButNotValues() {
+        JsonNode env = withEvidence(analysis.path("environmentVariables"), "coupon/src/main/resources/application-prod.yml:16");
+        assertEquals("REDIS_PROD_HOST", env.path("name").asText());
+        assertEquals("prod", env.path("profile").asText());
+        assertEquals("저장소에 근거 없음", env.path("value").path("status").asText());
+        assertTrue(env.path("value").path("value").isNull());
+        JsonNode db = withEvidence(analysis.path("externalResources"), "order/src/main/resources/application-prod.yml:3");
+        assertEquals("DB", db.path("kind").asText());
+        for (String kind : new String[] {"DB", "Redis", "Kafka", "Elasticsearch", "S3", "KakaoPay"}) {
+            JsonNode resource = find(analysis.path("externalResources"), "kind", kind);
+            assertFalse(resource.path("configurationEvidence").isEmpty(), kind);
+            assertFalse(resource.path("codeEvidence").isEmpty(), kind);
+        }
+        assertTrue(find(analysis.path("externalResources"), "kind", "KakaoPay")
+                .path("codeEvidence").toString().contains("KakaoPayClient.java:14"));
+        for (String stage : new String[] {"ecr-login", "image-build", "image-push", "ec2-connect", "compose-deploy"}) {
+            JsonNode step = find(analysis.path("deploymentSteps"), "kind", stage);
+            assertEquals("확인됨", step.path("status").asText());
+            assertTrue(step.path("evidence").toString().contains(".github/workflows/actions.yml:"));
+        }
+        for (JsonNode variable : analysis.path("environmentVariables")) {
+            assertEquals("저장소에 근거 없음", variable.path("value").path("status").asText());
+            assertTrue(variable.path("value").path("value").isNull());
+        }
+        JsonNode ec2 = find(analysis.path("deploymentSteps"), "kind", "ec2-connect");
+        assertEquals("저장소에 근거 없음", ec2.path("details").path("ec2Address").path("status").asText());
+        assertTrue(ec2.path("evidence").toString().contains("actions.yml:74"));
+        assertTrue(find(analysis.path("deploymentSteps"), "kind", "image-build").path("evidence").toString().contains("actions.yml:57"));
+        assertTrue(find(analysis.path("deploymentSteps"), "kind", "image-push").path("evidence").toString().contains("actions.yml:60"));
+        assertTrue(find(analysis.path("deploymentSteps"), "kind", "compose-deploy").path("evidence").toString().contains("actions.yml:95"));
     }
 }

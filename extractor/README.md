@@ -1,4 +1,4 @@
-# REST·Feign·게이트웨이 추출기
+# REST·Feign·게이트웨이·Kafka·설정 추출기
 
 저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
 
@@ -9,7 +9,7 @@
 ./gradlew :extractor:run --args="target/HotDealWave out/analysis.json"
 ```
 
-기본 입력은 `target/HotDealWave`, 출력은 `out/analysis.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`과 `src/main/java/**/*.java`만 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다.
+기본 입력은 `target/HotDealWave`, 출력은 `out/analysis.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`, `application-<프로필>.yml`, `src/main/java/**/*.java`와 루트 `docker-compose.yml`, `.github/workflows/actions.yml`을 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다.
 
 ## analysis.json 계약 (schemaVersion: 1)
 
@@ -40,7 +40,13 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 | `gatewayRoutes` | `id`, `uri/targetService/rewritePath: Fact<string>`, `paths: Fact<string>[]`, 상태·근거 |
 | `allowedPaths` | enum 상수의 `name`, `path/httpMethod: Fact<string>`, 상태·근거 |
 | `declarations` | 추출한 매핑 선언의 `kind`, 상태·근거. Feign 클래스 선언은 `feignClients`에 있음 |
-| `checks` | `declarations`, `feign-targets`, `gateway-routes`별 `warningCount`. 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함 |
+| `kafkaDeclarations` | `KafkaListener`, `kafkaTemplate.send`, `DeadLetterPublishingRecoverer` 선언의 `kind`, 상태·근거. 래퍼의 호출 횟수와 무관한 원래 선언 위치 |
+| `kafkaPublications`, `kafkaSubscriptions` | `id`, `service`, `kind`, `profile`, `topicKey/topicName/environment: Fact<string>`, 상태·근거 |
+| `kafkaLinks` | `publicationId`, `subscriptionId`, `environment`(환경변수 이름), 상태·양쪽 근거 |
+| `environmentVariables` | `service`, `profile`, `name`, `location`(설정 키 또는 참조 종류), `value: Fact<string>`, 상태·근거 |
+| `externalResources` | `service`, `kind`, `configurationEvidence`, `codeEvidence`, `details: {항목: Fact<string>}`, 상태·전체 근거 |
+| `deploymentSteps` | `kind`, `details: {항목: Fact<string>}`, 상태·근거 |
+| `checks` | `declarations`, `feign-targets`, `gateway-routes`, `kafka-declarations`, `kafka-topics`별 `warningCount`. 기존 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함. Kafka 선언 검사는 `listenerCount/sendCount/dlqCount`와 `extractedListenerCount/extractedSendCount/extractedDlqCount` 포함 |
 | `warnings` | `check`, `status`, `evidence`, `reason`. 판정 전 상태는 `확인 안 됨` |
 
 `httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
@@ -83,4 +89,24 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 
 선언 검사는 JavaParser와 별도로 Java 파일을 줄 단위 정규식으로 읽는다. 매핑·Feign 선언의 종류와 `파일:줄`을 추출 결과와 대조하며, 주석 안의 선언도 단순 검색 결과로 유지한다. Feign 검사는 이름·HTTP 메서드·경로로 연결되지 않은 내부 호출을, 게이트웨이 검사는 어느 컨트롤러에도 닿지 않는 각 Path 패턴과 외부 경로가 없는 엔드포인트를 경고로 낸다. 경로 변수 이름은 연결에 영향을 주지 않는다.
 
-경고는 실행 실패가 아니며 개발자가 판정한다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다. Kafka·설정·외부 자원 추출은 다음 이슈 범위다.
+Kafka 선언 검사(`kafka-declarations`)도 JavaParser와 독립적인 정규식 검색으로 종류와 `파일:줄`을 대조한다. `@KafkaListener`, `kafkaTemplate.send(...)`, `new DeadLetterPublishingRecoverer(...)`를 세며 메일 등 다른 `send`는 세지 않는다. 같은 위치의 선언은 한 번만 센다. `kafka-topics`는 확인된 연결이 없는 발행·구독 항목마다 경고를 낸다. 같은 서비스·토픽이라도 서로 다른 발행 경로이면 경고도 별개다. 실행 끝에 다섯 검사 각각의 경고 수를 출력한다.
+
+경고는 실행 실패가 아니며 개발자가 판정한다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다.
+
+### Kafka 토픽과 연결
+
+구독은 `@KafkaListener(topics = "${spring.kafka.topics.x}")`, 발행은 `kafkaTemplate.send`의 첫 인자와 `DeadLetterPublishingRecoverer` 안의 `TopicPartition` 토픽을 출발점으로 삼는다. 한 서비스의 메서드 인자를 호출 지점으로 거슬러 올라가 `@Value` 필드를 찾는다. private 래퍼와 여러 메서드를 거치는 인자도 따라간다. 하나의 `send`에 서로 다른 호출 경로로 토픽이 들어오면 경로별 발행 항목을 만든다.
+
+`topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 `application.yml` → compose `environment`까지 확인한 환경변수 이름이다. Kafka의 `profile`은 `base`이며 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `ENV=${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같을 때만 `kafkaLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
+
+문자열 리터럴 토픽(같은 서비스의 문자열 상수 포함)은 `topicName`에 이름·`확인됨`·근거 줄을 남기고, 해당 없는 `topicKey`·`environment`는 빈 문자열·`확인됨`으로 표시한다. 환경변수 사슬이 확인된 토픽의 실제 `topicName`은 `null`·`저장소에 근거 없음`이며, 문자열 토픽과 환경변수 토픽은 연결하지 않고 미연결 경고에 문자열 토픽 이름을 포함한다.
+
+분기·재할당, 컬렉션 접근, 다른 모듈의 값은 `확인 안 됨`과 해당 줄을 남긴다. 발행·구독의 최상위 상태는 문자열 토픽 이름 또는 환경변수 사슬의 확인 상태이고, 선언 자체의 존재는 `kafkaDeclarations`에서 별도로 확인할 수 있다.
+
+### 환경변수·외부 자원·배포
+
+환경변수는 사용 위치별로 기록한다. `profile`은 기본 YAML의 `base`, 파일 이름의 `local`·`prod` 등, compose의 `compose`, Actions 참조의 `workflow`다. 프로필을 병합하거나 실행할 프로필을 추정하지 않는다. Java `@Value`가 설정 키를 참조하면 해당 프로필의 YAML 환경변수와 코드 근거를 함께 남긴다. Actions의 `secrets`·`env` 참조는 `service: deployment`로 구별한다. 같은 이름이 여러 항목에 나올 수 있으므로 환경변수 이름 수는 `name`의 중복을 제거해서 센다. 값은 모두 `null`·`저장소에 근거 없음`이다.
+
+외부 자원은 서비스·종류별로 묶는다. 설정 키의 `spring.datasource`·`spring.jpa`는 DB, `spring.data.redis`는 Redis, `spring.kafka`는 Kafka, `spring.elasticsearch`는 Elasticsearch, `s3`는 S3, `pay`는 KakaoPay다. 코드에서는 JPA·Redis·Kafka·Elasticsearch·S3의 클래스·어노테이션 사용과 KakaoPay 클라이언트·Feign URL을 근거로 삼는다. 설정이나 코드 근거가 하나라도 있어야 항목을 내며, 없는 쪽의 근거 배열은 비워 둔다. `details.connectionValues`와 S3의 `details.bucketName`은 `저장소에 근거 없음`이다. 외부 자원의 설정·코드 근거 수는 각각의 배열에서 중복 위치를 제거한 수다.
+
+배포 단계는 Actions에 적힌 `ecr-login`, `image-build`, `image-push`, `ec2-connect`, `compose-deploy`다. 같은 종류의 여러 명령은 근거를 합친다. `ec2-connect`에는 선행 job(`needs`)과 SSH action 근거를 함께 남기며 `details.ec2Address/username/key`는 `저장소에 근거 없음`이다. 이는 배포 스크립트의 존재를 확인하는 것이며 실제 배포 성공이나 서버 구성을 뜻하지 않는다. 원문 설정값·명령문·비밀값은 새 결과 항목에 복사하지 않는다.

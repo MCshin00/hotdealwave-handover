@@ -19,6 +19,13 @@ public final class Analysis {
     public List<Route> gatewayRoutes = new ArrayList<>();
     public List<AllowedPath> allowedPaths = new ArrayList<>();
     public List<Declaration> declarations = new ArrayList<>();
+    public List<Declaration> kafkaDeclarations = new ArrayList<>();
+    public List<KafkaEndpoint> kafkaPublications = new ArrayList<>();
+    public List<KafkaEndpoint> kafkaSubscriptions = new ArrayList<>();
+    public List<KafkaLink> kafkaLinks = new ArrayList<>();
+    public List<EnvironmentVariable> environmentVariables = new ArrayList<>();
+    public List<ExternalResource> externalResources = new ArrayList<>();
+    public List<DeploymentStep> deploymentSteps = new ArrayList<>();
     public Map<String, Map<String, Integer>> checks = new LinkedHashMap<>();
     public List<Warning> warnings = new ArrayList<>();
 
@@ -32,6 +39,18 @@ public final class Analysis {
         public boolean known() { return CONFIRMED.equals(status); }
     }
     public record Service(String directory, Fact<String> name, String status, List<String> evidence) {}
+    public record KafkaEndpoint(String id, String service, String kind, String profile,
+                                Fact<String> topicKey, Fact<String> topicName, Fact<String> environment,
+                                String status, List<String> evidence) {}
+    public record KafkaLink(String publicationId, String subscriptionId, String environment,
+                            String status, List<String> evidence) {}
+    public record EnvironmentVariable(String service, String profile, String name, String location,
+                                      Fact<String> value, String status, List<String> evidence) {}
+    public record ExternalResource(String service, String kind, List<String> configurationEvidence,
+                                   List<String> codeEvidence, Map<String, Fact<String>> details,
+                                   String status, List<String> evidence) {}
+    public record DeploymentStep(String kind, Map<String, Fact<String>> details,
+                                 String status, List<String> evidence) {}
     public record Declaration(String kind, String status, List<String> evidence) {}
     public record Warning(String check, String status, List<String> evidence, String reason) {}
     public record AnnotationInfo(String name, Map<String, Fact<String>> arguments,
