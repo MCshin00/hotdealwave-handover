@@ -13,6 +13,56 @@ import static io.hotdealwave.extractor.ExtractorTest.find;
 class UnresolvedSourceTest {
     @TempDir Path root;
 
+    @Test void kafkaBranchCollectionAndOtherModuleTopicsRemainUnknown() throws Exception {
+        Path service = root.resolve("sample");
+        Files.createDirectories(service.resolve("src/main/java/sample"));
+        Files.createDirectories(service.resolve("src/main/resources"));
+        Files.writeString(service.resolve("build.gradle"), "");
+        Files.writeString(service.resolve("src/main/resources/application.yml"), """
+                spring:
+                  application:
+                    name: sample-service
+                  kafka:
+                    topics:
+                      first: ${FIRST_TOPIC}
+                      second: ${SECOND_TOPIC}
+                """);
+        Files.writeString(service.resolve("src/main/java/sample/Producer.java"), """
+                package sample;
+                import missing.OtherModule;
+                class Producer {
+                    @Value("${spring.kafka.topics.first}") String first;
+                    @Value("${spring.kafka.topics.second}") String second;
+                    KafkaTemplate<String, String> kafkaTemplate;
+                    void branch(boolean choice) {
+                        String topic = first;
+                        if (choice) topic = second;
+                        kafkaTemplate.send(topic, "message");
+                    }
+                    void collection(java.util.List<String> topics) {
+                        kafkaTemplate.send(topics.get(0), "message");
+                    }
+                    void external() {
+                        kafkaTemplate.send(OtherModule.TOPIC, "message");
+                    }
+                    void fieldBranch(boolean choice) {
+                        if (choice) this.first = second;
+                        kafkaTemplate.send(this.first, "message");
+                    }
+                }
+                """);
+        JsonNode result = new Extractor().analyze(root);
+        assertEquals(4, result.path("kafkaPublications").size());
+        for (JsonNode publication : result.path("kafkaPublications")) {
+            assertEquals("확인 안 됨", publication.path("topicKey").path("status").asText());
+            assertTrue(publication.path("topicKey").path("value").isNull());
+            assertFalse(publication.path("evidence").isEmpty());
+        }
+        assertTrue(ExtractorTest.withEvidence(result.path("kafkaPublications"), "Producer.java:10")
+                .path("evidence").toString().contains("Producer.java:9"));
+        assertTrue(result.path("kafkaLinks").isEmpty());
+    }
+
     @Test void localConstantsJsonAnnotationsCyclesAndUnresolvedMappings() throws Exception {
         Path service = root.resolve("sample");
         Files.createDirectories(service.resolve("src/main/java/sample"));
