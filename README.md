@@ -26,7 +26,7 @@ hotdealwave-handover/
 +-- target/HotDealWave/     # 분석 대상 서브모듈 (팀 원본 저장소 cc43016, 읽기만)
 |
 +-- extractor/              # 추출기 (Java 17, JavaParser)
-|                           #   REST·Feign·Kafka·설정 -> out/analysis.json, 맞대기 검사 경고
+|                           #   REST·Feign·Kafka·설정 -> out/analysis.json, 교차 검증 경고
 |
 +-- server/                 # Spring Boot 서버 하나
 |                           #   조회: 관계 조회 3개 + search_docs(BM25), 모델 호출 없음

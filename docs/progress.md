@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 0 | 저장소 준비: 규칙, Skill, 양식, 분석 대상 서브모듈 | 완료 | 이 저장소 |
 | 1 | 최종 질문: 개발자가 지금 실제로 궁금한 것을 쓰고 고정 | 완료 | `eval/questions/final.csv` |
-| 2 | 추출기: REST·Feign·Kafka·설정 → `out/analysis.json`, 맞대기 검사 경고 | 시작 전 | `extractor/` |
+| 2 | 추출기: REST·Feign·Kafka·설정 → `out/analysis.json`, 교차 검증 경고 | 시작 전 | `extractor/` |
 | 3 | 판정: 경고를 판정해 사실 목록 작성, 추출 오류 수정 | 시작 전 | `eval/facts.csv` |
 | 4 | 업무 규칙·함정: AI 해석과 판정 결과를 모아 쓰고 개발자가 확인 | 시작 전 | `knowledge/` |
 | 5 | 서버와 문서 페이지: 조회 계층, 문서 페이지(Thymeleaf) | 시작 전 | `server/` |
