@@ -1,0 +1,75 @@
+# REST·Feign·게이트웨이 추출기
+
+저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
+
+```bash
+./gradlew test
+./gradlew :extractor:run
+# 선택: 입력·출력 경로 변경 (작업 디렉터리는 항상 저장소 루트)
+./gradlew :extractor:run --args="target/HotDealWave out/analysis.json"
+```
+
+기본 입력은 `target/HotDealWave`, 출력은 `out/analysis.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`과 `src/main/java/**/*.java`만 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다.
+
+## analysis.json 계약 (schemaVersion: 1)
+
+UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 한 결과 파일 안에서만 참조한다. 시각·로컬 절대경로는 쓰지 않는다. 같은 소스는 같은 결과를 낸다.
+
+각 사실은 `status`, `evidence`를 가진다. `evidence`는 `target/HotDealWave` 기준 `/` 구분 상대경로의 `파일:줄` 배열이다. 줄은 1부터 센다. 선언의 확인 상태와 그 하위 타입·연결의 확인 상태는 별개다.
+
+값에 별도의 확인 상태가 필요한 곳은 다음 공통 형식(`Fact<T>`)을 쓴다.
+
+```json
+{
+  "value": "/api/v1/orders",
+  "status": "확인됨",
+  "evidence": ["order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35"],
+  "reason": null
+}
+```
+
+`status`는 `확인됨`, `확인 안 됨`, `저장소에 근거 없음` 중 하나다. 뒤의 두 상태는 `value: null`과 `reason`을 가진다. 선언에 속성이 없다는 사실을 확인한 경우(Feign `url`·`path`, 없는 `RewritePath`)는 빈 문자열을 쓴다. 소비자는 빈 문자열과 확인할 수 없는 `null`을 구별해야 한다.
+
+| 최상위 키 | 내용 |
+|---|---|
+| `schemaVersion` | 정수 `1` |
+| `services` | `directory`, `name: Fact<string>`, 상태·근거. `build.gradle`과 `src/main/java`가 있는 폴더이며 이름은 YAML의 `spring.application.name` |
+| `endpoints` | `id`, `service`, `controller`, `handler`, `httpMethod: Fact<string>`, `path: Fact<string>`, `parameters`, `response`, `externalPaths`, `tokenRequired: Fact<boolean>`, 상태·근거 |
+| `feignClients` | `id`, `service`, `type`, `name/url/path: Fact<string>`, 상태·근거 |
+| `feignCalls` | `id`, `clientId`, `service`, `handler`, `httpMethod/path: Fact<string>`, `external`, `target: Fact<string>`, 상태·근거 |
+| `gatewayRoutes` | `id`, `uri/targetService/rewritePath: Fact<string>`, `paths: Fact<string>[]`, 상태·근거 |
+| `allowedPaths` | enum 상수의 `name`, `path/httpMethod: Fact<string>`, 상태·근거 |
+| `declarations` | 추출한 매핑 선언의 `kind`, 상태·근거. Feign 클래스 선언은 `feignClients`에 있음 |
+| `checks` | `declarations`, `feign-targets`, `gateway-routes`별 `warningCount`. 선언 검사는 `mappingCount`, `feignClientCount`, `extractedMappingCount`, `extractedFeignClientCount`도 포함 |
+| `warnings` | `check`, `status`, `evidence`, `reason`. 판정 전 상태는 `확인 안 됨` |
+
+`httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
+
+### 파라미터와 DTO
+
+`parameters[]`는 `name`, `kind`, `binding`, `schema`, `annotations`, 상태·근거다. `kind`는 `경로`, `쿼리`, `본문`(명시된 헤더가 있으면 `헤더`)이며 `binding`은 실제 바인딩 어노테이션 또는 `Pageable`이다. `ModelAttribute`는 쿼리·폼 바인딩으로 분류하며 JSON 본문을 뜻하지 않는다. `AuthenticationPrincipal`은 제외한다. `Pageable`은 쿼리 인자로 보존하되 프레임워크의 기본 필드·기본값을 만들어 내지 않는다.
+
+`schema`와 `response`의 공통 타입 구조:
+
+- `type`: 소스 타입 표기. 제네릭 필드의 `T`는 실제 타입으로 바뀐다.
+- `qualifiedName`: 해석된 클래스 이름 또는 `null`.
+- `kind`: `object`, `enum`, `scalar`, `container`, `array`, `unresolved`.
+- `fields`: `{name, schema, annotations, jsonName: Fact<string>, jsonIgnored: Fact<boolean>, status, evidence}[]`.
+- `arguments`: 제네릭 인자 또는 배열 원소의 타입 구조 배열.
+- `enumValues`: 소스 enum 상수 이름 배열.
+- `recursive`: 같은 소스 클래스가 현재 탐색 경로에 다시 등장하면 `true`. 이 노드의 필드 전개를 멈춘다.
+- `status`, `evidence`, `reason`: 소스 클래스면 클래스 이름 위치, 외부 타입이면 그 타입을 쓴 위치. Spring 등 해석하지 못한 외부 타입은 `unresolved`·`확인 안 됨`으로 두고, 그 안의 로컬 제네릭 인자는 계속 전개한다.
+
+`annotations[]`는 `{name, arguments: {인자명: Fact<string>}, status, evidence}`다. 숫자·불리언도 소스 리터럴 문자열로 기록한다. DTO의 검증 어노테이션과 `JsonProperty`, `JsonIgnore`를 보존한다. `JsonIgnore` 필드도 삭제하지 않고 `jsonIgnored.value: true`로 표시한다. 같은 서비스의 상수만 따라가며, 다른 모듈의 상수·계산식은 근거와 함께 `확인 안 됨`으로 남긴다.
+
+### 외부 경로와 토큰
+
+`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로와 서비스 접두사를 제거하는 별칭을 모두 내며, 실제 `Path` 조건 및 정방향 `RewritePath` 적용 결과를 확인한다. 역변환은 고정 소스의 `/<서비스>/(?<segment>.*), /$\{segment}` 형태만 지원한다. 확정하지 못한 외부 경로는 만들지 않고 교차 검증 경고를 낸다.
+
+엔드포인트의 `tokenRequired`는 기본 API 경로의 판정이며, 기본 경로가 없으면 첫 외부 경로의 판정이다. 외부 경로 자체가 없으면 `확인 안 됨`이다. 토큰 허용은 `AllowedPath.matches`의 `startsWith`와 메서드 비교를 따른다. 재작성 전·후의 허용 결과가 다른 별칭은 필터 실행 순서를 확정하지 않으므로 `확인 안 됨`과 양쪽 결과를 남긴다. 서비스 안의 역할별 권한 검사는 포함하지 않는다.
+
+### 교차 검증
+
+선언 검사는 JavaParser와 별도로 Java 파일을 줄 단위 정규식으로 읽는다. 매핑·Feign 선언의 종류와 `파일:줄`을 추출 결과와 대조하며, 주석 안의 선언도 단순 검색 결과로 유지한다. Feign 검사는 이름·HTTP 메서드·경로로 연결되지 않은 내부 호출을, 게이트웨이 검사는 어느 컨트롤러에도 닿지 않는 각 Path 패턴과 외부 경로가 없는 엔드포인트를 경고로 낸다. 경로 변수 이름은 연결에 영향을 주지 않는다.
+
+경고는 실행 실패가 아니며 개발자가 판정한다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다. Kafka·설정·외부 자원 추출은 다음 이슈 범위다.
