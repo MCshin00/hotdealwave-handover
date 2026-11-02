@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/cancel",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "주문 취소가 처리 되었습니다.",
+    "data": null
+  },
+  "reason": null
+}

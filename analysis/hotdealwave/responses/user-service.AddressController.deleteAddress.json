@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "DELETE",
+    "path": "/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "배송지 삭제 성공",
+    "data": {
+      "addressId": "0ece61b3-8b54-487d-86cc-449e6f421deb"
+    }
+  },
+  "reason": null
+}

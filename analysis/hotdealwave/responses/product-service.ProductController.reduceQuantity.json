@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "PUT",
+    "path": "/api/v1/products/reduce-quantity",
+    "body": {
+      "orderId": null,
+      "productList": [
+        {
+          "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+          "quantity": 1
+        }
+      ]
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "상품이 수정되었습니다.",
+    "data": {
+      "orderId": null
+    }
+  },
+  "reason": null
+}

@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/coupon-infos",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "쿠폰 정보 목록 조회 성공",
+    "data": {
+      "content": [],
+      "page": {
+        "size": 10,
+        "number": 0,
+        "totalElements": 0,
+        "totalPages": 0
+      }
+    }
+  },
+  "reason": null
+}

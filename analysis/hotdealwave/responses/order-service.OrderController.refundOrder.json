@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/refund",
+    "body": null
+  },
+  "statusCode": 400,
+  "body": {
+    "timestamp": "2026-11-02T19:00:49.128339796",
+    "code": "O008",
+    "message": "환불 정책에 의해 환불할 수 없는 주문입니다."
+  },
+  "reason": "400: PENDING 주문은 COMPLETE 상태 조건을 충족하지 않아 환불 거부. target/HotDealWave/order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:295"
+}

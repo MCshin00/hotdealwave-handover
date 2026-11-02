@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/address-default/0ece61b3-8b54-487d-86cc-449e6f421deb",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "기본 배송지 설정 성공",
+    "data": {
+      "addressId": "0ece61b3-8b54-487d-86cc-449e6f421deb"
+    }
+  },
+  "reason": null
+}

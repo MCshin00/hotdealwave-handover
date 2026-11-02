@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PUT",
+    "path": "/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/status",
+    "body": {
+      "orderStatus": "PENDING"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "주문 상태가 수정되었습니다.",
+    "data": null
+  },
+  "reason": null
+}

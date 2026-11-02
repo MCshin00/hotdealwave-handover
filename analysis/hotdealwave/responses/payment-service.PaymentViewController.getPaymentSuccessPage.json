@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/payment/success",
+    "body": null
+  },
+  "statusCode": null,
+  "body": null,
+  "reason": "3차 완료: HTML 화면은 호출 범위 밖이다."
+}

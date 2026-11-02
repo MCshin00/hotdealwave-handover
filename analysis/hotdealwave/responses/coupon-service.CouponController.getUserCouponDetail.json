@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "사용자 쿠폰 상세 조회 성공",
+    "data": {
+      "couponId": "a2101784-fa6b-4b10-96ce-33c613d61481",
+      "name": "probe-r2-bdd629051b36",
+      "discountAmount": 1000,
+      "minOrderAmount": 5000,
+      "expirationDate": "2026-11-10",
+      "usedDate": "2026-11-02",
+      "dailyIssuedDate": "2026-11-02",
+      "used": true
+    }
+  },
+  "reason": null
+}

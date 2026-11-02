@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/payments",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "결제 내역 조회 성공",
+    "data": {
+      "content": [],
+      "page": {
+        "size": 20,
+        "number": 0,
+        "totalElements": 0,
+        "totalPages": 0
+      }
+    }
+  },
+  "reason": null
+}

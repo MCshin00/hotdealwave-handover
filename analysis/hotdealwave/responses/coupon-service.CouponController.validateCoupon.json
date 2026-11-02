@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/coupons/5f036bbc-015d-4f68-8933-637a3852d25f/validate",
+    "body": {
+      "products": [
+        {
+          "companyId": "eb0ebde7-8d15-4c54-bcc1-349fb1f297c8",
+          "quantity": 2,
+          "price": 20000
+        }
+      ]
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "쿠폰 유효성 검사 성공",
+    "data": {
+      "totalDiscountAmount": 1000,
+      "valid": true
+    }
+  },
+  "reason": null
+}

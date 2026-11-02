@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/companies",
+    "body": {
+      "businessRegistrationNumber": 1421903916,
+      "companyPhoneNumber": 2000000000,
+      "managerId": "359b7953-f393-4550-869d-a3c413a8c964",
+      "brandName": "probe-740e5181",
+      "companyEmail": "<이메일>",
+      "status": "REQUESTED"
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "업체가 신청되었습니다.",
+    "data": null
+  },
+  "reason": null
+}

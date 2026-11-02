@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/orders",
+    "body": {
+      "basketList": [
+        "6bfbf277-2664-4a69-a1ad-6c7bfd83e2b7"
+      ],
+      "addressId": "cf4d7a67-304b-456a-aa0e-f58dfee5f837",
+      "couponId": "d7d6aede-15da-4e4b-adc3-8874675ac5ee"
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "주문이 처리되었습니다.",
+    "data": {
+      "orderId": "6b654a21-8d52-464b-9cfc-a910e77ecdbe"
+    }
+  },
+  "reason": null
+}

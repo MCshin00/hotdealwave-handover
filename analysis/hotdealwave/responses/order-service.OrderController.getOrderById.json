@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "주문 상세 조회 성공",
+    "data": {
+      "orderId": "6b654a21-8d52-464b-9cfc-a910e77ecdbe",
+      "createdAt": "2026-11-02T18:59:55.930292",
+      "productList": [
+        {
+          "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+          "productName": "probe-r3-98bd03f4ef18c990",
+          "productQuantity": 100,
+          "productPrice": 20000
+        }
+      ],
+      "userId": "80faa9ae-5b87-428f-a2b9-652e4d9db9a7",
+      "username": "<닉네임>",
+      "orderName": "probe-r3-98bd03f4ef18c990",
+      "addressId": "cf4d7a67-304b-456a-aa0e-f58dfee5f837",
+      "totalAmount": 40000,
+      "discountAmount": 1000,
+      "orderStatus": "CREATE"
+    }
+  },
+  "reason": null
+}

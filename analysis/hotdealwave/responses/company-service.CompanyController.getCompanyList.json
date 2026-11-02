@@ -1,0 +1,49 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/companies",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "업체목록이 조회되었습니다.",
+    "data": {
+      "content": [
+        {
+          "businessRegistrationNumber": 1421903916,
+          "companyPhoneNumber": 2000000000,
+          "managerId": "359b7953-f393-4550-869d-a3c413a8c964",
+          "brandName": "probe-740e5181",
+          "companyEmail": "<이메일>",
+          "status": "REQUESTED"
+        }
+      ],
+      "pageable": {
+        "pageNumber": 0,
+        "pageSize": 20,
+        "sort": {
+          "empty": true,
+          "sorted": false,
+          "unsorted": true
+        },
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+      },
+      "last": true,
+      "totalElements": 1,
+      "totalPages": 1,
+      "first": true,
+      "size": 20,
+      "number": 0,
+      "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+      },
+      "numberOfElements": 1,
+      "empty": false
+    }
+  },
+  "reason": null
+}

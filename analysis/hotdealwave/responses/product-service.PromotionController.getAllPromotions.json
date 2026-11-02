@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/promotions",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "타임 세일이 조회되었습니다.",
+    "data": {
+      "content": [],
+      "page": {
+        "size": 10,
+        "number": 0,
+        "totalElements": 0,
+        "totalPages": 0
+      }
+    }
+  },
+  "reason": null
+}

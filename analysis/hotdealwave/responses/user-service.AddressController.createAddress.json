@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/address",
+    "body": {
+      "zipNum": "00000",
+      "city": "테스트시",
+      "district": "테스트구",
+      "streetName": "테스트로",
+      "streetNum": "1",
+      "detailAddr": "테스트 주소"
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "배송지 등록 성공",
+    "data": {
+      "addressId": "0ece61b3-8b54-487d-86cc-449e6f421deb"
+    }
+  },
+  "reason": null
+}

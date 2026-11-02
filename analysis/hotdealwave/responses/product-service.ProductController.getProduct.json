@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "상품이 조회되었습니다.",
+    "data": {
+      "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+      "name": "probe-r3-98bd03f4ef18c990",
+      "price": 20000,
+      "quantity": 100,
+      "category": "BOOKS_MEDIA",
+      "companyId": "eb0ebde7-8d15-4c54-bcc1-349fb1f297c8",
+      "description": "Local API probe fixture",
+      "detailImgs": [
+        "http://127.0.0.1:19091/probe-fixture.png"
+      ],
+      "thumbImg": "http://127.0.0.1:19091/probe-fixture.png",
+      "status": "ON_SALE",
+      "rating": 0.0,
+      "reviewCnt": 0,
+      "discountPrice": null
+    }
+  },
+  "reason": null
+}

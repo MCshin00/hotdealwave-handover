@@ -1,0 +1,25 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/reviews",
+    "body": {
+      "orderId": "6b654a21-8d52-464b-9cfc-a910e77ecdbe",
+      "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+      "userId": "80faa9ae-5b87-428f-a2b9-652e4d9db9a7",
+      "rating": 4.0,
+      "review": "Local probe review",
+      "reviewImgs": {
+        "filename": "probe.png",
+        "contentType": "image/png",
+        "byteLength": 68
+      }
+    }
+  },
+  "statusCode": 404,
+  "body": {
+    "timestamp": "2026-11-02T19:00:38.081931754",
+    "code": "O018",
+    "message": "올바르지 않은 주문 요청 값입니다."
+  },
+  "reason": "실제 주문 ID로 호출했으나 내부 주문 조회가 404로 실패. ReviewService의 첫 주문 조회 단계와 OrderClientErrorDecoder의 404 매핑에 해당. 내부 호출의 구체적 인증/사용자 설정 원인은 확인 안 됨. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:43; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/exception/decoder/OrderClientErrorDecoder.java:13"
+}

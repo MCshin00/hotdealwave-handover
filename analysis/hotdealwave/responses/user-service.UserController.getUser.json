@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "회원정보조회 성공",
+    "data": {
+      "userId": "f4a334c6-ab92-465b-972a-9370de1a4e04",
+      "email": "<이메일>",
+      "nickname": "<닉네임>"
+    }
+  },
+  "reason": null
+}

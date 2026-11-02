@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/products",
+    "body": {
+      "name": "probe-r3-98bd03f4ef18c990",
+      "price": 20000,
+      "quantity": 100,
+      "category": "BOOKS_MEDIA",
+      "companyId": "eb0ebde7-8d15-4c54-bcc1-349fb1f297c8",
+      "description": "Local API probe fixture",
+      "detailImgs": {
+        "filename": "probe.png",
+        "contentType": "image/png",
+        "byteLength": 68
+      },
+      "thumbImg": {
+        "filename": "probe.png",
+        "contentType": "image/png",
+        "byteLength": 68
+      }
+    }
+  },
+  "statusCode": 500,
+  "body": {
+    "timestamp": "2026-11-02T18:48:34.047425227",
+    "code": "P001",
+    "message": "Received an UnknownHostException when attempting to interact with a service. See cause for the exact endpoint that is failing to resolve. If this is happening on an endpoint that previously worked, there may be a network connectivity issue or your DNS cache could be storing endpoints for too long."
+  },
+  "reason": "3차 상품 생성: S3 업로드가 UnknownHostException으로 실패. 대상 코드는 수정하지 않았고 API 재성공을 꾸미지 않음. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/FileUploadService.java:43"
+}

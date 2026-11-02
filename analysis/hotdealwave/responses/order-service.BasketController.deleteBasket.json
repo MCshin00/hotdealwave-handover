@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "DELETE",
+    "path": "/api/v1/baskets/58c805ab-840f-4f25-ba0a-e3f78ece7ded",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "해당 장바구니가 삭제되었습니다.",
+    "data": {
+      "basketId": "58c805ab-840f-4f25-ba0a-e3f78ece7ded"
+    }
+  },
+  "reason": null
+}
