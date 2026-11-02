@@ -1,19 +1,6 @@
-# REST·Feign·게이트웨이·Kafka·설정 추출기
-
-HotDealWave 기준선(레거시)은 저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
-
-```bash
-./gradlew test
-./gradlew :extractor:run
-# 선택: 입력·출력 경로 변경 (작업 디렉터리는 항상 저장소 루트)
-./gradlew :extractor:run --args="target/HotDealWave out/parser.json"
-```
-
-기본 입력은 `target/HotDealWave`, 출력은 `out/parser.json`이다. 분석 대상을 빌드하거나 수정하지 않는다. 서비스의 `application.yml`, `application-<프로필>.yml`, `src/main/java/**/*.java`와 루트 `docker-compose.yml`을 읽는다. `.env` 계열과 최종 질문은 입력에 포함하지 않는다. 유료 모델은 호출하지 않는다. 파싱 자체에 실패하면 성공한 결과로 내보내지 않고 실행을 실패시킨다.
-
 ## analysis.json 계약 (schemaVersion: 1)
 
-UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 한 결과 파일 안에서만 참조한다. 시각·로컬 절대경로는 쓰지 않는다. 같은 소스는 같은 결과를 낸다.
+UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 한 결과 파일 안에서만 참조한다. 시각·로컬 절대경로는 쓰지 않는다.
 
 각 사실은 `status`, `evidence`를 가진다. `evidence`는 `target/HotDealWave` 기준 `/` 구분 상대경로의 `파일:줄` 배열이다. 줄은 1부터 센다. 선언의 확인 상태와 그 하위 타입·연결의 확인 상태는 별개다.
 
@@ -76,17 +63,17 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 3. public 필드면 필드 이름을 쓴다(`확인됨`).
 4. 나머지는 `확인 안 됨`이다.
 
-전역 ObjectMapper 설정 등 다른 Jackson 설정은 따라가지 않는다. 고정 소스에는 record 선언이 없으며, 현재 record 컴포넌트를 별도 필드로 전개하지 않는 동작은 유지한다.
+전역 ObjectMapper 설정 등 다른 Jackson 설정은 따라가지 않는다.
 
 ### 외부 경로와 토큰
 
-`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 [검증기](../verifier/README.md)가 교차 검증 경고를 낸다.
+`externalPaths[]`는 `{routeId, path, tokenRequired: Fact<boolean>, status, evidence}`다. 기본 API 경로를 내며, 실제 `Path` 조건을 확인한다. 확정하지 못한 외부 경로는 만들지 않고 [검증기](../../verifier/README.md)가 교차 검증 경고를 낸다.
 
 엔드포인트의 `tokenRequired`는 기본 API 경로의 판정이다. 외부 경로 자체가 없으면 `확인 안 됨`이다. 토큰 허용은 `AllowedPath.matches`의 `startsWith`와 메서드 비교를 따른다. 서비스 안의 역할별 권한 검사는 포함하지 않는다.
 
 ### Kafka 토픽과 연결
 
-구독은 `@KafkaListener(topics = "${spring.kafka.topics.x}")`, 발행은 `kafkaTemplate.send`의 첫 인자와 `DeadLetterPublishingRecoverer` 안의 `TopicPartition` 토픽을 출발점으로 삼는다. 한 서비스의 메서드 인자를 호출 지점으로 거슬러 올라가 `@Value` 필드를 찾는다. private 래퍼와 여러 메서드를 거치는 인자도 따라간다. 하나의 `send`에 서로 다른 호출 경로로 토픽이 들어오면 경로별 발행 항목을 만든다.
+구독은 `@KafkaListener(topics = "${spring.kafka.topics.x}")`, 발행은 `kafkaTemplate.send`의 첫 인자와 `DeadLetterPublishingRecoverer` 안의 `TopicPartition` 토픽을 출발점으로 삼는다. 하나의 `send`에 서로 다른 호출 경로로 토픽이 들어오면 경로별 발행 항목을 만든다.
 
 `topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 `application.yml` → compose `environment`까지 확인한 환경변수 이름이다. Kafka의 `profile`은 `base`이며 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `ENV=${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같을 때만 `kafkaLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
 

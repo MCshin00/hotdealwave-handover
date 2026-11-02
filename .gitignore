@@ -17,7 +17,6 @@ out/
 __pycache__/
 *.py[cod]
 
-# Java (extractor/, server/)
 .gradle/
 build/
 

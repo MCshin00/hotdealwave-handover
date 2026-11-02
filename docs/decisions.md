@@ -62,7 +62,6 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/extrac
 |---|---|---|
 | 추출 | AI 세션(Claude Code·Codex)과 Skill | 프레임워크가 달라도 지시문으로 따라간다. 세션 작업이라 별도 유료 호출이 없다 |
 | 검증 | Java 17, SnakeYAML, Jackson | 서버와 같은 실행 환경이다. 확인 상태는 AI가 아니라 검증이 정한다 |
-| 기준선 | Java 17, JavaParser 3.28.2(JavaSymbolSolver 포함) | HotDealWave에서 AI 추출 결과를 대조한다 |
 | 서버 | Spring Boot, Thymeleaf, Mermaid(흐름 그림) | 검증과 같은 실행 환경 하나로 빌드·테스트·배포한다. 개발자가 직접 읽고 판단할 수 있는 스택이다. 화면 모양은 중요하지 않다 |
 | MCP | MCP Java SDK(`mcp-core`의 서블릿용 Streamable HTTP 전송) | Spring Boot에 바로 붙는다. Claude Code·Codex 모두 HTTP 방식 MCP를 등록할 수 있어 표준 입출력 방식은 두지 않는다 |
 | 질의응답 | OpenAI Java SDK(정해진 형식의 출력) | rag-chatbot의 방식(BM25, 정해진 형식의 답·인용·보류, 보류 규칙)을 옮긴다. 인용 검사는 답의 `파일:줄`이 인용한 조각에 있는지까지 본다. 모델은 질의응답 단계에서 비용과 함께 정한다 |
@@ -79,9 +78,9 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/extrac
 
 ## 추출 방식
 
-AI 세션이 Skill을 따라 대상 코드를 읽고 정해진 형식으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
+AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/README.md)으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
 
-파서 추출기(`extractor/`)는 HotDealWave의 기준선이다. AI 추출 결과와 항목별로 대조해 일치율과 틀린 곳을 낸다. 파서로 만든 규칙은 대상 저장소의 코드 모양에 묶여 다른 저장소에 쓸 수 없었다.
+파서 추출기는 3단계에서 HotDealWave의 AI 추출 결과와 대조하는 기준선으로 썼다.
 
 ## Kafka 연결 규칙
 

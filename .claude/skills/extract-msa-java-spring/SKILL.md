@@ -8,8 +8,8 @@ description: Spring Boot·Spring Cloud MSA의 대상 저장소 경로와 결과 
 ## 입력과 경계
 
 - 대상 저장소 경로와 결과 파일 경로를 받는다. 대상은 지정된 고정 커밋의 읽기 전용 소스로 취급하며 수정하거나 빌드하지 않는다.
-- 입력은 대상 코드·설정, 이 Skill, [extractor/README.md의 analysis.json 계약](../../../extractor/README.md#analysisjson-계약-schemaversion-1)뿐이다. 계약의 필드·타입·분류·범위를 따른다. 계약에 등장하는 특정 대상의 이름·예시를 추출 사실로 쓰지 않는다.
-- 도구 저장소의 `extractor/`(위 계약 파일만 예외), `out/`, `docs/`, `eval/`, `knowledge/`, `.local/`은 읽거나 검색하지 않는다. 계약 안의 다른 문서 링크도 따라가지 않는다. 기존 추출 결과를 참고하지 않는다.
+- 입력은 대상 코드·설정, 이 Skill, [docs/format/README.md의 analysis.json 계약](../../../docs/format/README.md#analysisjson-계약-schemaversion-1)뿐이다. 계약의 필드·타입·분류·범위를 따른다. 계약에 등장하는 특정 대상의 이름·예시를 추출 사실로 쓰지 않는다.
+- 도구 저장소의 `out/`, `docs/`(위 계약 파일만 예외), `eval/`, `knowledge/`, `.local/`은 읽거나 검색하지 않는다. 계약 안의 다른 문서 링크도 따라가지 않는다. 기존 추출 결과를 참고하지 않는다.
 - 대상에서도 `.env`, `.env.*`, `.local/`은 열거나 검색하지 않는다. 환경변수는 이름만 기록하고 값·비밀값을 출력하지 않는다. 결과에 로컬 절대경로를 쓰지 않는다.
 - 파일 목록·텍스트 검색·줄 번호를 붙인 읽기로 코드를 직접 해석하고 JSON을 직접 작성한다. 추출 프로그램이나 스크립트를 만들거나 실행하지 않는다. 별도 모델 API도 호출하지 않는다.
 
