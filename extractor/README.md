@@ -1,6 +1,6 @@
 # REST·Feign·게이트웨이·Kafka·설정 추출기
 
-저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
+HotDealWave 기준선(레거시)은 저장소 루트에서 실행한다. JDK 17 이상이 필요하다.
 
 ```bash
 ./gradlew test
@@ -33,7 +33,7 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 | 최상위 키 | 내용 |
 |---|---|
 | `schemaVersion` | 정수 `1` |
-| `services` | `directory`, `name: Fact<string>`, 상태·근거. `build.gradle`과 `src/main/java`가 있는 폴더이며 이름은 YAML의 `spring.application.name` |
+| `services` | `directory`, `name: Fact<string>`, `composeService: Fact<string>`, 상태·근거. `build.gradle`과 `src/main/java`가 있는 폴더이며 이름은 YAML의 `spring.application.name` |
 | `endpoints` | `id`, `service`, `controller`, `handler`, `httpMethod: Fact<string>`, `path: Fact<string>`, `parameters`, `response`, `externalPaths`, `tokenRequired: Fact<boolean>`, 상태·근거 |
 | `feignClients` | `id`, `service`, `type`, `name/url/path: Fact<string>`, 상태·근거 |
 | `feignCalls` | `id`, `clientId`, `service`, `handler`, `httpMethod/path: Fact<string>`, `external`, `target: Fact<string>`, 상태·근거 |
@@ -49,6 +49,8 @@ UTF-8 JSON이다. 배열 순서는 서비스·소스 경로 순서이며, ID는 
 | `warnings` | `check`, `status`, `evidence`, `reason`. 판정 전 상태는 `확인 안 됨` |
 
 `httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
+
+`services[].composeService`는 그 애플리케이션을 실행하는 compose 서비스 키다. 근거는 키 선언 줄과 대응을 정한 줄(같은 블록의 이름·빌드·이미지 등)이며, compose에 없거나 대응을 정할 수 없으면 `value: null`이다.
 
 ### 파라미터와 DTO
 

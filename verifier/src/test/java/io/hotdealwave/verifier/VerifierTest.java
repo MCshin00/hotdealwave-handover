@@ -130,8 +130,57 @@ class VerifierTest {
         return node;
     }
 
+    private ObjectNode orderRequestProduct() {
+        var input = document();
+        input.withArray("services").add(service("order", "order-service", "order-service", 134, 136));
+        input.withArray("kafkaPublications").add(kafka("request", "order-service", "kafkaTemplate.send",
+                "spring.kafka.topics.request-product", "KAFKA_REQUEST_PRODUCT_TOPIC", ORDER + "event/producer/OrderEventProducer.java:62",
+                ORDER + "event/producer/OrderEventProducer.java:24", "order/src/main/resources/application.yml:15", "docker-compose.yml:156"));
+        return input;
+    }
+
+    private ObjectNode service(String directory, String name, String composeKey, int keyLine, int mappingLine) {
+        String application = directory + "/src/main/resources/application.yml:3";
+        var service = item(application).put("directory", directory);
+        service.set("name", fact(name, application));
+        service.set("composeService", fact(composeKey, "docker-compose.yml:" + keyLine, "docker-compose.yml:" + mappingLine));
+        return service;
+    }
+
+    @Test void orderRequestProductComposeLine156IsConfirmed() throws Exception {
+        var output = verify(orderRequestProduct());
+        assertEquals("확인됨", output.at("/kafkaPublications/0/environment/status").asText());
+        assertEquals("확인됨", output.at("/kafkaPublications/0/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+    }
+
+    @Test void nullComposeServiceIsUnknownWithoutEvidenceWarning() throws Exception {
+        var input = document();
+        var service = service("order", "order-service", "order-service", 134, 136);
+        service.set("composeService", fact(null));
+        input.withArray("services").add(service);
+        var output = verify(input);
+        assertEquals(Checks.UNKNOWN, output.at("/services/0/composeService/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+    }
+
+    @Test void extractedS3ResourceHasValidEvidence() throws Exception {
+        var input = document();
+        var extracted = JSON.readTree(Path.of("analysis/hotdealwave/extracted.json").toFile());
+        for (var resource : extracted.path("externalResources")) {
+            if (resource.path("kind").asText().equals("S3")) input.withArray("externalResources").add(resource);
+        }
+        assertEquals(1, input.path("externalResources").size());
+        var output = verify(input);
+        assertEquals(Checks.CONFIRMED, output.at("/externalResources/0/status").asText());
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+    }
+
     @Test void kafkaRelationsRequireEqualEnvironmentNamesAndBothComposeLines() throws Exception {
         var input = document();
+        input.withArray("services").add(service("order", "order-service", "order-service", 134, 136))
+                .add(service("payment", "payment-service", "payment-service", 169, 171))
+                .add(service("product", "product-service", "product-service", 70, 72));
         String payment = "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java";
         String consumer = ORDER + "event/consumer/OrderStatusUpdateEventConsumer.java:25";
         String env = "KAFKA_UPDATE_ORDER_STATUS_TOPIC";
@@ -159,6 +208,16 @@ class VerifierTest {
         assertEquals(2, output.at("/checks/kafka-topics/warningCount").asInt());
         assertEquals("확인됨", output.at("/kafkaPublications/1/status").asText());
         assertEquals("확인됨", output.at("/kafkaSubscriptions/1/status").asText());
+
+        // The same variable in payment's environment is not evidence for the order subscription.
+        for (var node : new JsonNode[]{sub, sub.path("topicKey"), sub.path("topicName"), sub.path("environment")})
+            ((ObjectNode) node).withArray("evidence").set(2, JSON.getNodeFactory().textNode("docker-compose.yml:196"));
+        ((ObjectNode) input.path("kafkaLinks").get(0)).withArray("evidence")
+                .set(1, JSON.getNodeFactory().textNode("docker-compose.yml:196"));
+        output = verify(input);
+        assertEquals(Checks.UNKNOWN, output.at("/kafkaSubscriptions/0/environment/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/kafkaSubscriptions/0/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/kafkaLinks/0/status").asText());
     }
 
     @Test void environmentOnlyValueIsAbsentButPlainNullIsUnknown() throws Exception {

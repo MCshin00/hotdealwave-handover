@@ -29,6 +29,10 @@ final class EvidenceChecks {
         if (!(node instanceof ObjectNode object)) return;
         for (var entry : new ArrayList<>(object.properties())) visit(entry.getValue(), entry.getKey(), object);
         if (!object.has("evidence")) return;
+        if (role.equals("composeService") && object.path("value").isNull()) {
+            verdict(object, UNKNOWN, "composeService: 값 없음");
+            return;
+        }
         var lines = source.evidenceLines(object);
         if (lines.isEmpty()) { reject(object, role + ": 근거 파일·줄을 확인하지 못함"); return; }
         // Relationship facts are decided after all local facts have been checked.
@@ -96,46 +100,36 @@ final class EvidenceChecks {
     private boolean topicEnvironment(JsonNode fact, JsonNode endpoint, String name) throws IOException {
         String key = value(endpoint.path("topicKey"));
         if (key == null || key.isEmpty() || !contains(source.evidenceLines(endpoint.path("topicKey")), key)) return false;
+        String composeService = items(analysis.path("services")).stream()
+                .filter(s -> known(s.path("name")) && endpoint.path("service").asText().equals(value(s.path("name"))))
+                .map(s -> s.path("composeService")).filter(Checks::known).map(Checks::value).findFirst().orElse(null);
+        if (composeService == null || composeService.isEmpty()) return false;
+        String composePath = "services." + composeService + ".environment";
         boolean yaml = false, compose = false;
         for (var ev : fact.path("evidence")) {
             String evidence = ev.asText(), line = source.line(evidence);
             if (evidence.contains("/src/main/resources/application.yml:") && source.yamlKey(evidence).equals(key)
                     && line.substring(line.indexOf(':') + 1).trim().equals("${" + name + "}")) yaml = true;
-            if (evidence.startsWith("docker-compose.yml:") && line.trim().equals("- " + name + "=${" + name + "}")) {
+            if (evidence.startsWith("docker-compose.yml:") && line.contains("${" + name + "}")) {
                 String composeKey = source.yamlKey(evidence);
-                compose = composeKey.equals("services." + endpoint.path("service").asText() + ".environment");
+                if (composeKey.equals(composePath) || composeKey.startsWith(composePath + ".")) compose = true;
             }
         }
         return yaml && compose;
     }
 
     private boolean resource(JsonNode node) throws IOException {
-        String kind = node.path("kind").asText();
-        String prefixes = switch (kind) {
-            case "DB" -> "spring.datasource.|spring.jpa.";
-            case "Redis" -> "spring.data.redis.";
-            case "Kafka" -> "spring.kafka.";
-            case "Elasticsearch" -> "spring.elasticsearch.";
-            case "S3" -> "s3.";
-            case "KakaoPay" -> "pay.";
-            default -> "";
-        };
+        // The extraction supplies the resource name; the verifier has no resource catalogue.
+        String name = node.path("kind").asText().toLowerCase(Locale.ROOT);
+        if (name.isBlank()) return false;
         for (var ev : node.path("configurationEvidence")) {
-            String key = source.yamlKey(ev.asText());
-            if (!prefixes.isEmpty() && Arrays.stream(prefixes.split("\\|")).anyMatch(key::startsWith)) return true;
+            String line = source.line(ev.asText());
+            if (line != null && (source.yamlKey(ev.asText()).toLowerCase(Locale.ROOT).contains(name)
+                    || line.toLowerCase(Locale.ROOT).contains(name))) return true;
         }
-        String names = switch (kind) {
-            case "DB" -> "JpaRepository|EntityManager|@Entity|@Table";
-            case "Redis" -> "RedisTemplate|RedisConnectionFactory|RedissonClient";
-            case "Kafka" -> "KafkaTemplate|ConsumerFactory|ProducerFactory|DeadLetterPublishingRecoverer|@KafkaListener|@EnableKafka";
-            case "Elasticsearch" -> "ElasticsearchClient|ElasticsearchRepository";
-            case "S3" -> "S3Client";
-            case "KakaoPay" -> "KakaoPayClient|open-api.kakaopay.com";
-            default -> "(?!)";
-        };
         for (var ev : node.path("codeEvidence")) {
             String line = source.line(ev.asText());
-            if (line != null && Pattern.compile(names).matcher(line).find()) return true;
+            if (line != null && line.toLowerCase(Locale.ROOT).contains(name)) return true;
         }
         return false;
     }

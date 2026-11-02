@@ -5,11 +5,14 @@
 ## 하는 일
 
 ```
-target/HotDealWave --> extractor --> out/parser.json --> verifier --> out/analysis.json
-   @cc43016             (Java)                          (Java)             |
-                                                                         server --+--> 문서 페이지
-                                                                    (Spring Boot) +--> 검색·질문 페이지
-                                                                                  +--> /mcp
+target/HotDealWave (@cc43016)
+  --> AI 추출(Skill)
+  --> analysis/hotdealwave/extracted.json
+  --> verifier (Java)
+  --> out/analysis.json
+  --> server (Spring Boot) --+--> 문서 페이지
+                            +--> 검색·질문 페이지
+                            +--> /mcp
 ```
 
 모든 결과에는 근거 `파일:줄`과 상태가 붙는다. 저장소만으로 확정할 수 없는 연결은 추측하지 않는다.
@@ -27,8 +30,9 @@ hotdealwave-handover/
 |
 +-- target/HotDealWave/     # 분석 대상 서브모듈 (팀 원본 저장소 cc43016, 읽기만)
 |
-+-- extractor/              # 추출기 (Java 17, JavaParser)
-|                           #   REST·Feign·Kafka·설정 -> out/parser.json
++-- extractor/              # HotDealWave 기준선(레거시, Java 17·JavaParser) -> out/parser.json
++-- analysis/               # AI 추출 결과
++-- .claude/skills/         # 추출 Skill
 |
 +-- verifier/               # 검증기 (Java 17, Jackson) -> out/analysis.json, 상태·경고
 |
@@ -84,13 +88,12 @@ JDK 17 이상이 필요하다.
 ```bash
 ./gradlew build
 ./gradlew test
-./gradlew :extractor:run
 ./gradlew :verifier:run
 # 선택: 입력·대상·출력 경로 변경
-./gradlew :verifier:run --args="out/parser.json target/HotDealWave out/analysis.json"
+./gradlew :verifier:run --args="analysis/hotdealwave/extracted.json target/HotDealWave out/analysis.json"
 python scripts/check_shared_files.py
 ```
 
-추출 명령은 분석 대상을 빌드하지 않고 `out/parser.json`을 만들며, [검증기](verifier/README.md)는 `out/analysis.json`을 만들고 근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 결과 구조는 [extractor/README.md](extractor/README.md)에 있다.
+`./gradlew :verifier:run`은 AI 추출 결과 `analysis/hotdealwave/extracted.json`을 검증해 `out/analysis.json`을 만들고 근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 파서 결과를 검증기에 넣으면 `composeService`가 없어 Kafka 연결이 `확인 안 됨`이 된다. 결과 구조는 [extractor/README.md](extractor/README.md)에 있다.
 
 공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 서버 실행 명령은 6단계에서 더한다.
