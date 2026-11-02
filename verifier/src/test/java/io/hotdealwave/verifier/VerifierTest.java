@@ -273,6 +273,26 @@ class VerifierTest {
         assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
     }
 
+    @Test void responseFileEvidenceSkipsLineChecksForCorrectedCouponField() throws Exception {
+        var input = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/extracted.json").toFile());
+        var endpoint = Checks.items(input.path("endpoints")).stream()
+                .filter(e -> e.path("evidence").toString().contains("CouponController.java:39"))
+                .findFirst().orElseThrow();
+        var field = Checks.items(endpoint.at("/response/fields/1/schema/arguments/0/fields")).stream()
+                .filter(f -> f.path("name").asText().equals("isUsed"))
+                .map(f -> (ObjectNode) f).findFirst().orElseThrow();
+        String evidence = "analysis/hotdealwave/responses/" + endpoint.path("id").asText() + ".json:1";
+        field.putArray("evidence").add(evidence);
+        field.set("jsonName", fact("isUsed", evidence));
+        ((ObjectNode) field.path("schema")).putArray("evidence").add(evidence);
+        var output = verify(input);
+        assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
+        assertFalse(output.path("warnings").toString().contains("responses/"));
+        var corrected = Checks.find(output.path("endpoints"), "id", endpoint.path("id").asText())
+                .at("/response/fields/1/schema/arguments/0/fields/5/jsonName");
+        assertEquals("isUsed", corrected.path("value").asText());
+    }
+
     @Test void jsonNameUsesBooleanFieldAndLombokEvidence() throws Exception {
         var input = document();
         String dto = COUPON + "application/dto/res/ResGetUserCouponsDto.java";

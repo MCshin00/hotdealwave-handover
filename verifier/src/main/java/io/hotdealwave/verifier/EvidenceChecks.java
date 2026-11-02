@@ -29,6 +29,11 @@ final class EvidenceChecks {
         if (!(node instanceof ObjectNode object)) return;
         for (var entry : new ArrayList<>(object.properties())) visit(entry.getValue(), entry.getKey(), object);
         if (!object.has("evidence")) return;
+        var evidence = items(object.path("evidence"));
+        if (!evidence.isEmpty() && evidence.stream().allMatch(e -> SourceText.isResponseEvidence(e.asText()))) {
+            verdict(object, CONFIRMED, null);
+            return;
+        }
         if (role.equals("composeService") && object.path("value").isNull()) {
             verdict(object, UNKNOWN, "composeService: 값 없음");
             return;

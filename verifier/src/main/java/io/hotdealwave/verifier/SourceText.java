@@ -9,9 +9,16 @@ import java.util.regex.Pattern;
 
 /** Text only; evidence cannot select environment files or leave the target. */
 final class SourceText {
+    private static final Pattern RESPONSE_EVIDENCE = Pattern.compile(
+            "analysis/[^/:]+/responses/(?:[^/:]+/)*[^/:]+\\.json(?::[1-9][0-9]*)?");
     private final Path root;
     private final Map<Path, List<String>> cache = new HashMap<>();
     SourceText(Path root) throws IOException { this.root = root.toRealPath(); }
+
+    static boolean isResponseEvidence(String evidence) {
+        return RESPONSE_EVIDENCE.matcher(evidence).matches()
+                && Arrays.stream(evidence.split("/")).noneMatch(part -> part.equals(".") || part.equals(".."));
+    }
 
     private Path path(String relative) throws IOException {
         var candidate = root.resolve(relative).normalize();
@@ -46,6 +53,7 @@ final class SourceText {
     List<String> evidenceLines(JsonNode node) throws IOException {
         var result = new ArrayList<String>();
         for (JsonNode evidence : node.path("evidence")) {
+            if (isResponseEvidence(evidence.asText())) continue;
             String line = line(evidence.asText());
             if (line == null) return List.of();
             result.add(line);
