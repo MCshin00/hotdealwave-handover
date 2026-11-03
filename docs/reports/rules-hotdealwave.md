@@ -24,6 +24,7 @@ out/analysis.json(추출) + analysis/hotdealwave/responses/ + target/HotDealWave
 |---|---:|---:|---:|---:|---:|
 | company-service | 8 | 5 | 3 | 4 | 0 |
 | coupon-service | 18 | 12 | 6 | 4 | 0 |
+| eureka-server | 0 | 0 | 0 | 0 | 0 |
 | gateway-service | 1 | 0 | 1 | 1 | 0 |
 | order-service | 25 | 12 | 13 | 3 | 0 |
 | payment-service | 19 | 8 | 11 | 3 | 1 |
@@ -31,7 +32,7 @@ out/analysis.json(추출) + analysis/hotdealwave/responses/ + target/HotDealWave
 | user-service | 21 | 15 | 6 | 0 | 0 |
 | 합계 | 125 | 61 | 64 | 21 | 1 |
 
-- eureka-server는 출발점(엔드포인트·Feign·Kafka·스케줄 작업)이 없어 실행하지 않았다.
+- eureka-server는 출발점(엔드포인트·Feign·Kafka·스케줄 작업)이 없어 Skill을 실행하지 않고 빈 항목 파일(`items: []`)을 두었다.
 - 확인 상태: 확인함 1(판정 항목), 미확인 124.
 - 검증기 경고: `knowledge-evidence` 0, `knowledge-affected-ids` 0, `schema` 0. 추출 경고는 그대로다(선언 목록 1, `kafka-topics` 11).
 
