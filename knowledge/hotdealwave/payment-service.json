@@ -41,7 +41,7 @@
       "service": "payment-service",
       "kind": "함정",
       "title": "중복 준비는 새 결제를 만들지만 취소·환불은 주문별 단건을 조회한다",
-      "description": "직접 API와 준비 이벤트 모두 기존 결제 조회 없이 외부 준비 요청 후 Payment.create와 save를 수행한다. 엔티티의 orderId·userId·tid에는 유일 제약 선언이 없는데 취소·환불의 주문·사용자 조회는 Optional<Payment> 단건을 요구한다. 같은 주문과 사용자로 준비가 반복되어 여러 행이 저장되면 어떤 결제를 취소·환불할지 선택하는 코드가 없다. 실제 중복 저장이나 단건 조회 오류가 관찰된 것은 아니다.",
+      "description": "직접 API와 준비 이벤트 모두 기존 결제 조회 없이 외부 준비 요청 후 Payment.create와 save를 수행한다. 엔티티의 orderId·userId·tid에는 유일 제약 선언이 없는데 취소·환불의 주문·사용자 조회는 Optional<Payment> 단건을 요구한다. 같은 주문과 사용자로 준비가 반복되어 여러 행이 저장되면 어떤 결제를 취소·환불할지 선택하는 코드가 없다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:43",
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:54",
@@ -218,7 +218,7 @@
       "service": "payment-service",
       "kind": "업무 규칙",
       "title": "승인은 TID 조회 후 외부 승인과 COMPLETE 통지를 수행한다",
-      "description": "승인 대상은 tid와 미삭제 조건으로 찾으며 없으면 404/PA001이다. 이 조회에는 userId가 없고 PENDING 여부를 검사하는 분기도 없다. 외부 승인에는 저장된 orderId와 현재 요청자의 userId를 보내고 응답 매핑이 정상 반환되면 로컬 상태를 COMPLETE로 바꾼 뒤 주문 COMPLETE 이벤트를 발행한다. 주문 소비자는 orderId로 미삭제 주문을 찾아 전달된 상태로 변경한다. 다른 소유자나 기존 상태의 결제가 외부에서 실제 승인되는지는 확인하지 않았다.",
+      "description": "승인 대상은 tid와 미삭제 조건으로 찾으며 없으면 404/PA001이다. 이 조회에는 userId가 없고 PENDING 여부를 검사하는 분기도 없다. 외부 승인에는 저장된 orderId와 현재 요청자의 userId를 보내고 응답 매핑이 정상 반환되면 로컬 상태를 COMPLETE로 바꾼 뒤 주문 COMPLETE 이벤트를 발행한다. 주문 소비자는 orderId로 미삭제 주문을 찾아 전달된 상태로 변경한다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59",
@@ -351,7 +351,7 @@
       "service": "payment-service",
       "kind": "업무 규칙",
       "title": "주문 Feign 호출은 고정 관리자 헤더를 사용한다",
-      "description": "OrderClient는 요청자나 메시지 소유자 대신 admin.user-id·admin.email·admin.role 설정으로 X-User 헤더를 만든다. 주문 상세는 ROLE_MASTER이면 주문 ID로, 그 외 역할이면 헤더 사용자와 주문 ID로 조회한다. 반환된 data.userId를 결제 이벤트 처리의 소유자로 사용한다. 주문 상태 변경 Feign 선언도 이 설정을 공유하고 대상 API는 ROLE_MASTER만 허용하지만 결제 코드에서 해당 어댑터 메서드를 실제 업무 흐름에 호출하는 지점은 발견되지 않았다. 설정의 실제 계정과 역할은 저장소 밖이므로 추정하지 않는다.",
+      "description": "OrderClient는 요청자나 메시지 소유자 대신 admin.user-id·admin.email·admin.role 설정으로 X-User 헤더를 만든다. 주문 상세는 ROLE_MASTER이면 주문 ID로, 그 외 역할이면 헤더 사용자와 주문 ID로 조회한다. 반환된 data.userId를 결제 이벤트 처리의 소유자로 사용한다. 주문 상태 변경 Feign 선언도 이 설정을 공유하고 대상 API는 ROLE_MASTER만 허용하지만 결제 코드에서 해당 어댑터 메서드를 실제 업무 흐름에 호출하는 지점은 발견되지 않았다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:14",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:16",
@@ -403,7 +403,7 @@
       "service": "payment-service",
       "kind": "함정",
       "title": "승인 후 주문 통지의 동기 실패는 외부 승인을 취소하지 않는다",
-      "description": "카카오페이 승인 응답을 받은 다음 주문 상태 통지에서 동기 예외가 발생하면 PaymentProducerService는 결제 상태를 CANCEL로 바꾸고 saveAndFlush한 뒤 PA005 런타임 예외를 던진다. 승인 서비스와 통지 서비스는 모두 @Transactional이고 별도 트랜잭션 전파 설정이 없어 이 flush를 독립된 CANCEL 확정 저장으로 볼 수 없다. 이 오류 경로는 카카오페이 취소를 호출하지 않으므로 이미 끝난 외부 승인을 되돌리는 처리가 없고 HTTP 응답은 400/PA005가 된다. 실제 외부 승인이나 롤백 결과를 관찰한 항목은 아니다.",
+      "description": "카카오페이 승인 응답을 받은 다음 주문 상태 통지에서 동기 예외가 발생하면 PaymentProducerService는 결제 상태를 CANCEL로 바꾸고 saveAndFlush한 뒤 PA005 런타임 예외를 던진다. 승인 서비스와 통지 서비스는 모두 @Transactional이고 별도 트랜잭션 전파 설정이 없어 이 flush를 독립된 CANCEL 확정 저장으로 볼 수 없다. 이 오류 경로는 카카오페이 취소를 호출하지 않으므로 이미 끝난 외부 승인을 되돌리는 처리가 없고 HTTP 응답은 400/PA005가 된다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:33",
         "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
@@ -515,7 +515,7 @@
       "service": "payment-service",
       "kind": "함정",
       "title": "DLQ 소비자는 리스너 선언만 있고 빈 등록 근거가 없다",
-      "description": "PaymentDlqConsumer에는 @KafkaListener가 있으나 클래스에는 @Slf4j와 @RequiredArgsConstructor만 있고 @Component가 없다. 결제 서비스의 애플리케이션·설정·소스에서 이 클래스를 생성하거나 @Bean·@Import로 등록하는 경로도 찾지 못했다. DLQ를 수신해 원문과 오류를 로깅하는 코드가 있다는 사실과 실제 소비자가 등록되어 실행된다는 주장은 구별해야 한다. 실제 DLQ 소비 실행 여부는 확인하지 않았다.",
+      "description": "PaymentDlqConsumer에는 @KafkaListener가 있으나 클래스에는 @Slf4j와 @RequiredArgsConstructor만 있고 @Component가 없다. 결제 서비스의 애플리케이션·설정·소스에서 이 클래스를 생성하거나 @Bean·@Import로 등록하는 경로도 찾지 못했다. DLQ를 수신해 원문과 오류를 로깅하는 코드가 있다는 사실과 실제 소비자가 등록되어 실행된다는 주장은 구별해야 한다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:10",
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:11",
@@ -546,7 +546,7 @@
       "service": "payment-service",
       "kind": "함정",
       "title": "수동 확인 모드인데 결제 리스너에는 확인 호출이 없다",
-      "description": "결제 리스너 컨테이너는 AckMode.MANUAL로 설정되지만 준비·취소·환불 리스너는 String message만 받고 Acknowledgment 인자나 acknowledge 호출이 없다. 정상 처리와 예외를 잡고 반환하는 경로 모두 수동 확인 코드를 제공하지 않으므로 메서드 반환을 수동 오프셋 확인 완료로 간주할 수 없다. 재기동·재할당 시 실제 재전달 여부나 횟수는 이 실행에서 확인하지 않았다.",
+      "description": "결제 리스너 컨테이너는 AckMode.MANUAL로 설정되지만 준비·취소·환불 리스너는 String message만 받고 Acknowledgment 인자나 acknowledge 호출이 없다. 정상 처리와 예외를 잡고 반환하는 경로 모두 수동 확인 코드를 제공하지 않으므로 메서드 반환을 수동 오프셋 확인 완료로 간주할 수 없다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:49",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:50",
@@ -583,7 +583,7 @@
       "service": "payment-service",
       "kind": "업무 규칙",
       "title": "컨테이너로 전파된 오류는 재시도 없이 DLQ 복구기로 넘긴다",
-      "description": "컨테이너의 DefaultErrorHandler는 FixedBackOff(0L, 0)으로 구성되어 있으며 복구기는 실패 레코드와 같은 파티션의 payment-dlq를 선택한다. 준비·취소·환불 리스너가 내부에서 잡아 처리한 예외는 이 경로로 자동 전달되는 것이 아니며 리스너 밖으로 전파된 오류에 대한 설정이다. 이 항목은 재시도와 예외 경계를 기록하며 이미 경고에 있는 DLQ 구독자 연결 여부를 새로 판정하지 않는다.",
+      "description": "컨테이너의 DefaultErrorHandler는 FixedBackOff(0L, 0)으로 구성되어 있으며 복구기는 실패 레코드와 같은 파티션의 payment-dlq를 선택한다. 준비·취소·환불 리스너가 내부에서 잡아 처리한 예외는 이 경로로 자동 전달되는 것이 아니며 리스너 밖으로 전파된 오류에 대한 설정이다.",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:49",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",

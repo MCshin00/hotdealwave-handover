@@ -51,7 +51,7 @@
       "service": "product-service",
       "kind": "함정",
       "title": "상품 생성의 APPROVED 업체 조건은 실제로 검사되지 않는다",
-      "description": "CompanyClient는 승인 업체를 요청하는 status=APPROVED를 보내지만 company-service의 단건 컨트롤러는 status를 받지 않고 ID로만 조회한다. 응답의 status·managerId 필드는 product 수신 DTO에도 있지만 ProductService는 조회 결과를 로그에만 쓰고 상태를 검사하지 않는다. 따라서 조회와 역직렬화가 성공하면 승인 상태가 아닌 업체를 상품 생성에서 거르는 분기가 없다. 원인은 단건 조회에 승인 필터가 적용된다고 의존하는 product 호출·처리 코드다.",
+      "description": "product-service의 CompanyClient.getCompany는 업체 검증을 위해 상세 조회에 status=APPROVED를 붙인다. 그러나 company-service의 상세 컨트롤러는 companyId만 받아 서비스로 넘기며, 서비스는 ID 존재만 확인한다. 없으면 404·CA001이고, 있으면 실제 상태를 그대로 응답하므로 이 요청 파라미터로 승인 업체만 선택되지 않는다. 응답의 status·managerId 필드는 product 수신 DTO에도 있지만, ProductService.createProduct는 받은 업체를 로그에만 쓰고 상태 비교 없이 이미지 처리와 상품 저장 단계로 진행한다. 따라서 호출 성공만으로 승인 여부가 보장되지 않는다. 원인은 단건 조회에 승인 필터가 적용된다고 의존하는 product 호출·처리 코드다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:18",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:23",
@@ -62,7 +62,24 @@
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:74",
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:73",
         "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:69",
-        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:78"
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:78",
+        "product/src/main/java/com/sparta/hotdeal/product/ProductApplication.java:11",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:13",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:17",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/CompanyClientConfig.java:19",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:75",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:8",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:10",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/dtos/ResGetCompanyByIdDto.java:7",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:79"
       ],
       "affectedIds": [
         "product-service.ProductController.createProduct",
@@ -151,7 +168,7 @@
       "service": "product-service",
       "kind": "함정",
       "title": "Elasticsearch 색인 실패를 삼키고 상품 변경 성공을 반환한다",
-      "description": "상품 생성·일반 수정·상태 변경은 indexProduct를 호출한 뒤 정상 응답을 만든다. indexProduct는 문서 변환과 저장에서 발생한 모든 Exception을 로그만 남기고 삼킨다. 따라서 해당 색인 단계만 실패한 경우 호출자는 성공 응답을 만들며, DB 상세 조회와 Elasticsearch 목록 조회가 서로 다른 결과를 낼 수 있다. 실제 색인 실패를 재현한 결과는 아니다.",
+      "description": "상품 생성·일반 수정·상태 변경은 indexProduct를 호출한 뒤 정상 응답을 만든다. indexProduct는 문서 변환과 저장에서 발생한 모든 Exception을 로그만 남기고 삼킨다. 따라서 해당 색인 단계만 실패한 경우 호출자는 성공 응답을 만들며, DB 상세 조회와 Elasticsearch 목록 조회가 서로 다른 결과를 낼 수 있다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
@@ -248,7 +265,7 @@
       "service": "product-service",
       "kind": "업무 규칙",
       "title": "재고 요청은 상품 수를 대조하고 할인 상품의 프로모션 잔량도 함께 변경한다",
-      "description": "조회된 상품 개수와 요청 항목 개수가 다르면 상품 없음 예외를 내므로 같은 상품 ID를 중복한 요청도 개수 비교에 걸린다. 차감은 먼저 일반 재고를 검사하고, discountPrice가 null이 아닌 상품만 IN_PROGRESS 프로모션의 잔량을 검사·차감한 뒤 상품 재고를 차감한다. 복구는 일반 재고와 현재 진행 중인 프로모션 잔량에 수량을 더하며 원래 주문의 차감 기록을 조회하지 않는다. HTTP 차감은 내부 Exception을 500/P020으로 바꾸지만 복구는 상품 없음 404/P002, 프로모션 없음 404/P012 등의 원래 ApplicationException을 전달한다.",
+      "description": "조회된 상품 개수와 요청 항목 개수가 다르면 상품 없음 예외를 내므로 같은 상품 ID를 중복한 요청도 개수 비교에 걸린다. 차감은 먼저 일반 재고를 검사하고, discountPrice가 null이 아닌 상품만 IN_PROGRESS 프로모션의 잔량을 검사·차감한 뒤 상품 재고를 차감한다. 복구는 일반 재고와 현재 진행 중인 프로모션 잔량에 수량을 더하며 원래 주문의 차감 기록을 조회하지 않는다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:24",
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:41",
@@ -278,8 +295,31 @@
     {
       "service": "product-service",
       "kind": "함정",
+      "title": "HTTP 재고 차감은 원래 오류를 500·P020으로 바꾼다",
+      "description": "HTTP 차감은 내부 Exception을 500/P020으로 바꾸지만 복구는 상품 없음 404/P002, 프로모션 없음 404/P012 등의 원래 ApplicationException을 전달한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:37",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:43",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:9",
+        "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:27",
+        "product/src/main/java/com/sparta/hotdeal/product/application/exception/handler/GlobalExceptionHandler.java:28"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.reduceQuantity",
+        "product-service.ProductController.restoreQuantity"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "함정",
       "title": "음수 재고 요청은 차감과 복구의 방향을 뒤집는다",
-      "description": "수량 DTO의 int quantity에는 양수 제약이 없고 서비스도 quantity > 0을 검사하지 않는다. 재고가 10이고 요청 수량이 -1이면 차감의 부족 검사 10 < -1은 통과하고 10 - (-1)로 재고를 늘린다. 복구는 음수를 그대로 더해 재고를 줄이며, 할인 상품의 프로모션 remaining도 같은 방식으로 반대 방향으로 변한다. 이는 코드 산술 예시이며 실제 요청 실행 결과가 아니다.",
+      "description": "수량 DTO의 int quantity에는 양수 제약이 없고 서비스도 quantity > 0을 검사하지 않는다. 재고가 10이고 요청 수량이 -1이면 차감의 부족 검사 10 < -1은 통과하고 10 - (-1)로 재고를 늘린다. 복구는 음수를 그대로 더해 재고를 줄이며, 할인 상품의 프로모션 remaining도 같은 방식으로 반대 방향으로 변한다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/application/dtos/req/product/ReqPutProductQuantityDto.java:21",
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:73",
@@ -601,30 +641,6 @@
     },
     {
       "service": "product-service",
-      "kind": "함정",
-      "title": "리뷰 GET은 게이트웨이 인증 제외와 서비스 헤더 요구가 충돌한다",
-      "description": "게이트웨이는 /api/v1/reviews로 시작하는 GET을 허용 경로로 보고 JWT 검사와 사용자 헤더 생성을 건너뛴다. product 필터는 상품·프로모션 GET만 제외하고 리뷰 GET은 제외하지 않아 사용자 ID·이메일·역할 헤더가 없으면 AuthenticationException을 던진다. 저장된 GET /api/v1/reviews 응답은 500이다. 기록에 요청 헤더가 없어 그 500의 원인을 단정하지 않지만, 코드상 헤더 없는 리뷰 GET의 충돌은 확인된다.",
-      "evidence": [
-        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
-        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
-        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:40",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/SecurityConfig.java:29",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:31",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:40",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:3",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:7"
-      ],
-      "affectedIds": [
-        "product-service.ReviewController.getReviewById",
-        "product-service.ReviewController.getReviewList"
-      ],
-      "source": "AI 해석",
-      "discoveryPath": "실제 응답",
-      "confirmationStatus": "미확인"
-    },
-    {
-      "service": "product-service",
       "kind": "업무 규칙",
       "title": "리뷰 생성은 주문·상품·사용자의 개별 조회만 하고 상호 관계는 검사하지 않는다",
       "description": "리뷰 생성은 요청의 orderId를 원격 조회한 뒤 productId를 로컬 조회하고 userId를 원격 조회한다. 주문 응답은 로그에만 사용하므로 해당 상품이 주문에 포함되는지, 주문자와 요청 userId가 같은지, 결제·배송 상태가 리뷰 가능한지 비교하지 않는다. 인증 사용자와 요청 userId 비교 및 같은 주문·상품의 리뷰 중복 조회도 없다. 사용자 응답에서는 nickname을 읽어 요청 userId와 함께 리뷰에 저장한다.",
@@ -650,8 +666,8 @@
     {
       "service": "product-service",
       "kind": "업무 규칙",
-      "title": "리뷰 수정·삭제는 작성자를 비교하지 않고 testUser를 전달한다",
-      "description": "리뷰 수정·삭제 컨트롤러에는 역할 제한이나 AuthenticationPrincipal 인자가 없고 username을 testUser로 고정한다. 서비스는 reviewId와 해당 상품의 존재만 확인하며 리뷰 userId와 요청자를 비교하지 않는다. 서비스 필터의 인증 헤더 처리를 통과한 뒤에는 작성자 소유 검사가 추가되지 않는다. testUser는 이미지 삭제와 리뷰 삭제 표시의 deletedBy 인자로 사용되며 JPA의 일반 수정 감사자와 동일한 값이라고 단정할 수 없다.",
+      "title": "리뷰 수정·삭제는 작성자를 비교하지 않는다",
+      "description": "리뷰 수정·삭제 컨트롤러에는 역할 제한이나 AuthenticationPrincipal 인자가 없다. 서비스는 reviewId와 해당 상품의 존재만 확인하며 리뷰 userId와 요청자를 비교하지 않는다. 서비스 필터의 인증 헤더 처리를 통과한 뒤에는 작성자 소유 검사가 추가되지 않는다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:38",
         "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:43",
@@ -675,8 +691,30 @@
     {
       "service": "product-service",
       "kind": "함정",
+      "title": "리뷰 이미지·리뷰 삭제에는 요청자 대신 testUser를 전달한다",
+      "description": "리뷰 수정·삭제 컨트롤러는 username을 testUser로 고정한다. testUser는 이미지 삭제와 리뷰 삭제 표시의 deletedBy 인자로 사용되며 JPA의 일반 수정 감사자와 동일한 값이라고 단정할 수 없다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:43",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:51",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:108",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/custom/SecurityAuditorAware.java:23"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.updateReview",
+        "product-service.ReviewController.deleteReview"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "함정",
       "title": "리뷰 생성·목록 응답에는 후속 조회·수정·삭제용 리뷰 ID가 없다",
-      "description": "리뷰는 UUID ID를 생성하지만 생성 컨트롤러는 data=null을 반환한다. 단건·목록의 ResGetReviewByIdDto도 nickname·rating·review·reviewImgs만 내며 reviewId가 없다. 반면 단건 조회·수정·삭제는 경로에 reviewId를 요구하므로 이 API들의 정상 생성·목록 응답만으로 후속 요청의 리뷰 ID를 얻을 수 없다. 저장된 리뷰 생성은 오류 응답이어서 이 정상 경로를 실행 관찰한 것은 아니다.",
+      "description": "리뷰는 UUID ID를 생성하지만 생성 컨트롤러는 data=null을 반환한다. 단건·목록의 ResGetReviewByIdDto도 nickname·rating·review·reviewImgs만 내며 reviewId가 없다. 반면 단건 조회·수정·삭제는 경로에 reviewId를 요구하므로 이 API들의 정상 생성·목록 응답만으로 후속 요청의 리뷰 ID를 얻을 수 없다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/domain/entity/review/Review.java:29",
         "product/src/main/java/com/sparta/hotdeal/product/domain/entity/review/Review.java:30",
@@ -728,7 +766,7 @@
       "service": "product-service",
       "kind": "함정",
       "title": "리뷰 조회에는 소프트 삭제된 행을 제외하는 조건이 없다",
-      "description": "리뷰 삭제는 AuditingDate.delete로 deletedAt을 기록하려 하지만 Review에는 Product·Promotion과 달리 deleted_at IS NULL 조건이 없다. 리뷰 단건·목록은 JpaRepository의 findById와 findAll을 그대로 사용한다. 따라서 삭제 표시가 DB에 저장된 행이 있어도 조회 조건 자체는 그 행을 제외하지 않는다. 삭제 메서드의 영속화 문제와는 별개의 조회 조건 문제이며 실제 삭제 성공을 전제로 단정하지 않는다.",
+      "description": "리뷰 삭제는 AuditingDate.delete로 deletedAt을 기록하려 하지만 Review에는 Product·Promotion과 달리 deleted_at IS NULL 조건이 없다. 리뷰 단건·목록은 JpaRepository의 findById와 findAll을 그대로 사용한다. 따라서 삭제 표시가 DB에 저장된 행이 있어도 조회 조건 자체는 그 행을 제외하지 않는다. 삭제 표시가 저장되는지와 조회 조건에서 제외되는지는 별개다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/domain/entity/review/Review.java:21",
         "product/src/main/java/com/sparta/hotdeal/product/domain/entity/review/Review.java:27",
@@ -775,7 +813,7 @@
       "service": "product-service",
       "kind": "업무 규칙",
       "title": "업체·주문·사용자 Feign 조회는 요청자 대신 설정된 관리자 헤더를 사용한다",
-      "description": "세 Feign 설정은 들어온 사용자 헤더를 전달하지 않고 admin.user-id·admin.email·admin.role로 X-User 헤더를 만든다. 리뷰 주문 조회에서 order-service는 MASTER일 때만 주문 소유자 제한을 생략하고 이후에는 헤더의 사용자 ID로 user-service를 조회한다. 따라서 ADMIN_USER_ID는 단지 UUID 형식만 맞는 값이 아니라 그 후속 사용자 조회도 통과해야 한다. 리뷰의 직접 사용자 조회도 ADMIN_ROLE이 MASTER가 아니면 요청 userId와 관리자 ID의 소유 비교를 받는다. 실제 환경변수 값과 저장 응답 실패의 구체적인 원인은 확인하지 않았다.",
+      "description": "세 Feign 설정은 들어온 사용자 헤더를 전달하지 않고 admin.user-id·admin.email·admin.role로 X-User 헤더를 만든다. 리뷰 주문 조회에서 order-service는 MASTER일 때만 주문 소유자 제한을 생략하고 이후에는 헤더의 사용자 ID로 user-service를 조회한다. 따라서 ADMIN_USER_ID는 단지 UUID 형식만 맞는 값이 아니라 그 후속 사용자 조회도 통과해야 한다. 리뷰의 직접 사용자 조회도 ADMIN_ROLE이 MASTER가 아니면 요청 userId와 관리자 ID의 소유 비교를 받는다.",
       "evidence": [
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/CompanyClientConfig.java:10",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/CompanyClientConfig.java:22",

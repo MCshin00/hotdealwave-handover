@@ -178,7 +178,7 @@
       "service": "coupon-service",
       "kind": "업무 규칙",
       "title": "발급 수 증가와 사용자 쿠폰 저장은 한 트랜잭션에서 처리한다",
-      "description": "발급은 쿠폰 정보별 Redis 락을 최대 10초 기다리고 5초 임대로 획득한 뒤 별도 @Service인 CouponIssueHelper의 @Transactional 메서드를 호출한다. 락 미획득은 HTTP 408/CO020이다. 삭제되지 않은 정보가 ISSUED가 아니면 400/CO004, issuedCount가 quantity 이상이면 400/CO005로 중단한다. 통과하면 발급 수를 증가시키고 수량에 도달할 때 OUT_OF_STOCK으로 바꾸며, 같은 트랜잭션에서 미사용 사용자 쿠폰을 저장한다. finally에서 현재 스레드가 락을 소유한 경우 해제한다. 실제 동시 요청의 결과는 확인하지 않았다.",
+      "description": "발급은 쿠폰 정보별 Redis 락을 최대 10초 기다리고 5초 임대로 획득한 뒤 별도 @Service인 CouponIssueHelper의 @Transactional 메서드를 호출한다. 락 미획득은 HTTP 408/CO020이다. 삭제되지 않은 정보가 ISSUED가 아니면 400/CO004, issuedCount가 quantity 이상이면 400/CO005로 중단한다. 통과하면 발급 수를 증가시키고 수량에 도달할 때 OUT_OF_STOCK으로 바꾸며, 같은 트랜잭션에서 미사용 사용자 쿠폰을 저장한다. finally에서 현재 스레드가 락을 소유한 경우 해제한다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:26",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35",
@@ -264,7 +264,7 @@
       "service": "coupon-service",
       "kind": "함정",
       "title": "선착순 발급 API는 DAILY_COUPON도 같은 방식으로 발급한다",
-      "description": "메서드와 성공 메시지는 선착순 발급을 명시하고 enum도 FIRST_COME_FIRST_SERVE와 DAILY_COUPON을 구분한다. 그러나 발급 처리는 couponType을 검사하지 않고 상태·수량·사용자 중복만 검사하므로 DAILY_COUPON도 같은 경로에 들어간다. 중복 조건에 날짜가 없어 날짜가 바뀌어도 같은 사용자가 같은 쿠폰 정보를 다시 발급받는 경로가 되지 않는다. 이 동작은 코드 해석이며 DAILY_COUPON 발급 응답은 저장되어 있지 않다.",
+      "description": "메서드와 성공 메시지는 선착순 발급을 명시하고 enum도 FIRST_COME_FIRST_SERVE와 DAILY_COUPON을 구분한다. 그러나 발급 처리는 couponType을 검사하지 않고 상태·수량·사용자 중복만 검사하므로 DAILY_COUPON도 같은 경로에 들어간다. 중복 조건에 날짜가 없어 날짜가 바뀌어도 같은 사용자가 같은 쿠폰 정보를 다시 발급받는 경로가 되지 않는다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:31",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:35",
@@ -291,7 +291,7 @@
       "service": "coupon-service",
       "kind": "함정",
       "title": "만료일이 지난 쿠폰도 삭제 전에는 발급 조건을 통과할 수 있다",
-      "description": "쿠폰 검증은 만료일이 오늘보다 이전이면 HTTP 400/CO008로 거절하지만, 발급 경로는 expirationDate를 검사하지 않는다. 따라서 아직 소프트 삭제되지 않은 정보가 ISSUED이고 잔여 수량이 있으며 중복 발급이 아니면 만료된 정보로도 발급 처리에 진입한다. 정기 작업은 날짜가 지난 정보를 조회해 삭제하도록 정의되어 있으나, 발급 자체에 만료일 검사가 생기는 것은 아니다. 실제 만료 쿠폰 발급은 실행하지 않았다.",
+      "description": "쿠폰 검증은 만료일이 오늘보다 이전이면 HTTP 400/CO008로 거절하지만, 발급 경로는 expirationDate를 검사하지 않는다. 따라서 아직 소프트 삭제되지 않은 정보가 ISSUED이고 잔여 수량이 있으며 중복 발급이 아니면 만료된 정보로도 발급 처리에 진입한다. 정기 작업은 날짜가 지난 정보를 조회해 삭제하도록 정의되어 있으나, 발급 자체에 만료일 검사가 생기는 것은 아니다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:64",
@@ -397,7 +397,7 @@
       "service": "coupon-service",
       "kind": "함정",
       "title": "역할 접두사 불일치로 고객·판매자의 조회 제한 분기를 건너뛴다",
-      "description": "인증 필터는 역할에 ROLE_를 붙이고 RequestUserDetails.getRole()은 그 문자열을 그대로 돌려준다. 그런데 사용자 쿠폰 목록은 CUSTOMER·SELLER일 때만 요청 userId와 본인 ID를 비교하고, 쿠폰 정보 목록도 같은 문자열일 때만 상태를 ISSUED로 강제한다. 정상 필터를 거친 ROLE_CUSTOMER·ROLE_SELLER는 두 분기 모두 통과하지 않아, 다른 userId의 쿠폰 목록을 요청하거나 쿠폰 상태를 지정·생략할 수 있다. 두 메서드에는 별도 @Secured 제한이 없다. 게이트웨이는 쿠폰 경로를 인증 제외하지 않고 JWT의 사용자 헤더를 전달하므로 이 항목은 인증 없는 접근을 뜻하지 않는다. 저장 응답에는 요청 역할이 없어 해당 역할로 실제 재현했는지는 확인할 수 없다.",
+      "description": "인증 필터는 역할에 ROLE_를 붙이고 RequestUserDetails.getRole()은 그 문자열을 그대로 돌려준다. 그런데 사용자 쿠폰 목록은 CUSTOMER·SELLER일 때만 요청 userId와 본인 ID를 비교하고, 쿠폰 정보 목록도 같은 문자열일 때만 상태를 ISSUED로 강제한다. 정상 필터를 거친 ROLE_CUSTOMER·ROLE_SELLER는 두 분기 모두 통과하지 않아, 다른 userId의 쿠폰 목록을 요청하거나 쿠폰 상태를 지정·생략할 수 있다. 두 메서드에는 별도 @Secured 제한이 없다. 게이트웨이는 쿠폰 경로를 인증 제외하지 않고 JWT의 사용자 헤더를 전달하므로 이 항목은 인증 없는 접근을 뜻하지 않는다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:33",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:39",
@@ -614,7 +614,7 @@
       "service": "coupon-service",
       "kind": "업무 규칙",
       "title": "쿠폰 정보 목록은 이름 부분검색과 제한된 정렬을 적용한다",
-      "description": "목록은 삭제되지 않은 정보만 반환하고 search가 있으면 이름의 대소문자를 무시한 부분 일치, couponStatus가 있으면 해당 상태의 일치를 적용한다. 만료일·업체·소유자는 이 쿼리의 필터가 아니다. pageNumber는 1을 빼 PageRequest에 전달한다. direction은 asc와 대소문자 구분 없이 같을 때만 오름차순이고 다른 문자열은 내림차순이다. 정렬은 createdAt·updatedAt·discountAmount 중 단일 필드만 허용하며 다른 필드는 HTTP 400/CO021이다. 유효하지 않은 페이지 번호·크기로 PageRequest가 RuntimeException을 던지면 공통 처리기는 HTTP 500/CO013으로 처리한다.",
+      "description": "목록은 삭제되지 않은 정보만 반환하고 search가 있으면 이름의 대소문자를 무시한 부분 일치, couponStatus가 있으면 해당 상태의 일치를 적용한다. 만료일·업체·소유자는 이 쿼리의 필터가 아니다. pageNumber는 1을 빼 PageRequest에 전달한다. direction은 asc와 대소문자 구분 없이 같을 때만 오름차순이고 다른 문자열은 내림차순이다. 정렬은 createdAt·updatedAt·discountAmount 중 단일 필드만 허용하며 다른 필드는 HTTP 400/CO021이다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:98",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:100",
@@ -644,9 +644,24 @@
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:29",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23",
-        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:24"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.getCoupons"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "함정",
+      "title": "쿠폰 정보 목록의 잘못된 페이지 입력은 500·CO013으로 처리된다",
+      "description": "pageNumber는 1을 빼 PageRequest에 전달한다. 유효하지 않은 페이지 번호·크기로 PageRequest가 RuntimeException을 던지면 공통 처리기는 HTTP 500/CO013으로 처리한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:98",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:103",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34",
-        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:35",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:37",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:38"
       ],
@@ -696,7 +711,7 @@
       "service": "coupon-service",
       "kind": "함정",
       "title": "인증 헤더 누락 분기는 주석의 401 처리기로 전달하지 않고 예외를 던진다",
-      "description": "서비스 필터의 주석은 헤더가 없으면 Security가 401을 반환하거나 401 핸들러에서 처리한다고 설명한다. 하지만 실제 코드는 javax.security.sasl.AuthenticationException을 직접 던지고, 다음 필터로 넘기는 코드는 주석 처리되어 있다. 등록된 CustomAuthenticationHandler는 org.springframework.security.core.AuthenticationException을 받는 진입점이므로 이 분기에서 그 핸들러를 호출하는 코드 경로는 없다. 쿠폰 API 경로는 서비스 필터의 제외 경로에 해당하지 않는다. 게이트웨이에서 토큰 검증을 통과한 요청에는 세 헤더가 설정되므로 헤더 누락 서비스 요청과 구분해야 한다. 이 요청의 저장 응답이 없어 실제 외부 HTTP 상태를 401 또는 500으로 단정하지 않는다.",
+      "description": "서비스 필터의 주석은 헤더가 없으면 Security가 401을 반환하거나 401 핸들러에서 처리한다고 설명한다. 하지만 실제 코드는 javax.security.sasl.AuthenticationException을 직접 던지고, 다음 필터로 넘기는 코드는 주석 처리되어 있다. 등록된 CustomAuthenticationHandler는 org.springframework.security.core.AuthenticationException을 받는 진입점이므로 이 분기에서 그 핸들러를 호출하는 코드 경로는 없다. 쿠폰 API 경로는 서비스 필터의 제외 경로에 해당하지 않는다. 게이트웨이에서 토큰 검증을 통과한 요청에는 세 헤더가 설정되므로 헤더 누락 서비스 요청과 구분해야 한다. 이 분기의 실제 외부 HTTP 상태는 이 코드만으로 401 또는 500으로 단정할 수 없다.",
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/filter/AuthenticationFilter.java:10",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/filter/AuthenticationFilter.java:30",
