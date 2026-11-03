@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${endpoint.path('id').asText()}"></title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<p><a href="/">처음</a> · <a th:href="@{/services/{n}(n=${endpoint.path('service').asText()})}" th:text="${endpoint.path('service').asText()}"></a></p>
+<h1 th:text="${endpoint.path('id').asText()}"></h1>
+<p class="line" th:text="|HTTP 메서드: ${@view.fact(endpoint.path('httpMethod'))}|"></p>
+<p class="line" th:text="|경로: ${@view.fact(endpoint.path('path'))}|"></p>
+<p class="line" th:text="|확인 상태: ${@view.status(endpoint)} ${@view.evidence(endpoint)}|"></p>
+<p class="line" th:text="|응답 확인: ${@view.responseCheck(endpoint.path('responseCheck'))}|"></p>
+<h2>게이트웨이 외부 경로</h2>
+<p class="line" th:each="x : ${endpoint.path('externalPaths')}"
+   th:text="|${x.path('path').asText()} (경로 규칙 ${x.path('routeId').asText()}) ${@view.status(x)} · 토큰 필요: ${@view.fact(x.path('tokenRequired'))}|"></p>
+<p class="line" th:text="|토큰 필요(기본 경로): ${@view.fact(endpoint.path('tokenRequired'))}|"></p>
+<h2>요청</h2>
+<div th:each="p : ${endpoint.path('parameters')}">
+  <p class="line" th:text="|${p.path('name').asText()} (${p.path('kind').asText()}) ${p.path('schema').path('type').asText()} ${@view.status(p.path('schema'))}|"></p>
+  <p class="line" th:each="l : ${@view.fields(p.path('schema'))}" th:text="|    ${l}|"></p>
+</div>
+<h2>응답</h2>
+<p class="line" th:text="|${endpoint.path('response').path('type').asText()} ${@view.status(endpoint.path('response'))}|"></p>
+<p class="line" th:each="l : ${@view.fields(endpoint.path('response'))}" th:text="|    ${l}|"></p>
+<h2>나가는 호출과 발행</h2>
+<p th:if="${flow.forward().isEmpty()}">확인된 호출 없음</p>
+<p class="line" th:each="s : ${flow.forward()}" th:text="${@view.step(s)}"></p>
+<h2>부르는 곳</h2>
+<p th:if="${flow.callers().isEmpty()}">확인된 호출 없음</p>
+<p class="line" th:each="s : ${flow.callers()}" th:text="${@view.step(s)}"></p>
+<section th:replace="~{items :: items(${items})}"></section>
+</body>
+</html>
