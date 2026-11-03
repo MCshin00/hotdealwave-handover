@@ -15,6 +15,7 @@ Kafka 선언 검사(`kafka-declarations`)도 주석을 지운 줄에서 정규�
 - 필수 필드·타입·허용 값이 어긋나면 기존 `schema` 경고에 더한다.
 - 근거가 고정 커밋의 대상 파일이나 해당 입력의 `responses/` 파일에 있고 줄 번호가 실제 길이 안이면 근거 존재 검사를 통과한다. 없으면 `knowledge-evidence` 경고를 낸다. 응답 근거 표기는 `analysis/<대상>/responses/<파일>.json:줄`이다. 추출 근거 검사에서 응답을 건너뛰는 동작과 달리, 항목의 응답 근거는 실제 줄 존재를 검사한다.
 - 영향 ID는 추출 결과의 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions`에서 찾는다. 없으면 `knowledge-affected-ids` 경고를 낸다.
+- 서비스가 다른 AI 해석 항목끼리 영향 ID 목록(순서 무관)이 같으면 `knowledge-duplicates` 경고를 낸다. 같은 문제가 두 서비스 결과에 따로 쓰인 경우를 찾는다.
 
 설명과 근거 줄 내용을 대조하지 않고 `confirmationStatus`도 바꾸지 않는다. `틀림`인 항목도 스키마·근거·영향 ID를 검사하지만 `out/analysis.json`의 `knowledge` 배열에는 넣지 않는다. 나머지 항목은 경고 유무와 관계없이 파일 이름순으로 원문 그대로 합친다. 서버는 이 출력 하나만 읽는다.
 

@@ -85,6 +85,21 @@ class KnowledgeTest {
         assertTrue(output.path("warnings").toString().contains("ENV~1:1"));
     }
 
+    @Test void sameAffectedIdsInAnotherServiceWarn() throws Exception {
+        var item = prepare();
+        var other = item.deepCopy().put("service", "product-service").put("title", "상품 쪽 같은 동작");
+        var document = JSON.createObjectNode().put("schemaVersion", 1);
+        document.putArray("items").add(other);
+        JSON.writeValue(temporary.resolve("knowledge/hotdealwave/product-service.json").toFile(), document);
+        var output = verify(item);
+        assertEquals(1, output.at("/checks/knowledge-duplicates/warningCount").asInt());
+        assertTrue(output.path("warnings").toString().contains("상품 쪽 같은 동작"));
+
+        other.putArray("affectedIds").add("order-service.OrderController.createOrder").add("order-service.OrderController.cancelOrder");
+        JSON.writeValue(temporary.resolve("knowledge/hotdealwave/product-service.json").toFile(), document);
+        assertEquals(0, verify(item).at("/checks/knowledge-duplicates/warningCount").asInt());
+    }
+
     @Test void incorrectItemIsExcludedFromKnowledgeOutput() throws Exception {
         var item = prepare().put("confirmationStatus", "틀림");
         assertEquals(0, verify(item).path("knowledge").size());
