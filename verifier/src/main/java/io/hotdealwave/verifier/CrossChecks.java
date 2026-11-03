@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import static io.hotdealwave.verifier.Checks.*;
 
 final class CrossChecks {
-    // Comments remain part of the independent declaration inventory.
+    // Declarations inside comments are not counted.
     private static final Pattern DECLARATION = Pattern.compile("@(?:[\\w]+\\.)*([\\w$]*Mapping|FeignClient)\\b");
     private static final Pattern PREFIX_REWRITE = Pattern.compile("^(/[^\\s(),?*]+/)\\(\\?<segment>\\.\\*\\),\\s*/\\$\\\\?\\{segment}$");
 

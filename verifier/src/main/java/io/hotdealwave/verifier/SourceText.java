@@ -67,6 +67,7 @@ final class SourceText {
         return result;
     }
 
+    /** Java lines with comments removed, for the declaration inventories only. */
     Map<String, String> javaLines() throws IOException {
         var result = new LinkedHashMap<String, String>();
         try (var directories = Files.list(root)) {
@@ -78,11 +79,40 @@ final class SourceText {
                 try (var files = Files.walk(javaRoot)) {
                     for (var file : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
                         String relative = root.relativize(file).toString().replace('\\', '/');
-                        var lines = lines(relative);
+                        var lines = withoutComments(lines(relative));
                         for (int i = 0; i < lines.size(); i++) result.put(relative + ":" + (i + 1), lines.get(i));
                     }
                 }
             }
+        }
+        return result;
+    }
+
+    private static List<String> withoutComments(List<String> lines) {
+        var result = new ArrayList<String>();
+        boolean block = false;
+        for (String line : lines) {
+            var code = new StringBuilder();
+            boolean string = false;
+            for (int i = 0; i < line.length(); i++) {
+                char c = line.charAt(i), next = i + 1 < line.length() ? line.charAt(i + 1) : 0;
+                if (block) {
+                    if (c == '*' && next == '/') { block = false; i++; }
+                } else if (string) {
+                    code.append(c);
+                    if (c == '\\' && next != 0) code.append(line.charAt(++i));
+                    else if (c == '"') string = false;
+                } else if (c == '/' && next == '/') {
+                    break;
+                } else if (c == '/' && next == '*') {
+                    block = true;
+                    i++;
+                } else {
+                    if (c == '"') string = true;
+                    code.append(c);
+                }
+            }
+            result.add(code.toString());
         }
         return result;
     }
