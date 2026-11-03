@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "장바구니는 상품별로 합치지 않고 생성하며 수정 시 재고를 검사하지 않는다",
+      "description": "생성은 상품 조회와 새 Basket 저장 후 조회 완료를 기다린다. 같은 사용자·상품의 기존 행을 조회하거나 수량을 합치지 않는다. 요청 수량은 1 이상이어야 하지만 상품의 판매 상태·재고와 비교하지 않으며, 수정도 본인 장바구니의 수량을 요청값으로 대체한다. 재고·판매 상태 검사는 주문 금액 계산 단계에서 수행한다. 생성 중 상품 조회에서 발생한 예외는 종류와 관계없이 OP001로 바꾸고 CompletionException 처리기를 통해 HTTP 404로 반환한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:39",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:47",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:89",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/basket/req/ReqPostBasketDto.java:19",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/basket/req/ReqPatchBasketDto.java:15",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:30"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.createBasket",
+        "order-service.BasketController.updateBasket",
+        "order-service.ProductClient.getProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "장바구니 조회·수정·삭제는 본인의 미삭제 행만 대상으로 한다",
+      "description": "목록은 요청 사용자 ID와 deletedAt IS NULL로 조회한다. 상세·수정·삭제도 같은 사용자와 미삭제 조건으로 찾으며, 대상이 없으면 HTTP 404/OB001이다. 삭제는 물리 삭제가 아니라 deletedAt과 요청자 이메일을 기록한다. MASTER 예외 분기는 없다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:51",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:75",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:60",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:83",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:95",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:36",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/basket/Basket.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/AuditingDate.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:37",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.getBasketDetail",
+        "order-service.BasketController.getBasketList",
+        "order-service.BasketController.updateBasket",
+        "order-service.BasketController.deleteBasket"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "주문은 요청 장바구니 중 본인의 미삭제 행이 하나라도 있으면 진행한다",
+      "description": "요청 basketList를 IN 조건과 사용자·미삭제 조건으로 조회하고 결과가 비었을 때만 HTTP 404/OB001을 낸다. 요청 ID 수와 조회 결과 수를 비교하지 않아 타인·삭제·없는 장바구니가 섞이면 그 행은 제외하고 조회된 행으로 주문한다. 동일 ID 반복도 요청 횟수만큼 수량을 늘리는 처리가 아니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:20",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/jpa/BasketRepositoryJpa.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:37"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "주문 금액은 판매 중 상품의 할인 단가와 장바구니 수량으로 계산한다",
+      "description": "상품별로 목록 응답의 상품 존재 여부, 장바구니 한 행의 수량 이하가 아닌 재고, ON_SALE 상태를 검사한다. 실패는 각각 HTTP 404/OP001, 400/OP004, 400/OP003이다. discountPrice가 null이면 price를 쓰고 아니면 할인 단가를 수량에 곱해 합산한다. 이 합계는 쿠폰 차감 전 totalAmount로 저장하고 쿠폰 할인액은 별도 저장한다. OrderProduct에는 해당 단가와 장바구니 수량을 보존하며 초기 주문 상태는 CREATE이다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderProductService.java:28",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:59",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.ProductClient.getProductList"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "주소 조회는 요청자 정보로 하고 상품·쿠폰 호출은 설정된 관리자 정보로 한다",
+      "description": "주문 생성의 주소 조회는 요청자의 사용자 ID·이메일·역할을 Feign 헤더로 전달한다. user-service는 주소 존재·삭제·소유를 검사하고 관리자 역할이라도 다른 사용자 주소를 허용하는 분기가 없다. 그 IllegalArgumentException은 user-service에서 HTTP 400이 되고 주문 서비스에서는 400/003으로 바뀐다. 상품·쿠폰 Feign 호출은 요청자 헤더 대신 ADMIN_USER_ID, ADMIN_EMAIL, ADMIN_ROLE에 연결된 설정값을 사용한다. 이 값의 실제 역할이나 계정은 확인하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/UserClientAdapter.java:18",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ProductClientConfig.java:11",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ProductClientConfig.java:21",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CouponClientConfig.java:11",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CouponClientConfig.java:21",
+        "order/src/main/resources/application.yml:30",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:47",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/decoder/UserClientErrorDecoder.java:13",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:11"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.UserClient.getAddress",
+        "order-service.ProductClient.getProduct",
+        "order-service.ProductClient.getProductList",
+        "order-service.ProductClient.reduceQuantity",
+        "order-service.CouponClient.validateCoupon",
+        "order-service.CouponClient.useCoupon",
+        "order-service.CouponClient.recoverCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "쿠폰이 없으면 검증·사용 호출을 생략하고 할인액을 0으로 둔다",
+      "description": "couponId가 null이면 어댑터가 valid=false와 할인액 0을 반환한다. 쿠폰이 있으면 각 장바구니 상품의 회사 ID·수량·할인 적용 단가를 검증 요청으로 보내고, 반환된 isValid가 true일 때만 사용 API를 호출한다. 검증 결과가 false여도 주문 중단 분기는 없으며 반환된 할인액을 주문에 저장한다. 검증 HTTP 400은 원래 상세 오류와 관계없이 주문 서비스의 400/OC006으로 변환된다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/req/ReqPostCouponValidateDto.java:27",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:135",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/decoder/CouponClientErrorDecoder.java:11",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:47"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.CouponClient.validateCoupon",
+        "order-service.CouponClient.useCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "쿠폰 검증 응답 valid와 수신 필드 isValid 사이의 쓰기 매핑이 없다",
+      "description": "저장된 쿠폰 검증 응답의 JSON 이름은 valid이며 값은 true이다. 주문 서비스 수신 DTO는 private boolean isValid에 Getter·기본 생성자·전체 생성자·Builder만 있고 setValid, JsonProperty 또는 JsonCreator 매핑은 없다. Getter의 JSON 속성 valid와 필드 이름 isValid가 달라 검증 결과를 쓰는 경로가 빠져 있다. 변환 메서드는 이 필드를 그대로 사용하고 주문 서비스는 true인 경우에만 useCoupon을 호출하는 반면 totalDiscountAmount는 별도로 저장한다. 저장된 주문 상세에는 할인액 1000이 있고 같은 쿠폰의 별도 상세 기록은 used=false이지만, 기록의 호출 순서와 실제 Feign 역직렬화 결과·사용 API 호출 여부는 이 응답들만으로 확정하지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:9",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:141",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:114",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResPostCouponValidateDto.java:8",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:20",
+        "analysis/hotdealwave/responses/order-service.OrderController.createOrder.json:10",
+        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:26",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:11",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:18"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.CouponClient.validateCoupon",
+        "order-service.CouponClient.useCoupon",
+        "coupon-service.CouponController.validateCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "실제 응답",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "쿠폰을 먼저 사용한 뒤 주문이 실패해도 쿠폰을 복구하지 않는다",
+      "description": "수신된 쿠폰 유효성 값이 true여서 useCoupon이 성공한 경로에서는 주문 상품의 재고·판매 상태 검사보다 먼저 coupon-service의 사용 처리가 끝난다. 뒤의 재고 부족·판매 불가나 저장·메시지 전송 실패로 주문 트랜잭션이 실패해도 이 경로에는 recoverCoupon 호출이 없다. 정상 주문 이후 취소·환불 및 Kafka 주문 취소 경로에도 쿠폰 복구 호출이 없다. recoverCoupon은 포트·Feign·어댑터에 선언되어 있으나 이를 부르는 업무 경로는 찾지 못했다. 실제 쿠폰 사용 성공이나 장애 발생을 관찰한 항목은 아니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:141",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:257",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:280",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:19",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:29",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:21",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:93",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:104"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.OrderController.cancelOrder",
+        "order-service.OrderController.refundOrder",
+        "order-service.cancelOrder",
+        "order-service.CouponClient.useCoupon",
+        "order-service.CouponClient.recoverCoupon",
+        "coupon-service.CouponController.useCoupon",
+        "coupon-service.CouponController.recoverCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "상품 전체 조회를 호출해도 첫 10개만 받아 나머지 상품을 누락한다",
+      "description": "getProductAll은 요청한 상품 전체를 맵으로 만드는 데 쓰이지만 Feign은 productIds만 전송하고 페이지 크기·다음 페이지를 지정하지 않는다. 상품 API 기본값은 첫 페이지 10개이며 검색도 해당 크기로 제한된다. 서로 다른 상품이 10개를 넘으면 요청 ID에 포함된 상품도 맵에서 빠질 수 있다. 장바구니 목록과 주문 생성은 누락 상품을 OP001로 처리하고, 주문 상세·목록 DTO는 null 상품을 직접 참조하므로 RuntimeException 처리기의 HTTP 500 경로로 이어진다. 한 상품만 있는 저장 응답으로 이 조건을 재현했다고 주장하지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:23",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:27",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:140",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:175",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:75",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderByIdDto.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderListDto.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:31"
+      ],
+      "affectedIds": [
+        "order-service.ProductClient.getProductList",
+        "order-service.BasketController.getBasketList",
+        "order-service.OrderController.createOrder",
+        "order-service.OrderController.getOrderById",
+        "order-service.OrderController.getOrders",
+        "product-service.ProductController.getAllProducts"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "동일 상품 장바구니를 합치지 않은 수량 요청은 상품 서비스의 개수 검사와 충돌한다",
+      "description": "장바구니 생성은 같은 상품의 여러 행을 허용하고, 주문 재고 검사는 각 행을 따로 검사한다. 주문은 같은 상품 ID의 수량을 합치지 않은 productList를 Kafka 차감 요청과 HTTP 취소 복구 요청에 담는다. 상품 처리 코드는 조회된 상품 행 수와 요청 productList 길이가 같아야 하므로, 서로 다른 장바구니 두 개가 같은 상품을 가리키면 복구 HTTP 호출에서 상품 없음 예외로 이어진다. Kafka 차감 요청도 같은 형태지만 request-product와 reduce-quantity의 실제 연결은 기존 warnings 때문에 확정하지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:39",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:20",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:36",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/product/req/ReqPutProductQuantityDto.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:53",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:63",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:66"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.OrderController.cancelOrder",
+        "order-service.requestProduct",
+        "order-service.ProductClient.reduceQuantity",
+        "product-service.ProductController.restoreQuantity"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "주문으로 삭제한 장바구니의 삭제자는 요청자 대신 고정 문자열이다",
+      "description": "장바구니 직접 삭제는 요청자 이메일을 deletedBy에 기록하지만 주문 생성 중 장바구니 삭제는 고정 이메일 형태 문자열을 remove에 넘긴다. 따라서 같은 삭제 필드라도 주문 생성으로 삭제된 행은 실제 요청자를 나타내지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:79",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:95",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:119",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:28",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/AuditingDate.java:34"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "주문 목록은 본인 주문만 조회하고 MASTER는 상세에서만 소유 검사를 생략한다",
+      "description": "주문 목록은 역할과 관계없이 요청자 사용자 ID와 미삭제 조건으로 조회한다. 상세는 ROLE_MASTER일 때 미삭제 주문 ID만 검사하고 다른 역할은 사용자 ID도 함께 검사한다. 대상이 없거나 타인 주문이면 HTTP 404/O001이다. 상세 상품명은 조회 시점의 상품 목록에서 가져오고 주문 단가는 저장된 OrderProduct에서 가져온다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:197",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:215",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:35",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderByIdDto.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:20",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.getOrders",
+        "order-service.OrderController.getOrderById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "MASTER가 타인 주문을 조회하면 주문자 ID와 조회자 닉네임이 섞인다",
+      "description": "상세는 MASTER에게 타인 주문 조회를 허용하지만 사용자 정보 조회에는 order.userId가 아니라 인증된 요청자 userId를 넘긴다. 응답의 userId는 주문 소유자이고 username은 그 요청자 조회 결과의 nickname이다. payment-service가 관리자 헤더로 상세를 조회하는 경우도 같은 매핑의 영향을 받는다. 저장 응답은 인증 주체가 없어 이 조건의 실행 증거로 쓰지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:187",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:197",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/UserClientAdapter.java:23",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:21",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderByIdDto.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:26",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/users/response/ResGetUsersByIdDto.java:19",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/order/res/ResGetOrderByIdDto.java:50"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.getOrderById",
+        "order-service.UserClient.getUser",
+        "payment-service.OrderClient.getOrderById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "주문 상세의 상품 수량은 주문 수량이 아니라 상품 조회 재고다",
+      "description": "주문 목록은 OrderProduct.quantity를 반환하지만 상세는 같은 productQuantity 필드에 ProductDto.quantity를 넣는다. 저장된 동일 주문의 상세에는 100, 목록에는 2가 기록되어 있다. payment-service는 상세의 수량을 그대로 OrderDto에 옮기고 재고 복구 메시지의 quantity로 사용하므로, 해당 메시지가 만들어질 때 주문 수량 대신 조회 재고가 들어간다. 복구 토픽의 실제 전달·재고 변경은 확인하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderByIdDto.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderListDto.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:207",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/order/res/ResGetOrderByIdDto.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44",
+        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:11",
+        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:17",
+        "analysis/hotdealwave/responses/order-service.OrderController.getOrders.json:13",
+        "analysis/hotdealwave/responses/order-service.OrderController.getOrders.json:20"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.getOrderById",
+        "payment-service.OrderClient.getOrderById",
+        "payment-service.rollbackProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "실제 응답",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "MASTER의 상태 수정은 이전 상태 검사나 취소·환불 부수 처리를 하지 않는다",
+      "description": "HTTP 상태 수정은 Secured와 securedEnabled 설정으로 ROLE_MASTER에 제한된다. 미삭제 주문만 찾고 요청 enum으로 상태를 그대로 대체한다. 이전 상태와의 전이 조건, 소유자 조건, 재고 복구, 결제·쿠폰 호출은 없다. JSON enum 입력은 대문자로 변환해 해석한다. 이 경로의 CANCEL·REFUND 지정은 전용 취소·환불 API와 동작이 다르다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:65",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/SecurityConfig.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:250",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/OrderStatus.java:9",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:257",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:280"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.updateOrderStatus",
+        "payment-service.OrderClient.updateOrderStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "주문 취소는 본인의 CREATE·PENDING 주문에 한해 재고 복구 후 결제 취소를 요청한다",
+      "description": "역할과 관계없이 본인의 미삭제 주문을 찾고 CREATE 또는 PENDING만 취소한다. 그 외 상태는 HTTP 400/O007이다. 주문을 CANCEL로 바꾼 뒤 저장된 주문 상품 수량을 HTTP restore-quantity에 보내고 결제 취소 Kafka 메시지를 전송한다. Feign 메서드 이름은 reduceQuantity지만 실제 대상과 사용 목적은 수량 복구이다. HTTP 성공은 payment-service의 처리 완료를 기다리지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:257",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:267",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:274",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:40",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:26"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.cancelOrder",
+        "order-service.ProductClient.reduceQuantity",
+        "order-service.cancelPayment",
+        "payment-service.cancel"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "재고 복구 후 결제 취소 전송이 동기 실패하면 복구된 재고를 되돌리지 않는다",
+      "description": "취소 경로는 상품 서비스의 재고 복구 HTTP 호출을 먼저 완료한 뒤 결제 취소 메시지를 보낸다. 그 전송 호출에서 동기 예외가 나면 OrderProducerService가 PENDING 저장·flush 후 RuntimeException인 ApplicationException을 던진다. 같은 주문 트랜잭션 안이므로 이 PENDING 저장도 독립적인 실패 기록이 아니며 롤백 대상이다. 이미 끝난 상품 서비스의 재고 증가를 다시 차감하는 보상 호출은 없다. 비동기 전송 실패는 이 catch에 들어오는 것으로 단정하지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:261",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:274",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:33",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ApplicationException.java:8",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.cancelOrder",
+        "order-service.ProductClient.reduceQuantity",
+        "order-service.cancelPayment",
+        "product-service.ProductController.restoreQuantity"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "환불은 본인의 COMPLETE 주문이고 생성 후 경과 시간의 정수 시간이 24 이하여야 한다",
+      "description": "본인의 미삭제 주문에 대해 상태가 COMPLETE이고 Duration.between(createdAt, now).toHours()가 24 이하일 때 REFUND로 바꾸고 결제 환불 메시지를 보낸다. 기준은 결제 완료 시각이 아니라 주문 생성 시각이며, 양의 경과 시간은 24시간을 조금 넘더라도 정수 시간이 24인 동안 통과한다. 이 경로에는 재고 복구가 없다. 저장 응답에서 관찰한 사실은 HTTP 400/O008 환불 정책 거부이다. reason의 PENDING 설명은 단서로만 사용하며 해당 호출 순간 상태를 독립적으로 입증하는 응답으로 보지 않는다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:280",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:288",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:27",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24",
+        "analysis/hotdealwave/responses/order-service.OrderController.refundOrder.json:7",
+        "analysis/hotdealwave/responses/order-service.OrderController.refundOrder.json:10"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.refundOrder",
+        "order-service.refundPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "실제 응답",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "환불 메시지 전송의 동기 예외를 삼켜 REFUND와 성공 응답을 남긴다",
+      "description": "환불은 먼저 상태를 REFUND로 바꾸고 전송을 호출한다. 하위 OrderEventProducer는 직렬화·전송 호출 예외를 ApplicationException으로 바꾸지만 OrderProducerService는 이를 로그만 남기고 정상 반환한다. 따라서 그 동기 예외 경로에서 주문 서비스는 예외 없이 종료하고 컨트롤러는 환불 처리 성공 응답을 반환한다. 저장된 환불 응답은 정책 거부 사례여서 이 실패 분기가 실제 발생했다는 근거는 아니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:280",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:50",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:44",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:81"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.refundOrder",
+        "order-service.refundPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "Kafka 전송 완료를 확인하지 않아 비동기 실패가 주문 보상 분기에 전달되지 않는다",
+      "description": "주문 상품 요청·결제 취소·환불은 공통 sendMessage에서 kafkaTemplate.send 반환값을 확인하지 않는다. 상위 서비스의 실패 처리 catch는 호출 시점의 동기 예외만 처리하며 나중에 완료되는 전송 실패를 받는 콜백이나 대기가 없다. 따라서 HTTP 생성·취소·환불의 정상 반환은 Kafka 전달 성공을 보장하지 않는다. 실제 브로커 실패나 전달 누락은 관찰하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:50",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:22",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:33",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:44",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:124"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder",
+        "order-service.OrderController.cancelOrder",
+        "order-service.OrderController.refundOrder",
+        "order-service.requestProduct",
+        "order-service.cancelPayment",
+        "order-service.refundPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "Kafka 주문 취소는 상태만 CANCEL로 바꾸며 HTTP 취소 조건을 적용하지 않는다",
+      "description": "취소 메시지를 파싱해 처리 메서드에 도달하면 미삭제 주문 ID만 조회하여 이전 상태와 관계없이 CANCEL로 바꾼다. HTTP 취소의 소유자·CREATE/PENDING 검사, 상품 수량 복구, 결제 취소 요청은 이 소비 경로에 없다. 파싱 또는 처리 예외는 리스너가 잡아 원문과 오류 설명을 직접 DLQ 발행 메서드로 넘긴다. cancel-order 발행자 연결은 기존 warnings의 미확인 상태를 그대로 둔다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:15",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:13",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:19",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:257"
+      ],
+      "affectedIds": [
+        "order-service.cancelOrder",
+        "order-service.publishDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "업무 규칙",
+      "title": "Kafka 상태 갱신은 대문자 enum 이름을 그대로 적용하고 이전 상태를 검사하지 않는다",
+      "description": "상태 메시지를 파싱해 서비스에 도달하면 미삭제 주문을 찾고 OrderStatus.valueOf(status)로 상태를 대체한다. HTTP 요청의 대문자 변환과 달리 소문자를 보정하지 않고 이전 상태별 전이 제한도 없다. 파싱·enum 변환·주문 처리 예외는 리스너의 직접 DLQ 전송 경로로 간다. payment-service 발행 DTO는 orderId와 status를 보내며 이 소비 DTO의 필드 이름과 일치한다. 실제 메시지 수신·역직렬화 성공은 확인하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:15",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/OrderStatus.java:9",
+        "order/src/main/java/com/sparta/hotdeal/order/event/message/order/ResOrderUpdateStatusMessage.java:7",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/order/ReqOrderUpdateStatusMessage.java:10",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32"
+      ],
+      "affectedIds": [
+        "order-service.updateStatus",
+        "order-service.publishDlq",
+        "payment-service.updateOrderStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "DLQ 리스너 선언은 있지만 OrderDlqConsumer의 빈 등록 근거가 없다",
+      "description": "OrderDlqConsumer에 KafkaListener는 있지만 클래스에는 Slf4j·RequiredArgsConstructor만 있으며 Component·Service 어노테이션이 없다. 주문 애플리케이션과 설정에서 이 클래스를 생성하는 Bean 선언이나 등록 참조도 찾지 못했다. 등록 근거가 있는 일반 주문 소비자와 달리 DLQ 리스너가 실제 실행된다고 단정할 수 없다. 본문이 하는 일도 원문·오류 로그 출력이며 주문 복구나 재발행은 아니다. 추출에 존재하는 dlq ID와 환경변수 연결 자체를 부정하는 항목은 아니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:19",
+        "order/src/main/java/com/sparta/hotdeal/order/OrderApplication.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:23",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:15"
+      ],
+      "affectedIds": [
+        "order-service.dlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "수동 ACK 설정과 달리 주문 리스너에는 ACK 호출이 없다",
+      "description": "주문 Kafka 컨테이너는 AckMode.MANUAL인데 cancel-order와 update-order-status 리스너는 String message만 받고 acknowledge를 호출하지 않는다. DLQ 메서드도 같다. 반면 같은 저장소의 상품 리스너는 Acknowledgment를 받아 명시적으로 호출한다. 주문 처리 성공을 이 코드의 수동 ACK와 연결할 수 없으며 실제 오프셋 커밋·재수신 여부는 확인하지 않았다. DLQ 메서드는 별도로 빈 등록 근거도 없다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:17",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:39"
+      ],
+      "affectedIds": [
+        "order-service.cancelOrder",
+        "order-service.updateStatus",
+        "order-service.dlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "함정",
+      "title": "직접 DLQ 발행은 완료 확인 없이 전송 완료 로그를 쓴다",
+      "description": "OrderDlqProducer는 originalMessage와 errorMessage를 JSON으로 감싼 뒤 send 반환값을 확인하지 않고 즉시 전송 완료 로그를 쓴다. JSON 생성 실패는 로그만 남기고 반환한다. 따라서 이 로그나 메서드의 정상 반환은 DLQ 보관 성공을 입증하지 않는다. 주문 취소·상태 갱신 리스너의 오류 처리에서 이 메서드를 사용한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:23",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:33",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48"
+      ],
+      "affectedIds": [
+        "order-service.publishDlq",
+        "order-service.cancelOrder",
+        "order-service.updateStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    }
+  ]
+}
