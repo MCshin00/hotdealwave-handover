@@ -29,19 +29,24 @@ HotDealWave는 첫 번째 경우다. 두 번째 경우는 고정 커밋을 띄�
 ```
 target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/services/*.json + relations.json
 떠 있는 서버(있을 때) ----> AI 호출(Skill) --> analysis/<대상>/responses/ --> 응답 비교 --> AI가 서비스 파일 고침
-                                                     |
-                                                     v
-                                    verifier --> out/analysis.json (상태·경고)
-                                                     |
-                                                     v
-                                   server (Spring Boot, 하나의 프로세스)
-                                     +-- 조회: 관계 조회 3개 + 검색(BM25)
-                                     +-- 페이지: 문서·검색·질문 (Thymeleaf)
-                                     +-- /api/search, /api/ask
-                                     +-- /mcp  <-- Claude Code·Codex (HTTP)
+추출 결과에서 코드·응답으로 --> AI 해석(Skill) --> knowledge/<대상>/*.json <-- 개발자의 경고 판정
+
+analysis/<대상>/services/*.json + relations.json --+
+knowledge/<대상>/*.json (있을 때) -----------------+--> verifier
+                                                        |
+                                                        v
+                                               out/analysis.json (추출·항목·상태·경고)
+                                                        |
+                                                        v
+                                      server (Spring Boot, 하나의 프로세스)
+                                        +-- 조회: 관계 조회 3개 + 검색(BM25)
+                                        +-- 페이지: 문서·검색·질문 (Thymeleaf)
+                                        +-- /api/search, /api/ask
+                                        +-- /mcp  <-- Claude Code·Codex (HTTP)
 ```
 
 - `verifier`와 `server`는 같은 Gradle 프로젝트의 모듈이고, `out/analysis.json` 하나로만 연결한다. 스키마는 양쪽 테스트가 확인한다.
+- 업무 규칙·함정도 검증기가 `knowledge/<대상>/*.json`을 검사해 같은 출력의 `knowledge` 배열에 합친다. 항목 디렉터리가 없으면 기존 출력과 같다.
 - 조회 계층은 관계 조회 3개(`find_endpoint`, `trace_flow`, `find_subscribers`)와 `search_docs`(BM25)를 제공하고 모델을 부르지 않는다. 페이지, API, MCP가 모두 이 계층을 쓴다.
 - `/mcp`는 조회 계층을 MCP 도구로 그대로 노출한다(Streamable HTTP). 답은 클라이언트의 모델이 쓴다. 서버 안에서 모델을 부르는 도구는 두지 않는다.
 - `/api/ask`는 고정 RAG다. 항상 `search_docs`로 찾고, 모델을 한 번 부르고, 인용을 검사해 답하거나 보류한다. 질문당 호출 수가 정해져 있어 비용을 미리 말할 수 있고, 같은 질문으로 다시 재기 쉽다. 흐름을 여러 단계로 따라가는 질문은 MCP 경로가 맡는다.
@@ -61,7 +66,7 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/servic
 | 부분 | 선택 | 이유 |
 |---|---|---|
 | 추출 | AI 세션(Claude Code·Codex)과 Skill | 프레임워크가 달라도 지시문으로 따라간다. 세션 작업이라 별도 유료 호출이 없다 |
-| 검증 | Java 17, SnakeYAML, Jackson, JSON Schema Validator | 서버와 같은 실행 환경이다. 확인 상태는 AI가 아니라 검증이 정한다 |
+| 검증 | Java 17, SnakeYAML, Jackson, JSON Schema Validator | 서버와 같은 실행 환경이다. 추출의 확인 상태는 검증기가, 업무 규칙·함정의 확인 상태는 개발자가 정한다 |
 | 서버 | Spring Boot, Thymeleaf, Mermaid(흐름 그림) | 검증과 같은 실행 환경 하나로 빌드·테스트·배포한다. 개발자가 직접 읽고 판단할 수 있는 스택이다. 화면 모양은 중요하지 않다 |
 | MCP | MCP Java SDK(`mcp-core`의 서블릿용 Streamable HTTP 전송) | Spring Boot에 바로 붙는다. Claude Code·Codex 모두 HTTP 방식 MCP를 등록할 수 있어 표준 입출력 방식은 두지 않는다 |
 | 질의응답 | OpenAI Java SDK(정해진 형식의 출력) | rag-chatbot의 방식(BM25, 정해진 형식의 답·인용·보류, 보류 규칙)을 옮긴다. 인용 검사는 답의 `파일:줄`이 인용한 조각에 있는지까지 본다. 모델은 질의응답 단계에서 비용과 함께 정한다 |
@@ -81,6 +86,8 @@ target/<대상> @고정 커밋 --> AI 추출(Skill) --> analysis/<대상>/servic
 AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/README.md)으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
 
 서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`를 담는다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
+
+업무 규칙·함정은 별도 `rules-msa-java-spring` Skill로 추출 결과에서 출발해 코드와 저장된 응답을 읽고 `knowledge/<대상>/<spring.application.name>.json`에 쓴다. 관계 추출 형식은 그대로 두고, 검증기가 항목도 같은 출력에 합친다.
 
 ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka). ID 앞부분으로 `services/<spring.application.name>.json`을 찾을 수 있게 하며, 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. `service` 필드가 없는 항목은 근거 경로의 첫 디렉터리로 소속을 정하고, 정할 수 없으면 멈추고 보고한다.
 
@@ -125,12 +132,14 @@ DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이�
 
 | 검증 | 보는 것 | 어긋나면 |
 |---|---|---|
-| 스키마 | 서비스·관계 파일의 필수 필드·타입·허용 값이 맞는가 | `schema` 경고 |
-| 근거 줄 | 근거 `파일:줄`이 고정 커밋에 있고, 그 줄에 항목의 경로·토픽·필드 이름이 있는가 | 그 항목은 "확인 안 됨" |
+| 스키마 | 서비스·관계·업무 규칙·함정 파일의 필수 필드·타입·허용 값이 맞는가 | `schema` 경고 |
+| 추출 근거 줄 | 근거 `파일:줄`이 고정 커밋에 있고, 그 줄에 추출 항목의 경로·토픽·필드 이름이 있는가 | 그 추출 항목은 "확인 안 됨" |
 | 선언 목록 | 정규식으로 센 선언(`@*Mapping`, `@FeignClient`, `@KafkaListener`, `send`) ↔ 추출 항목 | 빠뜨린 선언 경고 |
 | 관계 | 호출 대상 엔드포인트, 발행↔구독 환경변수 이름, 게이트웨이 경로가 결과 안에서 맞는가 | 끊긴 관계 경고 |
+| 업무 규칙·함정 근거 | 고정 커밋의 대상 파일 또는 `analysis/<대상>/responses/` 파일에 해당 줄이 있는가 | `knowledge-evidence` 경고, 확인 상태 유지 |
+| 업무 규칙·함정 영향 ID | 엔드포인트·Feign 호출·Kafka 발행·구독의 ID가 추출 결과에 있는가 | `knowledge-affected-ids` 경고, 확인 상태 유지 |
 
-검증을 모두 통과한 항목만 "확인됨"이다. 값이 `${ENV}`로만 나오는 항목은 "저장소에 근거 없음"이다. 선언 패턴은 프레임워크별로 두고, 지금은 Spring 하나다. 검증 규칙은 특정 대상의 작성 방식에 묶지 않고 "근거 줄에 이름이 있는가" 수준으로 둔다.
+검증을 모두 통과한 추출 항목만 "확인됨"이다. 값이 `${ENV}`로만 나오는 추출 항목은 "저장소에 근거 없음"이다. 선언 패턴은 프레임워크별로 두고, 지금은 Spring 하나다. 추출 검증 규칙은 특정 대상의 작성 방식에 묶지 않고 "근거 줄에 이름이 있는가" 수준으로 둔다. 업무 규칙·함정은 근거 줄의 존재만 검사하며 설명과 줄 내용을 대조하지 않는다. 설명이 맞는지와 확인 상태는 개발자가 정한다.
 
 경고 판정은 선택이다. 5단계에서 함정을 확인할 때 필요한 경고만 판정해 `eval/facts.csv`에 남긴다. 형식은 [eval/README.md](../eval/README.md). 경고를 없애려고 Skill이나 검증 규칙을 바꾸지 않는다.
 
@@ -152,9 +161,10 @@ DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이�
 추출은 관계만 뽑는다. 넘겨받는 사람이 실제로 많이 부딪히는 상태 전이, 계산, 검증 규칙과 겉으로 드러나지 않는 동작은 뽑지 못한다. 그래서 이 내용을 담는 층을 하나 더 둔다.
 
 - 출처는 둘이다. 하나는 AI가 `analysis.json`의 사실을 출발점으로 서비스 코드를 읽고 쓴 항목이고(Codex 세션 작업, 별도 유료 호출 없음), 다른 하나는 경고 판정에서 "코드의 실제 어긋남"이 된 항목이다.
-- 항목마다 서비스, 제목, 설명, 근거 `파일:줄`, 출처(AI 해석·판정), 확인 상태(확인함·틀림·미확인)를 둔다.
-- AI 해석 항목은 개발자가 근거를 열어 확인하기 전까지 "미확인"이고, 페이지에도 그렇게 표시한다. "틀림"이 된 항목은 내보내지 않는다.
-- 다시 만들 수 없는 결과라 `knowledge/`에 커밋한다. 문서 페이지와 `search_docs` 색인에 들어간다.
+- 항목마다 서비스, 제목, 설명, 근거 `파일:줄`, 영향받는 엔드포인트·Feign 호출·Kafka 발행·구독 ID, 출처(AI 해석·판정), 발견 경로(코드·실제 응답), 확인 상태(확인함·틀림·미확인)를 둔다. 필드는 [항목 형식](format/README.md#업무-규칙함정)을 따른다.
+- AI 해석 항목은 개발자가 근거를 열어 확인하기 전까지 "미확인"이고, 페이지에도 그렇게 표시한다. 응답 파일을 근거로 쓰면 발견 경로는 "실제 응답"이다.
+- 다시 만들 수 없는 결과라 `knowledge/<대상>/<spring.application.name>.json`에 커밋한다. 검증기는 확인 상태를 보존해 `out/analysis.json`의 `knowledge` 배열에 합치고 어긋남만 경고로 낸다. 서버는 별도로 `knowledge/`를 읽지 않는다.
+- 문서 페이지와 `search_docs` 색인 반영은 6·7단계에서 한다. "틀림" 항목은 검증 출력에 보존하되 페이지·색인에서 제외한다.
 
 ## 비교 실험
 

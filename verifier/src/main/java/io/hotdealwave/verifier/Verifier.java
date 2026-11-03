@@ -9,6 +9,7 @@ public final class Verifier {
         var extracted = new ExtractionInput().read(input);
         var analysis = (ObjectNode) verify(extracted, target);
         analysis.withArray("warnings").addAll(extracted.withArray("warnings"));
+        new KnowledgeChecks().run(input, target, analysis);
         Checks.count(analysis, "schema");
         return analysis;
     }

@@ -8,7 +8,7 @@
 target/HotDealWave (@cc43016)
   --> AI 추출(Skill)
   --> analysis/hotdealwave/services/*.json + relations.json
-  --> verifier (Java)
+  --> verifier (Java) <-- knowledge/hotdealwave/*.json (업무 규칙·함정)
   --> out/analysis.json
   --> server (Spring Boot) --+--> 문서 페이지
                             +--> 검색·질문 페이지
@@ -16,6 +16,8 @@ target/HotDealWave (@cc43016)
 ```
 
 모든 결과에는 근거 `파일:줄`과 상태가 붙는다. 저장소만으로 확정할 수 없는 연결은 추측하지 않는다.
+
+업무 규칙·함정은 `rules-msa-java-spring` Skill이 추출 결과에서 출발해 코드·저장된 응답을 읽고 서비스별 항목 파일로 쓴다. 검증기가 이 항목도 `out/analysis.json`에 합친다. 아래는 추출의 상태이며, 업무 규칙·함정은 개발자가 정하는 `확인함`·`틀림`·`미확인`을 쓴다.
 
 | 상태 | 뜻 |
 |---|---|
@@ -31,7 +33,7 @@ hotdealwave-handover/
 +-- target/HotDealWave/     # 분석 대상 서브모듈 (팀 원본 저장소 cc43016, 읽기만)
 |
 +-- analysis/               # AI 추출 결과
-+-- .claude/skills/         # 추출 Skill
++-- .claude/skills/         # 추출·응답 검증·업무 규칙 Skill
 |
 +-- verifier/               # 검증기 (Java 17, Jackson) -> out/analysis.json, 상태·경고
 |
@@ -40,7 +42,7 @@ hotdealwave-handover/
 |                           #   페이지: 문서·검색·질문 (Thymeleaf)
 |                           #   /api/search, /api/ask(고정 RAG), /mcp(Streamable HTTP)
 |
-+-- knowledge/              # 업무 규칙·함정 (AI 해석과 판정 결과, 확인 상태 포함)
++-- knowledge/<대상>/      # 서비스별 업무 규칙·함정 JSON (AI 해석·판정, 개발자 확인 상태)
 +-- eval/                   # 최종 질문, 판정한 사실 목록, 결과
 +-- out/                    # 생성 결과물 (커밋하지 않음)
 ```
@@ -96,6 +98,6 @@ python -m unittest discover tests
 python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/responses
 ```
 
-`./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
+`./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 같은 기준 위치의 `knowledge/hotdealwave/`가 있으면 항목 스키마·근거 줄 존재·영향 ID를 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
 
 공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다. 서버 실행 명령은 6단계에서 더한다.
