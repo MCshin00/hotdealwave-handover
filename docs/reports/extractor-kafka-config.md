@@ -2,6 +2,8 @@
 
 이슈 #5(2단계 뒷부분)의 결과다. 분석 대상 `cc43016`에서 Kafka 발행 13개, 구독 9개, 연결 9개, 환경변수 항목 292개(이름 54개), 외부 자원 15개, 배포 단계 5개를 `out/analysis.json`으로 뽑았다. 새로 더한 교차 검증 두 가지에서 나온 경고는 11개다. 숫자는 `./gradlew :extractor:run`으로 다시 만들 수 있다.
 
+파서 추출기(`extractor/`)는 #18에서 지웠다. 링크는 지우기 전 커밋을 가리킨다.
+
 ## 1. 추출기가 하는 일
 
 | 단계 | 읽는 것 | 하는 일 | 나오는 것 |
@@ -26,7 +28,7 @@
 | `kafka` | 발행·구독 추출, 토픽 추적, 연결, Kafka 교차 검증 | `KafkaExtractor`, `KafkaChecks` |
 | `config` | 프로필별 설정, 환경변수, 외부 자원, 배포 단계 | `ConfigExtractor` |
 
-`analysis.json`에 최상위 키 7개(`kafkaDeclarations`, `kafkaPublications`, `kafkaSubscriptions`, `kafkaLinks`, `environmentVariables`, `externalResources`, `deploymentSteps`)가 늘었다. 구조는 [extractor/README.md](../../extractor/README.md)에 있다.
+`analysis.json`에 최상위 키 7개(`kafkaDeclarations`, `kafkaPublications`, `kafkaSubscriptions`, `kafkaLinks`, `environmentVariables`, `externalResources`, `deploymentSteps`)가 늘었다. 구조는 [extractor/README.md](https://github.com/MCshin00/hotdealwave-handover/blob/f2753bb10ce4c3abeae1932ab8281e4b48ca51f0/extractor/README.md)에 있다.
 
 ## 3. 추출 결과
 

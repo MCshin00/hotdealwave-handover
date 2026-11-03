@@ -2,6 +2,8 @@
 
 이슈 #3(2단계 앞부분)의 결과다. 분석 대상 `cc43016`의 소스를 컴파일 없이 파서로 읽어, 엔드포인트 72개, Feign 호출 17개, 게이트웨이 경로 규칙 6개를 `out/analysis.json`으로 뽑았다. 교차 검증 세 가지에서 나온 경고는 1개다. 숫자는 `./gradlew :extractor:run`으로 다시 만들 수 있다.
 
+파서 추출기(`extractor/`)는 #18에서 지웠다. 링크는 지우기 전 커밋을 가리킨다.
+
 ## 1. 추출기가 하는 일
 
 | 단계 | 읽는 것 | 하는 일 | 나오는 것 |
@@ -30,7 +32,7 @@
 | `check` | 교차 검증 3가지 | `CrossChecks` |
 | `model` | `analysis.json`에 쓰는 레코드 | `Analysis` |
 
-`analysis.json`의 구조는 [extractor/README.md](../../extractor/README.md)에 있다.
+`analysis.json`의 구조는 [extractor/README.md](https://github.com/MCshin00/hotdealwave-handover/blob/f2753bb10ce4c3abeae1932ab8281e4b48ca51f0/extractor/README.md)에 있다.
 
 ## 3. 추출 결과
 

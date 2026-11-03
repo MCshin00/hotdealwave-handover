@@ -2,11 +2,13 @@
 
 이슈 #10(3단계)의 결과다. AI 세션이 추출 Skill만 보고 분석 대상 `cc43016`을 읽어 `analysis/hotdealwave/extracted.json`을 썼다. 검증기를 통과한 결과는 파서 기준선과 경고 12개가 같고, 13개 종류의 항목 키와 DTO 필드 727개가 모두 일치한다. 한 번 추출하고 대조한 뒤 Skill을 세 문장 고쳐 다시 추출했다.
 
+이 뒤 파서를 지우고(#18) 추출 결과를 서비스별 파일로 나눴다(#19). 바뀐 구조는 [4단계 보고서](probe-hotdealwave.md#1-4단계-전에-바뀐-구조)에 있다. 형식 링크는 바뀌기 전 커밋을 가리킨다.
+
 ## 1. 흐름
 
 | 단계 | 하는 것 | 나오는 것 |
 |---|---|---|
-| 1 | 새 AI 세션이 [추출 Skill](../../.claude/skills/extract-msa-java-spring/SKILL.md)과 [analysis.json 계약](../../extractor/README.md)만 보고 대상 코드를 직접 읽는다 | `analysis/hotdealwave/extracted.json` (상태·경고 없음) |
+| 1 | 새 AI 세션이 [추출 Skill](../../.claude/skills/extract-msa-java-spring/SKILL.md)과 [analysis.json 계약](https://github.com/MCshin00/hotdealwave-handover/blob/f2753bb10ce4c3abeae1932ab8281e4b48ca51f0/extractor/README.md)만 보고 대상 코드를 직접 읽는다 | `analysis/hotdealwave/extracted.json` (상태·경고 없음) |
 | 2 | `./gradlew :verifier:run --args="analysis/hotdealwave/extracted.json target/HotDealWave out/analysis.json"` | 상태·`checks`·`warnings`가 붙은 `out/analysis.json` |
 | 3 | 파서 결과(`out/parser.json`)도 같은 검증기에 넣고 두 결과를 키별로 대조한다 | 일치율, 경고·상태 비교 |
 
