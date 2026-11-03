@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "서비스 업무 규칙과 함정",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/KnowledgeItem" }
+    }
+  },
+  "required": ["schemaVersion", "items"],
+  "additionalProperties": false,
+  "$defs": {
+    "KnowledgeItem": {
+      "type": "object",
+      "properties": {
+        "service": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["업무 규칙", "함정"] },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^(?!/)[^\\\\:\\r\\n]+:[1-9][0-9]*$"
+          }
+        },
+        "affectedIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "source": { "enum": ["AI 해석", "판정"] },
+        "discoveryPath": { "enum": ["코드", "실제 응답"] },
+        "confirmationStatus": { "enum": ["확인함", "틀림", "미확인"] }
+      },
+      "required": ["service", "kind", "title", "description", "evidence", "affectedIds", "source", "discoveryPath", "confirmationStatus"],
+      "additionalProperties": false
+    }
+  }
+}

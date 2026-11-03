@@ -1,6 +1,8 @@
-# 추출 결과 형식
+# 추출 결과와 업무 규칙·함정 형식
 
 필수 필드·타입·허용 값은 JSON Schema 2020-12의 [서비스 스키마](service.schema.json)와 [관계 스키마](relations.schema.json)를 따른다. 공통 사실 형식은 서비스 스키마의 `$defs.Fact`다.
+
+업무 규칙·함정은 별도 [항목 스키마](knowledge.schema.json)를 따른다. 아래 추출 결과의 상태 판정 규칙과 달리, 항목의 확인 상태는 개발자가 정한다.
 
 UTF-8 JSON으로 `analysis/<대상>/services/<spring.application.name>.json`과 `analysis/<대상>/relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·Feign·Kafka), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, Feign 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, Feign 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
 
@@ -54,3 +56,25 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 환경변수는 사용 위치별로 기록한다. `profile`은 기본 YAML의 `base`, 파일 이름의 `local`·`prod` 등, compose의 `compose`다. 프로필을 병합하거나 실행할 프로필을 추정하지 않는다. Java `@Value`가 설정 키를 참조하면 해당 프로필의 YAML 환경변수와 코드 근거를 함께 남긴다. 같은 이름이 여러 항목에 나올 수 있으므로 환경변수 이름 수는 `name`의 중복을 제거해서 센다. 값은 모두 `null`·`저장소에 근거 없음`이다.
 
 외부 자원은 서비스·종류별로 묶는다. 설정 키의 `spring.datasource`·`spring.jpa`는 DB, `spring.data.redis`는 Redis, `spring.kafka`는 Kafka, `spring.elasticsearch`는 Elasticsearch, `s3`는 S3, `pay`는 KakaoPay다. 코드에서는 JPA·Redis·Kafka·Elasticsearch·S3의 클래스·어노테이션 사용과 KakaoPay 클라이언트·Feign URL을 근거로 삼는다. 설정이나 코드 근거가 하나라도 있어야 항목을 내며, 없는 쪽의 근거 배열은 비워 둔다. `details.connectionValues`와 S3의 `details.bucketName`은 `저장소에 근거 없음`이다. 외부 자원의 설정·코드 근거 수는 각각의 배열에서 중복 위치를 제거한 수다.
+
+## 업무 규칙·함정
+
+UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다.
+
+| 필드 | 내용 |
+|---|---|
+| `service` | 서비스의 `spring.application.name` |
+| `kind` | 종류: `업무 규칙` 또는 `함정` |
+| `title` | 제목 |
+| `description` | 발생 조건과 실제 동작. 함정은 누가 무엇을 하다 어떤 결과를 받는지도 쓴다 |
+| `evidence` | 하나 이상의 근거 `파일:줄` |
+| `affectedIds` | 하나 이상의 영향받는 엔드포인트·Feign 호출·Kafka 발행·구독 ID |
+| `source` | `AI 해석` 또는 `판정` |
+| `discoveryPath` | `코드` 또는 `실제 응답` |
+| `confirmationStatus` | `확인함`, `틀림`, `미확인` 중 개발자가 정한 값 |
+
+코드 근거는 고정 커밋의 대상 루트 기준 경로, 응답 근거는 `analysis/<대상>/responses/<파일>.json:줄`이다. 응답 파일을 근거에 포함하면 발견 경로는 `실제 응답`이다. AI 해석의 출처는 `AI 해석`, 확인 상태는 `미확인`으로 시작한다.
+
+검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions` 중 하나에 있는지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids` 경고다.
+
+`analysis/<대상>`을 입력하면 같은 기준 위치의 `knowledge/<대상>`을 읽는다(절대 입력 경로도 같은 구조). 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 두 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
