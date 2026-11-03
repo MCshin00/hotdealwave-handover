@@ -22,7 +22,7 @@ final class SourceText {
 
     static boolean isExcluded(Path relative) {
         for (Path part : relative) {
-            String name = part.toString();
+            String name = part.toString().toLowerCase(Locale.ROOT);
             if (name.equals(".env") || name.startsWith(".env.") || name.equals(".local") || name.equals(".git")) return true;
         }
         return false;

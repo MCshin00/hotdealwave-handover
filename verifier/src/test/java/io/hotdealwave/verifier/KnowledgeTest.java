@@ -77,10 +77,11 @@ class KnowledgeTest {
         Files.writeString(target.resolve(".env"), "SECRET=test\n");
         var item = prepare();
         assertEquals(0, verify(item, target).at("/checks/knowledge-evidence/warningCount").asInt());
-        item.withArray("evidence").add(".env:1");
+        item.withArray("evidence").add(".env:1").add(".ENV:1");
         var output = verify(item, target);
-        assertEquals(1, output.at("/checks/knowledge-evidence/warningCount").asInt());
+        assertEquals(2, output.at("/checks/knowledge-evidence/warningCount").asInt());
         assertTrue(output.path("warnings").toString().contains(".env:1"));
+        assertTrue(output.path("warnings").toString().contains(".ENV:1"));
     }
 
     @Test void incorrectItemIsExcludedFromKnowledgeOutput() throws Exception {
