@@ -59,7 +59,7 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 ## 업무 규칙·함정
 
-UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다. 별도 등급·분류·항목 ID는 두지 않는다.
+UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다.
 
 | 필드 | 내용 |
 |---|---|

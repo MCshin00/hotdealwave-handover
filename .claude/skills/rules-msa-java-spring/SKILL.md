@@ -23,7 +23,7 @@ description: Spring Boot·Spring Cloud MSA의 대상 경로, 추출 결과 디�
 ## 항목 작성
 
 - 선택한 서비스마다 `knowledge/<대상>/<spring.application.name>.json` 하나를 쓴다. `<대상>`은 입력 추출 디렉터리의 대상 이름이다. 형식은 `schemaVersion: 1`과 `items` 배열이며, 근거를 갖춘 항목이 없으면 빈 배열을 쓴다.
-- 항목마다 `service`, `title`, `description`, `evidence`, `affectedIds`, `source`, `discoveryPath`, `confirmationStatus`를 쓴다. 설명에는 발생 조건과 실제 동작·영향을 적는다. 등급이나 별도 분류를 만들지 않는다.
+- 항목마다 `service`, `title`, `description`, `evidence`, `affectedIds`, `source`, `discoveryPath`, `confirmationStatus`를 쓴다. 설명에는 발생 조건과 실제 동작·영향을 적는다.
 - `source`는 `AI 해석`, `confirmationStatus`는 `미확인`으로 쓴다. 확인 상태는 개발자만 정한다. 검증 경고의 판정을 대신하거나 `판정` 출처를 만들지 않는다.
 - 코드에 근거가 있는 항목만 쓴다. `evidence`에 대상 루트 기준 `파일:줄`을 붙이고, 여러 파일에 걸친 동작은 연결되는 줄을 함께 넣는다. 줄 번호는 실제 파일에서 확인한다.
 - 저장된 응답을 근거로 쓰면 `analysis/<대상>/responses/<파일>.json:줄`을 함께 붙이고 `discoveryPath`를 `실제 응답`으로 쓴다. 코드 근거만 있으면 `코드`로 쓴다. 응답이 없는데 호출 결과를 만들어 쓰지 않는다.
