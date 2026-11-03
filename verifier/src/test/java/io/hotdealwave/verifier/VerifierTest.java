@@ -109,11 +109,11 @@ class VerifierTest {
         assertTrue(output.path("warnings").toString().contains(file + ":41"));
     }
 
-    @Test void inventoryIncludesCommentedMapping() throws Exception {
+    @Test void inventoryExcludesCommentedMapping() throws Exception {
         var output = verify(document());
-        assertEquals(103, output.at("/checks/declarations/mappingCount").asInt());
+        assertEquals(102, output.at("/checks/declarations/mappingCount").asInt());
         assertEquals(9, output.at("/checks/declarations/feignClientCount").asInt());
-        assertTrue(output.path("warnings").toString().contains("PaymentViewController.java:12"));
+        assertFalse(output.path("warnings").toString().contains("PaymentViewController.java:12"));
         assertEquals(9, output.at("/checks/kafka-declarations/listenerCount").asInt());
         assertEquals(7, output.at("/checks/kafka-declarations/sendCount").asInt());
         assertEquals(3, output.at("/checks/kafka-declarations/dlqCount").asInt());
