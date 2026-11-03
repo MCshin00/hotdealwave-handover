@@ -64,6 +64,7 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 | 필드 | 내용 |
 |---|---|
 | `service` | 서비스의 `spring.application.name` |
+| `kind` | 종류: `업무 규칙` 또는 `함정` |
 | `title` | 제목 |
 | `description` | 발생 조건과 동작·영향 설명 |
 | `evidence` | 하나 이상의 근거 `파일:줄` |

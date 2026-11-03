@@ -24,6 +24,7 @@ class KnowledgeTest {
         Files.copy(Path.of("analysis/hotdealwave/responses", RESPONSE), responses.resolve(RESPONSE));
         Files.createDirectories(temporary.resolve("knowledge/hotdealwave"));
         var item = JSON.createObjectNode().put("service", "order-service")
+                .put("kind", "업무 규칙")
                 .put("title", "주문의 쿠폰 적용 처리")
                 .put("description", "쿠폰 검증 응답을 받아 주문에 적용한다. 설명의 정오 판정은 개발자가 한다.")
                 .put("source", "AI 해석").put("discoveryPath", "실제 응답").put("confirmationStatus", "미확인");
