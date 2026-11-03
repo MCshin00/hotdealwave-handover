@@ -91,8 +91,11 @@ JDK 17 이상이 필요하다.
 # 선택: 입력·대상·출력 경로 변경
 ./gradlew :verifier:run --args="analysis/hotdealwave target/HotDealWave out/analysis.json"
 python scripts/check_shared_files.py
+python -m unittest discover tests
+# 4단계: 저장한 응답과 추출의 응답 필드 비교
+python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/responses
 ```
 
 `./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka 검사의 경고 수를 출력한다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
 
-공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 서버 실행 명령은 6단계에서 더한다.
+공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다. 서버 실행 명령은 6단계에서 더한다.

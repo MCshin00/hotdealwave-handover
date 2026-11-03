@@ -90,7 +90,7 @@ ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka
 
 ## Kafka 연결 규칙
 
-토픽 이름은 코드와 설정 어디에도 값으로 없다. `@Value("${spring.kafka.topics.x}")` → `application.yml`의 `${KAFKA_..._TOPIC}` → `docker-compose.yml`의 `${KAFKA_..._TOPIC}`으로 이어지고, 값은 배포 서버의 환경에서 들어온다(`.github/workflows/actions.yml`이 EC2에서 `docker-compose`를 실행).
+DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이름은 코드와 설정 어디에도 값으로 없다. `@Value("${spring.kafka.topics.x}")` → `application.yml`의 `${KAFKA_..._TOPIC}` → `docker-compose.yml`의 `${KAFKA_..._TOPIC}`으로 이어지고, 값은 배포 서버의 환경에서 들어온다(`.github/workflows/actions.yml`이 EC2에서 `docker-compose`를 실행).
 
 - 발행 쪽과 구독 쪽이 같은 환경변수 이름을 쓰면 연결한다. 한 compose 파일 안의 같은 `${변수}`는 같은 값으로 채워지기 때문이다. 근거는 양쪽 서비스의 compose 줄이다.
 - 이름이 다르면 "확인 안 됨"으로 둔다. 이름·필드명·로그 문구가 비슷해도 후보로 내지 않는다.
