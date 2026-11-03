@@ -9,7 +9,7 @@
 | 항목 형식 | [docs/format/knowledge.schema.json](../format/knowledge.schema.json), [형식 문서](../format/README.md) | 서비스, 종류(업무 규칙·함정), 제목, 설명, 근거 `파일:줄`, 영향 ID, 출처(AI 해석·판정), 발견 경로(코드·실제 응답), 확인 상태(확인함·틀림·미확인) |
 | 검증기 검사 | `verifier/` | 항목 파일을 스키마로 검사하고, 근거 줄이 고정 커밋이나 응답 파일에 있는지(`knowledge-evidence`), 영향 ID가 추출 결과에 있는지(`knowledge-affected-ids`) 본다. 항목을 `out/analysis.json`의 `knowledge` 배열에 합치고 "틀림"은 넣지 않는다 |
 | Skill | [rules-msa-java-spring](../../.claude/skills/rules-msa-java-spring/SKILL.md) | 서비스마다 새 실행 문맥에서 출발점 정하기 → 처리 코드 읽기 → 항목 고르기 → 작성 |
-| 경고 판정 | `eval/facts.csv` | 함정 확인에 필요한 경고를 개발자가 판정하고, "코드의 실제 어긋남"을 판정 항목으로 옮긴다 |
+| 경고 판정 | `eval/facts.csv` | 저장소의 코드·응답만으로 결과가 정해지는 경고를 개발자가 판정하고, "코드의 실제 어긋남"을 판정 항목으로 옮긴다 |
 
 ```
 out/analysis.json(추출) + analysis/hotdealwave/responses/ + target/HotDealWave @cc43016
@@ -100,7 +100,7 @@ out/analysis.json(추출) + analysis/hotdealwave/responses/ + target/HotDealWave
 
 payment와 product는 처리에 실패한 메시지를 각각 문자열 토픽 `payment-dlq`, `product-dlq`로 보낸다(`ConsumerApplicationKafkaConfig.java:61`). DLQ 구독 클래스 `OrderDlqConsumer`·`PaymentDlqConsumer`는 환경변수 `KAFKA_DLQ_TOPIC` 하나를 구독하도록 선언됐지만 빈 등록 어노테이션이 없고, 다른 곳에서 등록하는 코드도 없어 구독이 시작되지 않는다. 두 판정을 판정 항목 하나("문자열로 지정한 DLQ 토픽 두 개를 받는 쪽이 없다", payment-service, 확인함)로 옮겼다.
 
-선언 목록 경고(`PaymentViewController.java:12`, 블록 주석 안의 `@GetMapping`)는 판정하지 않았다. 주석 속 선언은 등록되지 않으므로 검사가 세지 않는 것이 맞다고 보고, 검사를 고치는 일을 #22로 냈다. 나머지 `kafka-topics` 경고 9개는 함정 확인에 필요하지 않아 판정하지 않았다.
+선언 목록 경고(`PaymentViewController.java:12`, 블록 주석 안의 `@GetMapping`)는 판정하지 않았다. 주석 속 선언은 등록되지 않으므로 검사가 세지 않는 것이 맞다고 보고, 검사를 고치는 일을 #22로 냈다. 나머지 `kafka-topics` 경고 9개는 저장소 밖 환경변수 값에 따라 연결이 갈려 판정하지 않았다.
 
 ## 6. 남은 문제
 
@@ -109,7 +109,7 @@ payment와 product는 처리에 실패한 메시지를 각각 문자열 토픽 `
 | 같은 문제가 두 서비스 결과에 따로 있다 | 리뷰 조회 인증 차이(gateway·product), 승인 안 된 업체의 상품 등록(company·product). 서비스마다 따로 실행해 다른 결과를 모르고, 원인이 두 서비스에 걸치면 어느 쪽에 쓸지 정해 두지 않았다 | [#23](https://github.com/MCshin00/hotdealwave-handover/issues/23) |
 | 원인이 다른 내용이 한 항목에 섞였다 | `reduceQuantity` 함정이 주문 취소 업무 규칙 설명 속 한 문장으로만 남았다 | #23 |
 | 설명에 AI가 자기 작업을 밝힌 말이 섞였다 | "실제 실행 결과는 확인하지 않았다", Skill 문장을 옮긴 "추정하지 않는다". 같은 표현이지만 필요한 정보인 문장(코드가 확인하지 않는다는 서술, 인용한 응답이 보여 주는 범위)도 있어 표현으로는 가를 수 없다 | #23 |
-| 검사·부수 처리가 없다는 서술의 분류가 흐리다 | 업체 등록 상태를 요청값으로 저장, 관리자 주문 상태 수정에 부수 처리 없음이 업무 규칙으로 들어갔다 | #23에서 대조 기준으로 결과를 본다 |
+| 검사·부수 처리가 없다는 서술의 분류가 흐리다 | 업체 등록 상태를 요청값으로 저장, 관리자 주문 상태 수정에 부수 처리 없음이 업무 규칙으로 들어갔다 | 함정 기준을 쓰는 쪽에 미치는 영향으로 바꿨다(결정 문서 "업무 규칙과 함정"). 결과 파일은 #23에서 새 기준으로 다시 분류한다 |
 | 같은 모양의 항목이 서비스마다 반복된다 | Kafka 전송 완료를 확인하지 않음(order·payment·product), 수동 확인 모드에서 확인 호출 없음(order·payment) | 서비스마다 원인 코드가 따로 있어 합치지 않는다 |
 | 근거 줄이 많다 | 항목당 4~42줄, 중앙값 13줄. 판단에 결정적이지 않은 줄이 섞인다 | 페이지에 보여 줄 줄 수를 6단계에서 정한다 |
 

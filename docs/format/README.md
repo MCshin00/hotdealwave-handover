@@ -66,7 +66,7 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 | `service` | 서비스의 `spring.application.name` |
 | `kind` | 종류: `업무 규칙` 또는 `함정` |
 | `title` | 제목 |
-| `description` | 발생 조건과 동작·영향 설명 |
+| `description` | 발생 조건과 실제 동작. 함정은 누가 무엇을 하다 어떤 결과를 받는지도 쓴다 |
 | `evidence` | 하나 이상의 근거 `파일:줄` |
 | `affectedIds` | 하나 이상의 영향받는 엔드포인트·Feign 호출·Kafka 발행·구독 ID |
 | `source` | `AI 해석` 또는 `판정` |
