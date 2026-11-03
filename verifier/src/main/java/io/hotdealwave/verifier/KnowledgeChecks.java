@@ -34,7 +34,6 @@ final class KnowledgeChecks {
                 schema.validate(document).stream().sorted(Comparator.comparing(message -> message.toString()))
                         .forEach(message -> warn(analysis, "schema", json.createArrayNode(), location + ": " + message));
                 for (var item : document.path("items")) {
-                    knowledge.add(item);
                     String label = location + ": " + item.path("title").asText();
                     for (var evidence : item.path("evidence")) {
                         String reference = evidence.asText();
@@ -50,6 +49,7 @@ final class KnowledgeChecks {
                         if (!ids.contains(id.asText())) warn(analysis, "knowledge-affected-ids", item.path("evidence"),
                                 label + ": 추출 결과에 영향 ID 없음: " + id.asText());
                     }
+                    if (!"틀림".equals(item.path("confirmationStatus").asText())) knowledge.add(item);
                 }
             }
         }
@@ -61,10 +61,6 @@ final class KnowledgeChecks {
         if (!evidence.matches("^(?!/)[^\\\\:\\r\\n]+:[1-9][0-9]*$")) return false;
         int colon = evidence.lastIndexOf(':');
         String relative = evidence.substring(0, colon);
-        for (String part : relative.split("/")) {
-            if (part.equals(".") || part.equals("..") || part.equals(".env") || part.startsWith(".env.")
-                    || part.equals(".git") || part.equals(".local") || part.equals("eval")) return false;
-        }
         Path file = root.resolve(relative);
         if (!Files.isRegularFile(file) || !file.toRealPath().startsWith(root.toRealPath())) return false;
         try {

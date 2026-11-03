@@ -76,4 +76,4 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 
 검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions` 중 하나에 있는지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids` 경고다.
 
-`analysis/<대상>`을 입력하면 같은 기준 위치의 `knowledge/<대상>`을 읽는다(절대 입력 경로도 같은 구조). 파일 이름순으로 `items`를 합쳐 `out/analysis.json`의 `knowledge` 배열에 원문 그대로 넣고 경고는 기존 `warnings`·`checks`에 더한다. `틀림`도 이 검증 출력에는 보존하며, 이후 문서 페이지·검색 색인에서 제외한다. 항목 디렉터리가 없으면 `knowledge` 배열과 두 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
+`analysis/<대상>`을 입력하면 같은 기준 위치의 `knowledge/<대상>`을 읽는다(절대 입력 경로도 같은 구조). 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 두 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.

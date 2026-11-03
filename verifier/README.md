@@ -16,6 +16,6 @@ Kafka 선언 검사(`kafka-declarations`)도 정규식 검색으로 종류와 `�
 - 근거가 고정 커밋의 대상 파일이나 해당 입력의 `responses/` 파일에 있고 줄 번호가 실제 길이 안이면 근거 존재 검사를 통과한다. 없으면 `knowledge-evidence` 경고를 낸다. 응답 근거 표기는 `analysis/<대상>/responses/<파일>.json:줄`이다. 추출 근거 검사에서 응답을 건너뛰는 동작과 달리, 항목의 응답 근거는 실제 줄 존재를 검사한다.
 - 영향 ID는 추출 결과의 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions`에서 찾는다. 없으면 `knowledge-affected-ids` 경고를 낸다.
 
-설명과 근거 줄 내용을 대조하지 않고 `confirmationStatus`도 바꾸지 않는다. 파일 이름순으로 `items`를 `out/analysis.json`의 `knowledge` 배열에 그대로 합친다. 경고가 있거나 `틀림`인 항목도 검증 출력에는 보존한다. 페이지·검색 색인에서 `틀림`을 제외하는 일은 이후 단계다. 서버는 이 출력 하나만 읽는다.
+설명과 근거 줄 내용을 대조하지 않고 `confirmationStatus`도 바꾸지 않는다. `틀림`인 항목도 스키마·근거·영향 ID를 검사하지만 `out/analysis.json`의 `knowledge` 배열에는 넣지 않는다. 나머지 항목은 경고 유무와 관계없이 파일 이름순으로 원문 그대로 합친다. 서버는 이 출력 하나만 읽는다.
 
 항목 디렉터리가 없으면 항목 배열·검사 집계도 추가하지 않아 기존 출력이 유지된다. 대표 테스트는 임시 항목 파일에서 코드·응답의 범위 밖 줄 번호, 존재하지 않는 영향 ID, 필수 필드 누락을 경고로 내는지와 확인 상태 보존을 확인한다.

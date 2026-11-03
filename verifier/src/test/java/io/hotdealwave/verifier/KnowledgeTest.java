@@ -67,6 +67,11 @@ class KnowledgeTest {
         assertTrue(output.path("warnings").toString().contains(invalidResponse));
     }
 
+    @Test void incorrectItemIsExcludedFromKnowledgeOutput() throws Exception {
+        var item = prepare().put("confirmationStatus", "틀림");
+        assertEquals(0, verify(item).path("knowledge").size());
+    }
+
     @Test void missingAffectedIdAndRequiredFieldProduceWarnings() throws Exception {
         var item = prepare();
         assertEquals(0, verify(item).at("/checks/knowledge-affected-ids/warningCount").asInt());
