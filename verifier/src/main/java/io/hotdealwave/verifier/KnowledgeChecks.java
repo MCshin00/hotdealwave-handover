@@ -62,7 +62,7 @@ final class KnowledgeChecks {
         int colon = evidence.lastIndexOf(':');
         String relative = evidence.substring(0, colon);
         Path file = root.resolve(relative);
-        if (!Files.isRegularFile(file) || !file.toRealPath().startsWith(root.toRealPath())) return false;
+        if (SourceText.isExcluded(Path.of(relative)) || !Files.isRegularFile(file) || !file.toRealPath().startsWith(root.toRealPath())) return false;
         try {
             int number = Integer.parseInt(evidence.substring(colon + 1));
             try (var lines = Files.lines(file)) { return lines.limit(number).count() == number; }

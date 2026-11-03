@@ -20,13 +20,17 @@ final class SourceText {
                 && Arrays.stream(evidence.split("/")).noneMatch(part -> part.equals(".") || part.equals(".."));
     }
 
+    static boolean isExcluded(Path relative) {
+        for (Path part : relative) {
+            String name = part.toString();
+            if (name.equals(".env") || name.startsWith(".env.") || name.equals(".local") || name.equals(".git")) return true;
+        }
+        return false;
+    }
+
     private Path path(String relative) throws IOException {
         var candidate = root.resolve(relative).normalize();
-        if (!candidate.startsWith(root)) return null;
-        for (Path part : root.relativize(candidate)) {
-            String name = part.toString();
-            if (name.equals(".env") || name.startsWith(".env.") || name.equals(".local") || name.equals(".git")) return null;
-        }
+        if (!candidate.startsWith(root) || isExcluded(root.relativize(candidate))) return null;
         String name = candidate.getFileName().toString();
         if (!(name.endsWith(".java") || name.endsWith(".yml") || name.equals("build.gradle"))) return null;
         if (!Files.isRegularFile(candidate) || !candidate.toRealPath().startsWith(root)) return null;

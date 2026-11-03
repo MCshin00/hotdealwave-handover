@@ -33,12 +33,14 @@ class KnowledgeTest {
         return item;
     }
 
-    private JsonNode verify(ObjectNode item) throws Exception {
+    private JsonNode verify(ObjectNode item) throws Exception { return verify(item, TARGET); }
+
+    private JsonNode verify(ObjectNode item, Path target) throws Exception {
         var document = JSON.createObjectNode().put("schemaVersion", 1);
         document.putArray("items").add(item);
         JSON.writeValue(temporary.resolve("knowledge/hotdealwave/order-service.json").toFile(), document);
         Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{temporary.resolve("analysis/hotdealwave").toString(), TARGET.toString(),
+        Main.main(new String[]{temporary.resolve("analysis/hotdealwave").toString(), target.toString(),
                 output.toString()});
         return JSON.readTree(output.toFile());
     }
@@ -66,6 +68,19 @@ class KnowledgeTest {
         assertEquals(1, output.at("/checks/knowledge-evidence/warningCount").asInt());
         assertEquals(item, output.at("/knowledge/0"));
         assertTrue(output.path("warnings").toString().contains(invalidResponse));
+    }
+
+    @Test void environmentFileEvidenceWarnsWithoutReadingIt() throws Exception {
+        Path target = Files.createDirectories(temporary.resolve("target"));
+        Files.createDirectories(target.resolve(CODE).getParent());
+        Files.copy(TARGET.resolve(CODE), target.resolve(CODE));
+        Files.writeString(target.resolve(".env"), "SECRET=test\n");
+        var item = prepare();
+        assertEquals(0, verify(item, target).at("/checks/knowledge-evidence/warningCount").asInt());
+        item.withArray("evidence").add(".env:1");
+        var output = verify(item, target);
+        assertEquals(1, output.at("/checks/knowledge-evidence/warningCount").asInt());
+        assertTrue(output.path("warnings").toString().contains(".env:1"));
     }
 
     @Test void incorrectItemIsExcludedFromKnowledgeOutput() throws Exception {
