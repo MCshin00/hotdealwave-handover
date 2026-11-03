@@ -136,7 +136,7 @@ DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이�
 | 추출 근거 줄 | 근거 `파일:줄`이 고정 커밋에 있고, 그 줄에 추출 항목의 경로·토픽·필드 이름이 있는가 | 그 추출 항목은 "확인 안 됨" |
 | 선언 목록 | 정규식으로 센 선언(`@*Mapping`, `@FeignClient`, `@KafkaListener`, `send`) ↔ 추출 항목. 주석 안의 선언은 세지 않는다 | 빠뜨린 선언 경고 |
 | 관계 | 호출 대상 엔드포인트, 발행↔구독 환경변수 이름, 게이트웨이 경로가 결과 안에서 맞는가 | 끊긴 관계 경고 |
-| 핸들러 호출 | `calls`의 출발·도착 ID가 있고, 첫 근거가 출발 항목의 첫 근거, 마지막 근거가 Feign 메서드 호출 줄 또는 발행 항목의 근거 줄인가. 어느 `calls`의 도착도 아닌 Feign 호출·`kafkaTemplate.send` 발행이 있는가 | 그 연결은 "확인 안 됨", `handler-calls` 경고 |
+| 핸들러 호출 | `calls`의 출발·도착 ID가 있고, 첫 근거가 출발 항목의 첫 근거, 마지막 근거가 Feign 메서드 호출 줄 또는 발행 항목의 근거 줄이고, 발행이면 사슬에 그 발행만의 근거 줄이 있는가. 어느 `calls`의 도착도 아닌 Feign 호출·`kafkaTemplate.send` 발행이 있는가 | 그 연결은 "확인 안 됨", `handler-calls` 경고 |
 | 업무 규칙·함정 근거 | 고정 커밋의 대상 파일 또는 `analysis/<대상>/responses/` 파일에 해당 줄이 있는가 | `knowledge-evidence` 경고, 확인 상태 유지 |
 | 업무 규칙·함정 영향 ID | 엔드포인트·Feign 호출·Kafka 발행·구독의 ID가 추출 결과에 있는가 | `knowledge-affected-ids` 경고, 확인 상태 유지 |
 | 업무 규칙·함정 중복 | 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은가 | `knowledge-duplicates` 경고, 확인 상태 유지 |

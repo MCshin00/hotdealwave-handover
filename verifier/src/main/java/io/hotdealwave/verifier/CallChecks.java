@@ -1,6 +1,5 @@
 package io.hotdealwave.verifier;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.Objects;
@@ -11,6 +10,8 @@ import static io.hotdealwave.verifier.Checks.*;
 /** Handler → Feign call or kafkaTemplate.send links; only the ends of each chain are checked. */
 final class CallChecks {
     void run(SourceText source, ObjectNode analysis) throws IOException {
+        var sends = items(analysis.path("kafkaPublications")).stream()
+                .filter(p -> "kafkaTemplate.send".equals(p.path("kind").asText())).toList();
         for (var call : analysis.path("calls")) {
             String fromId = call.path("fromId").asText(), toId = call.path("toId").asText();
             var from = find(analysis.path("endpoints"), "id", fromId);
@@ -26,7 +27,10 @@ final class CallChecks {
                 reason = "첫 근거가 출발 항목의 첫 근거와 다름";
             else {
                 var last = evidence.get(evidence.size() - 1);
+                // Publications may share a wrapper's send line, so the chain must also hold a line only this publication has.
                 boolean reaches = feign.isMissingNode() ? items(publication.path("evidence")).contains(last)
+                        && evidence.stream().anyMatch(line -> items(publication.path("evidence")).contains(line)
+                                && sends.stream().noneMatch(p -> p != publication && items(p.path("evidence")).contains(line)))
                         : Pattern.compile("\\.\\s*" + Pattern.quote(feign.path("handler").asText()) + "\\s*\\(")
                                 .matcher(Objects.toString(source.line(last.asText()), "")).find();
                 if (!reaches) reason = "마지막 근거가 도착 지점 줄이 아님";
@@ -34,8 +38,7 @@ final class CallChecks {
             verdict(call, reason == null ? CONFIRMED : UNKNOWN, reason);
             if (reason != null) warn(analysis, "handler-calls", call.path("evidence"), reason + ": " + fromId + " -> " + toId);
         }
-        var targets = Stream.concat(items(analysis.path("feignCalls")).stream(), items(analysis.path("kafkaPublications")).stream()
-                .filter(p -> "kafkaTemplate.send".equals(p.path("kind").asText()))).toList();
+        var targets = Stream.concat(items(analysis.path("feignCalls")).stream(), sends.stream()).toList();
         for (var target : targets) {
             String id = target.path("id").asText();
             if (items(analysis.path("calls")).stream().noneMatch(c -> known(c) && c.path("toId").asText().equals(id)))

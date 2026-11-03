@@ -48,7 +48,7 @@ class CallCheckTest {
         assertEquals(9, analysis.path("kafkaLinks").size());
     }
 
-    @Test void callEndingAtAnotherTargetIsUnknown() throws Exception {
+    @Test void callsReachingAnotherTargetAreUnknown() throws Exception {
         Path input = Files.createDirectories(temporary.resolve("hotdealwave"));
         Path services = Files.createDirectories(input.resolve("services"));
         try (var files = Files.list(Path.of("analysis/hotdealwave/services"))) {
@@ -62,6 +62,11 @@ class CallCheckTest {
         var evidence = call.withArray("evidence");
         evidence.set(evidence.size() - 1, JSON.getNodeFactory().textNode(
                 "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/UserClientAdapter.java:19"));
+        // The order publications share one send line; only the per-publication call line tells them apart.
+        Checks.items(relations.path("calls")).stream()
+                .filter(c -> c.path("fromId").asText().equals("order-service.OrderController.createOrder")
+                        && c.path("toId").asText().equals("order-service.requestProduct"))
+                .forEach(c -> ((ObjectNode) c).put("toId", "order-service.cancelPayment"));
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
 
         var analysis = run(input);
@@ -71,5 +76,6 @@ class CallCheckTest {
                 .findFirst().orElseThrow();
         assertEquals(Checks.UNKNOWN, checked.path("status").asText());
         assertTrue(warnings(analysis).stream().anyMatch(r -> r.contains("order-service.CouponClient.useCoupon")));
+        assertFalse(confirmedTargets(analysis, "order-service.OrderController.createOrder").contains("order-service.cancelPayment"));
     }
 }
