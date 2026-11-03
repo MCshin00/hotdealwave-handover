@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/baskets",
+    "body": {
+      "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+      "quantity": 1
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "장바구니가 추가되었습니다.",
+    "data": {
+      "basketId": "a129a2a7-680d-4c06-a321-fdbded6e834d"
+    }
+  },
+  "reason": null
+}

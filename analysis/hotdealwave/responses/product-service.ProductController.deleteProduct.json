@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "DELETE",
+    "path": "/api/v1/products/{productId}",
+    "body": null
+  },
+  "statusCode": null,
+  "body": null,
+  "reason": "3차 완료: 상품 삭제는 외부 S3 이미지 삭제에 의존하며 로컬 S3 endpoint 설정 경로가 없다. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:107"
+}

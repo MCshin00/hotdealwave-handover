@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/coupons/issue",
+    "body": {
+      "couponInfoId": "adac01c2-1e5b-47d5-9ee8-7e884bf22ac7"
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "선착순 쿠폰 발급 성공",
+    "data": null
+  },
+  "reason": null
+}

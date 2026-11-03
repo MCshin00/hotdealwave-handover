@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/promotions",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "타임 세일이 조회되었습니다.",
+    "data": {
+      "content": [
+        {
+          "promotionId": "600c8d54-b81c-457a-a6aa-5eb91899e1fb",
+          "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+          "start": "2026-11-10T14:16:59.000+00:00",
+          "end": "2026-11-10T16:16:59.000+00:00",
+          "discountRate": 25,
+          "discountPrice": 15000,
+          "quantity": 10,
+          "remaining": 10,
+          "status": "PENDING"
+        }
+      ],
+      "page": {
+        "size": 10,
+        "number": 0,
+        "totalElements": 1,
+        "totalPages": 1
+      }
+    }
+  },
+  "reason": null
+}

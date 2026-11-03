@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/reviews",
+    "body": null
+  },
+  "statusCode": 500,
+  "body": {
+    "timestamp": "2026-11-02T19:00:38.103+00:00",
+    "status": 500,
+    "error": "Internal Server Error",
+    "path": "/api/v1/reviews"
+  },
+  "reason": "재호출 500. 게이트웨이는 리뷰 GET을 인증 제외하지만 product 필터는 해당 경로를 제외하지 않아 사용자 헤더 누락. target/HotDealWave/gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50"
+}

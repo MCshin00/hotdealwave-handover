@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/payments/{paymentId}",
+    "body": null
+  },
+  "statusCode": null,
+  "body": null,
+  "reason": "3차 완료: 실제 주문의 결제 목록 API가 빈 목록을 반환하여 사용할 결제 ID가 없다. 임의 ID나 DB 결제 삽입을 쓰지 않았다."
+}

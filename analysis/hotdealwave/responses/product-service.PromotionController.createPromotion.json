@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/promotions",
+    "body": {
+      "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+      "start": "2026-11-05T03:49:03",
+      "end": "2026-11-05T05:49:03",
+      "discountPrice": 15000,
+      "quantity": 10
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "프로모션이 생성되었습니다.",
+    "data": {
+      "promotionId": "202cdb26-34e2-4559-9b44-c8797bc157eb"
+    }
+  },
+  "reason": null
+}

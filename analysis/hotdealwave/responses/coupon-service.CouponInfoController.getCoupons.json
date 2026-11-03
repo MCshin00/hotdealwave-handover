@@ -1,0 +1,58 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/coupon-infos",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "쿠폰 정보 목록 조회 성공",
+    "data": {
+      "content": [
+        {
+          "couponId": "adac01c2-1e5b-47d5-9ee8-7e884bf22ac7",
+          "name": "probe-r2-bdd629051b36",
+          "quantity": 12,
+          "issuedCount": 1,
+          "discountAmount": 1000,
+          "minOrderAmount": 5000,
+          "expirationDate": "2026-11-10",
+          "status": "ISSUED",
+          "couponType": "FIRST_COME_FIRST_SERVE",
+          "companyId": null
+        },
+        {
+          "couponId": "ee05df31-4d60-4f76-83cb-e6b315a9ba38",
+          "name": "probe-r3-5c5d84aaca85",
+          "quantity": 10,
+          "issuedCount": 1,
+          "discountAmount": 1000,
+          "minOrderAmount": 5000,
+          "expirationDate": "2026-11-10",
+          "status": "ISSUED",
+          "couponType": "FIRST_COME_FIRST_SERVE",
+          "companyId": null
+        },
+        {
+          "couponId": "5da18afe-9ea4-4c7b-ab8f-cb674b23fefd",
+          "name": "probe-r3-422a5725297d",
+          "quantity": 10,
+          "issuedCount": 1,
+          "discountAmount": 1000,
+          "minOrderAmount": 5000,
+          "expirationDate": "2026-11-10",
+          "status": "ISSUED",
+          "couponType": "FIRST_COME_FIRST_SERVE",
+          "companyId": null
+        }
+      ],
+      "page": {
+        "size": 10,
+        "number": 0,
+        "totalElements": 3,
+        "totalPages": 1
+      }
+    }
+  },
+  "reason": null
+}

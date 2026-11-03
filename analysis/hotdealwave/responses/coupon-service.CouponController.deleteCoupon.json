@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "path": "/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "사용자 쿠폰 삭제 성공",
+    "data": null
+  },
+  "reason": null
+}

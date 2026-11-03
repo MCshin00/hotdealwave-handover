@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/address-default",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "기본 배송지 조회 성공",
+    "data": {
+      "addressId": "0ece61b3-8b54-487d-86cc-449e6f421deb",
+      "zipNum": "00000",
+      "city": "테스트시",
+      "district": "테스트구",
+      "streetName": "테스트로",
+      "streetNum": "1",
+      "detailAddr": "수정한 테스트 주소"
+    }
+  },
+  "reason": null
+}

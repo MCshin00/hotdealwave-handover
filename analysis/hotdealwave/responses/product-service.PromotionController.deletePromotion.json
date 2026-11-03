@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "DELETE",
+    "path": "/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "프로모션이 삭제되었습니다.",
+    "data": null
+  },
+  "reason": null
+}

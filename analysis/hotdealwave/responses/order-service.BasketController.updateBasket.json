@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d",
+    "body": {
+      "quantity": 2
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "장바구니 상품 수량이 수정되었습니다.",
+    "data": {
+      "basketId": "a129a2a7-680d-4c06-a321-fdbded6e834d"
+    }
+  },
+  "reason": null
+}

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "장바구니 단건 조회 성공",
+    "data": {
+      "basketId": "a129a2a7-680d-4c06-a321-fdbded6e834d",
+      "quantity": 2,
+      "product": {
+        "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+        "productName": "probe-r3-98bd03f4ef18c990",
+        "productQuantity": 100,
+        "productPrice": 20000,
+        "productStatus": "ON_SALE",
+        "productDiscountPrice": null,
+        "productRating": 0.0,
+        "productReviewCnt": 0,
+        "productThumbImg": "http://127.0.0.1:19091/probe-fixture.png"
+      }
+    }
+  },
+  "reason": null
+}

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/payments/cancel?orderId=6b654a21-8d52-464b-9cfc-a910e77ecdbe",
+    "body": null
+  },
+  "statusCode": 404,
+  "body": {
+    "timestamp": "2026-11-02T19:00:49.219090558",
+    "code": "PA001",
+    "message": "존재하지 않는 결제 리소스입니다."
+  },
+  "reason": "404: 이번 주문에 대한 결제 리소스가 없음. API 결제 목록도 비어 있음. target/HotDealWave/payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:107"
+}

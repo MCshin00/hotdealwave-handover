@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7/status",
+    "body": {
+      "status": "ISSUED"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "쿠폰 정보의 상태 변경 성공",
+    "data": null
+  },
+  "reason": null
+}

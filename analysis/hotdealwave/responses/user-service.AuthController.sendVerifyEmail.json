@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/auth/email-verification",
+    "body": {
+      "email": "<이메일>"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "이메일 인증이 요청되었습니다. 메일을 확인해주세요.",
+    "data": null
+  },
+  "reason": null
+}

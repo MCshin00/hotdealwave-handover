@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/payments/refund",
+    "body": null
+  },
+  "statusCode": null,
+  "body": null,
+  "reason": "3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다."
+}

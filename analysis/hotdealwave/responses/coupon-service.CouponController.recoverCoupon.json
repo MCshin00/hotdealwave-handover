@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481/recover",
+    "body": null
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "쿠폰 회복 성공",
+    "data": null
+  },
+  "reason": null
+}

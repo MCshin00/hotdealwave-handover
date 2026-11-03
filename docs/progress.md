@@ -8,7 +8,7 @@
 | 1 | 최종 질문: 개발자가 지금 실제로 궁금한 것을 쓰고 고정 | 완료 | `eval/questions/final.csv` |
 | 2 | 파서 추출(HotDealWave 기준선): REST·Feign·Kafka·설정 → `out/analysis.json`, 교차 검증 경고 | 완료 | `extractor/` |
 | 3 | AI 추출과 검증(HotDealWave): 추출 Skill, `verifier`, 파서 기준선과 대조 | 완료 | `analysis/`, `verifier/` |
-| 4 | 배포된 서비스 응답 검증: 떠 있는 서버의 실제 응답을 추출과 비교. HotDealWave는 고정 커밋을 띄워 대신 | 시작 전 | `analysis/`, `verifier/` |
+| 4 | 배포된 서비스 응답 검증: 떠 있는 서버의 실제 응답을 추출과 비교. HotDealWave는 고정 커밋을 띄워 대신 | 완료 | `analysis/`, `verifier/` |
 | 5 | 업무 규칙·함정: AI 해석과 필요한 경고의 판정을 모아 쓰고 개발자가 확인 | 시작 전 | `knowledge/`, `eval/facts.csv` |
 | 6 | 서버와 문서 페이지: 조회 계층, 문서 페이지(Thymeleaf) | 시작 전 | `server/` |
 | 7 | 검색·질의응답: `search_docs`, `/api/search`, `/api/ask`(고정 RAG), 검색·질문 페이지 | 시작 전 | `server/` |
@@ -21,4 +21,4 @@
 
 ## 지금 위치
 
-3단계 완료. 교차 검증을 검증기로 옮기고 근거 줄 검증을 더했다(#9). 추출 Skill로 AI 세션이 HotDealWave를 추출해 `analysis/hotdealwave/extracted.json`에 두었다(#10). 검증 경고는 파서 기준선과 같은 12개(선언 목록 1, Kafka 발행↔구독 11)이고, 항목 키와 DTO 필드가 모두 일치한다([보고서](reports/ai-extract-hotdealwave.md)). 다음 할 일: 개발자가 시작하라고 하면 4단계(배포된 서비스 응답 검증) 이슈 등록.
+4단계 완료(#13). 저장된 응답은 61개(정상 56, 오류 5), 미호출은 11개다. `Page<T>`·`PagedModel<T>` 응답은 `content` 항목만 `T`와 비교하고 페이지 객체의 나머지 키는 비교하거나 추출에 더하지 않았다. 필드 차이는 0개여서 서비스 파일 수정은 없다. 비교 보류는 10개(오류 응답 5, Timestamp 내부 구조 4, 빈 배열 1)다. 빈 배열은 결제 목록이며 외부 결제가 막혀 데이터를 만들 수 없고, 오류 응답은 결제 데이터가 없는 환불·결제 취소, 내부 주문 조회에 실패한 리뷰 생성, S3가 없는 상품 생성, 게이트웨이와 상품 서비스의 인증 제외 경로가 다른 리뷰 목록이다. 검증 경고는 12개(선언 목록 1, Kafka 발행↔구독 11)다. 다음 할 일: 개발자가 시작하라고 하면 5단계(업무 규칙·함정) 이슈 등록.

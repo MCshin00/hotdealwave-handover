@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+    "body": {
+      "status": "ON_SALE"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "상품이 수정되었습니다.",
+    "data": {
+      "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce"
+    }
+  },
+  "reason": null
+}

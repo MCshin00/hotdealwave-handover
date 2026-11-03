@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f/status",
+    "body": {
+      "status": "APPROVED"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "상태가 수정되었습니다.",
+    "data": null
+  },
+  "reason": null
+}

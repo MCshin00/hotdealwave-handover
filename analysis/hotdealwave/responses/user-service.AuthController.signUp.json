@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/v1/auth/signup",
+    "body": {
+      "email": "<이메일>",
+      "password": "<비밀번호>",
+      "nickname": "<닉네임>",
+      "role": "SELLER"
+    }
+  },
+  "statusCode": 201,
+  "body": {
+    "message": "회원가입 성공",
+    "data": {
+      "userId": "359b7953-f393-4550-869d-a3c413a8c964"
+    }
+  },
+  "reason": null
+}

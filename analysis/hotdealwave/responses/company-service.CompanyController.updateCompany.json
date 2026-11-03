@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "PATCH",
+    "path": "/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f",
+    "body": {
+      "companyPhoneNumber": 2000000001,
+      "managerId": "f7906275-0da9-4ea7-9fd2-c5e1937201cf",
+      "brandName": "probe-r2-8b97bbd6c0f51809",
+      "companyEmail": "<이메일>"
+    }
+  },
+  "statusCode": 200,
+  "body": {
+    "message": "업체가 수정되었습니다.",
+    "data": null
+  },
+  "reason": null
+}
