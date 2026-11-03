@@ -85,7 +85,7 @@ knowledge/<대상>/*.json (있을 때) -----------------+--> verifier
 
 AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/README.md)으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
 
-서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`를 담는다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
+서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결과 핸들러의 나가는 호출은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`와 `calls`를 담는다. `calls`는 엔드포인트·Kafka 구독에서 같은 서비스의 Feign 호출·발행까지 이어지는 연결이다. 넘겨받는 사람이 "이 API를 부르면 어디까지 이어지는가"를 따라가려면 필요하고, 이미 응답 비교를 거친 서비스 파일을 다시 추출하지 않으려고 관계 파일에 둔다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
 
 업무 규칙·함정은 별도 `rules-msa-java-spring` Skill로 추출 결과에서 출발해 코드와 저장된 응답을 읽고 `knowledge/<대상>/<spring.application.name>.json`에 쓴다. 관계 추출 형식은 그대로 두고, 검증기가 항목도 같은 출력에 합친다.
 
@@ -136,6 +136,7 @@ DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이�
 | 추출 근거 줄 | 근거 `파일:줄`이 고정 커밋에 있고, 그 줄에 추출 항목의 경로·토픽·필드 이름이 있는가 | 그 추출 항목은 "확인 안 됨" |
 | 선언 목록 | 정규식으로 센 선언(`@*Mapping`, `@FeignClient`, `@KafkaListener`, `send`) ↔ 추출 항목. 주석 안의 선언은 세지 않는다 | 빠뜨린 선언 경고 |
 | 관계 | 호출 대상 엔드포인트, 발행↔구독 환경변수 이름, 게이트웨이 경로가 결과 안에서 맞는가 | 끊긴 관계 경고 |
+| 핸들러 호출 | `calls`의 출발·도착 ID가 있고, 첫 근거가 출발 항목의 첫 근거, 마지막 근거가 Feign 메서드 호출 줄 또는 발행 항목의 근거 줄인가. 어느 `calls`의 도착도 아닌 Feign 호출·`kafkaTemplate.send` 발행이 있는가 | 그 연결은 "확인 안 됨", `handler-calls` 경고 |
 | 업무 규칙·함정 근거 | 고정 커밋의 대상 파일 또는 `analysis/<대상>/responses/` 파일에 해당 줄이 있는가 | `knowledge-evidence` 경고, 확인 상태 유지 |
 | 업무 규칙·함정 영향 ID | 엔드포인트·Feign 호출·Kafka 발행·구독의 ID가 추출 결과에 있는가 | `knowledge-affected-ids` 경고, 확인 상태 유지 |
 | 업무 규칙·함정 중복 | 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은가 | `knowledge-duplicates` 경고, 확인 상태 유지 |

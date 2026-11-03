@@ -25,6 +25,7 @@ public final class Verifier {
         var lines = source.javaLines();
         new CrossChecks().run(lines, analysis);
         new KafkaChecks().run(lines, analysis);
+        new CallChecks().run(source, analysis);
         return analysis;
     }
 }

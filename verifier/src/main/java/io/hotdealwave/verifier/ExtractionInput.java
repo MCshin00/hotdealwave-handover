@@ -26,6 +26,7 @@ final class ExtractionInput {
         merged.putArray("services");
         SERVICE_ARRAYS.forEach(merged::putArray);
         merged.putArray("kafkaLinks");
+        merged.putArray("calls");
         merged.putArray("warnings");
 
         var services = new ArrayList<JsonNode>();
@@ -45,6 +46,7 @@ final class ExtractionInput {
             for (var key : SERVICE_ARRAYS) service.path(key).forEach(merged.withArray(key)::add);
         }
         relations.path("kafkaLinks").forEach(merged.withArray("kafkaLinks")::add);
+        relations.path("calls").forEach(merged.withArray("calls")::add);
         return merged;
     }
 

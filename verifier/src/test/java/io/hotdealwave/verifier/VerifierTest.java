@@ -19,7 +19,7 @@ class VerifierTest {
         var service = JSON.readTree(Path.of("analysis/hotdealwave/services/company-service.json").toFile());
         ((ObjectNode) service.path("endpoints").get(0)).remove("httpMethod");
         JSON.writeValue(services.resolve("company-service.json").toFile(), service);
-        Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[]}");
+        Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[]}");
         Path output = temporary.resolve("analysis.json");
 
         Main.main(new String[]{temporary.toString(), "target/HotDealWave", output.toString()});
