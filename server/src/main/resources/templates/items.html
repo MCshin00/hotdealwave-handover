@@ -3,11 +3,10 @@
 <body>
 <section th:fragment="items(items)">
   <h2 th:text="|업무 규칙·함정 ${#lists.size(items)}개|"></h2>
-  <p>AI 해석 항목은 개발자가 근거를 확인하기 전까지 "미확인"이다.</p>
   <div class="item" th:each="k : ${items}">
     <h3 th:text="${@view.item(k)}"></h3>
     <p th:text="${k.path('description').asText()}"></p>
-    <p class="meta" th:text="|서비스 ${k.path('service').asText()} · 출처 ${k.path('source').asText()} · 발견 경로 ${k.path('discoveryPath').asText()}|"></p>
+    <p class="meta" th:text="|서비스 ${k.path('service').asText()} · 발견 경로 ${k.path('discoveryPath').asText()}|"></p>
     <p class="meta" th:text="|영향 ID ${@view.texts(k.path('affectedIds'))}|"></p>
     <p class="meta" th:text="|근거 ${@view.evidence(k)}|"></p>
   </div>

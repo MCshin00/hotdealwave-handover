@@ -50,8 +50,11 @@ public class View {
         return status;
     }
 
+    /** Kind and source; the confirmation status only once the developer has set it. */
     public String item(JsonNode item) {
-        return "[" + item.path("kind").asText() + " · " + item.path("confirmationStatus").asText() + "] " + item.path("title").asText();
+        String status = item.path("confirmationStatus").asText();
+        return "[" + item.path("kind").asText() + " · " + item.path("source").asText() + ("미확인".equals(status) ? "" : " · " + status) + "] "
+                + item.path("title").asText();
     }
 
     /** Field tree lines of a request or response type, one field per line. */
@@ -65,7 +68,8 @@ public class View {
         for (var field : Analysis.listOf(schema.path("fields"))) {
             var annotations = Analysis.listOf(field.path("annotations")).stream().map(a -> "@" + a.path("name").asText()).toList();
             lines.add(indent + fact(field.path("jsonName")).replaceFirst(" \\[.*", "") + "  " + field.path("schema").path("type").asText()
-                    + (annotations.isEmpty() ? "" : "  " + String.join(" ", annotations)) + "  " + status(field) + " " + evidence(field));
+                    + (annotations.isEmpty() ? "" : "  " + String.join(" ", annotations)) + "  " + status(field) + " " + evidence(field)
+                    + (known(field.path("schema")) ? "" : "  타입 구조: " + status(field.path("schema"))));
             if (!field.path("schema").path("recursive").asBoolean()) nested(field.path("schema"), indent + "    ", lines);
         }
     }

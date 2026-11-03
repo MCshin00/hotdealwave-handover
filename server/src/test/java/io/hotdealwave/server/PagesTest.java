@@ -29,8 +29,14 @@ class PagesTest {
 
         String createOrder = page("/endpoints/order-service.OrderController.createOrder");
         assertEquals(10, count(createOrder, "class=\"item\""));
-        assertTrue(createOrder.indexOf("[함정 · 미확인]") < createOrder.indexOf("[업무 규칙 · 미확인]"));
+        assertTrue(createOrder.indexOf("[함정 · AI 해석]") < createOrder.indexOf("[업무 규칙 · AI 해석]"));
+        assertFalse(createOrder.contains("미확인"));
         assertTrue(createOrder.contains("order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40"));
+        assertTrue(createOrder.contains("gateway/src/main/resources/application.yml:45"));
+    }
+
+    @Test void fieldShowsUnconfirmedTypeStructure() throws Exception {
+        assertTrue(page("/endpoints/order-service.OrderController.getOrders").contains("타입 구조: 확인 안 됨 — 외부 타입의 구조를 근거 줄만으로 확인할 수 없음"));
     }
 
     @Test void serviceAndTopicPagesShowAttachedItems() throws Exception {
@@ -39,7 +45,8 @@ class PagesTest {
         assertTrue(product.contains("href=\"/topics/KAFKA_REDUCE_QUANTITY_TOPIC\""));
         String literal = page("/topics/payment-dlq");
         assertTrue(literal.contains("문자열로 지정한 DLQ 토픽 두 개를 받는 쪽이 없다"));
-        assertTrue(literal.contains("[함정 · 확인함]"));
+        assertTrue(literal.contains("[함정 · 판정 · 확인함]"));
+        assertTrue(page("/services/order-service").contains("order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37"));
     }
 
     @Test void unresolvedValuesShowStatusAndReason() throws Exception {

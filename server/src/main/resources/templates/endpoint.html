@@ -10,7 +10,7 @@
 <p class="line" th:text="|응답 확인: ${@view.responseCheck(endpoint.path('responseCheck'))}|"></p>
 <h2>게이트웨이 외부 경로</h2>
 <p class="line" th:each="x : ${endpoint.path('externalPaths')}"
-   th:text="|${x.path('path').asText()} (경로 규칙 ${x.path('routeId').asText()}) ${@view.status(x)} · 토큰 필요: ${@view.fact(x.path('tokenRequired'))}|"></p>
+   th:text="|${x.path('path').asText()} (경로 규칙 ${x.path('routeId').asText()}) ${@view.status(x)} ${@view.evidence(x)} · 토큰 필요: ${@view.fact(x.path('tokenRequired'))}|"></p>
 <p class="line" th:text="|토큰 필요(기본 경로): ${@view.fact(endpoint.path('tokenRequired'))}|"></p>
 <h2>요청</h2>
 <div th:each="p : ${endpoint.path('parameters')}">
