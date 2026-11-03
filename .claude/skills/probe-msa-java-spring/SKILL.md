@@ -43,6 +43,7 @@ python scripts/compare_responses.py analysis/<대상> analysis/<대상>/response
 ```
 
 엔드포인트별로 "응답에만 있음", "추출에만 있음", "이름 다름"을 출력한다. 오류 응답·빈 배열·`null`은 비교하지 않으므로, 데이터를 만들 수 있으면 다시 부른다.
+추출 타입이 `Page<T>` 또는 `PagedModel<T>`이고 타입 인자가 하나이며 응답이 `content` 배열을 가진 객체이면 `content` 항목만 `T`와 비교하고(빈 배열은 비교 보류), 페이지 객체의 나머지 키는 비교하거나 추출에 더하지 않는다.
 
 ## 3. 해당 서비스 파일에 반영 (`analysis/<대상>/services/<spring.application.name>.json`)
 

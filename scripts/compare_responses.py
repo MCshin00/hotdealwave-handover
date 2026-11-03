@@ -19,6 +19,14 @@ def compare(schema, samples, path="$"):
     kind = schema["kind"]
     fields = schema.get("fields", [])
     arguments = schema.get("arguments", [])
+    if (schema["type"].startswith(("Page<", "PagedModel<")) and len(arguments) == 1
+            and all(isinstance(sample, dict) and isinstance(sample.get("content"), list)
+                    for sample in samples)):
+        elements = [element for sample in samples for element in sample["content"]]
+        if not elements:
+            return [f"비교 보류: {path}.content[] (빈 배열)"]
+        return compare(arguments[0], elements, path + ".content[]")
+
     if kind in ("container", "array") and not fields:
         if len(arguments) != 1 or not all(isinstance(sample, list) for sample in samples):
             return [f"비교 보류: {path} (추출 인자와 응답 배열을 대응할 수 없음)"]

@@ -6,6 +6,8 @@ import sys
 import tempfile
 import unittest
 
+from scripts.compare_responses import compare
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -62,6 +64,19 @@ class CompareResponsesTest(unittest.TestCase):
         self.assertIn("이름 다름: $.data[].isUsed ↔ $.data[].used", result.stdout)
         self.assertNotIn("응답에만 있음", result.stdout)
         self.assertNotIn("추출에만 있음", result.stdout)
+
+    def test_company_page_content_reports_a_renamed_field(self):
+        extracted = json.loads((ROOT / "analysis/hotdealwave/services/company-service.json").read_text(encoding="utf-8"))
+        endpoint = next(endpoint for endpoint in extracted["endpoints"]
+                        if endpoint["id"] == "company-service.CompanyController.getCompanyList")
+        record = json.loads((ROOT / "analysis/hotdealwave/responses" / (endpoint["id"] + ".json")).read_text(encoding="utf-8"))
+        company = record["body"]["data"]["content"][0]
+        company["brand_name"] = company.pop("brandName")
+
+        self.assertEqual(
+            ["이름 다름: $.data.content[].brand_name ↔ $.data.content[].brandName"],
+            compare(endpoint["response"], [record["body"]]),
+        )
 
 
 if __name__ == "__main__":
