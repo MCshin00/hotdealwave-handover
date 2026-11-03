@@ -75,11 +75,8 @@ final class KnowledgeChecks {
     private boolean lineExists(Path root, String evidence) throws IOException {
         if (!evidence.matches("^(?!/)[^\\\\:\\r\\n]+:[1-9][0-9]*$")) return false;
         int colon = evidence.lastIndexOf(':');
-        String relative = evidence.substring(0, colon);
-        Path file = root.resolve(relative);
-        if (SourceText.isExcluded(Path.of(relative)) || !Files.isRegularFile(file)) return false;
-        Path real = file.toRealPath(), realRoot = root.toRealPath();
-        if (!real.startsWith(realRoot) || SourceText.isExcluded(realRoot.relativize(real))) return false;
+        Path file = SourceText.fileUnder(root, evidence.substring(0, colon));
+        if (file == null) return false;
         try {
             int number = Integer.parseInt(evidence.substring(colon + 1));
             try (var lines = Files.lines(file)) { return lines.limit(number).count() == number; }

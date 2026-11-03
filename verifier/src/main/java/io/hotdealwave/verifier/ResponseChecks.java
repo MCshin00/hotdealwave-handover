@@ -14,8 +14,9 @@ final class ResponseChecks {
         for (var endpoint : analysis.path("endpoints")) {
             var check = ((ObjectNode) endpoint).putObject("responseCheck");
             String reference = prefix + endpoint.path("id").asText() + ".json";
-            Path file = extraction.resolve("responses").resolve(endpoint.path("id").asText() + ".json");
-            if (!SourceText.isResponseEvidence(reference) || !Files.isRegularFile(file)) {
+            Path file = SourceText.isResponseEvidence(reference)
+                    ? SourceText.fileUnder(extraction.resolve("responses"), endpoint.path("id").asText() + ".json") : null;
+            if (file == null) {
                 check.put("status", "코드만").putNull("statusCode").putNull("reason").putNull("file");
                 check.putArray("lines");
                 continue;

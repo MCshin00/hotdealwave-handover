@@ -2,6 +2,7 @@ package io.hotdealwave.verifier;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,22 @@ class ResponseCheckTest {
         for (var endpoint : analysis.path("endpoints")) {
             assertEquals("코드만", endpoint.path("responseCheck").path("status").asText());
             assertTrue(endpoint.path("responseCheck").path("file").isNull());
+            assertTrue(endpoint.path("responseCheck").path("statusCode").isNull());
+            assertTrue(endpoint.path("responseCheck").path("reason").isNull());
+            assertTrue(endpoint.path("responseCheck").path("lines").isArray());
+            assertTrue(endpoint.path("responseCheck").path("lines").isEmpty());
         }
+    }
+
+    @Test void responseOutsideResponsesDirectoryIsNotRead() throws Exception {
+        Path services = Files.createDirectories(temporary.resolve("hotdealwave/services"));
+        Files.createDirectories(temporary.resolve("hotdealwave/responses"));
+        var service = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/services/order-service.json").toFile());
+        ((ObjectNode) service.path("endpoints").get(0)).put("id", "..\\..\\outside");
+        JSON.writeValue(services.resolve("order-service.json").toFile(), service);
+        Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[]}");
+        Files.writeString(temporary.resolve("outside.json"), "{\"statusCode\":200,\"reason\":null}");
+        var analysis = run(services.getParent());
+        assertEquals("코드만", check(analysis, "..\\..\\outside").path("status").asText());
     }
 }
