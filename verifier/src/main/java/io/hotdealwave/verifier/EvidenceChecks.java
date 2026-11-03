@@ -41,7 +41,7 @@ final class EvidenceChecks {
         var lines = source.evidenceLines(object);
         if (lines.isEmpty()) { reject(object, role + ": 근거 파일·줄을 확인하지 못함"); return; }
         // Relationship facts are decided after all local facts have been checked.
-        if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks").contains(role)) return;
+        if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks", "calls").contains(role)) return;
         if (object.has("value") && !object.path("value").isObject()) { fact(object, role, parent, lines); return; }
         if (object.has("type") && "unresolved".equals(object.path("kind").asText())) {
             if (!contains(lines, simpleType(object.path("type").asText())))

@@ -138,5 +138,442 @@
         "docker-compose.yml:157"
       ]
     }
+  ],
+  "calls": [
+    {
+      "fromId": "coupon-service.CouponInfoController.createCoupon",
+      "toId": "coupon-service.CompanyClient.getCompanyById",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:38",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/client/CompanyClient.java:21"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCoupon",
+      "toId": "coupon-service.CompanyClient.getCompanyById",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:75",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/client/CompanyClient.java:21"
+      ]
+    },
+    {
+      "fromId": "order-service.cancelOrder",
+      "toId": "order-service.publishDlq",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:50",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "order-service.cancelOrder",
+      "toId": "order-service.publishDlq",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:33",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:55",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "order-service.updateStatus",
+      "toId": "order-service.publishDlq",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:50",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "order-service.updateStatus",
+      "toId": "order-service.publishDlq",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:33",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:55",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.createBasket",
+      "toId": "order-service.ProductClient.getProduct",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:41",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:51",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:41"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.getBasketDetail",
+      "toId": "order-service.ProductClient.getProduct",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:49",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:41"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.getBasketList",
+      "toId": "order-service.ProductClient.getProductList",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:57",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:72",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:28"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "toId": "order-service.ProductClient.getProductList",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:89",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:130",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:28"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "toId": "order-service.UserClient.getAddress",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:94",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/UserClientAdapter.java:19"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "toId": "order-service.CouponClient.validateCoupon",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:138",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:47"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "toId": "order-service.CouponClient.useCoupon",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:142",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:25"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "toId": "order-service.requestProduct",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.getOrders",
+      "toId": "order-service.ProductClient.getProductList",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:49",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:220",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:237",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:28"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.getOrderById",
+      "toId": "order-service.UserClient.getUser",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:56",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:187",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/UserClientAdapter.java:24"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.getOrderById",
+      "toId": "order-service.ProductClient.getProductList",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:56",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:192",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:209",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:28"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "toId": "order-service.ProductClient.reduceQuantity",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:262",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:276",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:55"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "toId": "order-service.cancelPayment",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:264",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:35",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:44",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.refundOrder",
+      "toId": "order-service.refundPayment",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:81",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:284",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62"
+      ]
+    },
+    {
+      "fromId": "payment-service.cancel",
+      "toId": "payment-service.OrderClient.getOrderById",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/OrderClientAdapter.java:24"
+      ]
+    },
+    {
+      "fromId": "payment-service.cancel",
+      "toId": "payment-service.publishDlq",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:51",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "payment-service.cancel",
+      "toId": "payment-service.publishDlq",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:34",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:56",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "payment-service.ready",
+      "toId": "payment-service.OrderClient.getOrderById",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:31",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/OrderClientAdapter.java:24"
+      ]
+    },
+    {
+      "fromId": "payment-service.ready",
+      "toId": "payment-service.KakaoPayClient.ready",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:64"
+      ]
+    },
+    {
+      "fromId": "payment-service.ready",
+      "toId": "payment-service.publishDlq",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:34",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "payment-service.ready",
+      "toId": "payment-service.OrderClient.getOrderById",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:60",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/OrderClientAdapter.java:24"
+      ]
+    },
+    {
+      "fromId": "payment-service.ready",
+      "toId": "payment-service.rollbackProduct",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:61",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:47",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52"
+      ]
+    },
+    {
+      "fromId": "payment-service.refund",
+      "toId": "payment-service.OrderClient.getOrderById",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/OrderClientAdapter.java:24"
+      ]
+    },
+    {
+      "fromId": "payment-service.refund",
+      "toId": "payment-service.KakaoPayClient.cancel",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:97"
+      ]
+    },
+    {
+      "fromId": "payment-service.refund",
+      "toId": "payment-service.publishDlq",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:50",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "payment-service.refund",
+      "toId": "payment-service.publishDlq",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:34",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.readyPayment",
+      "toId": "payment-service.KakaoPayClient.ready",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:42",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:49"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.confirmPayment",
+      "toId": "payment-service.KakaoPayClient.approve",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:81"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.confirmPayment",
+      "toId": "payment-service.updateOrderStatus",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.refundPayment",
+      "toId": "payment-service.KakaoPayClient.cancel",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:71",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:86",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:97"
+      ]
+    },
+    {
+      "fromId": "product-service.reduce",
+      "toId": "product-service.requestPayment",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:134",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:18"
+      ]
+    },
+    {
+      "fromId": "product-service.reduce",
+      "toId": "product-service.rollbackOrder",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:125",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:14"
+      ]
+    },
+    {
+      "fromId": "product-service.restore",
+      "toId": "product-service.requestOrder",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:22"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.createProduct",
+      "toId": "product-service.CompanyClient.getCompanyById",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:55",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:57",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:23"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.createReview",
+      "toId": "product-service.OrderClient.getOrderById",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:34",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/OrderClient.java:20"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.createReview",
+      "toId": "product-service.UserClient.getUserById",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:34",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:51",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/UserClient.java:20"
+      ]
+    }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "서비스 사이 관계",
+  "title": "서비스 사이 관계와 핸들러의 나가는 호출",
   "type": "object",
   "properties": {
     "schemaVersion": {
@@ -12,11 +12,18 @@
       "items": {
         "$ref": "#/$defs/KafkaLink"
       }
+    },
+    "calls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Call"
+      }
     }
   },
   "required": [
     "schemaVersion",
-    "kafkaLinks"
+    "kafkaLinks",
+    "calls"
   ],
   "additionalProperties": false,
   "$defs": {
@@ -49,6 +56,35 @@
         "publicationId",
         "subscriptionId",
         "environment",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Call": {
+      "type": "object",
+      "properties": {
+        "fromId": {
+          "type": "string"
+        },
+        "toId": {
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "fromId",
+        "toId",
         "evidence"
       ],
       "additionalProperties": false
