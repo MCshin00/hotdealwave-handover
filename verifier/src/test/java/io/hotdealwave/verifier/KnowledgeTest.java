@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,13 +37,21 @@ class KnowledgeTest {
     private JsonNode verify(ObjectNode item) throws Exception { return verify(item, TARGET); }
 
     private JsonNode verify(ObjectNode item, Path target) throws Exception {
-        var document = JSON.createObjectNode().put("schemaVersion", 1);
-        document.putArray("items").add(item);
-        JSON.writeValue(temporary.resolve("knowledge/hotdealwave/order-service.json").toFile(), document);
+        write("order-service", item);
+        return run(target);
+    }
+
+    private JsonNode run(Path target) throws Exception {
         Path output = temporary.resolve("analysis.json");
         Main.main(new String[]{temporary.resolve("analysis/hotdealwave").toString(), target.toString(),
                 output.toString()});
         return JSON.readTree(output.toFile());
+    }
+
+    private void write(String service, ObjectNode... items) throws Exception {
+        var document = JSON.createObjectNode().put("schemaVersion", 1);
+        document.putArray("items").addAll(List.of(items));
+        JSON.writeValue(temporary.resolve("knowledge/hotdealwave/" + service + ".json").toFile(), document);
     }
 
     @Test void evidenceBeyondCodeOrResponseLengthWarnsWithoutChangingConfirmation() throws Exception {
@@ -83,6 +92,22 @@ class KnowledgeTest {
         assertTrue(output.path("warnings").toString().contains(".env:1"));
         assertTrue(output.path("warnings").toString().contains(".ENV:1"));
         assertTrue(output.path("warnings").toString().contains("ENV~1:1"));
+    }
+
+    @Test void sameAffectedIdsInAnotherServiceWarn() throws Exception {
+        var item = prepare();
+        item.putArray("affectedIds").add("order-service.OrderController.createOrder").add("order-service.OrderController.cancelOrder");
+        var sameService = item.deepCopy().put("title", "주문 쪽 다른 동작");
+        var other = item.deepCopy().put("service", "product-service").put("title", "상품 쪽 같은 동작");
+        other.putArray("affectedIds").add("order-service.OrderController.cancelOrder").add("order-service.OrderController.createOrder");
+        write("product-service", other);
+        var output = verify(item);
+        assertEquals(1, output.at("/checks/knowledge-duplicates/warningCount").asInt());
+        assertTrue(output.path("warnings").toString().contains("상품 쪽 같은 동작"));
+
+        write("product-service");
+        write("order-service", item, sameService);
+        assertEquals(0, run(TARGET).at("/checks/knowledge-duplicates/warningCount").asInt());
     }
 
     @Test void incorrectItemIsExcludedFromKnowledgeOutput() throws Exception {

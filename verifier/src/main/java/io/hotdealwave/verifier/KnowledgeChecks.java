@@ -1,5 +1,6 @@
 package io.hotdealwave.verifier;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.networknt.schema.JsonSchemaFactory;
@@ -7,9 +8,7 @@ import com.networknt.schema.SpecVersion;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import static io.hotdealwave.verifier.Checks.*;
 
 /** Knowledge keeps the developer's confirmation; checks only add warnings. */
@@ -27,6 +26,7 @@ final class KnowledgeChecks {
         for (String key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions"))
             for (var item : analysis.path(key)) ids.add(item.path("id").asText());
         var knowledge = analysis.putArray("knowledge");
+        var interpreted = new ArrayList<Map.Entry<String, JsonNode>>();
         try (var files = Files.list(directory)) {
             for (var file : files.filter(p -> p.getFileName().toString().endsWith(".json")).sorted().toList()) {
                 var document = json.readTree(file.toFile());
@@ -50,11 +50,26 @@ final class KnowledgeChecks {
                                 label + ": 추출 결과에 영향 ID 없음: " + id.asText());
                     }
                     if (!"틀림".equals(item.path("confirmationStatus").asText())) knowledge.add(item);
+                    if ("AI 해석".equals(item.path("source").asText())) interpreted.add(Map.entry(label, item));
                 }
             }
         }
+        for (int i = 0; i < interpreted.size(); i++) for (int j = i + 1; j < interpreted.size(); j++) {
+            var a = interpreted.get(i).getValue();
+            var b = interpreted.get(j).getValue();
+            if (!a.path("service").equals(b.path("service")) && affectedIds(a).equals(affectedIds(b)))
+                warn(analysis, "knowledge-duplicates", json.createArrayNode(),
+                        "서비스가 다른 항목의 영향 ID 목록이 같음: " + interpreted.get(i).getKey() + " / " + interpreted.get(j).getKey());
+        }
         count(analysis, "knowledge-evidence");
         count(analysis, "knowledge-affected-ids");
+        count(analysis, "knowledge-duplicates");
+    }
+
+    private static Set<String> affectedIds(JsonNode item) {
+        var ids = new TreeSet<String>();
+        for (var id : item.path("affectedIds")) ids.add(id.asText());
+        return ids;
     }
 
     private boolean lineExists(Path root, String evidence) throws IOException {

@@ -30,9 +30,9 @@
     },
     {
       "service": "company-service",
-      "kind": "업무 규칙",
+      "kind": "함정",
       "title": "업체 생성 상태는 REQUESTED로 고정하지 않고 요청값을 저장한다",
-      "description": "등록 API는 SELLER·MASTER·MANAGER 역할을 허용하며, 생성 DTO의 필수 status를 Company.create에 그대로 전달한다. 팩터리도 해당 값을 그대로 저장하므로 REQUESTED를 기본값으로 넣거나 등록 시 APPROVED·REJECTED·PENDING을 제외하는 분기가 없다. 따라서 상태 변경 API가 MASTER·MANAGER 전용이어도 생성 경로에서는 SELLER에게 별도 초기 상태 제한을 적용하지 않는다. 이는 코드상 입력 처리 규칙이며, SELLER가 APPROVED로 등록한 실제 실행 결과는 확인하지 않았다.",
+      "description": "등록 API는 SELLER·MASTER·MANAGER 역할을 허용하며, 생성 DTO의 필수 status를 Company.create에 그대로 전달한다. 팩터리도 해당 값을 그대로 저장하므로 REQUESTED를 기본값으로 넣거나 등록 시 APPROVED·REJECTED·PENDING을 제외하는 분기가 없다. 따라서 상태 변경 API가 MASTER·MANAGER 전용이어도 생성 경로에서는 SELLER에게 별도 초기 상태 제한을 적용하지 않는다.",
       "evidence": [
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:42",
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:45",
@@ -129,7 +129,7 @@
       "service": "company-service",
       "kind": "업무 규칙",
       "title": "업체 목록은 status가 없으면 전체를, 있으면 해당 상태를 페이지 조회한다",
-      "description": "목록 서비스는 status가 null인지에 따라 findAll(pageable) 또는 findByStatus(status, pageable)로 나뉜다. APPROVED를 기본 필터로 적용하지 않으며, 두 조회 모두 담당자나 deletedAt 조건을 선언하지 않는다. 저장된 status 없는 목록 요청에서도 REQUESTED 업체가 HTTP 200 응답의 content에 포함되어 있다. 삭제 필드가 있는 행의 실제 존재나 삭제된 업체의 조회 실행 결과는 확인하지 않았다.",
+      "description": "목록 서비스는 status가 null인지에 따라 findAll(pageable) 또는 findByStatus(status, pageable)로 나뉜다. APPROVED를 기본 필터로 적용하지 않으며, 두 조회 모두 담당자나 deletedAt 조건을 선언하지 않는다. 저장된 status 없는 목록 요청에서도 REQUESTED 업체가 HTTP 200 응답의 content에 포함되어 있다.",
       "evidence": [
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:84",
         "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:82",
@@ -154,7 +154,7 @@
       "service": "company-service",
       "kind": "함정",
       "title": "업체 정보 PATCH의 필수 본문 검증이 빠져 누락값도 그대로 대입한다",
-      "description": "수정 DTO는 전화번호·담당자 ID·브랜드명·이메일에 @NotNull과 필수 입력 메시지를 선언한다. 그러나 컨트롤러의 @Valid는 companyId 경로 변수에만 붙고 본문에는 없어 이 DTO 제약 검증을 요청하지 않는다. 업체가 있으면 @Transactional 서비스가 네 값을 모두 Company.update에 전달하고 엔티티는 null 여부와 관계없이 덮어쓴다. 따라서 일부 필드를 생략한 PATCH가 기존 값을 보존하는 경로가 아니며, 누락값은 nullable=false인 엔티티 필드에 대입된다. 업체가 없으면 먼저 404·CA001이다. 저장 과정에서 RuntimeException이 발생하면 전역 처리기는 500·CA000으로 매핑하지만, null 입력을 실제 호출한 응답은 없어 DB 실패의 구체적 메시지나 발생 시점은 확인하지 않았다. 저장된 200 응답은 네 필드를 모두 보낸 요청에 대한 결과다.",
+      "description": "수정 DTO는 전화번호·담당자 ID·브랜드명·이메일에 @NotNull과 필수 입력 메시지를 선언한다. 그러나 컨트롤러의 @Valid는 companyId 경로 변수에만 붙고 본문에는 없어 이 DTO 제약 검증을 요청하지 않는다. 업체가 있으면 @Transactional 서비스가 네 값을 모두 Company.update에 전달하고 엔티티는 null 여부와 관계없이 덮어쓴다. 따라서 일부 필드를 생략한 PATCH가 기존 값을 보존하는 경로가 아니며, 누락값은 nullable=false인 엔티티 필드에 대입된다. 업체가 없으면 먼저 404·CA001이다. 저장 과정에서 RuntimeException이 발생하면 전역 처리기는 500·CA000으로 매핑한다. DB 실패의 구체적 메시지와 발생 시점은 이 코드와 저장 응답만으로 확정할 수 없다. 저장된 200 응답은 네 필드를 모두 보낸 요청에 대한 결과다.",
       "evidence": [
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:12",
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ReqPatchCompanyByIdDto.java:14",
@@ -185,49 +185,8 @@
     {
       "service": "company-service",
       "kind": "함정",
-      "title": "상세 조회는 상품 서비스가 보낸 status=APPROVED를 검사하지 않는다",
-      "description": "product-service의 CompanyClient.getCompany는 업체 검증을 위해 상세 조회에 status=APPROVED를 붙인다. 그러나 company-service의 상세 컨트롤러는 companyId만 받아 서비스로 넘기며, 서비스는 ID 존재만 확인한다. 없으면 404·CA001이고, 있으면 실제 상태를 그대로 응답하므로 이 요청 파라미터로 승인 업체만 선택되지 않는다. 응답의 data.status는 상품 수신 DTO의 String status와 이름이 맞지만, ProductService.createProduct는 받은 업체를 로그에만 쓰고 상태 비교 없이 이미지 처리와 상품 저장 단계로 진행한다. 따라서 호출 성공만으로 승인 여부가 보장되지 않는다. 이는 고정 코드의 분기 해석이며 미승인 업체의 상품 등록 성공을 실제 관찰한 것은 아니다.",
-      "evidence": [
-        "product/src/main/java/com/sparta/hotdeal/product/ProductApplication.java:11",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:13",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:17",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/CompanyClient.java:23",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/CompanyClientConfig.java:19",
-        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:73",
-        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:75",
-        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:69",
-        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:78",
-        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9",
-        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23",
-        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:6",
-        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ResponseDto.java:10",
-        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9",
-        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
-        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:8",
-        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:10",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/dtos/ResGetCompanyByIdDto.java:7",
-        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/dtos/ResGetCompanyByIdDto.java:15",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:42",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:55",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:57",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:62",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:74",
-        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:79"
-      ],
-      "affectedIds": [
-        "company-service.CompanyController.getCompanyById",
-        "product-service.CompanyClient.getCompanyById",
-        "product-service.ProductController.createProduct"
-      ],
-      "source": "AI 해석",
-      "discoveryPath": "코드",
-      "confirmationStatus": "미확인"
-    },
-    {
-      "service": "company-service",
-      "kind": "함정",
       "title": "조회 응답 DTO에 업체 ID가 없어 목록에서 후속 요청의 companyId를 얻을 수 없다",
-      "description": "업체 엔티티에는 생성되는 UUID id가 있지만, 상세와 목록이 공유하는 ResGetCompanyByIdDto에는 해당 필드와 매핑이 없다. 반면 상세·정보 수정·상태 변경 경로는 companyId를 요구한다. 저장된 목록 응답에도 businessRegistrationNumber와 managerId는 있으나 업체 자신의 ID는 없어, 목록의 업체를 고르더라도 그 응답만으로 후속 경로의 companyId를 얻을 수 없다. 등록 성공 응답 역시 data가 null이라 목록으로 ID를 보완할 수 없는 흐름이 관찰된다. 저장된 상세·수정 요청에는 이미 UUID가 들어 있으나 그 UUID를 얻은 경로는 기록에 없어 추정하지 않는다. 이 항목의 공통 원인은 상세·목록 응답 DTO의 업체 ID 누락이다.",
+      "description": "업체 엔티티에는 생성되는 UUID id가 있지만, 상세와 목록이 공유하는 ResGetCompanyByIdDto에는 해당 필드와 매핑이 없다. 반면 상세·정보 수정·상태 변경 경로는 companyId를 요구한다. 저장된 목록 응답에도 businessRegistrationNumber와 managerId는 있으나 업체 자신의 ID는 없어, 목록의 업체를 고르더라도 그 응답만으로 후속 경로의 companyId를 얻을 수 없다. 등록 성공 응답 역시 data가 null이라 목록으로 ID를 보완할 수 없는 흐름이 관찰된다. 저장된 상세·수정 요청에는 이미 UUID가 들어 있으나 그 UUID를 얻은 경로는 기록에 없다.",
       "evidence": [
         "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:29",
         "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:30",
