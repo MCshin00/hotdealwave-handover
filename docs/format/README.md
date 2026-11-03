@@ -78,3 +78,17 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions` 중 하나에 있는지, 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids`, `knowledge-duplicates` 경고다.
 
 `analysis/<대상>`을 입력하면 같은 기준 위치의 `knowledge/<대상>`을 읽는다(절대 입력 경로도 같은 구조). 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 세 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
+
+## 응답 확인 상태
+
+검증기는 `out/analysis.json`의 엔드포인트마다 `responseCheck`를 붙인다. 입력 디렉터리의 `responses/<엔드포인트 ID>.json`을 읽는다.
+
+| 필드 | 내용 |
+|---|---|
+| `status` | `응답 기록 있음`(`statusCode`가 null이 아님), `호출 못 함`(`statusCode`가 null), `코드만`(응답 파일 없음) |
+| `statusCode` | 응답 파일의 HTTP 상태 코드. 없으면 null |
+| `reason` | 응답 파일의 `reason`. 없으면 null |
+| `file` | `analysis/<대상>/responses/<엔드포인트 ID>.json`. 응답 파일이 없으면 null |
+| `lines` | 응답 파일 원문의 줄 배열. N번째 원소가 원문 N줄이라 응답 근거 `파일:N`을 그대로 찾는다. 응답 파일이 없으면 빈 배열 |
+
+응답 기록은 그 요청 조건에서 관찰한 것이며 엔드포인트의 `status`(확인 상태)를 바꾸지 않는다. 오류 응답도 `응답 기록 있음`이고 `statusCode`로 구분한다.
