@@ -8,12 +8,26 @@
   "body": {
     "message": "주문 목록 조회 성공",
     "data": {
-      "content": [],
+      "content": [
+        {
+          "orderId": "6b654a21-8d52-464b-9cfc-a910e77ecdbe",
+          "createdAt": "2026-11-02T18:59:55.930292",
+          "status": "CANCEL",
+          "productList": [
+            {
+              "productId": "2ccb9a46-ada4-48a4-a286-ff947c57a9ce",
+              "productName": "probe-r3-98bd03f4ef18c990",
+              "productQuantity": 2,
+              "productPrice": 20000
+            }
+          ]
+        }
+      ],
       "page": {
         "size": 10,
         "number": 0,
-        "totalElements": 0,
-        "totalPages": 0
+        "totalElements": 1,
+        "totalPages": 1
       }
     }
   },
