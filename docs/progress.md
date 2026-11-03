@@ -9,7 +9,7 @@
 | 2 | 파서 추출(HotDealWave 기준선): REST·Feign·Kafka·설정 → `out/analysis.json`, 교차 검증 경고 | 완료 | `docs/reports/` (파서는 #18에서 삭제) |
 | 3 | AI 추출과 검증(HotDealWave): 추출 Skill, `verifier`, 파서 기준선과 대조 | 완료 | `analysis/`, `verifier/`, `docs/reports/` |
 | 4 | 배포된 서비스 응답 검증: 떠 있는 서버의 실제 응답을 추출과 비교. HotDealWave는 고정 커밋을 띄워 대신 | 완료 | `analysis/`, `verifier/`, `docs/reports/` |
-| 5 | 업무 규칙·함정: AI 해석과 필요한 경고의 판정을 모아 쓰고 개발자가 확인 | 진행 중 | `knowledge/`, `eval/facts.csv` |
+| 5 | 업무 규칙·함정: AI 해석과 필요한 경고의 판정을 모아 쓰고 개발자가 확인 | 진행 중 | `knowledge/`, `eval/facts.csv`, `docs/reports/` |
 | 6 | 서버와 문서 페이지: 조회 계층, 문서 페이지(Thymeleaf) | 시작 전 | `server/` |
 | 7 | 검색·질의응답: `search_docs`, `/api/search`, `/api/ask`(고정 RAG), 검색·질문 페이지 | 시작 전 | `server/` |
 | 8 | MCP: 관계 조회 3개와 `search_docs`를 `/mcp`로 노출, Claude Code·Codex에서 확인 | 시작 전 | `server/` |
@@ -23,4 +23,4 @@
 
 4단계 완료(#13). 엔드포인트 72개 중 61개를 불러 응답을 저장했고(정상 56, 오류 5), 11개는 이유와 함께 남겼다. 정상 응답의 필드 차이는 0개여서 서비스 파일 수정은 없다. 검증 경고는 12개(선언 목록 1, Kafka 발행↔구독 11)다. 3단계 뒤 바뀐 구조(#15·#18·#19)와 4단계 결과는 [4단계 보고서](reports/probe-hotdealwave.md)에 있다.
 
-5단계 진행 중(#21, 브랜치 `feat/21-knowledge`). 항목 형식·검증기 검사·`rules-msa-java-spring` Skill을 구현했다. 다음 할 일: Skill로 8개 서비스 항목 작성, 경고 판정, 개발자 확인.
+5단계 진행 중. #21에서 항목 형식·검증기 검사·`rules-msa-java-spring` Skill을 만들고 7개 서비스에 AI 해석 항목 124개를 썼다. DLQ 경고 2개는 판정해 판정 항목 1개로 옮겼고, 항목 경고는 0개다. 결과와 Skill을 고친 과정은 [5단계 보고서](reports/rules-hotdealwave.md)에 있다. 다음 할 일: 6단계 전에 서비스 사이 중복·섞인 항목·덧말 정리(#23)와 주석 속 선언 검사 수정(#22).
