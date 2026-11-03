@@ -33,7 +33,9 @@ final class SourceText {
         if (!candidate.startsWith(root) || isExcluded(root.relativize(candidate))) return null;
         String name = candidate.getFileName().toString();
         if (!(name.endsWith(".java") || name.endsWith(".yml") || name.equals("build.gradle"))) return null;
-        if (!Files.isRegularFile(candidate) || !candidate.toRealPath().startsWith(root)) return null;
+        if (!Files.isRegularFile(candidate)) return null;
+        Path real = candidate.toRealPath();
+        if (!real.startsWith(root) || isExcluded(root.relativize(real))) return null;
         return candidate;
     }
 
