@@ -28,7 +28,7 @@ final class CallChecks {
             else {
                 var last = evidence.get(evidence.size() - 1);
                 // Publications may share a wrapper's send line, so the chain must also hold a line only this publication has.
-                boolean reaches = feign.isMissingNode() ? items(publication.path("evidence")).contains(last)
+                boolean reaches = feign.isMissingNode() ? last.equals(publication.path("evidence").path(0))
                         && evidence.stream().anyMatch(line -> items(publication.path("evidence")).contains(line)
                                 && sends.stream().noneMatch(p -> p != publication && items(p.path("evidence")).contains(line)))
                         : Pattern.compile("\\.\\s*" + Pattern.quote(feign.path("handler").asText()) + "\\s*\\(")

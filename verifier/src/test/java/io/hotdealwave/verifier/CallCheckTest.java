@@ -67,6 +67,15 @@ class CallCheckTest {
                 .filter(c -> c.path("fromId").asText().equals("order-service.OrderController.createOrder")
                         && c.path("toId").asText().equals("order-service.requestProduct"))
                 .forEach(c -> ((ObjectNode) c).put("toId", "order-service.cancelPayment"));
+        // A publication chain must end at the send line, not at another line of that publication's evidence.
+        Checks.items(relations.path("calls")).stream()
+                .filter(c -> c.path("fromId").asText().equals("order-service.OrderController.cancelOrder")
+                        && c.path("toId").asText().equals("order-service.cancelPayment"))
+                .forEach(c -> {
+                    var chain = ((ObjectNode) c).withArray("evidence");
+                    chain.set(chain.size() - 1, JSON.getNodeFactory().textNode(
+                            "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:26"));
+                });
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
 
         var analysis = run(input);
@@ -77,5 +86,6 @@ class CallCheckTest {
         assertEquals(Checks.UNKNOWN, checked.path("status").asText());
         assertTrue(warnings(analysis).stream().anyMatch(r -> r.contains("order-service.CouponClient.useCoupon")));
         assertFalse(confirmedTargets(analysis, "order-service.OrderController.createOrder").contains("order-service.cancelPayment"));
+        assertFalse(confirmedTargets(analysis, "order-service.OrderController.cancelOrder").contains("order-service.cancelPayment"));
     }
 }
