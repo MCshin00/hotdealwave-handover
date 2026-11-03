@@ -28,6 +28,15 @@ final class SourceText {
         return false;
     }
 
+    /** The regular file at relative under root, or null when its real path leaves root or is excluded. */
+    static Path fileUnder(Path root, String relative) throws IOException {
+        if (relative.contains("\\") || isExcluded(Path.of(relative))) return null;
+        Path file = root.resolve(relative);
+        if (!Files.isRegularFile(file)) return null;
+        Path real = file.toRealPath(), realRoot = root.toRealPath();
+        return real.startsWith(realRoot) && !isExcluded(realRoot.relativize(real)) ? file : null;
+    }
+
     private Path path(String relative) throws IOException {
         var candidate = root.resolve(relative).normalize();
         if (!candidate.startsWith(root) || isExcluded(root.relativize(candidate))) return null;

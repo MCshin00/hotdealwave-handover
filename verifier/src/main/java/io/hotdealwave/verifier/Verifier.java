@@ -10,6 +10,7 @@ public final class Verifier {
         var analysis = (ObjectNode) verify(extracted, target);
         analysis.withArray("warnings").addAll(extracted.withArray("warnings"));
         new KnowledgeChecks().run(input, target, analysis);
+        new ResponseChecks().run(input, analysis);
         Checks.count(analysis, "schema");
         return analysis;
     }
