@@ -75,6 +75,17 @@ class Pages {
         return String.join("\n\n", page.stream().map(s -> s.heading().isEmpty() ? s.text() : s.heading() + "\n" + s.text()).toList());
     }
 
+    /** The page as HTML for the browser, with display-only markup, or null. */
+    String html(String path) {
+        var page = page(path);
+        return page == null ? null : Decor.html(process(page.template(), page.model()));
+    }
+
+    /** Any other template as HTML for the browser, with display-only markup. */
+    String html(String template, Map<String, Object> model) {
+        return Decor.html(process(template, model));
+    }
+
     private Page endpoint(String id) {
         var endpoint = analysis.find("endpoints", id);
         if (endpoint.isMissingNode()) return null;
@@ -110,10 +121,14 @@ class Pages {
         return new Page("/services/" + name, "service", model, "서비스", Set.of(name));
     }
 
-    private List<Section> render(Page page) {
-        var context = new Context(Locale.KOREAN, page.model());
+    private String process(String template, Map<String, Object> model) {
+        var context = new Context(Locale.KOREAN, model);
         context.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME, evaluation);
-        String html = engine.process(page.template(), context);
+        return engine.process(template, context);
+    }
+
+    private List<Section> render(Page page) {
+        String html = process(page.template(), page.model());
         html = html.substring(html.indexOf("<h1"), html.lastIndexOf("</body>"));
         String title = plain(html.substring(0, html.indexOf("</h1>")));
         var sections = new ArrayList<Section>();

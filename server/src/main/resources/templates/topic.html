@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title th:text="${topic.name()}"></title><link rel="stylesheet" href="/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${topic.name()}"></title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<p><a href="/">처음</a></p>
+<nav class="top"><span><a href="/">처음</a></span><span class="target">HotDealWave · 고정 커밋 cc43016</span></nav>
+<header class="summary">
 <h1 th:text="|토픽 ${topic.name()}|"></h1>
 <p class="line">검증 범위: 코드만</p>
+</header>
 <section th:replace="~{items :: descriptions(${descriptions})}"></section>
 <h2>발행</h2>
 <p th:if="${topic.publications().isEmpty()}">확인된 발행 없음</p>
@@ -28,5 +30,6 @@
 <p class="line" th:each="s : ${links}" th:text="${@view.step(s)}"></p>
 <p class="line" th:each="w : ${unpublished}" th:text="|확인 안 됨 — ${w}|"></p>
 <section th:replace="~{items :: items(${items})}"></section>
+<script src="/app.js"></script>
 </body>
 </html>

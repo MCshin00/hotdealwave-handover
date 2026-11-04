@@ -40,8 +40,22 @@ public class View {
     }
 
     public String step(Queries.Step step) {
-        String to = step.to() != null ? step.to() : step.status() + (step.reason() != null ? " — " + step.reason() : "");
-        return step.from() + " → (" + step.kind() + ") " + to + " [" + String.join(", ", step.evidence()) + "]";
+        return step.from() + " → (" + step.kind() + ") " + target(step) + " " + stepEvidence(step);
+    }
+
+    /** Where a step goes, or its status and reason when the target is not confirmed. */
+    public String target(Queries.Step step) {
+        return step.to() != null ? step.to() : step.status() + (step.reason() != null ? " — " + step.reason() : "");
+    }
+
+    public String stepEvidence(Queries.Step step) {
+        return "[" + String.join(", ", step.evidence()) + "]";
+    }
+
+    /** File name of a recorded response, or null when none was recorded. */
+    public String responseFile(JsonNode check) {
+        String file = check.path("file").asText(null);
+        return file == null ? null : file.substring(file.lastIndexOf('/') + 1);
     }
 
     /** How far an endpoint was checked: code alone, or code plus a recorded live response. */
@@ -71,9 +85,21 @@ public class View {
 
     /** Kind and source; the confirmation status only once the developer has set it. */
     public String item(JsonNode item) {
+        return itemTag(item) + " " + item.path("title").asText();
+    }
+
+    public String itemTag(JsonNode item) {
         String status = item.path("confirmationStatus").asText();
-        return "[" + item.path("kind").asText() + " · " + item.path("source").asText() + ("미확인".equals(status) ? "" : " · " + status) + "] "
-                + item.path("title").asText();
+        return "[" + item.path("kind").asText() + " · " + item.path("source").asText() + ("미확인".equals(status) ? "" : " · " + status) + "]";
+    }
+
+    /** Style class for an item's kind tag. */
+    public String kindClass(JsonNode item) {
+        return switch (item.path("kind").asText()) {
+            case "함정" -> "trap";
+            case "업무 규칙" -> "rule";
+            default -> "about";
+        };
     }
 
     /** Field tree lines of a request or response type, one field per line. */
