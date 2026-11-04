@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<section th:fragment="items(items)">
+  <h2 th:text="|업무 규칙·함정 ${#lists.size(items)}개|"></h2>
+  <div class="item" th:each="k : ${items}">
+    <h3 th:text="${@view.item(k)}"></h3>
+    <p th:text="${k.path('description').asText()}"></p>
+    <p class="meta" th:text="|서비스 ${k.path('service').asText()} · 발견 경로 ${k.path('discoveryPath').asText()}|"></p>
+    <p class="meta" th:text="|영향 ID ${@view.texts(k.path('affectedIds'))}|"></p>
+    <p class="meta" th:text="|근거 ${@view.evidence(k)}|"></p>
+  </div>
+</section>
+</body>
+</html>

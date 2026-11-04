@@ -100,4 +100,12 @@ python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/re
 
 `./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출 검사의 경고 수를 출력한다. 같은 기준 위치의 `knowledge/hotdealwave/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
 
-공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다. 서버 실행 명령은 6단계에서 더한다.
+공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다.
+
+## 서버
+
+```bash
+./gradlew :server:bootRun
+```
+
+검증기를 먼저 돌려 `out/analysis.json`을 새로 만든 뒤 `http://localhost:8080`에 문서 페이지를 띄운다. 첫 화면에서 서비스(`/services/{이름}`)와 토픽(`/topics/{토픽 환경변수 이름 또는 코드에 적힌 토픽 이름}`)으로 들어가고, 서비스 페이지에서 엔드포인트(`/endpoints/{ID}`)로 들어간다. 값마다 확인 상태와 근거 `파일:줄`이 붙고, 확인되지 않은 값은 상태와 이유가 대신 나온다.
