@@ -87,7 +87,7 @@ public class View {
         for (var field : Analysis.listOf(schema.path("fields"))) {
             var annotations = Analysis.listOf(field.path("annotations")).stream().map(a -> "@" + a.path("name").asText()).toList();
             lines.add(indent + fact(field.path("jsonName")).replaceFirst(" \\[.*", "") + "  " + field.path("schema").path("type").asText()
-                    + (annotations.isEmpty() ? "" : "  " + String.join(" ", annotations)) + "  " + status(field) + " " + evidence(field)
+                    + "  " + (annotations.isEmpty() ? "어노테이션 없음" : String.join(" ", annotations)) + "  " + status(field) + " " + evidence(field)
                     + (known(field.path("schema")) ? "" : "  타입 구조: " + status(field.path("schema"))));
             if (!field.path("schema").path("recursive").asBoolean()) nested(field.path("schema"), indent + "    ", lines);
         }

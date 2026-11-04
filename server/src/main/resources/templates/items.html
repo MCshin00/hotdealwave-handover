@@ -11,5 +11,13 @@
     <p class="meta" th:text="|근거 ${@view.evidence(k)}|"></p>
   </div>
 </section>
+<section th:fragment="descriptions(items)" th:if="${!#lists.isEmpty(items)}">
+  <h2>설명</h2>
+  <div class="item" th:each="k : ${items}">
+    <h3 th:text="${@view.item(k)}"></h3>
+    <p th:text="${k.path('description').asText()}"></p>
+    <p class="meta" th:text="|영향 ID ${@view.texts(k.path('affectedIds'))} · 근거 ${@view.evidence(k)}|"></p>
+  </div>
+</section>
 </body>
 </html>

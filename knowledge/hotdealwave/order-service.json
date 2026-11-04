@@ -625,6 +625,342 @@
       "source": "AI 해석",
       "discoveryPath": "코드",
       "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "장바구니에 상품 담기",
+      "description": "상품과 수량을 받아 요청 사용자의 장바구니 항목을 새로 저장하고, 생성한 장바구니 ID를 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:39",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/basket/Basket.java:38"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.createBasket"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "장바구니 항목 상세 조회",
+      "description": "본인의 삭제되지 않은 장바구니 항목 하나를 찾아 담은 수량과 상품 정보를 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:83",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:32"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.getBasketDetail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "내 장바구니 목록 조회",
+      "description": "본인의 삭제되지 않은 장바구니 항목을 페이지 단위로 조회하고, 각 항목에 상품 정보를 붙여 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:60",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:75",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:37"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.getBasketList"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "장바구니 상품 수량 변경",
+      "description": "본인의 장바구니 항목을 찾아 수량을 요청한 값으로 바꾸고, 수정한 장바구니 ID를 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:69",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:89",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/BasketRepositoryImpl.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/basket/Basket.java:50"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.updateBasket"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "장바구니 항목 삭제",
+      "description": "본인의 장바구니 항목에 삭제 시각과 요청자 이메일을 기록해 삭제 처리한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:79",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:95",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/basket/Basket.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/AuditingDate.java:34"
+      ],
+      "affectedIds": [
+        "order-service.BasketController.deleteBasket"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "장바구니 상품으로 주문 만들기",
+      "description": "선택한 장바구니 항목으로 상품 금액을 계산하고 배송지와 쿠폰 할인 정보를 담은 주문을 생성한다. 주문 상품을 저장하고 사용한 장바구니 항목을 삭제 처리한 뒤 주문 ID를 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:118",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:124",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:28"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.createOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "내 주문 내역 목록 조회",
+      "description": "본인의 삭제되지 않은 주문을 페이지 단위로 조회하고, 주문별 상태와 상품 목록을 돌려준다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:215",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderListDto.java:40"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.getOrders"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "주문 상세 내역 조회",
+      "description": "주문 하나의 상품 목록, 주문 금액, 할인액, 배송지 ID와 상태를 조회한다. 일반 사용자는 본인 주문을 조회하고, 마스터 관리자는 다른 사용자의 주문도 조회할 수 있다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:179",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:197",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/res/ResGetOrderByIdDto.java:77"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.getOrderById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "관리자의 주문 상태 변경",
+      "description": "마스터 관리자가 지정한 주문을 찾아 요청한 상태로 변경한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:65",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/SecurityConfig.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:250",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.updateOrderStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "내 주문 취소",
+      "description": "본인의 주문이 취소 가능한 상태인지 검사한 뒤 주문 상태를 취소로 바꾸고 결제 취소 메시지 발행을 요청한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:257",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:267",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:300",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:33"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.cancelOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "내 주문 환불 요청",
+      "description": "본인의 주문 상태와 생성 후 경과 시간을 검사해 환불 가능 여부를 판단한다. 조건을 만족하면 주문 상태를 환불로 바꾸고 결제 환불 메시지 발행을 요청한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:280",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:288",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:300",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:44"
+      ],
+      "affectedIds": [
+        "order-service.OrderController.refundOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "실패한 메시지와 오류 내용 발행",
+      "description": "처리하지 못한 메시지의 원문과 오류 내용을 하나의 JSON으로 묶어 실패 메시지용 토픽에 발행한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:23",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
+      ],
+      "affectedIds": [
+        "order-service.publishDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "주문 상품의 재고 차감 요청 발행",
+      "description": "주문 ID와 장바구니의 상품별 ID·수량을 담아 재고 차감 요청 메시지를 발행한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:28",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:36"
+      ],
+      "affectedIds": [
+        "order-service.requestProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "주문 결제 취소 요청 발행",
+      "description": "취소할 주문의 ID를 담은 결제 취소 요청 메시지를 발행한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/event/message/payment/ReqPaymentCancelMessage.java:13"
+      ],
+      "affectedIds": [
+        "order-service.cancelPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "주문 결제 환불 요청 발행",
+      "description": "환불할 주문의 ID를 담은 결제 환불 요청 메시지를 발행한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:50",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/java/com/sparta/hotdeal/order/event/message/payment/ReqPaymentRefundMessage.java:13"
+      ],
+      "affectedIds": [
+        "order-service.refundPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "소비 오류 처리기의 실패 메시지 발행",
+      "description": "Kafka 소비 오류 처리기에 전달된 실패 메시지를 재시도 없이 실패 메시지용 토픽의 원래 파티션으로 보내도록 설정한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67"
+      ],
+      "affectedIds": [
+        "order-service.recoverDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "취소 메시지에 따른 주문 상태 변경",
+      "description": "취소 메시지의 주문 ID로 삭제되지 않은 주문을 찾아 상태를 취소로 변경한다. 메시지 해석이나 주문 처리에 실패하면 원문과 오류 내용을 실패 메시지 발행 처리로 넘긴다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:19"
+      ],
+      "affectedIds": [
+        "order-service.cancelOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "실패 메시지의 원문과 오류 내용 기록",
+      "description": "실패 메시지에서 원문과 오류 내용을 읽어 로그로 남기는 구독 메서드다. 이 클래스를 빈으로 등록하는 선언은 코드에 없다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:20",
+        "order/src/main/java/com/sparta/hotdeal/order/OrderApplication.java:10"
+      ],
+      "affectedIds": [
+        "order-service.dlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "order-service",
+      "kind": "설명",
+      "title": "상태 변경 메시지에 따른 주문 갱신",
+      "description": "메시지의 주문 ID와 상태값을 읽어 삭제되지 않은 주문의 상태를 변경한다. 메시지 해석이나 상태 변경에 실패하면 원문과 오류 내용을 실패 메시지 발행 처리로 넘긴다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26"
+      ],
+      "affectedIds": [
+        "order-service.updateStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }

@@ -2,6 +2,7 @@ package io.hotdealwave.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.*;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 import static io.hotdealwave.server.Analysis.known;
 import static io.hotdealwave.server.Analysis.value;
@@ -58,11 +59,20 @@ class Queries {
         return known(kafka.path("topicName")) ? value(kafka.path("topicName")) : null;
     }
 
-    /** Items whose affected IDs include any of the given IDs, traps first. */
+    /** Rules and traps whose affected IDs include any of the given IDs, traps first. */
     List<JsonNode> knowledgeFor(Collection<String> ids) {
-        return analysis.list("knowledge").stream()
-                .filter(k -> Analysis.listOf(k.path("affectedIds")).stream().anyMatch(a -> ids.contains(a.asText())))
+        return affecting(ids).filter(k -> !"설명".equals(k.path("kind").asText()))
                 .sorted(Comparator.comparing(k -> !"함정".equals(k.path("kind").asText()))).toList();
+    }
+
+    /** Descriptions of the given IDs. */
+    List<JsonNode> descriptionsFor(Collection<String> ids) {
+        return affecting(ids).filter(k -> "설명".equals(k.path("kind").asText())).toList();
+    }
+
+    private Stream<JsonNode> affecting(Collection<String> ids) {
+        return analysis.list("knowledge").stream()
+                .filter(k -> Analysis.listOf(k.path("affectedIds")).stream().anyMatch(a -> ids.contains(a.asText())));
     }
 
     /** kafka-topics warning reason for an unlinked publication or subscription, if any. */

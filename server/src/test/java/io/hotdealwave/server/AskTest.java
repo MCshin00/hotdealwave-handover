@@ -90,6 +90,12 @@ class AskTest {
         assertTrue(model.lastInput.contains("basketList  List<UUID>  @NotNull"));
     }
 
+    @Test void topicQuestionPassesTheConnectionState() {
+        model.next = reply("조각에 없다.", true);
+        ask.ask("주문 생성이 보내는 상품 요청 Kafka 메시지는 누가 받나?");
+        assertTrue(model.lastInput.contains("order-service.requestProduct → (구독) 확인 안 됨 — 구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐"));
+    }
+
     @Test void apiAskReturnsStatusAnswerCitationsAndUsage() throws Exception {
         model.next = reply("주문 생성은 OrderController.java:40에서 받는다.", false, "C1");
         mvc.perform(post("/api/ask").contentType("application/json").content("{\"question\":\"createOrder\"}"))

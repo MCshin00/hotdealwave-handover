@@ -16,7 +16,7 @@
       "type": "object",
       "properties": {
         "service": { "type": "string", "minLength": 1 },
-        "kind": { "enum": ["업무 규칙", "함정"] },
+        "kind": { "enum": ["업무 규칙", "함정", "설명"] },
         "title": { "type": "string", "minLength": 1 },
         "description": { "type": "string", "minLength": 1 },
         "evidence": {

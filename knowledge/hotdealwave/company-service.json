@@ -216,6 +216,112 @@
       "source": "AI 해석",
       "discoveryPath": "실제 응답",
       "confirmationStatus": "미확인"
+    },
+    {
+      "service": "company-service",
+      "kind": "설명",
+      "title": "새 업체 등록",
+      "description": "사업자등록번호·전화번호·담당자·브랜드명·이메일·상태를 받아 새 업체를 등록한다. 같은 사업자등록번호의 업체가 있으면 등록을 거절한다.",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:46",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:26",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:29",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:32",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:40"
+      ],
+      "affectedIds": [
+        "company-service.CompanyController.createCompany"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "company-service",
+      "kind": "설명",
+      "title": "업체 기본 정보 수정",
+      "description": "업체 ID로 업체를 찾아 전화번호·담당자·이메일·브랜드명을 요청한 값으로 바꾼다.",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:56",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:43",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:46",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:50",
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:70"
+      ],
+      "affectedIds": [
+        "company-service.CompanyController.updateCompany"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "company-service",
+      "kind": "설명",
+      "title": "업체 상태 변경",
+      "description": "업체 ID로 업체를 찾아 요청한 상태값이 유효한지 검사한 뒤 해당 상태로 바꾼다.",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:66",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:54",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:57",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:60",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:64",
+        "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:77"
+      ],
+      "affectedIds": [
+        "company-service.CompanyController.updateCompanyStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "company-service",
+      "kind": "설명",
+      "title": "업체 상세 정보 조회",
+      "description": "업체 ID로 업체를 찾아 사업자등록번호·전화번호·담당자·브랜드명·이메일·상태를 반환한다.",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:75",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:76",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:69",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:72",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:12",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:13",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:14",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:15",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:16",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17"
+      ],
+      "affectedIds": [
+        "company-service.CompanyController.getCompanyById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "company-service",
+      "kind": "설명",
+      "title": "업체 목록 조회",
+      "description": "업체 목록을 페이지 단위로 조회한다. 상태를 지정하면 해당 상태의 업체만, 지정하지 않으면 전체 업체를 조회 대상으로 삼는다.",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:79",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:84",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:85",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:82",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:84",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:87"
+      ],
+      "affectedIds": [
+        "company-service.CompanyController.getCompanyList"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }

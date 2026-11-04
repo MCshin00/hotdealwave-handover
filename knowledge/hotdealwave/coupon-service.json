@@ -750,6 +750,275 @@
       "source": "AI 해석",
       "discoveryPath": "코드",
       "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "선착순 쿠폰 발급",
+      "description": "지정한 쿠폰 정보의 발급 상태·남은 수량·중복 발급 여부를 확인하고, 요청한 사용자에게 미사용 쿠폰을 발급한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:47",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:50",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.issueFirstComeFirstServeCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "사용자 쿠폰 목록 조회",
+      "description": "지정한 사용자의 삭제되지 않은 쿠폰을 사용 여부로 골라 목록으로 반환한다. 사용 여부를 지정하지 않으면 미사용 쿠폰을 조회한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:51",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:126"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.getUserCoupons"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "사용자 쿠폰 상세 조회",
+      "description": "사용자 쿠폰 ID로 삭제되지 않은 쿠폰 한 장을 찾아 이름·할인액·최소 주문 금액·만료일과 사용 여부 등을 반환한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:56",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:130",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:132",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:136",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:32",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:35"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.getUserCouponDetail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "주문 상품의 쿠폰 적용 가능 여부 확인",
+      "description": "쿠폰의 사용 여부·만료일과 주문 상품의 적용 업체·최소 주문 금액 조건을 검사한다. 조건을 통과하면 적용 가능 여부와 쿠폰에 정해진 할인액을 반환한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:59",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:68",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:74",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:78",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:83",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:88",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:89"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.validateCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "사용자 쿠폰 사용 처리",
+      "description": "아직 사용하지 않은 사용자 쿠폰을 사용 상태로 바꾸고 사용일을 오늘로 기록한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:97",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:101",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:40"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.useCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "사용자 쿠폰 사용 취소",
+      "description": "사용한 사용자 쿠폰을 미사용 상태로 되돌리고 사용일을 지운다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:78",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:108",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:45"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.recoverCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "사용자 쿠폰 삭제 표시",
+      "description": "지정한 사용자 쿠폰에 삭제 시각과 요청자의 이메일을 기록해 삭제된 쿠폰으로 표시한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:85",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:89",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:117",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:120",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/AuditingDate.java:35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/AuditingDate.java:36"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponController.deleteCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "발급할 쿠폰 정보 생성",
+      "description": "이름·수량·할인액·최소 주문 금액·만료일·유형·적용 업체를 담은 쿠폰 정보를 대기 상태로 저장하고, 생성한 쿠폰 정보의 ID를 반환한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:45",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:46",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:49",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:18",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:20",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:21",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:22",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:23",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:25"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.createCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "대기 중인 쿠폰 정보 수정",
+      "description": "대기 상태인 쿠폰 정보의 이름·수량·할인액·최소 주문 금액·만료일·유형·적용 업체를 요청한 값으로 바꾼다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:83",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:87",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:58",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:59",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:60",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:61",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:62",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:64"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.updateCoupon"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "쿠폰 정보 상태 변경",
+      "description": "지정한 쿠폰 정보의 상태를 요청한 상태로 바꾼다. 이미 같은 상태이면 변경을 거절한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:65",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:68",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:54"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.updateCouponStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "쿠폰 정보 상세 조회",
+      "description": "쿠폰 정보 ID로 삭제되지 않은 정보를 찾아 이름·전체 수량·발급 수·할인 조건·만료일·상태·유형·적용 업체를 반환한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:51",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:55",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:57",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:111",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:38",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponInfoMapper.java:41"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.getCouponDetail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "coupon-service",
+      "kind": "설명",
+      "title": "쿠폰 정보 검색과 목록 조회",
+      "description": "삭제되지 않은 쿠폰 정보를 이름 검색어와 상태 조건으로 골라, 지정한 정렬 순서와 페이지에 맞춰 반환한다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:57",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:100",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:103",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:105",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:32",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:42",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:55",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:62"
+      ],
+      "affectedIds": [
+        "coupon-service.CouponInfoController.getCoupons"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }
