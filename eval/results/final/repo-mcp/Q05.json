@@ -1,0 +1,26 @@
+{
+  "id": "Q05",
+  "condition": "repo-mcp",
+  "question": "상품 목록 응답에는 어떤 상품 정보와 페이지 정보가 들어가고, 검색 결과가 없을 때는 어떤 형식으로 내려오나요?",
+  "status": "완료",
+  "seconds": 69.7,
+  "tokens": {
+    "input": 210076,
+    "cachedInput": 183168,
+    "output": 2158
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "get_page"
+  ],
+  "mcpFailed": [],
+  "commands": 6,
+  "answer": "상품 목록 응답은 **`message`와 `data`**로 감싸며, 메시지는 `\"상품이 조회되었습니다.\"`, `data`는 상품 DTO의 페이지입니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:9`, `product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:138`, `product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:151`.\n\n**상품 정보**는 다음 13개 필드입니다.\n\n| 필드 | 의미 | 근거 (`파일:줄`) |\n|---|---|---|\n| `productId`, `name` | 상품 UUID, 상품명 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:17` 및 `:18` |\n| `price`, `quantity` | 가격, 재고 수량 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19` 및 `:20` |\n| `category`, `companyId` | 카테고리, 업체 UUID | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:21` 및 `:22` |\n| `description` | 상품 설명 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:23` |\n| `detailImgs`, `thumbImg` | 상세 이미지 문자열 목록, 썸네일 문자열 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:24` 및 `:25` |\n| `status` | 상품 상태 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:26` |\n| `rating`, `reviewCnt`, `discountPrice` | 평점, 리뷰 수, 할인 가격 | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:27` 및 `:28`, `:29` |\n\n**페이지 정보**는 Spring Data의 `VIA_DTO` 직렬화를 사용하므로, 해당 표준 동작에 따르면 `data.content`에 상품 배열, `data.page`에 `size`(페이지 크기), `number`(0부터 시작하는 페이지 번호), `totalElements`(전체 건수), `totalPages`(전체 페이지 수)가 들어갑니다. 요청 기본값은 `page_number=1`, `page_size=10`이며 내부에서는 페이지 번호에서 1을 뺍니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/ProductApplication.java:13`, `product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:140`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:176`.\n\n**검색 결과가 없으면 빈 페이지를 정상 응답으로 반환합니다.** 빈 결과를 예외로 바꾸는 분기 없이 빈 목록과 전체 건수 `0`으로 `PageImpl`을 만들고 동일한 메시지로 감쌉니다. 기본 페이지 요청의 예상 JSON은 아래와 같습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:183`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:188`, `product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:151`.\n\n```json\n{\n  \"message\": \"상품이 조회되었습니다.\",\n  \"data\": {\n    \"content\": [],\n    \"page\": {\n      \"size\": 10,\n      \"number\": 0,\n      \"totalElements\": 0,\n      \"totalPages\": 0\n    }\n  }\n}\n```\n\n다만 위 JSON의 페이지 필드 구조는 **저장소의 설정과 Spring Data 표준 동작에 따른 예상**입니다. 저장소의 목록 테스트는 HTTP 200만 검사하므로, 빈 검색 결과의 실제 JSON 본문까지 검증됐다고 확인할 수는 없습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/ProductApplication.java:13`, `product/src/test/java/com/sparta/hotdeal/product/ProductControllerTest.java:167`.\n\n또한 현재 구현은 전체 검색 건수 대신 **현재 페이지에서 받은 결과 수**를 `PageImpl`의 전체 건수 인자로 넘깁니다. 따라서 결과가 여러 페이지이면 `totalElements`와 `totalPages`가 부정확할 수 있습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:53`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:188`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

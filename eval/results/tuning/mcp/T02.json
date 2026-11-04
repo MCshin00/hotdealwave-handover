@@ -3,18 +3,18 @@
   "condition": "mcp",
   "question": "createOrder 요청 필드는?",
   "status": "완료",
-  "seconds": 25.2,
+  "seconds": 25.8,
   "tokens": {
-    "input": 63263,
-    "cachedInput": 53376,
-    "output": 587
+    "input": 60448,
+    "cachedInput": 48640,
+    "output": 491
   },
   "mcpTools": [
     "find_endpoint"
   ],
   "mcpFailed": [],
-  "commands": 2,
-  "answer": "`createOrder`의 요청 본문은 `ReqPostOrderDto`이며 `@Valid` 검증을 적용합니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:44`\n\n| 필드 | 타입 | 필수 여부 | 근거 (저장소 루트 기준) |\n|---|---|---|---|\n| `basketList` | `List<UUID>` — 장바구니 ID 목록 | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16`, `:17` |\n| `addressId` | `UUID` — 주소 ID | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:18`, `:19` |\n| `couponId` | `UUID` — 쿠폰 ID | 선택 (필수 검증 없음) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20` |\n\n사용자 ID·이메일·역할은 요청 본문이 아니라 인증된 `userDetails`에서 가져옵니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43`, `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46`",
+  "commands": 0,
+  "answer": "`createOrder`는 `POST /api/v1/orders`입니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35`, `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40`\n\n요청 본문 필드는 다음 3개이며, 모두 **확인됨** 상태입니다.\n\n| 필드 | 타입 | 검증 선언 | 근거 |\n|---|---|---|---|\n| `basketList` | `List<UUID>` | `@NotNull` | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:17` |\n| `addressId` | `UUID` | `@NotNull` | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:19` |\n| `couponId` | `UUID` | 검증 어노테이션 없음 | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20` |\n\n`couponId`는 `null`일 수 있으며, 이 경우 쿠폰 검증·사용 호출을 생략하고 할인액을 0으로 처리합니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:34`\n\n`basketList`의 최소 항목 수나 요소별 검증 조건은 제공된 도구 근거만으로 확인할 수 없습니다. 확인된 선언은 `@NotNull`입니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:17`",
   "settings": {
     "model": "gpt-6-astra",
     "reasoning": "high",

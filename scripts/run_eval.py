@@ -2,7 +2,7 @@
 
 조건
 - base: Codex, 이 저장소가 없는 HotDealWave 고정 커밋 체크아웃, 기본 도구만
-- mcp: base와 같고 실행마다 서버의 /mcp와 지시문의 도구 안내 한 줄만 더한다
+- mcp: base와 같은 Codex 설정에 서버의 /mcp를 더하고, 질문마다 새로 만든 원본 코드가 없는 작업 폴더에서 실행한다
 - ask: 서버의 /api/ask를 한 번 부른다(유료 모델 호출)
 
 결과는 <out>/<조건>/<id>.json이다. 기계 검사는 check_citations.py가 한다.
@@ -28,26 +28,31 @@ PROMPT = """이 디렉터리는 HotDealWave 저장소다. 아래 질문에 답�
 - 주장마다 근거를 저장소 루트 기준 `파일:줄`로 붙인다.
 - 저장소에서 확인할 수 없는 것은 확인할 수 없다고 밝힌다.
 - 파일을 고치지 않는다.
-{tools}
+
 질문: {question}
 """
-# MCP 조건에서만 더하는 줄. 팀이 MCP를 등록할 때 함께 남기는 안내에 해당한다.
-MCP_LINE = "- `hotdealwave` MCP 도구로 이 저장소를 분석한 문서(엔드포인트·흐름·Kafka 연결, 확인 상태와 근거)를 볼 수 있다.\n"
+# 저장소 없이 MCP만 쓰는 조건. 도구 안내는 팀이 MCP를 등록할 때 함께 남기는 안내에 해당한다.
+MCP_PROMPT = """HotDealWave 저장소는 이 디렉터리에 없다. `hotdealwave` MCP 도구로 이 저장소를 분석한 문서(엔드포인트·흐름·Kafka 연결, 확인 상태와 근거)를 볼 수 있다. 아래 질문에 답하라.
+- 주장마다 도구가 보여 준 근거 `파일:줄`을 저장소 루트 기준 경로 그대로 붙인다.
+- 저장소에서 확인할 수 없는 것은 확인할 수 없다고 밝힌다.
+
+질문: {question}
+"""
 
 
 def prompt(condition, question):
-    return PROMPT.format(tools=MCP_LINE if condition == "mcp" else "", question=question)
+    return (MCP_PROMPT if condition == "mcp" else PROMPT).format(question=question)
 
 
-def codex_command(condition, checkout, last_message, server):
-    """두 조건은 MCP 서버 한 줄만 다르다. 사용자 설정·앱 연결·기억·웹 검색은 끈다."""
+def codex_command(condition, folder, last_message, server):
+    """두 조건은 MCP 서버 설정만 다르다. 사용자 설정·앱 연결·기억·웹 검색은 끈다."""
     command = ["codex", "exec", "--ignore-user-config", "--ephemeral", "--json",
                "-s", "read-only", "-c", 'approval_policy="never"', "-c", 'windows.sandbox="elevated"',
                "--disable", "apps", "--disable", "memories", "-c", 'web_search="disabled"',
                "-m", MODEL, "-c", f'model_reasoning_effort="{REASONING}"', "-c", 'service_tier="fast"',
-               "-C", str(checkout), "-o", str(last_message)]
-    if condition == "mcp":  # 승인 정책이 never라 도구 호출도 승인 없이 통과시켜야 한다.
-        command += ["-c", f'mcp_servers.hotdealwave.url="{server}/mcp"',
+               "-C", str(folder), "-o", str(last_message)]
+    if condition == "mcp":  # 이 작업 폴더는 Git 저장소가 아니다. 승인 정책이 never라 도구 호출도 승인 없이 통과시킨다.
+        command += ["--skip-git-repo-check", "-c", f'mcp_servers.hotdealwave.url="{server}/mcp"',
                     "-c", 'mcp_servers.hotdealwave.default_tools_approval_mode="approve"']
     return command + ["-"]
 
@@ -92,8 +97,12 @@ def check_checkout(checkout):
 def run_codex(condition, question, checkout, server, timeout):
     with tempfile.TemporaryDirectory() as directory:
         last_message = Path(directory) / "answer.md"
+        folder = checkout
+        if condition == "mcp":
+            folder = Path(directory) / "workdir"
+            folder.mkdir()
         started = time.monotonic()
-        command = codex_command(condition, checkout, last_message, server)
+        command = codex_command(condition, folder, last_message, server)
         command[0] = shutil.which(command[0]) or command[0]  # Windows에서는 codex.cmd
         process = subprocess.Popen(command, stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
@@ -109,7 +118,7 @@ def run_codex(condition, question, checkout, server, timeout):
             status = "시간 초과"
         seconds = round(time.monotonic() - started, 1)
         answer = last_message.read_text(encoding="utf-8") if status == "완료" and last_message.exists() else None
-    if answer is not None:  # 절대경로로 인용한 답을 저장소 루트 기준으로 맞춘다.
+    if answer is not None and checkout:  # 절대경로로 인용한 답을 저장소 루트 기준으로 맞춘다.
         for prefix in (str(checkout) + os.sep, checkout.as_posix() + "/"):
             answer = answer.replace(prefix, "")
     lines = [line for line in output.decode("utf-8", "replace").splitlines() if line.startswith("{")]
@@ -133,14 +142,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("questions", type=Path, help="질문 CSV(id, 질문 열)")
     parser.add_argument("condition", choices=["base", "mcp", "ask"])
-    parser.add_argument("--checkout", type=Path, help="HotDealWave 고정 커밋 체크아웃(base, mcp)")
+    parser.add_argument("--checkout", type=Path, help="HotDealWave 고정 커밋 체크아웃(base)")
     parser.add_argument("--server", default="http://localhost:8080", help="문서 서버 주소(mcp, ask)")
     parser.add_argument("--timeout", type=int, required=True, help="질문당 시간 제한(초)")
     parser.add_argument("--out", type=Path, help="결과 디렉터리. 기본은 eval/results/<질문 파일 이름>")
     args = parser.parse_args()
 
-    checkout = check_checkout(args.checkout) if args.condition != "ask" else None
-    if args.condition != "base":  # 서버가 없으면 MCP 조건이 기본 조건과 같아진다.
+    checkout = check_checkout(args.checkout) if args.condition == "base" else None
+    if args.condition != "base":
         try:
             urllib.request.urlopen(f"{args.server}/api/search?q=order", timeout=10).close()
         except urllib.error.URLError as error:

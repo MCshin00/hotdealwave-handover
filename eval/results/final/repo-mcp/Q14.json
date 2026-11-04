@@ -1,0 +1,26 @@
+{
+  "id": "Q14",
+  "condition": "repo-mcp",
+  "question": "프로모션 응답의 시간 필드는 어떤 시간대와 시작·종료 기준을 쓰고, 가격 필드는 각각 어떤 금액을 뜻하나요?",
+  "status": "완료",
+  "seconds": 61.3,
+  "tokens": {
+    "input": 166156,
+    "cachedInput": 136192,
+    "output": 2169
+  },
+  "mcpTools": [
+    "find_endpoint",
+    "search_docs",
+    "get_page"
+  ],
+  "mcpFailed": [],
+  "commands": 5,
+  "answer": "**시간대는 KST·UTC 중 하나로 확정할 수 없고, `discountPrice`는 할인 후 판매가입니다.** 코드에서 확인되는 기준은 다음과 같습니다.\n\n- **`start`·`end`의 의미와 시간대:** 요청한 행사 시작·종료 시각을 `LocalDateTime`으로 저장하고, 조회 응답에서는 `Timestamp.valueOf(...)`로 변환합니다. 시간대·오프셋을 명시하지 않아 **운영 환경의 시간대나 최종 JSON의 시간대는 저장소만으로 확인할 수 없습니다.** 현재 시간 비교도 시간대를 지정하지 않은 `LocalDateTime.now()`를 사용합니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:40`, `product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:66`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:178`\n\n- **실제 시작·종료 기준:** 매 정각 실행되는 스케줄러가 현재 시각을 초 단위로 자른 뒤, `start` 또는 `end`와 **정확히 일치하는** 행사를 찾습니다. 시작 시 `IN_PROGRESS`로 바꾸고 상품에 할인가를 적용하며, 종료 시 `COMPLETED`로 바꾸고 상품 할인가를 `null`로 지웁니다. 따라서 일반적인 `start ≤ 현재 < end` 판정이라고 해석하면 안 됩니다. 비정각 시각이나 실행을 놓친 행사를 따라잡는 조건도 없습니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27`, `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:32`, `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:38`, `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:45`, `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:56`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:24`\n\n- **기간 검증의 한계:** 생성·수정 시 두 시각이 각각 현재보다 과거인지는 검사하지만, `start < end`는 검사하지 않습니다. 응답의 기간이 항상 정상적인 순서라는 보장은 없습니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:46`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:86`\n\n| 필드 | 금액·수치의 의미 | 근거 |\n|---|---|---|\n| 프로모션 `discountPrice` | **할인 후 판매가**입니다. 할인으로 차감되는 금액이 아니며, 상품의 원래 가격보다 작아야 합니다. | `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:59`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:163` |\n| 프로모션 `discountRate` | 금액이 아닌 **할인율(%)**입니다. `반올림((원래 가격 − 할인가) / 원래 가격 × 100)`으로 계산한 정수입니다. | `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:65`, `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154` |\n| 상품 `price` | 할인율 계산의 기준인 **상품의 원래 가격**입니다. 프로모션 조회 DTO에는 이 필드가 없습니다. | `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:65`, `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19`, `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:15` |\n\n가격 필드는 정수형이지만 통화나 금액 단위는 명시되어 있지 않으므로, **KRW·원 단위라고는 확정할 수 없습니다.** 근거: `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:21`, `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}
