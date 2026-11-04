@@ -8,7 +8,7 @@
 <h2>발행</h2>
 <p th:if="${topic.publications().isEmpty()}">확인된 발행 없음</p>
 <div th:each="p : ${topic.publications()}">
-  <h3><a th:href="@{/services/{n}(n=${p.path('service').asText()})}" th:text="${p.path('id').asText()}"></a></h3>
+  <h3><a th:href="|/services/${p.path('service').asText()}|" th:text="${p.path('id').asText()}"></a></h3>
   <p class="line" th:text="|종류: ${p.path('kind').asText()} · 확인 상태: ${@view.status(p)} ${@view.evidence(p)}|"></p>
   <p class="line" th:text="|설정 키: ${@view.fact(p.path('topicKey'))}|"></p>
   <p class="line" th:text="|환경변수: ${@view.fact(p.path('environment'))}|"></p>
@@ -17,7 +17,7 @@
 <h2>구독</h2>
 <p th:if="${topic.subscriptions().isEmpty()}">확인된 구독 없음</p>
 <div th:each="s : ${topic.subscriptions()}">
-  <h3><a th:href="@{/services/{n}(n=${s.path('service').asText()})}" th:text="${s.path('id').asText()}"></a></h3>
+  <h3><a th:href="|/services/${s.path('service').asText()}|" th:text="${s.path('id').asText()}"></a></h3>
   <p class="line" th:text="|확인 상태: ${@view.status(s)} ${@view.evidence(s)}|"></p>
   <p class="line" th:text="|설정 키: ${@view.fact(s.path('topicKey'))}|"></p>
   <p class="line" th:text="|환경변수: ${@view.fact(s.path('environment'))}|"></p>

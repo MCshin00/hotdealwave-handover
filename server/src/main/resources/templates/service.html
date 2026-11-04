@@ -8,7 +8,7 @@
 <p class="line" th:text="|디렉터리: ${service.path('directory').asText()} · compose 서비스: ${@view.fact(service.path('composeService'))}|"></p>
 <h2 th:text="|엔드포인트 ${#lists.size(endpoints)}개|"></h2>
 <p class="line" th:each="e : ${endpoints}">
-  <a th:href="@{/endpoints/{id}(id=${e.path('id').asText()})}" th:text="|${@view.plain(e.path('httpMethod'))} ${@view.plain(e.path('path'))}|"></a>
+  <a th:href="|/endpoints/${e.path('id').asText()}|" th:text="|${@view.plain(e.path('httpMethod'))} ${@view.plain(e.path('path'))}|"></a>
   <span th:text="|${e.path('handler').asText()} · ${@view.status(e)} · 응답 확인: ${@view.responseCheck(e.path('responseCheck'))}|"></span>
 </p>
 <h2>Feign 호출</h2>
@@ -16,12 +16,12 @@
 <h2>Kafka 발행</h2>
 <p class="line" th:each="p : ${kafkaPublications}" th:with="t=${@view.topic(p)}">
   <span th:text="|${p.path('id').asText()} (${p.path('kind').asText()}) ${@view.status(p)} ${@view.evidence(p)} 토픽 |"></span>
-  <a th:if="${t != null}" th:href="@{/topics/{n}(n=${t})}" th:text="${t}"></a>
+  <a th:if="${t != null}" th:href="|/topics/${t}|" th:text="${t}"></a>
 </p>
 <h2>Kafka 구독</h2>
 <p class="line" th:each="s : ${kafkaSubscriptions}" th:with="t=${@view.topic(s)}">
   <span th:text="|${s.path('id').asText()} ${@view.status(s)} ${@view.evidence(s)} 토픽 |"></span>
-  <a th:if="${t != null}" th:href="@{/topics/{n}(n=${t})}" th:text="${t}"></a>
+  <a th:if="${t != null}" th:href="|/topics/${t}|" th:text="${t}"></a>
 </p>
 <h2>환경변수</h2>
 <p class="line" th:each="v : ${environmentVariables}" th:text="|${v.path('name').asText()} (${v.path('profile').asText()}, ${v.path('location').asText()}) 값: ${@view.fact(v.path('value'))}|"></p>
