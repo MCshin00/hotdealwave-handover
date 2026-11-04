@@ -113,7 +113,11 @@ python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/re
 
 검증기를 먼저 돌려 `out/analysis.json`을 새로 만든 뒤 `http://localhost:8080`에 문서 페이지를 띄운다. 첫 화면에서 서비스(`/services/{이름}`)와 토픽(`/topics/{토픽 환경변수 이름 또는 코드에 적힌 토픽 이름}`)으로 들어가고, 서비스 페이지에서 엔드포인트(`/endpoints/{ID}`)로 들어간다. 값마다 확인 상태와 근거 `파일:줄`이 붙고, 확인되지 않은 값은 상태와 이유가 대신 나온다.
 
-`/api/search?q=찾을 말`은 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 JSON으로 낸다. MCP는 서버를 띄운 채 클라이언트에 등록한다.
+`/api/search?q=찾을 말`은 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 JSON으로 낸다. `/search`는 같은 검색과 질문을 하는 페이지다.
+
+질문(`/search`의 질문 칸, `POST /api/ask` 본문 `{"question": "..."}`)은 검색 상위 5개를 근거로 모델을 한 번 부르고, 인용 검사를 통과하면 답과 인용한 페이지를, 아니면 보류와 이유를 낸다. 모델 키는 `OPENAI_API_KEY` 환경변수로 준다. 질문 한 번이 유료 호출 한 번이다.
+
+MCP는 서버를 띄운 채 클라이언트에 등록한다.
 
 ```bash
 claude mcp add --transport http hotdealwave http://localhost:8080/mcp
