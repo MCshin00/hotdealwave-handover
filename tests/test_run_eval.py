@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import unittest
+from unittest import mock
 
 from scripts import run_eval
 
@@ -19,6 +20,28 @@ class RunEvalTest(unittest.TestCase):
         self.assertEqual(mcp, base[:-1] + added + base[-1:])
         for setting in ("--ignore-user-config", "--ephemeral", "read-only", "apps", "memories", 'web_search="disabled"'):
             self.assertIn(setting, base)
+
+    def test_mcp_runs_in_a_new_empty_folder_and_base_in_the_checkout(self):
+        folders = []
+
+        class FakeProcess:
+            returncode = 0
+
+            def __init__(self, command, **_):
+                folder = Path(command[command.index("-C") + 1])
+                folders.append((folder, folder.is_dir() and not any(folder.iterdir())))
+
+            def communicate(self, *_, **__):
+                return b"", b""
+
+        with mock.patch.object(run_eval.subprocess, "Popen", FakeProcess):
+            run_eval.run_codex("mcp", "질문", None, "http://localhost:8080", 10)
+            run_eval.run_codex("mcp", "질문", None, "http://localhost:8080", 10)
+            run_eval.run_codex("base", "질문", ROOT / "checkout", "http://localhost:8080", 10)
+        (first, first_empty), (second, second_empty), (base, _) = folders
+        self.assertTrue(first_empty and second_empty)
+        self.assertNotEqual(first, second)
+        self.assertEqual(base, ROOT / "checkout")
 
     def test_mcp_prompt_says_there_is_no_repository(self):
         self.assertEqual(run_eval.prompt("mcp", "createOrder 요청 필드는?"), """\
