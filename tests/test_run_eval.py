@@ -10,21 +10,25 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class RunEvalTest(unittest.TestCase):
     def test_base_and_mcp_differ_only_by_the_mcp_server(self):
-        base = run_eval.codex_command("base", "checkout", "answer.md", "http://localhost:8080")
-        mcp = run_eval.codex_command("mcp", "checkout", "answer.md", "http://localhost:8080")
-        added = ["-c", 'mcp_servers.hotdealwave.url="http://localhost:8080/mcp"',
+        base = run_eval.codex_command("base", "folder", "answer.md", "http://localhost:8080")
+        mcp = run_eval.codex_command("mcp", "folder", "answer.md", "http://localhost:8080")
+        added = ["--skip-git-repo-check",
+                 "-c", 'mcp_servers.hotdealwave.url="http://localhost:8080/mcp"',
                  "-c", 'mcp_servers.hotdealwave.default_tools_approval_mode="approve"']
-        self.assertNotIn(added[1], base)
+        self.assertNotIn(added[2], base)
         self.assertEqual(mcp, base[:-1] + added + base[-1:])
         for setting in ("--ignore-user-config", "--ephemeral", "read-only", "apps", "memories", 'web_search="disabled"'):
             self.assertIn(setting, base)
 
-    def test_mcp_prompt_adds_only_the_tool_line(self):
-        base = run_eval.prompt("base", "createOrder 요청 필드는?").splitlines()
-        mcp = run_eval.prompt("mcp", "createOrder 요청 필드는?").splitlines()
-        self.assertEqual([line for line in mcp if line not in base],
-                         ["- `hotdealwave` MCP 도구로 이 저장소를 분석한 문서(엔드포인트·흐름·Kafka 연결, 확인 상태와 근거)를 볼 수 있다."])
-        self.assertEqual([line for line in mcp if line in base], base)
+    def test_mcp_prompt_says_there_is_no_repository(self):
+        self.assertEqual(run_eval.prompt("mcp", "createOrder 요청 필드는?"), """\
+HotDealWave 저장소는 이 디렉터리에 없다. `hotdealwave` MCP 도구로 이 저장소를 분석한 문서(엔드포인트·흐름·Kafka 연결, 확인 상태와 근거)를 볼 수 있다. 아래 질문에 답하라.
+- 주장마다 도구가 보여 준 근거 `파일:줄`을 저장소 루트 기준 경로 그대로 붙인다.
+- 저장소에서 확인할 수 없는 것은 확인할 수 없다고 밝힌다.
+
+질문: createOrder 요청 필드는?
+""")
+        self.assertIn("이 디렉터리는 HotDealWave 저장소다.", run_eval.prompt("base", "createOrder 요청 필드는?"))
 
     def test_events_give_tokens_tools_and_commands(self):
         events = [

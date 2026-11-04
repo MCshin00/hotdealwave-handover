@@ -129,15 +129,15 @@ codex mcp add hotdealwave --url http://localhost:8080/mcp
 
 ## 비교 실험
 
-[결정 문서 "비교 실험"](docs/decisions.md#비교-실험)의 세 조건을 질문 파일로 실행한다. 기본·MCP는 Codex CLI와, 이 저장소 밖에 둔 HotDealWave 고정 커밋 체크아웃이 필요하다. MCP·질의응답은 서버가 떠 있어야 하고, 질의응답은 유료 모델을 질문마다 한 번 부른다.
+[결정 문서 "비교 실험"](docs/decisions.md#비교-실험)의 세 조건을 질문 파일로 실행한다. 기준선(`base`)·MCP는 Codex CLI가 필요하다. 기준선은 이 저장소 밖에 둔 HotDealWave 고정 커밋 체크아웃을 읽고, MCP는 저장소 없이 질문마다 새 빈 폴더에서 도구만 쓴다. MCP·질의응답은 서버가 떠 있어야 하고, 질의응답은 유료 모델을 질문마다 한 번 부른다.
 
 ```bash
 git clone https://github.com/sparta-final-12th-9700/HotDealWave ../HotDealWave-cc43016
 git -C ../HotDealWave-cc43016 checkout cc43016b907331a3ce8471475cbf44412e8a6954
 python scripts/run_eval.py eval/questions/tuning.csv base --checkout ../HotDealWave-cc43016 --timeout 300
-python scripts/run_eval.py eval/questions/tuning.csv mcp --checkout ../HotDealWave-cc43016 --timeout 300
+python scripts/run_eval.py eval/questions/tuning.csv mcp --timeout 300
 python scripts/run_eval.py eval/questions/tuning.csv ask --timeout 120
 python scripts/check_citations.py eval/results/tuning
 ```
 
-결과는 `eval/results/<질문 파일 이름>/<조건>/<id>.json`(답, 걸린 시간, 토큰, 결과, 부른 MCP 도구)이다. 기계 검사는 답의 `파일:줄`이 고정 커밋(응답 근거는 이 저장소)에 있는지와 같은 답 줄의 코드 이름이 그 줄에 있는지를 `check.csv`에 남긴다. 답이 맞는지는 판단하지 않는다.
+결과는 `eval/results/<질문 파일 이름>/<조건>/<id>.json`(답, 걸린 시간, 토큰, 결과, 부른 MCP 도구)이다. 기계 검사는 답의 `파일:줄`이 고정 커밋(응답 근거는 이 저장소)에 있는지와 같은 답 줄의 코드 이름이 그 줄에 있는지를 `check.csv`에 남긴다. 답이 맞는지는 판단하지 않는다. `repo-mcp`는 체크아웃과 MCP를 함께 준 #41 실행 결과이고, 그 스크립트는 `7274f6f`에 있다.

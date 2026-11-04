@@ -1,0 +1,26 @@
+{
+  "id": "Q02",
+  "condition": "repo-mcp",
+  "question": "재고를 차감한 뒤 주문 생성에 실패하면 재고를 어떻게 복구하고, 복구까지 실패하면 어떻게 처리하나요?",
+  "status": "완료",
+  "seconds": 67.6,
+  "tokens": {
+    "input": 214714,
+    "cachedInput": 185088,
+    "output": 2305
+  },
+  "mcpTools": [
+    "search_docs",
+    "find_endpoint",
+    "find_subscribers"
+  ],
+  "mcpFailed": [],
+  "commands": 6,
+  "answer": "**주문 생성 실패 시 재고를 자동 복구하고, 복구 실패까지 재처리하는 완결된 경로는 저장소에서 확인되지 않습니다.** 주문 생성 코드에는 재고 복구 호출이 없으며, 별도의 Kafka 복구 수신부는 실패를 잡아 로그와 ACK를 처리합니다. (`order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:83`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74`)\n\n1. **실제 순서는 주문 저장 → 재고 차감 요청입니다.** 주문과 주문 상품을 저장하고 장바구니를 삭제한 뒤 Kafka로 차감을 요청합니다. 차감 요청 전송에서 동기적으로 예외가 발생하면 주문을 `CANCEL`로 변경해 `saveAndFlush`하고 예외를 던지지만, 재고 복구는 호출하지 않습니다. 또한 주문 서비스가 `@Transactional`이므로 이 `CANCEL` 저장이 최종 커밋된다고 단정할 수 없습니다. (`order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38`, `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108`, `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:118`, `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:22`)\n\n2. **복구 요청을 받으면 요청 수량만큼 재고를 더합니다.** 상품 서비스의 `restore-quantity` 리스너가 `restoreQuantity()`를 호출하고, 상품별 `increaseQuantity()`로 복구합니다. 이후 ACK를 호출하고 주문 취소 요청을 발행합니다. 이는 복구 메시지를 받았을 때의 구현이며, 주문 생성 실패가 자동으로 이 메시지를 발행한다는 의미는 아닙니다. (`product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:66`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103`)\n\n3. **복구 자체가 실패하면 해당 catch에서는 로그를 남기고 ACK하며, 재시도하거나 DLQ로 보내지 않습니다.** `ApplicationException`과 일반 예외 모두 다시 던지지 않습니다. 다만 역직렬화처럼 catch 밖에서 발생하거나 트랜잭션 종료 때 밖으로 전파되는 예외에는 공통 오류 처리기가 적용될 수 있으며, 그 설정은 **재시도 0회 후 `product-dlq` 전송**입니다. 따라서 “복구 실패는 모두 DLQ로 간다”거나 “항상 DLQ에 가지 않는다”고 단정하면 부정확합니다. (`product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:58`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:61`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64`)\n\n4. **실제 Kafka 연결과 운영상 최종 복구는 확인할 수 없습니다.** 결제 서비스의 복구 요청 발행 설정은 `KAFKA_ROLLBACK_REDUCE_QUANTITY_TOPIC`, 상품 서비스의 복구 구독 설정은 `KAFKA_RESTORE_QUANTITY_TOPIC`입니다. 두 환경변수의 실제 토픽 값은 저장소에 없어 연결을 확정할 수 없으며, MCP 문서도 이 연결을 ‘확인 안 됨’으로 표시합니다. DLQ 이후 자동 재처리나 운영자의 수동 복구 절차 역시 확인되지 않습니다. (`payment/src/main/resources/application.yml:16`, `product/src/main/resources/application.yml:16`, `docker-compose.yml:88`, `docker-compose.yml:195`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:61`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

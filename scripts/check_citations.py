@@ -32,8 +32,9 @@ def read(path):
 
 
 def names(line):
-    """답 줄의 백틱 안에서 경로·줄 번호가 아닌 코드 이름."""
-    return {word for span in CODE.findall(line) if "/" not in span and not span.startswith(":")
+    """답 줄의 백틱 안에서 경로·줄 번호·인용이 아닌 코드 이름."""
+    return {word for span in CODE.findall(line)
+            if "/" not in span and not span.startswith(":") and not CITE.search(span)
             for word in WORD.findall(span)}
 
 

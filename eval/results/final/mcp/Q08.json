@@ -3,21 +3,29 @@
   "condition": "mcp",
   "question": "카카오페이 결제를 마친 뒤 어떤 주소로 돌아와서 어떤 처리를 거쳐 운영 화면으로 이동하나요?",
   "status": "완료",
-  "seconds": 69.7,
+  "seconds": 44.2,
   "tokens": {
-    "input": 204504,
-    "cachedInput": 175744,
-    "output": 2228
+    "input": 195951,
+    "cachedInput": 167040,
+    "output": 1460
   },
   "mcpTools": [
     "search_docs",
     "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
     "trace_flow",
-    "find_endpoint"
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "find_subscribers"
   ],
   "mcpFailed": [],
-  "commands": 5,
-  "answer": "**저장소에서는 성공 안내 화면까지 돌아오는 흐름만 확인됩니다. 이 화면에서 결제를 승인하고 운영 화면으로 이동하는 연결은 구현되어 있지 않습니다.** (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n1. **돌아오는 주소: `${PAY_HOST_DOMAIN}/payment/success`**  \n   카카오페이 준비 요청의 `approvalUrl`을 `domain + \"/payment/success\"`로 설정합니다. 도메인은 환경변수로 주입되므로 **실제 운영 도메인은 저장소에서 확인할 수 없습니다.** (`payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35`, `payment/src/main/resources/application.yml:29`)\n\n2. **복귀 후 처리: 완료 문구 표시만 수행**  \n   `GET /payment/success`는 `payment-success` 템플릿을 반환합니다. 템플릿에는 “결제 완료 페이지” 문구만 있으며, `pg_token` 추출·승인 API 호출·운영 화면 리다이렉트는 없습니다. 따라서 이 화면에 도착했다는 사실만으로 서버의 결제 승인 완료를 의미하지는 않습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:8`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n3. **실제 승인은 별도 API에서 수행**  \n   `POST /api/v1/payments/confirm`에 `tid`, `pgToken`을 보내면, 거래번호로 결제를 조회하고 카카오페이 승인을 호출합니다. 정상 응답 후 결제 상태를 `COMPLETE`로 바꾸고 주문 완료 이벤트를 발행합니다. 이 API는 승인 결과를 반환하며 화면 이동을 처리하지 않습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:13`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58`)\n\n4. **주문 완료 처리는 Kafka로 연결**  \n   결제 서비스가 주문 ID와 `COMPLETE` 상태를 Kafka로 전송하고, 주문 서비스가 이를 소비하여 주문 상태를 변경합니다. 이는 데이터 갱신 흐름이며 브라우저 이동 처리는 아닙니다. (`payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`)\n\n따라서 **운영 화면의 목적지 주소와 그 화면으로 이동하는 방식은 저장소에서 확인할 수 없습니다.** 확인 가능한 복귀 화면과 승인 API 모두 해당 이동 코드를 포함하지 않습니다. (`payment/src/main/resources/templates/payment-success.html:1`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48`)",
+  "commands": 0,
+  "answer": "**확인되는 복귀 경로는 `/payment/success`입니다. 다만 여기서 결제를 승인하고 운영 화면으로 이동하는 자동 흐름은 확인되지 않습니다.** 성공 화면은 완료 안내만 표시합니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20`, `payment/src/main/resources/templates/payment-success.html:9`.\n\n1. **카카오페이에서 돌아오는 곳**  \n   결제 준비 요청의 `approvalUrl`은 `/payment/success`로 설정됩니다. `GET /payment/success` 처리기는 성공 템플릿을 반환합니다. 도구가 제시한 근거로는 경로까지 확인되며, 운영 환경의 도메인·포트를 포함한 전체 주소는 확인할 수 없습니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20`.\n\n2. **실제 결제 승인은 별도 요청**  \n   성공 화면에는 `pg_token` 수신이나 승인 API 호출 코드가 없습니다. 별도로 `tid`와 `pgToken`을 담아 `POST /api/v1/payments/confirm`을 호출해야 합니다. 근거: `payment/src/main/resources/templates/payment-success.html:9`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:14`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:16`.\n\n3. **승인 API 내부 처리**  \n   `tid`로 결제를 조회하고 카카오페이 승인을 요청합니다. 정상 응답을 받으면 결제를 `COMPLETE`로 변경하고 주문 상태 변경 이벤트를 발행한 뒤 승인 결과를 반환합니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:67`.\n\n4. **주문 상태 반영**  \n   `KAFKA_UPDATE_ORDER_STATUS_TOPIC` 설정을 통해 주문 서비스가 이벤트를 받아 주문을 `COMPLETE`로 변경합니다. 다만 발행 코드는 비동기 전송 결과를 기다리지 않으므로 승인 API 성공만으로 주문 갱신 완료까지 보장하지는 않습니다. 근거: `payment/src/main/resources/application.yml:18`, `order/src/main/resources/application.yml:17`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`.\n\n**운영 화면의 목적지 주소와 이동 처리는 저장소에서 확인할 수 없습니다.** 확인된 성공 페이지는 안내 템플릿이고, 승인 API는 결과 DTO를 반환하므로 이 둘을 연결하는 클라이언트 처리와 이후 화면 이동을 추정해서는 안 됩니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20`, `payment/src/main/resources/templates/payment-success.html:9`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:67`.\n\nMCP 문서의 확인 상태는 **코드 기준 확인**이며, 성공 HTML과 카카오페이 승인 API의 실제 호출 검증은 수행되지 않았습니다.",
   "settings": {
     "model": "gpt-6-astra",
     "reasoning": "high",

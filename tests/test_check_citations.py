@@ -34,6 +34,9 @@ class CheckCitationsTest(unittest.TestCase):
                          [("docker-compose.yml", "있음"), ("docker-compose.yml", "없음")])
         self.assertEqual(found[0]["name"], "일치")
 
+    def test_root_file_citation_is_not_a_name(self):
+        self.assertEqual(check("근거: `docker-compose.yml:32`")[0]["name"], "이름 없음")
+
     def test_answer_without_citations(self):
         self.assertEqual(check("저장소에서 확인할 수 없습니다."), [])
 
