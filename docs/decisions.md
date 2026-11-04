@@ -69,7 +69,7 @@ knowledge/<대상>/*.json (있을 때) -----------------+--> verifier
 |---|---|---|
 | 추출 | AI 세션(Claude Code·Codex)과 Skill | 프레임워크가 달라도 지시문으로 따라간다. 세션 작업이라 별도 유료 호출이 없다 |
 | 검증 | Java 17, SnakeYAML, Jackson, JSON Schema Validator | 서버와 같은 실행 환경이다. 추출의 확인 상태는 검증기가, 업무 규칙·함정의 확인 상태는 개발자가 정한다 |
-| 서버 | Spring Boot, Thymeleaf, Mermaid(흐름 그림) | 검증과 같은 실행 환경 하나로 빌드·테스트·배포한다. 개발자가 직접 읽고 판단할 수 있는 스택이다. 화면 모양은 중요하지 않다 |
+| 서버 | Spring Boot, Thymeleaf | 검증과 같은 실행 환경 하나로 빌드·테스트·배포한다. 개발자가 직접 읽고 판단할 수 있는 스택이다. 화면 모양은 중요하지 않다. 흐름은 그림 라이브러리 없이 본문의 단계 줄을 CSS로 잇는다 |
 | MCP | MCP Java SDK(`mcp-core`의 서블릿용 Streamable HTTP 전송) | Spring Boot에 바로 붙는다. Claude Code·Codex 모두 HTTP 방식 MCP를 등록할 수 있어 표준 입출력 방식은 두지 않는다 |
 | 질의응답 | OpenAI Java SDK(정해진 형식의 출력) | rag-chatbot의 방식(BM25, 정해진 형식의 답·인용·보류, 보류 규칙)을 옮긴다. 인용 검사는 답의 `파일:줄`이 인용한 조각에 있는지까지 본다. 모델은 `gpt-6-luna`(추론 없음, 출력 1500토큰 상한)다. 입력 100만 토큰당 0.10달러로 질문 한 번에 1센트 아래다 |
 
