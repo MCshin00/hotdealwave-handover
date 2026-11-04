@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>검색·질문</title><link rel="stylesheet" href="/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>검색·질문</title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<p><a href="/">처음</a></p>
+<nav class="top"><span><a href="/">처음</a></span><span class="target">HotDealWave · 고정 커밋 cc43016</span></nav>
 <h1>검색·질문</h1>
 <form method="get" action="/search">
   <input type="text" name="q" size="60" th:value="${q}" placeholder="찾을 말 (예: createOrder, 쿠폰 복구)">

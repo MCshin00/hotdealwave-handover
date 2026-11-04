@@ -20,6 +20,62 @@ class PagesTest {
         return response.getContentAsString();
     }
 
+    @Autowired Pages pages;
+
+    @Test void homeSummarizesServicesAndListsUnconfirmedConnections() throws Exception {
+        String home = page("/");
+        assertTrue(home.contains("엔드포인트 11 · Feign 8 · 발행 5 · 구독 3"));
+        assertTrue(home.contains("<h2>확인 안 된 연결 13개</h2>"));
+        assertTrue(home.contains("<a href=\"/topics/KAFKA_REQUEST_PRODUCT_TOPIC\">KAFKA_REQUEST_PRODUCT_TOPIC</a>"));
+        assertFalse(home.contains("evidence-lines"));
+    }
+
+    @Test void responseCheckReasonIsFolded() throws Exception {
+        String order = page("/services/order-service");
+        assertTrue(order.contains("응답 기록 있음 400 <details class=\"why\"><summary>이유</summary>(400: PENDING 주문은"));
+        assertTrue(order.contains("<a href=\"" + Decor.SOURCE + "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java#L295\">"));
+    }
+
+    @Test void sectionsFold() throws Exception {
+        assertTrue(page("/endpoints/order-service.OrderController.createOrder").contains("<script src=\"/app.js\"></script>"));
+        assertTrue(page("/app.js").contains("heading.classList.toggle(\"closed\")"));
+    }
+
+    @Test void evidenceLinksToFixedCommitAndResponseLines() throws Exception {
+        String createOrder = page("/endpoints/order-service.OrderController.createOrder");
+        assertTrue(createOrder.contains("<a href=\"https://github.com/sparta-final-12th-9700/HotDealWave/blob/cc43016b907331a3ce8471475cbf44412e8a6954/"
+                + "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java#L40\">"));
+        assertTrue(createOrder.contains("<a href=\"/responses/order-service.OrderController.createOrder.json#L10\">"));
+        String response = page("/responses/order-service.OrderController.createOrder.json");
+        assertTrue(response.contains("id=\"L10\""));
+        assertTrue(response.contains("/api/v1/orders"));
+    }
+
+    @Test void evidenceListsAreFolded() throws Exception {
+        assertTrue(page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC").contains("<summary>근거 7개</summary>"));
+    }
+
+    @Test void flowStepsAreBoxesUnknownStepsToo() throws Exception {
+        String createOrder = page("/endpoints/order-service.OrderController.createOrder");
+        assertTrue(createOrder.contains("<span class=\"node\">order-service.requestProduct</span>"));
+        assertTrue(createOrder.contains("<span class=\"node unknown\"><span class=\"pill unknown\">확인 안 됨</span> — 구독자 확인 안 됨"));
+    }
+
+    @Test void linesAndItemsAreColoredByStatus() throws Exception {
+        String createOrder = page("/endpoints/order-service.OrderController.createOrder");
+        assertTrue(createOrder.contains("<div class=\"line ok\"><span class=\"k\">확인 상태:</span> <span class=\"pill ok\">확인됨</span>"));
+        assertTrue(createOrder.contains("<div class=\"item ai\">"));
+        String topic = page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC");
+        assertTrue(topic.contains("<div class=\"line none\"><span class=\"k\">토픽 실제 값:</span> <span class=\"pill none\">저장소에 근거 없음</span>"));
+        assertTrue(topic.contains("<div class=\"line unknown\">order-service.requestProduct → (구독) <span class=\"pill unknown\">확인 안 됨</span>"));
+    }
+
+    @Test void bodyTextKeepsEvidenceAsPlainText() {
+        String topic = pages.text("/topics/KAFKA_REQUEST_PRODUCT_TOPIC");
+        assertTrue(topic.contains("토픽 실제 값: 저장소에 근거 없음 — 실제 값은 저장소 밖의 환경변수에서 정해짐 [order/src/main/resources/application.yml:15, docker-compose.yml:156]"));
+        assertFalse(topic.contains("근거 7개"));
+    }
+
     @Test void endpointPageShowsResponseCheckAndItemsWithTrapsFirst() throws Exception {
         assertTrue(page("/endpoints/product-service.ReviewController.getReviewList").contains("응답 기록 있음 500"));
 
@@ -31,17 +87,17 @@ class PagesTest {
         assertTrue(createOrder.contains("gateway/src/main/resources/application.yml:45"));
     }
 
-    @Test void pagesShowVerificationScope() throws Exception {
-        assertTrue(page("/endpoints/order-service.OrderController.createOrder").contains("검증 범위: 코드 + 실제 응답</p>"));
-        assertTrue(page("/endpoints/product-service.ReviewController.getReviewList").contains("검증 범위: 코드 + 실제 응답(오류 500)"));
-        assertTrue(page("/endpoints/payment-service.PaymentController.readyPayment").contains("검증 범위: 코드만"));
-        assertTrue(page("/services/payment-service").contains("검증 범위: 엔드포인트 9개 중 코드 + 실제 응답 1개, 코드 + 실제 응답(오류) 1개, 코드만 7개"));
-        assertTrue(page("/services/gateway-service").contains("검증 범위: 코드만(엔드포인트 없음)"));
-        assertTrue(page("/topics/KAFKA_DLQ_TOPIC").contains("검증 범위: 코드만"));
+    @Test void pagesShowVerificationScope() {
+        assertTrue(pages.text("/endpoints/order-service.OrderController.createOrder").contains("검증 범위: 코드 + 실제 응답\n"));
+        assertTrue(pages.text("/endpoints/product-service.ReviewController.getReviewList").contains("검증 범위: 코드 + 실제 응답(오류 500)"));
+        assertTrue(pages.text("/endpoints/payment-service.PaymentController.readyPayment").contains("검증 범위: 코드만"));
+        assertTrue(pages.text("/services/payment-service").contains("검증 범위: 엔드포인트 9개 중 코드 + 실제 응답 1개, 코드 + 실제 응답(오류) 1개, 코드만 7개"));
+        assertTrue(pages.text("/services/gateway-service").contains("검증 범위: 코드만(엔드포인트 없음)"));
+        assertTrue(pages.text("/topics/KAFKA_DLQ_TOPIC").contains("검증 범위: 코드만"));
     }
 
-    @Test void fieldShowsUnconfirmedTypeStructure() throws Exception {
-        assertTrue(page("/endpoints/order-service.OrderController.getOrders").contains("타입 구조: 확인 안 됨 — 외부 타입의 구조를 근거 줄만으로 확인할 수 없음"));
+    @Test void fieldShowsUnconfirmedTypeStructure() {
+        assertTrue(pages.text("/endpoints/order-service.OrderController.getOrders").contains("타입 구조: 확인 안 됨 — 외부 타입의 구조를 근거 줄만으로 확인할 수 없음"));
     }
 
     @Test void descriptionsComeFirstApartFromItems() throws Exception {
@@ -51,8 +107,8 @@ class PagesTest {
         assertTrue(page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC").contains("<h2>설명</h2>"));
     }
 
-    @Test void fieldWithoutAnnotationsSaysSo() throws Exception {
-        String createOrder = page("/endpoints/order-service.OrderController.createOrder");
+    @Test void fieldWithoutAnnotationsSaysSo() {
+        String createOrder = pages.text("/endpoints/order-service.OrderController.createOrder");
         assertTrue(createOrder.contains("addressId  UUID  @NotNull  확인됨"));
         assertTrue(createOrder.contains("couponId  UUID  어노테이션 없음  확인됨"));
     }

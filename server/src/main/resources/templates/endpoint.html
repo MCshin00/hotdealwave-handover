@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title th:text="${endpoint.path('id').asText()}"></title><link rel="stylesheet" href="/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${endpoint.path('id').asText()}"></title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<p><a href="/">처음</a> · <a th:href="|/services/${endpoint.path('service').asText()}|" th:text="${endpoint.path('service').asText()}"></a></p>
+<nav class="top"><span><a href="/">처음</a> · <a th:href="|/services/${endpoint.path('service').asText()}|" th:text="${endpoint.path('service').asText()}"></a></span><span class="target">HotDealWave · 고정 커밋 cc43016</span></nav>
+<header class="summary">
 <h1 th:text="${endpoint.path('id').asText()}"></h1>
 <p class="line" th:text="|검증 범위: ${@view.verification(endpoint)}|"></p>
 <p class="line" th:text="|HTTP 메서드: ${@view.fact(endpoint.path('httpMethod'))}|"></p>
 <p class="line" th:text="|경로: ${@view.fact(endpoint.path('path'))}|"></p>
 <p class="line" th:text="|확인 상태: ${@view.status(endpoint)} ${@view.evidence(endpoint)}|"></p>
-<p class="line" th:text="|응답 확인: ${@view.responseCheck(endpoint.path('responseCheck'))}|"></p>
+<p class="line" th:with="file=${@view.responseFile(endpoint.path('responseCheck'))}">응답 확인: <a th:if="${file != null}" th:href="|/responses/${file}|" th:text="${@view.responseCheck(endpoint.path('responseCheck'))}"></a><span th:if="${file == null}" th:text="${@view.responseCheck(endpoint.path('responseCheck'))}"></span></p>
+</header>
 <section th:replace="~{items :: descriptions(${descriptions})}"></section>
 <h2>게이트웨이 외부 경로</h2>
 <p class="line" th:each="x : ${endpoint.path('externalPaths')}"
@@ -24,10 +26,11 @@
 <p class="line" th:each="l : ${@view.fields(endpoint.path('response'))}" th:text="|    ${l}|"></p>
 <h2>나가는 호출과 발행</h2>
 <p th:if="${flow.forward().isEmpty()}">확인된 호출 없음</p>
-<p class="line" th:each="s : ${flow.forward()}" th:text="${@view.step(s)}"></p>
+<p class="line step" th:each="s : ${flow.forward()}" th:classappend="${s.from() != endpoint.path('id').asText()} ? 'next'"><span class="node" th:text="${s.from()}"></span> <span class="arrow" th:text="|→ (${s.kind()})|"></span> <span class="node" th:classappend="${s.to() == null} ? 'unknown'" th:text="${@view.target(s)}"></span> <span th:text="${@view.stepEvidence(s)}"></span></p>
 <h2>부르는 곳</h2>
 <p th:if="${flow.callers().isEmpty()}">확인된 호출 없음</p>
-<p class="line" th:each="s : ${flow.callers()}" th:text="${@view.step(s)}"></p>
+<p class="line step" th:each="s : ${flow.callers()}"><span class="node" th:text="${s.from()}"></span> <span class="arrow" th:text="|→ (${s.kind()})|"></span> <span class="node" th:classappend="${s.to() == null} ? 'unknown'" th:text="${@view.target(s)}"></span> <span th:text="${@view.stepEvidence(s)}"></span></p>
 <section th:replace="~{items :: items(${items})}"></section>
+<script src="/app.js"></script>
 </body>
 </html>

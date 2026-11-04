@@ -3,8 +3,8 @@
 <body>
 <section th:fragment="items(items)">
   <h2 th:text="|업무 규칙·함정 ${#lists.size(items)}개|"></h2>
-  <div class="item" th:each="k : ${items}">
-    <h3 th:text="${@view.item(k)}"></h3>
+  <div class="item" th:each="k : ${items}" th:classappend="${k.path('source').asText() == 'AI 해석'} ? 'ai'">
+    <h3><span class="tag" th:classappend="${@view.kindClass(k)}" th:text="${@view.itemTag(k)}"></span> <span th:text="${k.path('title').asText()}"></span></h3>
     <p th:text="${k.path('description').asText()}"></p>
     <p class="meta" th:text="|서비스 ${k.path('service').asText()} · 발견 경로 ${k.path('discoveryPath').asText()}|"></p>
     <p class="meta" th:text="|영향 ID ${@view.texts(k.path('affectedIds'))}|"></p>
@@ -13,8 +13,8 @@
 </section>
 <section th:fragment="descriptions(items)" th:if="${!#lists.isEmpty(items)}">
   <h2>설명</h2>
-  <div class="item" th:each="k : ${items}">
-    <h3 th:text="${@view.item(k)}"></h3>
+  <div class="item" th:each="k : ${items}" th:classappend="${k.path('source').asText() == 'AI 해석'} ? 'ai'">
+    <h3><span class="tag" th:classappend="${@view.kindClass(k)}" th:text="${@view.itemTag(k)}"></span> <span th:text="${k.path('title').asText()}"></span></h3>
     <p th:text="${k.path('description').asText()}"></p>
     <p class="meta" th:text="|영향 ID ${@view.texts(k.path('affectedIds'))} · 근거 ${@view.evidence(k)}|"></p>
   </div>
