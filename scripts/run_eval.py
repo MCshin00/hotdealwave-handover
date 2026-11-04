@@ -2,7 +2,7 @@
 
 조건
 - base: Codex, 이 저장소가 없는 HotDealWave 고정 커밋 체크아웃, 기본 도구만
-- mcp: base와 같은 Codex 설정에 서버의 /mcp를 더하고, 저장소 대신 질문마다 새 빈 폴더에서 실행한다
+- mcp: base와 같은 Codex 설정에 서버의 /mcp를 더하고, 질문마다 새로 만든 원본 코드가 없는 작업 폴더에서 실행한다
 - ask: 서버의 /api/ask를 한 번 부른다(유료 모델 호출)
 
 결과는 <out>/<조건>/<id>.json이다. 기계 검사는 check_citations.py가 한다.
@@ -51,7 +51,7 @@ def codex_command(condition, folder, last_message, server):
                "--disable", "apps", "--disable", "memories", "-c", 'web_search="disabled"',
                "-m", MODEL, "-c", f'model_reasoning_effort="{REASONING}"', "-c", 'service_tier="fast"',
                "-C", str(folder), "-o", str(last_message)]
-    if condition == "mcp":  # 빈 폴더는 Git 저장소가 아니다. 승인 정책이 never라 도구 호출도 승인 없이 통과시킨다.
+    if condition == "mcp":  # 이 작업 폴더는 Git 저장소가 아니다. 승인 정책이 never라 도구 호출도 승인 없이 통과시킨다.
         command += ["--skip-git-repo-check", "-c", f'mcp_servers.hotdealwave.url="{server}/mcp"',
                     "-c", 'mcp_servers.hotdealwave.default_tools_approval_mode="approve"']
     return command + ["-"]
@@ -99,7 +99,7 @@ def run_codex(condition, question, checkout, server, timeout):
         last_message = Path(directory) / "answer.md"
         folder = checkout
         if condition == "mcp":
-            folder = Path(directory) / "empty"
+            folder = Path(directory) / "workdir"
             folder.mkdir()
         started = time.monotonic()
         command = codex_command(condition, folder, last_message, server)

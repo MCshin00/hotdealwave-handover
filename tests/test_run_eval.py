@@ -21,7 +21,7 @@ class RunEvalTest(unittest.TestCase):
         for setting in ("--ignore-user-config", "--ephemeral", "read-only", "apps", "memories", 'web_search="disabled"'):
             self.assertIn(setting, base)
 
-    def test_mcp_runs_in_a_new_empty_folder_and_base_in_the_checkout(self):
+    def test_mcp_runs_in_a_new_folder_without_source_and_base_in_the_checkout(self):
         folders = []
 
         class FakeProcess:
@@ -38,8 +38,8 @@ class RunEvalTest(unittest.TestCase):
             run_eval.run_codex("mcp", "질문", None, "http://localhost:8080", 10)
             run_eval.run_codex("mcp", "질문", None, "http://localhost:8080", 10)
             run_eval.run_codex("base", "질문", ROOT / "checkout", "http://localhost:8080", 10)
-        (first, first_empty), (second, second_empty), (base, _) = folders
-        self.assertTrue(first_empty and second_empty)
+        (first, first_has_nothing), (second, second_has_nothing), (base, _) = folders
+        self.assertTrue(first_has_nothing and second_has_nothing)
         self.assertNotEqual(first, second)
         self.assertEqual(base, ROOT / "checkout")
 

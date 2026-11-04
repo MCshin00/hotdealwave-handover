@@ -129,7 +129,7 @@ codex mcp add hotdealwave --url http://localhost:8080/mcp
 
 ## 비교 실험
 
-[결정 문서 "비교 실험"](docs/decisions.md#비교-실험)의 세 조건을 질문 파일로 실행한다. 기준선(`base`)·MCP는 Codex CLI가 필요하다. 기준선은 이 저장소 밖에 둔 HotDealWave 고정 커밋 체크아웃을 읽고, MCP는 저장소 없이 질문마다 새 빈 폴더에서 도구만 쓴다. MCP·질의응답은 서버가 떠 있어야 하고, 질의응답은 유료 모델을 질문마다 한 번 부른다.
+[결정 문서 "비교 실험"](docs/decisions.md#비교-실험)의 세 조건을 질문 파일로 실행한다. 기준선(`base`)·MCP는 Codex CLI가 필요하다. 기준선은 이 저장소 밖에 둔 HotDealWave 고정 커밋 체크아웃을 읽고, MCP는 질문마다 새로 만든 원본 코드가 없는 작업 폴더에서 도구만 쓴다. MCP·질의응답은 서버가 떠 있어야 하고, 질의응답은 유료 모델을 질문마다 한 번 부른다.
 
 ```bash
 git clone https://github.com/sparta-final-12th-9700/HotDealWave ../HotDealWave-cc43016
