@@ -53,8 +53,10 @@ class Ask {
         } catch (RuntimeException e) {
             return new Answer("오류", null, List.of(), "모델 호출 실패: " + e.getMessage(), 0, 0);
         }
+        // The model's own abstain answer says why; an answer the check rejects is not shown.
+        if (reply.abstain()) return new Answer("보류", reply.answer(), List.of(), "모델 보류", reply.inputTokens(), reply.outputTokens());
         String reason = check(reply, chunks);
-        if (reason != null) return new Answer("보류", reply.answer(), List.of(), reason, reply.inputTokens(), reply.outputTokens());
+        if (reason != null) return new Answer("보류", null, List.of(), reason, reply.inputTokens(), reply.outputTokens());
         var cited = reply.citations().stream().distinct()
                 .map(id -> { var c = chunks.get(id); return new Cited(id, c.page(), c.title(), c.section()); }).toList();
         return new Answer("답", reply.answer(), cited, null, reply.inputTokens(), reply.outputTokens());
@@ -62,7 +64,6 @@ class Ask {
 
     /** The abstain reason, or null when the answer passes. */
     private String check(AskModel.Reply reply, Map<String, Chunk> chunks) {
-        if (reply.abstain()) return "모델 보류";
         if (reply.citations().isEmpty()) return "인용 검사: 인용 없음";
         for (var id : reply.citations()) if (!chunks.containsKey(id)) return "인용 검사: 없는 조각 " + id;
         String cited = String.join("\n", reply.citations().stream().map(id -> chunks.get(id).text()).toList());

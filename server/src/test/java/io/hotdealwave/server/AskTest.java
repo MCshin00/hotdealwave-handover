@@ -63,6 +63,7 @@ class AskTest {
         var answer = ask.ask("createOrder");
         assertEquals("보류", answer.status());
         assertEquals("인용 검사: 인용한 조각에 없는 OrderController.java:41", answer.reason());
+        assertNull(answer.answer());
 
         model.next = reply("주문 생성 API다.", false);
         assertEquals("인용 검사: 인용 없음", ask.ask("createOrder").reason());
