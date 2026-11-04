@@ -1,6 +1,6 @@
 # HotDealWave 인수인계 도구
 
-팀원이 모두 떠나고 저장소만 남은 마이크로서비스 프로젝트를 새 사람이 넘겨받는 상황을 가정한다. 이 도구는 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)(Spring Boot, Spring Cloud, Kafka)의 고정 커밋을 정적으로 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 그 결과를 서버 하나로 제공한다.
+문서도, 인수인계해 줄 사람도 없이 마이크로서비스 프로젝트를 넘겨받는 두 상황을 다룬다. 서비스는 떠 있는데 문서가 없거나, 팀이 떠나 저장소만 남아 서비스를 되살려야 한다. 이 도구는 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)(Spring Boot, Spring Cloud, Kafka)의 고정 커밋을 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 서버가 떠 있으면 응답으로 확인한 뒤, 그 결과를 서버 하나로 제공한다. 두 상황의 차이는 [결정 기록](docs/decisions.md#문제-상황)에 있다.
 
 ## 하는 일
 
