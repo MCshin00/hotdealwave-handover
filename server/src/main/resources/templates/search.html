@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>검색·질문</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<p><a href="/">처음</a></p>
+<h1>검색·질문</h1>
+<form method="get" action="/search">
+  <input type="text" name="q" size="60" th:value="${q}" placeholder="찾을 말 (예: createOrder, 쿠폰 복구)">
+  <button type="submit">검색</button>
+</form>
+<form method="post" action="/search">
+  <input type="text" name="question" size="60" th:value="${question}" placeholder="질문 하나 (모델을 한 번 부른다)">
+  <button type="submit">질문</button>
+</form>
+<section th:if="${results != null}">
+  <h2 th:text="|검색 결과 ${#lists.size(results)}개|"></h2>
+  <div th:each="r : ${results}">
+    <p><a th:href="${r.page()}" th:text="${r.title()}"></a> <span th:text="${r.section()}"></span> <span class="meta" th:text="|점수 ${r.score()}|"></span></p>
+    <p class="meta" th:text="${r.preview()}"></p>
+  </div>
+</section>
+<section th:if="${answer != null}">
+  <h2 th:text="|${answer.status()}|"></h2>
+  <p class="line" th:if="${answer.answer() != null}" th:text="${answer.answer()}"></p>
+  <p class="line" th:if="${answer.reason() != null}" th:text="|보류·오류 이유: ${answer.reason()}|"></p>
+  <ul><li th:each="c : ${answer.citations()}"><span th:text="|${c.id()} |"></span><a th:href="${c.page()}" th:text="${c.title()}"></a> <span th:text="${c.section()}"></span></li></ul>
+  <p class="meta" th:text="|모델 ${model} · 입력 토큰 ${answer.inputTokens()} · 출력 토큰 ${answer.outputTokens()}|"></p>
+</section>
+</body>
+</html>
