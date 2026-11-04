@@ -23,14 +23,18 @@ final class Decor {
     /** The reason after a response check in a service page row. The endpoint page shows it whole. */
     private static final Pattern REASON = Pattern.compile("(응답 확인: [^(<]*?) \\(([^<]+)\\)(?=</span>)");
     private static final Pattern TARGET_LINE = Pattern.compile("target/HotDealWave/([^\\s;:]+):(\\d+)");
+    /** An item tag "[kind · source (· status)]" split into a kind tag and a source tag. */
+    private static final Pattern TAG = Pattern.compile("<span class=\"tag (\\w+)\">\\[([^·\\]]+) · ([^\\]]+)]</span>");
 
     private Decor() {}
 
     static String html(String html) {
-        return LINE.matcher(html).replaceAll(m -> {
+        String lines = LINE.matcher(html).replaceAll(m -> {
             String inner = m.group(2).contains("\n") ? m.group(2).strip().replaceAll("\\s*\\n\\s*", " ") : m.group(2);
             return Matcher.quoteReplacement("<div class=\"" + m.group(1) + status(inner) + "\">" + mark(inner) + "</div>");
         });
+        return TAG.matcher(lines).replaceAll(m -> Matcher.quoteReplacement("<span class=\"tag " + m.group(1) + "\">" + m.group(2)
+                + "</span> <span class=\"tag " + (m.group(3).endsWith("확인함") ? "checked" : "ai") + "\">" + m.group(3) + "</span>"));
     }
 
     /** The weakest status on the line decides its stripe. */

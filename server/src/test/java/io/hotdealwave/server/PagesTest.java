@@ -64,7 +64,8 @@ class PagesTest {
     @Test void linesAndItemsAreColoredByStatus() throws Exception {
         String createOrder = page("/endpoints/order-service.OrderController.createOrder");
         assertTrue(createOrder.contains("<div class=\"line ok\"><span class=\"k\">확인 상태:</span> <span class=\"pill ok\">확인됨</span>"));
-        assertTrue(createOrder.contains("<div class=\"item ai\">"));
+        assertTrue(createOrder.contains("<span class=\"tag trap\">함정</span> <span class=\"tag ai\">AI 해석</span>"));
+        assertTrue(page("/topics/payment-dlq").contains("<span class=\"tag trap\">함정</span> <span class=\"tag checked\">판정 · 확인함</span>"));
         String topic = page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC");
         assertTrue(topic.contains("<div class=\"line none\"><span class=\"k\">토픽 실제 값:</span> <span class=\"pill none\">저장소에 근거 없음</span>"));
         assertTrue(topic.contains("<div class=\"line unknown\">order-service.requestProduct → (구독) <span class=\"pill unknown\">확인 안 됨</span>"));
@@ -79,7 +80,7 @@ class PagesTest {
     @Test void endpointPageShowsResponseCheckAndItemsWithTrapsFirst() throws Exception {
         assertTrue(page("/endpoints/product-service.ReviewController.getReviewList").contains("응답 기록 있음 500"));
 
-        String createOrder = page("/endpoints/order-service.OrderController.createOrder");
+        String createOrder = pages.text("/endpoints/order-service.OrderController.createOrder");
         assertTrue(createOrder.contains("업무 규칙·함정 10개"));
         assertTrue(createOrder.indexOf("[함정 · AI 해석]") < createOrder.indexOf("[업무 규칙 · AI 해석]"));
         assertFalse(createOrder.contains("미확인"));
@@ -103,7 +104,7 @@ class PagesTest {
     @Test void descriptionsComeFirstApartFromItems() throws Exception {
         String createOrder = page("/endpoints/order-service.OrderController.createOrder");
         assertTrue(createOrder.indexOf("<h2>설명</h2>") > 0 && createOrder.indexOf("<h2>설명</h2>") < createOrder.indexOf("<h2>요청</h2>"));
-        assertTrue(createOrder.contains("[설명 · AI 해석]"));
+        assertTrue(pages.text("/endpoints/order-service.OrderController.createOrder").contains("[설명 · AI 해석]"));
         assertTrue(page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC").contains("<h2>설명</h2>"));
     }
 
@@ -117,7 +118,7 @@ class PagesTest {
         String product = page("/services/product-service");
         assertTrue(product.contains("리뷰 GET은 인증 제외 분기 때문에 JWT가 있어도 사용자 헤더를 생성하지 않는다"));
         assertTrue(product.contains("href=\"/topics/KAFKA_REDUCE_QUANTITY_TOPIC\""));
-        String literal = page("/topics/payment-dlq");
+        String literal = pages.text("/topics/payment-dlq");
         assertTrue(literal.contains("문자열로 지정한 DLQ 토픽 두 개를 받는 쪽이 없다"));
         assertTrue(literal.contains("[함정 · 판정 · 확인함]"));
         assertTrue(page("/services/order-service").contains("order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37"));

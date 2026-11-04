@@ -3,7 +3,7 @@
 :root {
   --bg: #fbfcfd; --panel: #f1f4f7; --surface: #ffffff; --fg: #1c2530; --muted: #5b6773; --rule: #d5dce3; --accent: #0b6285;
   --ok: #1d7340; --ok-bg: #e5f4ea; --unknown: #8a5a00; --unknown-bg: #fdf1d8; --none: #b3261e; --none-bg: #fde8e6;
-  --trap: #a3401e; --trap-bg: #fbe9e2; --rule-tag: #3d4b59; --rule-bg: #e6ebf0; --about: #1f5a86; --about-bg: #e3eef7;
+  --trap: #a3401e; --trap-bg: #fbe9e2; --rule-tag: #3d4b59; --rule-bg: #e6ebf0; --about: #1f5a86; --about-bg: #e3eef7; --ai: #6b3fa0; --ai-bg: #f1eaf9;
   --get: #1f6fbf; --get-bg: #edf4fc; --post: #18794e; --post-bg: #eaf6ef; --put: #b35c00; --put-bg: #fdf3e6;
   --patch: #0e7f72; --patch-bg: #e6f5f3; --delete: #c42b2b; --delete-bg: #fcecec; --soft-rule: #e6ebf0;
   --sans: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
@@ -12,7 +12,7 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #12171c; --panel: #1a2128; --surface: #161c22; --fg: #dbe2e8; --muted: #93a0ac; --rule: #2c3640; --accent: #6cc1e4;
   --ok: #7fd09a; --ok-bg: #173323; --unknown: #f0c36b; --unknown-bg: #3a2c10; --none: #f19a92; --none-bg: #3d1a17;
-  --trap: #f2a687; --trap-bg: #3b2118; --rule-tag: #c2ccd6; --rule-bg: #26303a; --about: #9ccbee; --about-bg: #1a2c3c;
+  --trap: #f2a687; --trap-bg: #3b2118; --rule-tag: #c2ccd6; --rule-bg: #26303a; --about: #9ccbee; --about-bg: #1a2c3c; --ai: #c9adf0; --ai-bg: #2a2139;
   --get: #79b8f3; --get-bg: #17263a; --post: #6fd3a0; --post-bg: #14301f; --put: #f2b062; --put-bg: #352612;
   --patch: #6fd6c8; --patch-bg: #123330; --delete: #f08a8a; --delete-bg: #3a1818; --soft-rule: #222b34;
   color-scheme: dark;
@@ -20,7 +20,7 @@
 :root[data-theme="dark"] {
   --bg: #12171c; --panel: #1a2128; --surface: #161c22; --fg: #dbe2e8; --muted: #93a0ac; --rule: #2c3640; --accent: #6cc1e4;
   --ok: #7fd09a; --ok-bg: #173323; --unknown: #f0c36b; --unknown-bg: #3a2c10; --none: #f19a92; --none-bg: #3d1a17;
-  --trap: #f2a687; --trap-bg: #3b2118; --rule-tag: #c2ccd6; --rule-bg: #26303a; --about: #9ccbee; --about-bg: #1a2c3c;
+  --trap: #f2a687; --trap-bg: #3b2118; --rule-tag: #c2ccd6; --rule-bg: #26303a; --about: #9ccbee; --about-bg: #1a2c3c; --ai: #c9adf0; --ai-bg: #2a2139;
   --get: #79b8f3; --get-bg: #17263a; --post: #6fd3a0; --post-bg: #14301f; --put: #f2b062; --put-bg: #352612;
   --patch: #6fd6c8; --patch-bg: #123330; --delete: #f08a8a; --delete-bg: #3a1818; --soft-rule: #222b34;
   color-scheme: dark;
@@ -91,6 +91,8 @@ details.ev, details.why { display: inline; }
 .tag.trap { color: var(--trap); background: var(--trap-bg); }
 .tag.rule { color: var(--rule-tag); background: var(--rule-bg); }
 .tag.about { color: var(--about); background: var(--about-bg); }
+.tag.ai { color: var(--ai); background: var(--ai-bg); }
+.tag.checked { color: var(--ok); background: var(--ok-bg); }
 
 .src { font: 0.82rem/1.6 var(--mono); white-space: pre; overflow-x: auto; background: var(--panel);
   border: 1px solid var(--rule); border-radius: 8px; padding-block: 0.5rem; }
