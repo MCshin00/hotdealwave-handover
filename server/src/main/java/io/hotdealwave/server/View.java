@@ -2,6 +2,7 @@ package io.hotdealwave.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import static io.hotdealwave.server.Analysis.known;
@@ -41,6 +42,23 @@ public class View {
     public String step(Queries.Step step) {
         String to = step.to() != null ? step.to() : step.status() + (step.reason() != null ? " — " + step.reason() : "");
         return step.from() + " → (" + step.kind() + ") " + to + " [" + String.join(", ", step.evidence()) + "]";
+    }
+
+    /** How far an endpoint was checked: code alone, or code plus a recorded live response. */
+    public String verification(JsonNode endpoint) {
+        var check = endpoint.path("responseCheck");
+        if (!"응답 기록 있음".equals(check.path("status").asText())) return "코드만";
+        int code = check.path("statusCode").asInt();
+        return code / 100 == 2 ? "코드 + 실제 응답" : "코드 + 실제 응답(오류 " + code + ")";
+    }
+
+    /** Endpoint count per verification scope, error codes merged. */
+    public String verificationSummary(List<JsonNode> endpoints) {
+        var counts = new LinkedHashMap<String, Integer>();
+        for (var scope : List.of("코드 + 실제 응답", "코드 + 실제 응답(오류)", "코드만")) counts.put(scope, 0);
+        for (var endpoint : endpoints) counts.merge(verification(endpoint).replaceFirst(" \\d+\\)", ")"), 1, Integer::sum);
+        var parts = counts.entrySet().stream().filter(e -> e.getValue() > 0).map(e -> e.getKey() + " " + e.getValue() + "개").toList();
+        return "엔드포인트 " + endpoints.size() + "개 중 " + String.join(", ", parts);
     }
 
     public String responseCheck(JsonNode check) {

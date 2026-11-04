@@ -4,6 +4,7 @@
 <body>
 <p><a href="/">처음</a> · <a th:href="@{/services/{n}(n=${endpoint.path('service').asText()})}" th:text="${endpoint.path('service').asText()}"></a></p>
 <h1 th:text="${endpoint.path('id').asText()}"></h1>
+<p class="line" th:text="|검증 범위: ${@view.verification(endpoint)}|"></p>
 <p class="line" th:text="|HTTP 메서드: ${@view.fact(endpoint.path('httpMethod'))}|"></p>
 <p class="line" th:text="|경로: ${@view.fact(endpoint.path('path'))}|"></p>
 <p class="line" th:text="|확인 상태: ${@view.status(endpoint)} ${@view.evidence(endpoint)}|"></p>

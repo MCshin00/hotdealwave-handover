@@ -35,6 +35,14 @@ class PagesTest {
         assertTrue(createOrder.contains("gateway/src/main/resources/application.yml:45"));
     }
 
+    @Test void pagesShowVerificationScope() throws Exception {
+        assertTrue(page("/endpoints/order-service.OrderController.createOrder").contains("검증 범위: 코드 + 실제 응답</p>"));
+        assertTrue(page("/endpoints/product-service.ReviewController.getReviewList").contains("검증 범위: 코드 + 실제 응답(오류 500)"));
+        assertTrue(page("/endpoints/payment-service.PaymentController.readyPayment").contains("검증 범위: 코드만"));
+        assertTrue(page("/services/payment-service").contains("검증 범위: 엔드포인트 9개 중 코드 + 실제 응답 1개, 코드 + 실제 응답(오류) 1개, 코드만 7개"));
+        assertTrue(page("/topics/KAFKA_DLQ_TOPIC").contains("검증 범위: 코드만"));
+    }
+
     @Test void fieldShowsUnconfirmedTypeStructure() throws Exception {
         assertTrue(page("/endpoints/order-service.OrderController.getOrders").contains("타입 구조: 확인 안 됨 — 외부 타입의 구조를 근거 줄만으로 확인할 수 없음"));
     }
