@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><meta charset="UTF-8"><title th:text="${endpoint.path('id').asText()}"></title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<p><a href="/">처음</a> · <a th:href="@{/services/{n}(n=${endpoint.path('service').asText()})}" th:text="${endpoint.path('service').asText()}"></a></p>
+<p><a href="/">처음</a> · <a th:href="|/services/${endpoint.path('service').asText()}|" th:text="${endpoint.path('service').asText()}"></a></p>
 <h1 th:text="${endpoint.path('id').asText()}"></h1>
 <p class="line" th:text="|검증 범위: ${@view.verification(endpoint)}|"></p>
 <p class="line" th:text="|HTTP 메서드: ${@view.fact(endpoint.path('httpMethod'))}|"></p>

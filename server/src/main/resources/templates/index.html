@@ -4,9 +4,9 @@
 <body>
 <h1>HotDealWave (cc43016)</h1>
 <h2>서비스</h2>
-<ul><li th:each="s : ${services}"><a th:href="@{/services/{n}(n=${s})}" th:text="${s}"></a></li></ul>
+<ul><li th:each="s : ${services}"><a th:href="|/services/${s}|" th:text="${s}"></a></li></ul>
 <h2>토픽</h2>
-<ul><li th:each="t : ${topics}"><a th:href="@{/topics/{n}(n=${t})}" th:text="${t}"></a></li></ul>
+<ul><li th:each="t : ${topics}"><a th:href="|/topics/${t}|" th:text="${t}"></a></li></ul>
 <h2>검증 경고</h2>
 <ul><li th:each="w : ${warnings}" th:text="|${w.key}: ${w.value}개|"></li></ul>
 </body>

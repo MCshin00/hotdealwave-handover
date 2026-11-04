@@ -63,14 +63,17 @@ MCP와 질의응답은 같은 조회 계층을 쓰고, 답을 쓰는 모델의 �
   -> 답의 근거가 조각에 있으면 답하고, 없으면 보류한다
 ```
 
-## MCP 도구 (예정)
+## MCP 도구
 
 | 도구 | 하는 일 |
 |---|---|
-| `find_endpoint` | 경로·이름으로 엔드포인트와 요청·응답 필드를 찾는다 |
-| `trace_flow` | 엔드포인트나 이벤트에서 시작해 Feign 호출·Kafka 발행·구독을 따라간다 |
-| `find_subscribers` | 토픽 환경변수 이름으로 발행자와 구독자를 찾는다 |
-| `search_docs` | 문서 페이지를 키워드로 검색한다 (BM25) |
+| `find_endpoint` | 경로·ID·핸들러 이름으로 엔드포인트 본문(요청·응답 필드, 호출, 검증 범위, 업무 규칙·함정)을 낸다 |
+| `trace_flow` | 엔드포인트·Kafka 발행·구독에서 Feign 호출·Kafka 발행·구독을 따라간 단계와 부르는 곳을 낸다. 이어지지 않는 곳은 상태와 이유에서 멈춘다 |
+| `find_subscribers` | 토픽 이름으로 발행·구독과 그 연결을 담은 토픽 본문을 낸다 |
+| `search_docs` | 본문을 BM25로 찾아 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 낸다 |
+| `get_page` | 페이지 주소로 본문 전체를 낸다 |
+
+도구 결과는 페이지 본문과 같은 텍스트라 값마다 상태·이유·근거 `파일:줄`이 붙는다.
 
 결정과 이유는 [docs/decisions.md](docs/decisions.md), 진행 상황은 [docs/progress.md](docs/progress.md)에 있다.
 
@@ -109,3 +112,13 @@ python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/re
 ```
 
 검증기를 먼저 돌려 `out/analysis.json`을 새로 만든 뒤 `http://localhost:8080`에 문서 페이지를 띄운다. 첫 화면에서 서비스(`/services/{이름}`)와 토픽(`/topics/{토픽 환경변수 이름 또는 코드에 적힌 토픽 이름}`)으로 들어가고, 서비스 페이지에서 엔드포인트(`/endpoints/{ID}`)로 들어간다. 값마다 확인 상태와 근거 `파일:줄`이 붙고, 확인되지 않은 값은 상태와 이유가 대신 나온다.
+
+`/api/search?q=찾을 말`은 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 JSON으로 낸다. MCP는 서버를 띄운 채 클라이언트에 등록한다.
+
+```bash
+claude mcp add --transport http hotdealwave http://localhost:8080/mcp
+```
+
+```bash
+codex mcp add hotdealwave --url http://localhost:8080/mcp
+```
