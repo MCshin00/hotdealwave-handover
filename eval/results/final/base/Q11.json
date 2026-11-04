@@ -1,0 +1,21 @@
+{
+  "id": "Q11",
+  "condition": "base",
+  "question": "결제 완료 안내는 어떤 처리 결과를 기준으로 표시되고, Payment의 결제 결과가 Order에 전달돼 주문 상태가 바뀌기까지 어떤 경로를 거치나요?",
+  "status": "완료",
+  "seconds": 73.1,
+  "tokens": {
+    "input": 125281,
+    "cachedInput": 91776,
+    "output": 2735
+  },
+  "mcpTools": [],
+  "commands": 10,
+  "answer": "**“결제 완료 페이지”는 Payment 승인 성공이나 Order 상태 변경을 확인한 뒤 표시되는 화면이 아닙니다.** `/payment/success` 요청이 들어오면 컨트롤러가 바로 템플릿을 반환하고, 템플릿은 “결제 완료 페이지”라는 고정 문구를 표시합니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:9`)\n\n카카오페이 결제 준비 요청에는 이 주소가 `approvalUrl`로 설정됩니다. 따라서 코드상 화면 표시 기준은 **성공 이동 주소에 도달했는지**이며, 해당 화면에는 승인 API 호출이나 주문 상태 확인 로직이 없습니다. 이 화면에서 실제 승인 요청까지 자동으로 이어지는 연결은 저장소에서 확인할 수 없습니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n별도의 결제 승인 요청이 들어왔을 때 Order까지 전달되는 경로는 다음과 같습니다.\n\n1. **클라이언트 → Payment 승인 API**  \n   `POST /api/v1/payments/confirm`이 `tid`, `pgToken`을 받아 인증 사용자의 ID와 함께 `PaymentService.approvePayment()`를 호출합니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:13`)\n\n2. **Payment → 카카오페이 승인 → Payment 상태 변경**  \n   `tid`로 Payment를 찾고 카카오페이 승인 API를 호출합니다. 호출이 예외 없이 반환되면 Payment 상태를 `COMPLETE`로 변경하고, 주문 상태를 `COMPLETE`로 바꾸라는 메시지 전송을 요청합니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:70`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14`)\n\n3. **Payment → Kafka**  \n   `PaymentProducerService`가 `PaymentEventProducer`를 호출합니다. Producer는 `{orderId, status}`를 JSON으로 직렬화하고, 주문 ID를 메시지 키로 사용해 `update-order-status` 토픽에 전송합니다. Payment와 Order의 해당 토픽 설정은 모두 `${KAFKA_UPDATE_ORDER_STATUS_TOPIC}`을 참조합니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:24`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32`, `payment/src/main/resources/application.yml:18`, `order/src/main/resources/application.yml:17`)\n\n4. **Kafka → Order Consumer → 주문 상태 변경**  \n   `OrderStatusUpdateEventConsumer`가 `order-group`으로 메시지를 수신하고 역직렬화한 뒤 `OrderConsumerService.updateOrderStatus(orderId, status)`를 호출합니다. 서비스는 삭제되지 않은 주문을 조회하고 `OrderStatus.valueOf(status)`를 적용하므로, 위 성공 메시지는 주문 상태를 `COMPLETE`로 바꿉니다. JPA 엔티티를 트랜잭션 안에서 변경하는 구조여서 정상 커밋 시 변경 감지로 DB에 반영됩니다. (근거: `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:24`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:37`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:14`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`, `order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:20`, `order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70`)\n\n**승인 API의 성공 응답도 Order 반영 완료를 보장하지 않습니다.** “결제 승인 처리되었습니다.”는 Payment 승인 서비스가 정상 반환하면 내려가는 응답입니다. Kafka 전송 코드는 `send()`의 완료 결과를 기다리지 않으며, Order 소비 결과도 기다리지 않습니다. Order 측 파싱·상태 변경 오류는 DLQ 전송 경로로 처리됩니다. 따라서 실제 주문 반영 성공 여부와 시점은 저장소 코드만으로 확인할 수 없습니다. (근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

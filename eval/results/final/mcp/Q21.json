@@ -1,0 +1,23 @@
+{
+  "id": "Q21",
+  "condition": "mcp",
+  "question": "Grafana에 실제 연결된 데이터 소스와 대시보드 조회 조건은 어디서 관리하고, 누락된 서비스의 지표와 로그가 저장된 대상을 보고 있나요?",
+  "status": "완료",
+  "seconds": 62.0,
+  "tokens": {
+    "input": 121095,
+    "cachedInput": 106880,
+    "output": 1902
+  },
+  "mcpTools": [
+    "search_docs"
+  ],
+  "commands": 5,
+  "answer": "**저장소만으로는 Grafana가 실제로 어떤 데이터 소스에 연결되어 있고, 누락된 서비스의 데이터가 저장된 곳을 조회하는지 확인할 수 없습니다.** 확인되는 것은 수집·전송 설정이며, Grafana 연결과 대시보드 조회 설정은 발견되지 않았습니다. (`monitoring/prometheus/prometheus.yml:4`, `monitoring/loki/loki-config.yml:7`, `docker-compose.yml:3`)\n\n| 구분 | 저장소에서 확인되는 관리 위치와 내용 |\n|---|---|\n| Grafana 데이터 소스·대시보드 | 데이터 소스 provisioning, 대시보드 JSON, 패널 쿼리·변수·시간 범위 정의를 발견하지 못했습니다. Compose에도 Grafana·Prometheus·Loki 실행 정의가 없어, 실제 관리 위치가 Grafana UI인지 별도 배포 설정인지 확인할 수 없습니다. (`docker-compose.yml:3`, `docker-compose.yml:169`, `docker-compose.yml:203`) |\n| 지표 수집 대상 | `monitoring/prometheus/prometheus.yml`에서 관리합니다. 15초 간격으로 gateway·user·product·order·payment·coupon·company의 `/actuator/prometheus`를 각각 19091~19097 포트에서 수집하도록 설정되어 있습니다. **이 파일은 Grafana 조회 조건이 아닙니다.** (`monitoring/prometheus/prometheus.yml:2`, `monitoring/prometheus/prometheus.yml:5`, `monitoring/prometheus/prometheus.yml:10`, `monitoring/prometheus/prometheus.yml:15`, `monitoring/prometheus/prometheus.yml:20`, `monitoring/prometheus/prometheus.yml:25`, `monitoring/prometheus/prometheus.yml:30`, `monitoring/prometheus/prometheus.yml:35`) |\n| 로그 전송 대상·조회 라벨 | 서비스의 `logback.xml`에서 관리합니다. 예를 들어 order는 `http://${HOST}:3100/loki/api/v1/push`로 전송하고 `app=order-service`, `host=${HOSTNAME}` 라벨을 붙입니다. Compose는 `HOST`를 외부 환경변수로 전달하므로 실제 목적지 주소는 확인할 수 없습니다. (`order/src/main/resources/logback.xml:4`, `order/src/main/resources/logback.xml:8`, `docker-compose.yml:149`) |\n| 로그 저장 설정 | Loki는 filesystem 저장을 사용하며 chunks 경로는 `/tmp/loki/chunks`입니다. 다만 이 설정이 운영 Loki에 적용됐는지, 영속 볼륨이 어디인지, Grafana가 그 Loki를 조회하는지는 확인할 수 없습니다. (`monitoring/loki/loki-config.yml:9`, `monitoring/loki/loki-config.yml:12`, `monitoring/loki/loki-config.yml:29`, `docker-compose.yml:3`) |\n\n누락 원인은 서비스에 따라 구분해야 합니다.\n\n- **위 7개 서비스 중 하나라면:** 수집 대상 정의에는 포함되어 있습니다. 그러나 실제 수집 성공·저장 여부와 Grafana 연결 대상은 별도 확인이 필요합니다. 예를 들어 order는 지표의 `job=\"order-service\"`와 로그의 `{app=\"order-service\"}`를 기준으로 확인할 수 있지만, **현재 대시보드가 이 조건을 사용하는지는 알 수 없습니다.** (`monitoring/prometheus/prometheus.yml:20`, `monitoring/prometheus/prometheus.yml:23`, `order/src/main/resources/logback.xml:8`)\n- **Eureka라면:** 애플리케이션은 정의되어 있지만 Prometheus 수집 목록에는 없고, `server/build.gradle`에도 Actuator·Prometheus registry·Loki appender 의존성이 명시되어 있지 않습니다. 따라서 다른 서비스와 같은 관측 설정이 갖춰졌다고 볼 수 없습니다. (`docker-compose.yml:4`, `monitoring/prometheus/prometheus.yml:4`, `server/build.gradle:24`)\n\n결국 운영 Grafana의 **데이터 소스 URL·UID, 패널이 선택한 데이터 소스, 쿼리·변수·시간 범위**를 실제 Prometheus 수집 상태 및 `${HOST}`의 Loki와 대조해야 답을 확정할 수 있습니다. 이 운영 값들은 저장소에서 확인되지 않습니다. (`monitoring/prometheus/prometheus.yml:20`, `order/src/main/resources/logback.xml:4`, `docker-compose.yml:149`)\n\n파일은 수정하지 않았습니다. `hotdealwave` MCP 문서 조회는 도구 승인 정책(`never`)으로 거부되어 사용하지 못했으며, 위 답변은 저장소 파일을 직접 확인한 결과입니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

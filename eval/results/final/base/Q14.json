@@ -1,0 +1,21 @@
+{
+  "id": "Q14",
+  "condition": "base",
+  "question": "프로모션 응답의 시간 필드는 어떤 시간대와 시작·종료 기준을 쓰고, 가격 필드는 각각 어떤 금액을 뜻하나요?",
+  "status": "완료",
+  "seconds": 79.8,
+  "tokens": {
+    "input": 168662,
+    "cachedInput": 136320,
+    "output": 2652
+  },
+  "mcpTools": [],
+  "commands": 11,
+  "answer": "**시간대는 KST나 UTC로 확정할 수 없고, `discountPrice`는 할인 후 판매 단가입니다.** 근거와 세부 기준은 다음과 같습니다.\n\n- **시간 필드의 의미와 시간대:** `start`·`end`는 등록한 프로모션 시작·종료 시각입니다. 엔티티에는 시간대 정보가 없는 `LocalDateTime`으로 저장하고, 응답에서는 `Timestamp.valueOf(...)`로 변환합니다. 현재 시각도 시간대를 지정하지 않은 `LocalDateTime.now()`를 사용하므로 JVM 기본 시간대에 의존합니다. 실제 배포 환경의 시간대와 JSON 응답의 오프셋은 저장소만으로 확인할 수 없습니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:40`, `:43`, `:66`; `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44`, `:178`; `product/Dockerfile:19`.\n\n- **실제 시작·종료 기준:** 매 정각 실행되는 스케줄러가 현재 시각의 소수 초를 버린 뒤, `start` 또는 `end`가 **정확히 일치하는** 프로모션을 조회합니다. 시작 시 `IN_PROGRESS`로 바꾸고 상품에 할인 판매가를 설정하며, 종료 시 `COMPLETED`로 바꾸고 상품의 할인 판매가를 `null`로 만듭니다. 따라서 일반적인 `start ≤ 현재 < end` 판정이라고 단정할 수 없으며, 정각이 아닌 시각이나 놓친 실행을 따라잡는 처리는 이 코드에 없습니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27`, `:32`, `:38`, `:45`, `:50`, `:56`; `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21`, `:24`.\n\n- **기간 입력·중복 기준:** 생성·수정 시 시작이나 종료가 현재보다 과거이면 거절합니다. `start < end` 검증은 해당 메서드에 없습니다. 중복 검사는 `기존 start < 요청 end AND 기존 end > 요청 start`이므로, 기존 종료와 새 시작이 같은 경우는 중복으로 보지 않습니다. 이는 중복 판정 기준이며, 판매 가능 기간의 경계 보장과는 구분해야 합니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:39`, `:46`, `:51`, `:74`, `:86`, `:95`; `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16`.\n\n- **`discountPrice`:** 프로모션을 적용한 **상품 1개당 판매금액**입니다. 차감되는 할인액을 뜻하지 않습니다. 상품의 기본 `price`보다 작아야 하며, 주문 계산에서도 이 금액을 단가로 선택해 수량을 곱합니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:59`, `:163`, `:181`; `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45`, `:52`.\n\n- **`discountRate`:** 금액이 아니라 할인율(%)입니다. `round((price - discountPrice) / price × 100)`으로 계산한 정수이며, 조회 시 저장된 값을 반환합니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:65`, `:154`, `:180`.\n\n- **`price`와 응답 범위:** `price`는 상품 응답의 기본 판매 단가이자 할인율 계산 기준입니다. 프로모션 조회 응답 자체에는 `price`나 별도의 할인액 필드가 없고, 가격 관련 필드는 `discountPrice`·`discountRate`입니다. 이 필드 정의에는 통화·금액 단위가 명시되어 있지 않아 원화라고 확정할 수 없습니다.  \n  근거: `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19`; `product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:65`; `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:15`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

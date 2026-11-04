@@ -1,0 +1,21 @@
+{
+  "id": "Q06",
+  "condition": "ask",
+  "question": "쿠폰 발급 요청에 성공을 응답하는 시점은 언제고, 그 뒤 사용자에게 발급된 쿠폰이 저장되기까지 어떤 처리를 거치나요?",
+  "status": "완료",
+  "answer": "발급 처리에서 쿠폰 정보 상태·잔여 수량·사용자 중복 여부 검사를 통과한 뒤, 발급 수 증가와 미사용 사용자 쿠폰 저장을 같은 트랜잭션에서 처리합니다. 컨트롤러는 이 처리가 끝난 뒤 `201` 응답을 반환하며, 응답 본문은 `data=null`이어서 사용자 쿠폰 ID는 돌려주지 않습니다. 이 흐름은 AI 해석으로 정리된 내용입니다. (근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:46`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53`, `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30`, `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34`, `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:35`; 실제 응답 기록: 201)",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "title": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 29289,
+    "output": 351
+  },
+  "seconds": 4.3
+}

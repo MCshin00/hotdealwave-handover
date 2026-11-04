@@ -1,0 +1,14 @@
+{
+  "id": "Q13",
+  "condition": "ask",
+  "question": "실패한 ECR 업로드 단계는 어떤 방식으로 AWS 인증을 받고, GitHub에 등록된 인증 설정이 워크플로에서 참조하는 값과 맞나요?",
+  "status": "보류",
+  "answer": "확인할 수 없습니다. 제공된 조각에는 ECR 업로드의 AWS 인증 방식이나 GitHub에 등록된 인증 설정, 워크플로가 참조하는 값에 대한 정보가 없습니다.",
+  "reason": "모델 보류",
+  "citations": [],
+  "tokens": {
+    "input": 51873,
+    "output": 67
+  },
+  "seconds": 2.8
+}

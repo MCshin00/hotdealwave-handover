@@ -1,0 +1,23 @@
+{
+  "id": "Q16",
+  "condition": "mcp",
+  "question": "Elasticsearch 반영에 실패하면 어떻게 재시도하고, 누락되거나 순서가 뒤바뀐 변경 사항은 어떻게 맞추나요?",
+  "status": "완료",
+  "seconds": 72.2,
+  "tokens": {
+    "input": 123480,
+    "cachedInput": 103936,
+    "output": 2389
+  },
+  "mcpTools": [
+    "search_docs"
+  ],
+  "commands": 5,
+  "answer": "**현재 구현은 Elasticsearch 반영 실패를 자동 재시도하거나, 누락·역순 변경을 자동으로 맞추는 구조가 아닙니다.** 색인 저장 예외를 잡아 로그만 남기며, 문서에 변경 순서를 비교할 버전 필드도 없습니다.  \n근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19`, `product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18`\n\n1. **생성·수정·상태 변경의 색인 실패는 로그만 남깁니다.** `indexProduct()`가 `save()` 예외를 삼키므로 호출자는 ES 실패를 전달받지 않습니다. 따라서 다른 문제가 없다면 DB 변경과 API 응답은 성공하고 ES만 누락되거나 오래된 상태로 남을 수 있습니다. 애플리케이션 차원의 재시도·백오프·실패 작업 저장은 이 경로에 없습니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:79`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:121`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:133`\n\n2. **삭제 실패는 처리 방식이 다릅니다.** ES의 `deleteById()`를 직접 호출하고 예외를 잡지 않으며, 그다음에 DB 상품의 삭제 처리를 실행합니다. 따라서 ES 삭제 예외는 밖으로 전파되고 이후 상품 삭제 코드는 실행되지 않습니다. 이 경로에도 별도 재시도는 없습니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:141`\n\n3. **Kafka DLQ는 ES 복구 경로가 아닙니다.** 상품 Kafka 소비자는 재고 차감·복구를 처리하며, 해당 재고 처리에는 색인 호출이 없습니다. 컨테이너 설정은 밖으로 전파된 실패에 대해 `FixedBackOff(0L, 0)`, 즉 재시도 없이 `product-dlq`로 보내도록 되어 있습니다. 소비자 내부에서 잡은 예외는 ACK하는 경우도 있으므로 모든 실패가 DLQ로 가는 것도 아닙니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:57`\n\n4. **누락을 주기적으로 대조·복구하는 구현은 확인되지 않습니다.** 오히려 재고 변경과 할인 가격 변경은 DB 객체만 갱신하고 ES를 갱신하지 않습니다. 프로모션 스케줄러도 이 할인 가격 변경 메서드를 호출합니다. 이후 같은 상품을 일반 수정하거나 상태 변경하면 당시 상품 정보를 다시 색인하므로 누락된 값이 함께 반영될 수는 있지만, 이는 보장된 복구 절차가 아닙니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:246`, `product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:40`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:40`\n\n5. **순서가 뒤바뀐 쓰기를 판별하는 장치도 확인되지 않습니다.** 상품 ID를 ES 문서 ID로 사용하지만, 문서에는 변경 버전·수정 시각이 없고 저장할 때 최신 여부를 비교하지 않습니다. 따라서 같은 ID에 다시 저장할 수 있다는 것과 최신 변경을 보장한다는 것은 별개이며, 오래된 내용을 뒤늦게 저장하는 상황을 막는 애플리케이션 로직은 없습니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:21`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:40`, `product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18`\n\n6. **검색 시 DB를 읽어 자동 보정하지도 않습니다.** “JPA에서 상세 정보를 조회하거나 보완”이라는 주석은 있지만, 실제 구현은 ES 검색 결과를 DTO로 변환합니다. 따라서 이 조회 경로가 누락 문서나 오래된 값을 복구하지는 않습니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:178`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221`\n\n운영 환경의 수동 재색인 절차나 외부 복구 작업, 실제 장애 후 복구 여부는 저장소에서 확인할 수 없습니다.\n\n`hotdealwave` MCP 문서 조회는 도구가 승인을 요구했지만 현재 승인 정책이 `never`여서 거부되었습니다. 따라서 문서의 확인 상태와 대조하지 못했고, 위 답변은 저장소 코드에 근거합니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

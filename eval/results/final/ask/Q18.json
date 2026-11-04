@@ -1,0 +1,27 @@
+{
+  "id": "Q18",
+  "condition": "ask",
+  "question": "쿠폰 소진이나 중복 발급, 발급 기간 종료로 발급이 실패하면 각각 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "answer": "쿠폰 소진은 HTTP 400/CO005, 중복 발급은 HTTP 400/CO006으로 처리됩니다. 다만 발급 기간 종료에 대한 발급 경로의 상태 코드와 오류 본문은 조각에서 확인할 수 없습니다. AI 해석으로는 발급 경로가 expirationDate를 검사하지 않아, 만료됐더라도 아직 삭제되지 않은 쿠폰 정보가 발급 조건을 통과할 수 있습니다.\n\n오류 본문의 구체적인 필드·메시지 형식은 조각에 제시되어 있지 않습니다. 발급 결과로 확인된 것은 201 응답뿐이며, 위 오류 본문 내용은 확인할 수 없습니다. 근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:24`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44`, `analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6`.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "title": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "section": ""
+    },
+    {
+      "id": "C2",
+      "page": "/services/coupon-service",
+      "title": "coupon-service",
+      "section": "업무 규칙·함정 21개"
+    }
+  ],
+  "tokens": {
+    "input": 30930,
+    "output": 370
+  },
+  "seconds": 6.0
+}
