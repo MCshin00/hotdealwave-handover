@@ -1,0 +1,61 @@
+{
+  "id": "Q13",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 40.3,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "S3 설정 설명과 GitHub 실제 등록값을 대조할 수 없다는 판단은 맞습니다. 다만 저장소 워크플로에 액세스 키 인증 방식과 Secret 이름이 명시되어 있는데도 이를 확인하지 못해 핵심 답변이 빠졌습니다.",
+      "evidence": [
+        "docker-compose.yml:97",
+        "docker-compose.yml:98",
+        "product/src/main/resources/application.yml:35",
+        "product/src/main/resources/application.yml:36",
+        ".github/workflows/actions.yml:20",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Secrets의 액세스 키를 사용하는 인증 방식과 ECR 로그인·푸시 흐름이 코드와 일치합니다. 현재 워크플로에서 확인되는 참조와 실제 GitHub 등록 설정·실패 원인을 명확히 구분했습니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:9",
+        ".github/workflows/actions.yml:20",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23",
+        ".github/workflows/actions.yml:24",
+        ".github/workflows/actions.yml:28",
+        ".github/workflows/actions.yml:33",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:60"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "저장소에 인증 방식과 Secret 참조가 명시되어 있으므로 전부 확인할 수 없다는 답은 핵심에 답하지 못했습니다. 실제 GitHub 등록 설정이 미확인이라는 한계는 드러냈지만, 코드로 확인 가능한 부분을 구분하지 않았습니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:20",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23",
+        ".github/workflows/actions.yml:28",
+        ".github/workflows/actions.yml:60"
+      ]
+    }
+  },
+  "usage": {
+    "input": 49652,
+    "cachedInput": 31104,
+    "output": 1100
+  },
+  "seed": 45
+}

@@ -1,0 +1,58 @@
+{
+  "id": "Q20",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 75.6,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "서비스별 예외 응답과 리뷰 500의 원인을 확정할 수 없다는 설명은 타당합니다. 다만 코드에 명시된 Gateway의 본문 없는 401 직접 반환과 체인 중단을 확인 불가로 처리하여 핵심을 빠뜨렸습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30-32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23-27",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14-25",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:40-50",
+        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:2-12"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "밝힘",
+      "reason": "확인하지 못한 흐름을 단정하지는 않았습니다. 그러나 저장소에는 Gateway의 직접 거부와 서비스 예외 응답 생성 코드가 있으므로, 환경변수 설정만 있다는 설명으로는 질문의 핵심에 답하지 못했습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24-46",
+        "gateway/src/main/resources/application.yml:13-19",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24-35"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Gateway의 401 직접 종료, 서비스의 예외·보안 처리기별 응답 생성, 내부 서비스 호출 실패 변환을 코드와 일치하게 설명했습니다. 프록시 내부 동작과 연결 실패 응답은 라이브러리 위임으로 구분하고, 헤더 누락 예외가 401 처리기로 연결된다고 단정하지 않은 점도 타당합니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24-46",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:47-60",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:17-56",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/SecurityConfig.java:35-39",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAuthenticationHandler.java:12-16",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAccessDeniedHandler.java:13-17",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/filter/AuthenticationFilter.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/decoder/ProductClientErrorDecoder.java:10-15",
+        "gateway/src/main/resources/application.yml:13-54",
+        "gateway/build.gradle:45"
+      ]
+    }
+  },
+  "usage": {
+    "input": 170795,
+    "cachedInput": 124544,
+    "output": 2217
+  },
+  "seed": 45
+}

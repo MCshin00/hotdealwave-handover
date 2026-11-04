@@ -1,0 +1,61 @@
+{
+  "id": "Q11",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 77.1,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "완료 화면의 표시 조건과 별도 승인 API→Kafka→Order 상태 변경 경로가 코드와 일치한다. 화면에서 승인 API로 이어지는 연결은 확인되지 않으며, 승인 응답도 주문 반영 완료를 보장하지 않는다고 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "화면 표시와 승인 처리를 구분하고, 미삭제 결제 조회부터 Kafka를 통한 주문 상태 변경까지 핵심 경로를 정확히 설명했다. 발행 호출의 반환과 실제 전달·소비·갱신 완료를 구분한 설명도 코드에 부합한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/repository/PaymentRepositoryImpl.java:21",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:28",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "핵심 흐름은 맞지만 호출 경로의 메서드명을 두 곳 잘못 적었다. 실제 이름은 PaymentEventProducer.sendUpdateOrderStatusMessage와 OrderStatusUpdateEventConsumer.consumeUpdateOrderStatus이며, 외부 토픽 값·비동기 전달·수동 ACK의 확인 한계는 정확히 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "payment/src/main/resources/application.yml:18",
+        "order/src/main/resources/application.yml:17",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58"
+      ]
+    }
+  },
+  "usage": {
+    "input": 132703,
+    "cachedInput": 107392,
+    "output": 2466
+  },
+  "seed": 45
+}

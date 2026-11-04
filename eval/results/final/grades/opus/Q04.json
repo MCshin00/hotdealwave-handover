@@ -1,0 +1,93 @@
+{
+  "id": "Q04",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 32.7,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "저장소에는 운영 DB·Redis 접속 변수(application-prod.yml), Compose 주입 경로, 배포 워크플로가 있습니다. 그런데도 A는 근거가 없다며 질문에 답하지 않았습니다. 코드로 확인되는 것과 저장소 밖 값을 구분하지 않았습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3",
+        "user/src/main/resources/application-prod.yml:15",
+        "docker-compose.yml:37",
+        "docker-compose.yml:41",
+        ".github/workflows/actions.yml:87"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "PROD_DB_*·REDIS_PROD_* 변수와 user/order 서비스의 Compose 주입 줄, ACTIVE_PROFILE 연결이 모두 코드와 맞습니다. 실제 값과 접속 여부는 확인할 수 없으며 검증 절차는 권장안이라고 밝혔습니다. 배포 워크플로(EC2 디렉터리)는 언급하지 않았지만 틀린 주장은 없습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/application-prod.yml:15-18",
+        "docker-compose.yml:32",
+        "docker-compose.yml:37-44",
+        "docker-compose.yml:142-144",
+        "docker-compose.yml:159-162",
+        "user/src/main/resources/application.yml:5"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "변수 매핑, 배포 워크플로(EC2 /home/ubuntu/HotDealWave에서 docker-compose pull/up 실행), .gitignore의 .env 제외를 확인했습니다. 서비스별 Redis 클라이언트, coupon의 actuator/health 인증 필요 여부도 모두 코드와 일치합니다. .env와 비밀 저장소는 후보일 뿐 확정할 수 없다고 구분해 밝혔습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3",
+        "user/src/main/resources/application-prod.yml:15-18",
+        ".github/workflows/actions.yml:74-76",
+        ".github/workflows/actions.yml:87",
+        ".github/workflows/actions.yml:94-95",
+        ".gitignore:2",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/RedisConfig.java:13",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CacheConfig.java:19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:27-34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:25-33",
+        "coupon/src/main/resources/application.yml:15-22"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 17603,
+    "cache_read_input_tokens": 35873,
+    "output_tokens": 3203,
+    "output_tokens_details": {
+      "thinking_tokens": 1246
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17603,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2160,
+        "cache_read_input_tokens": 18940,
+        "cache_creation_input_tokens": 3834,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3834
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2120826
+  },
+  "seed": 45
+}

@@ -1,0 +1,91 @@
+{
+  "id": "Q13",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 21.6,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "A는 워크플로 근거가 없다고 했지만 저장소에 .github/workflows/actions.yml이 있습니다. 이 파일은 secrets.AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY 액세스 키 방식으로 인증하므로 질문의 핵심에 답하지 못했습니다. GitHub에 등록된 값이 저장소 밖에 있다는 구분은 맞지만, 코드로 확인되는 인증 방식까지 확인 불가로 분류해 구분이 일부만 맞습니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:19",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23",
+        "docker-compose.yml:97",
+        "docker-compose.yml:98",
+        "product/src/main/resources/application.yml:35",
+        "product/src/main/resources/application.yml:36"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "configure-aws-credentials@v4에 secrets로 액세스 키 쌍을 넘기고 role-to-assume이 없다는 설명, amazon-ecr-login@v2 로그인 후 레지스트리 출력으로 태깅해 push한다는 설명, ap-northeast-2 리전이 모두 코드와 맞습니다. GitHub에 실제 등록된 Secret의 존재·유효성·권한과 실패 로그는 저장소 밖이라 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:9",
+        ".github/workflows/actions.yml:19",
+        ".github/workflows/actions.yml:20",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23",
+        ".github/workflows/actions.yml:24",
+        ".github/workflows/actions.yml:28",
+        ".github/workflows/actions.yml:33",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:60"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "C는 정보가 없다고만 답했습니다. 하지만 워크플로가 참조하는 인증 방식(secrets 액세스 키)은 저장소에서 확인되므로 질문의 핵심에 답하지 못했습니다. 확인되지 않은 것을 확인된 것처럼 말하지는 않았지만, 코드로 확인되는 것과 GitHub 등록값처럼 저장소 밖에 있는 것을 구분하지도 않았습니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:19",
+        ".github/workflows/actions.yml:22",
+        ".github/workflows/actions.yml:23",
+        ".github/workflows/actions.yml:28"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 6920,
+    "cache_read_input_tokens": 24519,
+    "output_tokens": 1966,
+    "output_tokens_details": {
+      "thinking_tokens": 599
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6920,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1624,
+        "cache_read_input_tokens": 10576,
+        "cache_creation_input_tokens": 1515,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1515
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.0996078
+  },
+  "seed": 45
+}

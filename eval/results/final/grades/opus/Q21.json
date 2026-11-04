@@ -1,0 +1,89 @@
+{
+  "id": "Q21",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 40.9,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A는 저장소에 Grafana 데이터 소스나 대시보드 정의가 없다고 정확히 짚었습니다. Prometheus 수집 대상 7개, logback의 Loki push URL과 app 라벨, Loki 파일시스템 저장 경로, Eureka 서버의 수집 구성 누락까지 모두 코드와 맞습니다. 실제 로드 여부, HOST 값, 대시보드 조건처럼 확인되지 않는 연결은 따로 구분해 밝혔습니다.",
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:2-38",
+        "order/src/main/resources/logback.xml:4",
+        "order/src/main/resources/logback.xml:8",
+        "gateway/src/main/resources/logback.xml:4",
+        "monitoring/loki/loki-config.yml:12",
+        "monitoring/loki/loki-config.yml:29-30",
+        "docker-compose.yml:3-206",
+        "docker-compose.yml:20",
+        "docker-compose.yml:149",
+        ".github/workflows/actions.yml:87-95",
+        "server/build.gradle:24-28"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "Grafana 연결과 대시보드 조건을 확인할 수 없다는 결론 자체는 맞습니다. 하지만 저장소에 있는 지표·로그 저장 대상 설정(prometheus.yml, loki-config.yml, logback의 Loki URL)을 '내용이 없다'고 해 핵심을 놓쳤습니다. 무엇이 확인되고 무엇이 저장소 밖 값인지도 구분하지 않았습니다.",
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:4-38",
+        "monitoring/loki/loki-config.yml:10-13",
+        "order/src/main/resources/logback.xml:4-8"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "Grafana 데이터 소스와 대시보드 근거가 저장소에 없으므로 확인 불가라는 판단과, DB·Redis 설정이 Grafana 연결이 아니라는 지적은 맞습니다. 인용한 application-prod.yml:3,15도 정확합니다. 다만 저장소에 있는 Prometheus 수집 설정과 Loki 전송·저장 설정을 찾지 못해 핵심 근거가 빠졌습니다. 검색 결과가 없다는 것이 부재의 증명이 아니라고 스스로 한정해 확인 범위는 구분했습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3",
+        "user/src/main/resources/application-prod.yml:15",
+        "monitoring/prometheus/prometheus.yml:4-38",
+        "monitoring/loki/loki-config.yml:12",
+        "order/src/main/resources/logback.xml:4"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 23228,
+    "cache_read_input_tokens": 70417,
+    "output_tokens": 4281,
+    "output_tokens_details": {
+      "thinking_tokens": 1149
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23228,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1055,
+        "cache_read_input_tokens": 24561,
+        "cache_creation_input_tokens": 3838,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3838
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2855674
+  },
+  "seed": 45
+}

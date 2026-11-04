@@ -1,0 +1,79 @@
+{
+  "id": "T02",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 25.4,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "ReqPostOrderDto의 세 필드와 타입, 검증 어노테이션(basketList·addressId만 @NotNull, couponId는 없음)을 정확히 적었고 줄 번호도 맞습니다. 이 질문에는 저장소 밖에서 정해지는 값이 없으므로 확인된 내용을 그대로 말한 것으로 충분합니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:44"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "POST /api/v1/orders 경로와 세 필드·검증 선언이 코드와 맞습니다. couponId가 null이면 검증 호출을 건너뛰고 (false, 0)을 돌려주며, isValid가 false이므로 사용 호출도 생략되어 할인액이 0이 된다는 설명도 맞습니다. 다만 근거로 든 줄은 메서드 선언(34)이고 실제 null 확인은 36줄, 사용 호출 생략은 OrderService:141에 있습니다. basketList에 최소 개수 검증이 없다는 점은 DTO만 봐도 확인되는데 '확인할 수 없다'고 쓴 것은 지나치게 조심스러운 표현이지만, 확인된 선언이 @NotNull뿐이라는 점은 구분해 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:34-38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:138-146"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "요청 본문이 ReqPostOrderDto라는 점(44줄), 세 필드와 필수 여부를 정확히 적었습니다. userId·email·role이 본문이 아니라 @AuthenticationPrincipal에서 온다는 설명도 43·46줄과 맞습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43-46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 11080,
+    "cache_read_input_tokens": 54110,
+    "output_tokens": 2462,
+    "output_tokens_details": {
+      "thinking_tokens": 622
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11080,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1381,
+        "cache_read_input_tokens": 14946,
+        "cache_creation_input_tokens": 1305,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1305
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.14874199999999999
+  },
+  "seed": 45
+}

@@ -1,0 +1,94 @@
+{
+  "id": "Q09",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 37.2,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A가 짚은 콘솔 위치·등록값 확인 불가, 환경변수(PAY_KEY/PAY_CID/PAY_HOST_DOMAIN) 주입, 복귀 URL 생성, cancel/fail 경로가 뒤바뀐 점, 화면 매핑은 모두 코드와 맞습니다. 확인된 코드 내용과 저장소 밖에서 정해지는 값(콘솔, 운영 도메인, 프로필)도 구분했습니다.",
+      "evidence": [
+        "README.md:125",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14",
+        "payment/src/main/resources/application.yml:5",
+        "payment/src/main/resources/application.yml:26-29",
+        "docker-compose.yml:175",
+        "docker-compose.yml:185-187",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:62",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:23-30",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "B는 복귀 주소에 관한 근거가 없다고 했지만, 실제로는 코드에 approval/cancel/fail URL 생성과 PAY_HOST_DOMAIN 주입이 들어 있어 확인할 수 있는 내용을 놓쳤습니다. 콘솔과 운영 값을 확인할 수 없다는 판단은 맞지만, 확인되는 것과 확인되지 않는 것을 구분하지 않았습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/resources/application.yml:29",
+        "docker-compose.yml:187"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "C가 짚은 콘솔·운영값 확인 불가, 환경변수 주입, cancel/fail 경로가 뒤바뀐 점, 템플릿 문구는 코드와 맞습니다. /payment/success는 뷰만 반환하고 실제 승인은 POST /api/v1/payments/confirm에서 이뤄진다는 추가 주장도 코드로 확인됩니다. 확인된 것과 외부에서 정해지는 값을 구분했습니다.",
+      "evidence": [
+        "docker-compose.yml:185-187",
+        "payment/src/main/resources/application.yml:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-21",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44-48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61-64"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 17352,
+    "cache_read_input_tokens": 66836,
+    "output_tokens": 4505,
+    "output_tokens_details": {
+      "thinking_tokens": 414
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17352,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1449,
+        "cache_read_input_tokens": 19452,
+        "cache_creation_input_tokens": 3071,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3071
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.24232320000000002
+  },
+  "seed": 45
+}

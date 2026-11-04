@@ -1,0 +1,49 @@
+{
+  "id": "T02",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 38.6,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "요청 본문의 세 필드와 타입, 검증 어노테이션이 코드와 일치한다. DTO에서 확인되는 선언만 설명했다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:44",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "경로와 요청 필드가 정확하며, couponId가 null이면 외부 쿠폰 검증·사용 호출을 생략하고 할인액을 0으로 처리한다. basketList의 검증 선언과 추가 조건의 확인 범위도 구분했다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35-44",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:34-47",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:138-146",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/coupon/CouponValidationDto.java:12-18"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "요청 DTO의 필드·타입·필수 검증을 정확히 설명했다. userId, email, role을 인증 principal에서 가져온다는 설명도 컨트롤러와 일치한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16-20",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43-46"
+      ]
+    }
+  },
+  "usage": {
+    "input": 85018,
+    "cachedInput": 61568,
+    "output": 995
+  },
+  "seed": 45
+}

@@ -1,0 +1,98 @@
+{
+  "id": "Q07",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 41.6,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "조회 조건(userId·deletedAt IS NULL·isUsed, 기본값 false, 본인만 조회), CouponInfo에서 읽는 표시 필드, 수량 증가와 저장을 한 @Transactional로 묶고 끝난 뒤 201을 반환하는 흐름, RuntimeException이면 500, finally에서 락 해제, 재시도·보상 처리 없음까지 모두 코드와 맞습니다. 실제 장애 시 복구 결과와 화면 쪽 처리는 저장소로 확인할 수 없다고 따로 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:39-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/repository/CouponRepository.java:17",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponRepositoryImpl.java:9",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:12-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44-51",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:123-126",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34-38"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "조회 조건과 CouponInfo에서 읽는 표시 필드 설명은 맞습니다. 하지만 질문 후반부인 실패 처리는 '확인할 수 없다'고만 했습니다. 실제로는 CouponIssueHelper.java:26의 @Transactional로 수량 증가와 저장이 한 트랜잭션이고, 이 처리가 끝나야 201을 반환하며, RuntimeException은 500으로 처리된다는 점이 코드로 확인됩니다. 코드로 확인되는 것까지 확인 불가로 분류한 셈입니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:123-126",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34-38"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "조회 조건, 현재 CouponInfo에서 읽는 표시 필드(유효성 검사는 만료일·최소 주문액을 따로 확인함), 한 트랜잭션 안에서 저장한 뒤 201을 반환하는 흐름, 성공 응답이 201·data=null이라는 점, 다시 요청하면 400/CO006으로 거절된다는 점이 모두 코드와 맞습니다. 실제 장애 재현 결과와 화면 정책은 확인되지 않았다고 구분했습니다. 다만 응답 파일 근거 줄 :6은 couponInfoId가 있는 줄이고, 201은 :9에 있어 인용이 약간 어긋납니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:41-42",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:83",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/repository/CouponRepository.java:13",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 19101,
+    "cache_read_input_tokens": 62131,
+    "output_tokens": 4276,
+    "output_tokens_details": {
+      "thinking_tokens": 1068
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19101,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2954,
+        "cache_read_input_tokens": 23980,
+        "cache_creation_input_tokens": 292,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 292
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2507862
+  },
+  "seed": 45
+}

@@ -1,0 +1,65 @@
+{
+  "id": "Q01",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 92.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "주문 저장과 재고 차감 경로는 대체로 맞지만, 상품 조회 다음 배송지를 순차 조회한다는 설명은 틀리며 실제로는 두 조회를 병렬 실행합니다. Kafka 토픽의 실제 연결과 전송·차감 완료의 확인 한계는 명확히 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "저장 후 Kafka 전송 호출은 맞지만, 상품·배송지 병렬 조회를 순차 흐름으로 설명하고 쿠폰 처리보다 금액 계산을 앞에 두었으며 상품 서비스의 실제 차감 절차를 빠뜨렸습니다. 전송·커밋의 한계는 밝혔으나 연결 불확실성을 중복 상품 상황에 한정해 언급하고, 별도 토픽 환경변수에 따른 일반적인 연결 조건은 구분하지 않았습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:105",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "병렬 조회, 쿠폰 처리와 금액 계산, 주문·주문상품 저장, Kafka 전송 호출 및 소비자의 프로모션·상품 재고 차감 순서가 코드와 일치합니다. 저장 호출과 DB 커밋을 구분하고 전송 완료를 기다리지 않는 점과 실제 토픽 연결의 외부 설정 조건도 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:118",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:43",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:144",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    }
+  },
+  "usage": {
+    "input": 148328,
+    "cachedInput": 100736,
+    "output": 2513
+  },
+  "seed": 45
+}

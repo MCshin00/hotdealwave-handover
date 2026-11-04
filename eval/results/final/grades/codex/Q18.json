@@ -1,0 +1,64 @@
+{
+  "id": "Q18",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 73.9,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "소진 상태에 따른 CO004·CO005 구분, 중복 발급 CO006, 발급 경로에 만료일 검사가 없다는 설명은 맞습니다. 그러나 코드로 확인되는 오류 본문의 timestamp·code·message와 정확한 메시지를 확인 불가로 처리했고, 만료 후 소프트 삭제된 경우의 404/CO001도 빠졌습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9-16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25-31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "수량 검사에서의 400/CO005와 중복 검사에서의 400/CO006, 발급 경로의 만료일 검사 부재는 맞지만, 정상 소진 후에는 앞선 상태 검사로 400/CO004가 반환되는 점을 누락했습니다. 만료 관련 불확실성은 밝혔으나 코드로 확인 가능한 오류 본문을 확인 불가로 처리했고, 삭제 후 404/CO001 분기도 설명하지 않았습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:27-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9-14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9-12"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소진·중복의 검사 순서와 상태별 코드, 오류 본문의 필드·메시지, 만료 후 삭제된 경우의 404/CO001이 코드와 일치합니다. 발급과 검증의 만료 처리를 구분하고, 삭제 전 발급 가능성과 실제 운영에서의 스케줄러 실행 여부도 명확히 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:27-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9-16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25-31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/AuditingDate.java:39-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:55-64",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/scheduler/CouponExpirationScheduler.java:17-20"
+      ]
+    }
+  },
+  "usage": {
+    "input": 66992,
+    "cachedInput": 40192,
+    "output": 2061
+  },
+  "seed": 45
+}

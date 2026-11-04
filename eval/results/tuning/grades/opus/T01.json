@@ -1,0 +1,101 @@
+{
+  "id": "T01",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 95.1,
+  "order": {
+    "A": "base",
+    "B": "mcp",
+    "C": "ask"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "호출 순서(장바구니→상품·주소 병렬→조건부 쿠폰 검증·사용→저장→재고 차감 발행), 메시지 key·payload, 후속 상품→결제 흐름과 보상 흐름, 쿠폰 미복구·send 미확인·DLQ 컴포넌트 미등록이 모두 코드와 맞습니다. 토픽 연결은 발행 측과 소비 측 환경변수 쌍이 같은 값을 가리켜야 하는 조건부 연결이라고 구분했습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:83-125",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:36-38",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/ProductClientAdapter.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:34-37,61-62",
+        "order/src/main/resources/application.yml:15-16",
+        "product/src/main/resources/application.yml:14-17",
+        "payment/src/main/resources/application.yml:15-16",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29-54",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27-66",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:19-24",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:10-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64-65",
+        "docker-compose.yml:88-91,152,156,193"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Feign 호출 대상, 조건부 쿠폰 호출, 재고 차감 메시지 발행, 그리고 KAFKA_REQUEST_PRODUCT_TOPIC과 KAFKA_REDUCE_QUANTITY_TOPIC이 서로 다른 환경변수라서 연결을 확정할 수 없다는 판단이 코드와 맞습니다. 확인된 것과 미확인인 것도 구분했습니다. 다만 응답 파일에는 valid:true만 있을 뿐 '쓰기 매핑 없음'을 지적하는 내용은 없어 출처 표현이 부정확합니다. isValid 필드와 setter 부재는 코드와 맞습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88-122,138-142",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:23",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:136",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:15-16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63,71",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:24,61-62",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14-17",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29,38-48",
+        "docker-compose.yml:89-91,156",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:9-18",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:20"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "상품·주소·쿠폰 호출과 재고 차감 발행, 구독 연결 미확인과 토픽 값이 저장소 밖에서 정해진다는 점은 맞습니다. 그러나 쿠폰 검증을 무조건 호출하는 것처럼 썼지만 couponId가 null이면 원격 호출을 하지 않습니다. 또 메시지 내용(orderId, productList)과 상품 서비스 쪽 리스너(KAFKA_REDUCE_QUANTITY_TOPIC)를 설명하지 않았고, 파일:줄 근거도 없습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:36-38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88-122",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:16-17,36-40",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 55110,
+    "cache_read_input_tokens": 386954,
+    "output_tokens": 10412,
+    "output_tokens_details": {
+      "thinking_tokens": 2533
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 55110,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1965,
+        "cache_read_input_tokens": 56840,
+        "cache_creation_input_tokens": 3441,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3441
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.7265908
+  },
+  "seed": 45
+}

@@ -1,0 +1,64 @@
+{
+  "id": "Q02",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 80.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "주문 저장 후 차감 요청이라는 순서와 결제 준비 실패의 보상 처리, 복구 실패 시 로그·ACK 및 외부로 전파되는 예외의 DLQ 설정을 정확히 설명했다. 토픽 연결과 실제 복구 완료가 확인되지 않는다는 한계도 밝혔다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "차감 실패 시 주문 되돌리기 요청과 복구 성공 후 주문 취소 요청, 일반 예외의 로그·ACK 설명은 맞고 연결의 불확실성도 밝혔다. 그러나 질문의 주문 생성 순서를 짚지 않았고, 코드로 확인되는 결제 준비 실패의 복구 요청·수량 증가·복구 실패 처리를 충분히 설명하지 않았다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "주문 저장 호출의 순서, 재조회 실패 시 복구 요청 불가, 수량 증가 방식과 단계별 실패 처리는 코드와 맞는다. 운영 재처리와 최종 복구 여부의 한계는 밝혔지만, 결제 발행과 상품 구독이 서로 다른 환경변수를 사용해 실제 연결도 확인되지 않는다는 점은 구분하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:60",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    }
+  },
+  "usage": {
+    "input": 107664,
+    "cachedInput": 74880,
+    "output": 2155
+  },
+  "seed": 45
+}

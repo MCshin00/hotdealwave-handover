@@ -1,0 +1,56 @@
+{
+  "id": "Q06",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 65.8,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "락 획득, 조건 검사, 발급 수 갱신과 쿠폰 저장, 트랜잭션 완료 후 성공 응답이라는 설명이 코드와 일치한다. save 호출과 커밋을 구분하고, 실제 운영 결과와 mock 테스트의 확인 한계도 밝혔다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35-52",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:67-76",
+        "coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:42-43",
+        "coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:75-84"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "조건 검사와 발급 수 증가·쿠폰 저장을 같은 트랜잭션에서 수행한 뒤 201을 반환한다는 핵심 설명이 정확하다. data=null과 201 기록도 확인되며, 응답 기록으로 실제 DB 커밋까지 검증했다고 주장하지 않는다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44-52",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30-35",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9-12"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "응답 전 동기 발급 처리와 락 해제 순서가 코드와 일치하며, 해당 경로에 Kafka를 통한 후속 저장은 없다. 코드에서 확인한 처리 순서와 201 응답 기록을 구분하고, 기록만으로 실제 커밋과 응답의 시간 차이를 확인할 수 없다고 밝혔다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35-52",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:72-76",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9-12"
+      ]
+    }
+  },
+  "usage": {
+    "input": 70700,
+    "cachedInput": 42112,
+    "output": 1553
+  },
+  "seed": 45
+}

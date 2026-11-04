@@ -1,0 +1,100 @@
+{
+  "id": "Q14",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 31.3,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "시각이 정확히 일치하는지 보는 매 정각 스케줄러, 과거 시각 검증만 있고 start<end 검증은 없다는 점, 맞닿는 기간을 중복으로 보지 않는 중복 조건, discountPrice가 할인 후 판매가라는 점, discountRate가 반올림한 정수 %라는 점이 모두 코드와 맞습니다. 저장소에 시간대 설정이 없으니 시간대·직렬화 오프셋·통화는 확인할 수 없다고 구분해 밝혔습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:32",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:46",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:162",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:29"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "엔티티가 LocalDateTime으로 저장하고 응답에서 Timestamp.valueOf로 변환한다는 점, LocalDateTime.now()가 JVM 기본 시간대에 의존한다는 점(Dockerfile ENTRYPOINT에 시간대 옵션 없음), 정확히 일치하는 시각만 찾는 스케줄러, 중복 조건이 코드와 맞습니다. discountPrice를 주문 계산의 단가로 쓴다는 점(OrderCalculationService:45-53)도 확인됩니다. 배포 시간대·오프셋·통화는 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:66",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:178",
+        "product/Dockerfile:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:32",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:65",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:163",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:52"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "시작·종료 기준(정각 스케줄러의 정확한 시각 일치)과 가격 필드의 의미(할인 후 판매가, 계산된 할인율)는 저장소에서 확인되는데도 '확인할 수 없다'고 답해 질문에 답하지 못했습니다. 시간대를 확정할 수 없다는 점만 맞고, 확인 가능한 것을 확인 불가로 잘못 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:162",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 17586,
+    "cache_read_input_tokens": 58464,
+    "output_tokens": 3612,
+    "output_tokens_details": {
+      "thinking_tokens": 514
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17586,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2433,
+        "cache_read_input_tokens": 22536,
+        "cache_creation_input_tokens": 221,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 221
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2246528
+  },
+  "seed": 45
+}

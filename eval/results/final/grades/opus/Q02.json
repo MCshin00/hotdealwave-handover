@@ -1,0 +1,94 @@
+{
+  "id": "Q02",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 68.7,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A는 createOrder가 주문 저장, 주문 상품 저장, 장바구니 삭제를 마친 뒤 재고 차감 메시지를 보낸다는 점을 짚었습니다. 결제 준비 실패 시의 복구 메시지 발행, 상품 측의 수량 가산 방식, 복구 실패 시 로그와 ACK만 남는 점, 전파된 예외에만 적용되는 재시도 0회와 product-dlq 설정도 모두 코드와 맞습니다. 결제 측 발행 토픽(ROLLBACK_REDUCE_QUANTITY)과 상품 측 구독 토픽(RESTORE_QUANTITY)이 저장소 밖 환경변수로 정해져 연결을 확인할 수 없다는 점도 구분해 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108-122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55-65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44-53",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:59-80",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:47-50,100-106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:40-41",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:55-64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16",
+        "docker-compose.yml:88,195"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "B는 질문의 핵심을 비껴갔습니다. 재고 차감 실패 경로(ProductKafkaConsumer:45-50)를 앞세웠고, 주문 저장이 차감보다 먼저라는 순서와 결제 측의 복구 요청 경로는 빠뜨렸습니다. 재고를 어떻게 복구하는지(수량 가산)도 설명하지 않았고, 복구 실패 시 조치는 코드(74-80행의 로그와 ACK)로 확인되는데도 '확인할 수 없다'고 했습니다. 토픽 값과 구독 연결을 확인할 수 없다는 점은 구분해 밝혔습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45-50",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:64-80",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:13-15",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55-65",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108-122"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "C의 주장은 모두 코드와 맞습니다. 주문 저장이 먼저이고 createOrder에는 복구 처리가 없다는 점, 결제 준비 실패 시 주문을 다시 조회해 복구 메시지를 발행한다는 점, 상품과 프로모션 수량을 가산하는 방식, 양쪽 실패 처리에서 로그와 ACK만 남는 점이 그렇습니다. 다만 결제 측이 발행한 복구 메시지를 상품 측이 받아 restoreQuantity를 호출한다고 연결을 확인된 것처럼 썼습니다. 실제로는 발행(ROLLBACK_REDUCE_QUANTITY)과 구독(RESTORE_QUANTITY) 토픽이 저장소 밖 환경변수로 정해져 이 연결을 확인할 수 없는데, 이 점을 밝히지 않았습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108-122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:29-37,55-65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44-53",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:47-50,100-106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:40-41",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:64-80",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58-64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 27449,
+    "cache_read_input_tokens": 113825,
+    "output_tokens": 7480,
+    "output_tokens_details": {
+      "thinking_tokens": 2187
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 27449,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2051,
+        "cache_read_input_tokens": 28307,
+        "cache_creation_input_tokens": 4313,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4313
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.39200500000000005
+  },
+  "seed": 45
+}
