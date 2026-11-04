@@ -52,22 +52,24 @@ final class KafkaChecks {
         }
         for (var publication : analysis.path("kafkaPublications")) {
             if (items(analysis.path("kafkaLinks")).stream().noneMatch(l -> known(l) && l.path("publicationId").asText().equals(publication.path("id").asText()))) {
-                warn(analysis, "kafka-topics", publication.path("evidence"), "구독자 확인 안 됨: " + label(publication));
+                warn(analysis, "kafka-topics", publication.path("evidence"), "구독자 확인 안 됨: " + reason(publication, "구독"));
             }
         }
         for (var subscription : analysis.path("kafkaSubscriptions")) {
             if (items(analysis.path("kafkaLinks")).stream().noneMatch(l -> known(l) && l.path("subscriptionId").asText().equals(subscription.path("id").asText()))) {
-                warn(analysis, "kafka-topics", subscription.path("evidence"), "발행자 확인 안 됨: " + label(subscription));
+                warn(analysis, "kafka-topics", subscription.path("evidence"), "발행자 확인 안 됨: " + reason(subscription, "발행"));
             }
         }
         count(analysis, "kafka-topics");
     }
 
-    private static String label(JsonNode endpoint) {
+    /** Why no link is confirmed: nothing on the other side uses the same topic name or environment variable. */
+    private static String reason(JsonNode endpoint, String otherSide) {
         String service = endpoint.path("service").asText();
         if (known(endpoint.path("topicName")))
-            return service + ", 토픽 " + value(endpoint.path("topicName")) + ", 토픽 키·환경변수 해당 없음";
-        return service + ", " + (known(endpoint.path("topicKey")) ? value(endpoint.path("topicKey")) : "토픽 키 확인 안 됨")
-                + ", " + (known(endpoint.path("environment")) ? value(endpoint.path("environment")) : "환경변수 확인 안 됨");
+            return "같은 토픽 이름(" + value(endpoint.path("topicName")) + ")을 쓰는 " + otherSide + "을 찾지 못함 (" + service + ")";
+        return "같은 환경변수(" + (known(endpoint.path("environment")) ? value(endpoint.path("environment")) : "확인 안 됨") + ")를 쓰는 " + otherSide
+                + "을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 ("
+                + service + ", " + (known(endpoint.path("topicKey")) ? value(endpoint.path("topicKey")) : "토픽 키 확인 안 됨") + ")";
     }
 }

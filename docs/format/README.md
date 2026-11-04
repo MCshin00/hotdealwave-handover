@@ -70,7 +70,7 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 | 필드 | 내용 |
 |---|---|
 | `service` | 서비스의 `spring.application.name` |
-| `kind` | 종류: `업무 규칙` 또는 `함정` |
+| `kind` | 종류: `업무 규칙`, `함정`, `설명` |
 | `title` | 제목 |
 | `description` | 발생 조건과 실제 동작. 함정은 누가 무엇을 하다 어떤 결과를 받는지도 쓴다 |
 | `evidence` | 하나 이상의 근거 `파일:줄` |
@@ -78,6 +78,8 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 | `source` | `AI 해석` 또는 `판정` |
 | `discoveryPath` | `코드` 또는 `실제 응답` |
 | `confirmationStatus` | `확인함`, `틀림`, `미확인` 중 개발자가 정한 값 |
+
+`설명`은 엔드포인트·Kafka 발행·구독 하나가 하는 일을 한국어로 쓴 항목이다. 영향 ID는 그 하나이고, 페이지 맨 위 "설명" 절에 나온다.
 
 코드 근거는 고정 커밋의 대상 루트 기준 경로, 응답 근거는 `analysis/<대상>/responses/<파일>.json:줄`이다. 응답 파일을 근거에 포함하면 발견 경로는 `실제 응답`이다. AI 해석의 출처는 `AI 해석`, 확인 상태는 `미확인`으로 시작한다.
 

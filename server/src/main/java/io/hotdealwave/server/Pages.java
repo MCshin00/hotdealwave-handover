@@ -79,7 +79,7 @@ class Pages {
         var endpoint = analysis.find("endpoints", id);
         if (endpoint.isMissingNode()) return null;
         return new Page("/endpoints/" + id, "endpoint", Map.of("endpoint", endpoint, "flow", queries.traceFlow(id),
-                "items", queries.knowledgeFor(List.of(id))), "엔드포인트", Set.of(endpoint.path("service").asText()));
+                "items", queries.knowledgeFor(List.of(id)), "descriptions", queries.descriptionsFor(List.of(id))), "엔드포인트", Set.of(endpoint.path("service").asText()));
     }
 
     private Page topic(String name) {
@@ -89,9 +89,10 @@ class Pages {
         var links = topic.publications().stream()
                 .flatMap(p -> queries.traceFlow(p.path("id").asText()).forward().stream().filter(s -> s.from().equals(p.path("id").asText())))
                 .filter(s -> s.kind().equals("구독")).toList();
+        var ids = nodes.stream().map(n -> n.path("id").asText()).toList();
         return new Page("/topics/" + name, "topic", Map.of("topic", topic, "links", links,
                 "unpublished", topic.subscriptions().stream().map(queries::warning).filter(Objects::nonNull).toList(),
-                "items", queries.knowledgeFor(nodes.stream().map(n -> n.path("id").asText()).toList())),
+                "items", queries.knowledgeFor(ids), "descriptions", queries.descriptionsFor(ids)),
                 "토픽", new TreeSet<>(nodes.stream().map(n -> n.path("service").asText()).toList()));
     }
 

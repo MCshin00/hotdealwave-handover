@@ -718,6 +718,377 @@
       "source": "판정",
       "discoveryPath": "코드",
       "confirmationStatus": "확인함"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 준비와 결제 화면 주소 반환",
+      "description": "주문 번호·주문명·수량·금액을 받아 결제 준비를 요청하고 대기 상태의 결제 내역을 저장한다. 거래 번호와 PC 결제 화면 주소, 생성 시각을 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:42",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:45",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:54",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/res/ResPostPaymentsDto.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/res/ResPostPaymentsDto.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/res/ResPostPaymentsDto.java:31"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.readyPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 승인과 완료 상태 저장",
+      "description": "거래 번호와 결제 승인용 토큰으로 승인을 요청한다. 승인 응답을 받으면 결제 상태를 완료로 바꾸고 승인 결과를 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:74",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:77",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:81"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.confirmPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "내 결제 내역 목록 조회",
+      "description": "요청자 본인의 삭제되지 않은 결제 내역을 페이지 단위로 조회한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:51",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:57",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:79",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/repository/PaymentRepositoryImpl.java:36"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.getPayments"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "내 결제 내역 한 건 조회",
+      "description": "결제 번호로 요청자 본인의 삭제되지 않은 결제 내역 한 건을 조회한다. 해당 내역이 없으면 결제를 찾을 수 없다는 오류를 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:60",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:72",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:73",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:74",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/repository/PaymentRepositoryImpl.java:31"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.getPaymentById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "완료된 결제의 전액 환불",
+      "description": "주문 번호로 요청자 본인의 완료된 결제를 찾아 저장된 결제 금액 전액의 환불을 요청한다. 환불 응답을 받으면 환불액·환불 상태·환불 시각을 저장하고 결과를 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:71",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:83",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:84",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:86",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:87",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:89",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:93",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:89",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:92",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:97",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:79",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:80",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:81",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:82"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.refundPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "대기 중인 결제 취소",
+      "description": "주문 번호로 요청자 본인의 대기 중인 결제를 찾아 취소 상태로 바꾸고 결과를 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:74",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:78",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:99",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:100",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:102",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:103",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:107",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:112"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentController.cancelPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 완료 안내 화면",
+      "description": "결제 완료 문구가 있는 안내 화면을 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20",
+        "payment/src/main/resources/templates/payment-success.html:9"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentViewController.getPaymentSuccessPage"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 실패 안내 화면",
+      "description": "결제 실패 문구가 있는 안내 화면을 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:25",
+        "payment/src/main/resources/templates/payment-fail.html:9"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentViewController.getPaymentFailPage"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 취소 안내 화면",
+      "description": "결제 취소 문구가 있는 안내 화면을 반환한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:30",
+        "payment/src/main/resources/templates/payment-cancel.html:9"
+      ],
+      "affectedIds": [
+        "payment-service.PaymentViewController.getPaymentCancelPage"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "실패한 메시지와 오류 내용 발행",
+      "description": "처리에 실패한 원본 메시지와 오류 내용을 JSON으로 묶어 실패 메시지 보관용 토픽에 보낸다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:17",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
+      ],
+      "affectedIds": [
+        "payment-service.publishDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "주문 상태 변경 메시지 발행",
+      "description": "주문 번호와 변경할 주문 상태를 메시지로 보낸다. 주문 번호를 메시지 키로 사용한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:34",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:35",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52"
+      ],
+      "affectedIds": [
+        "payment-service.updateOrderStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "상품 수량 복구 요청 발행",
+      "description": "주문 번호와 상품별 상품 번호·수량을 담아, 줄어든 상품 수량을 복구하도록 요청하는 메시지를 보낸다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:45",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:46",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:47",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:38"
+      ],
+      "affectedIds": [
+        "payment-service.rollbackProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "오류 처리기로 넘어온 실패 메시지 발행",
+      "description": "메시지 처리 오류가 리스너의 공통 오류 처리기까지 전달되면 재시도 없이 실패 메시지를 payment-dlq 토픽으로 보내도록 설정한다. 보낼 파티션은 원래 메시지의 파티션 번호를 사용한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:49",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:61",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:64"
+      ],
+      "affectedIds": [
+        "payment-service.literalDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 취소 요청 메시지 처리",
+      "description": "메시지의 주문 번호로 주문 정보를 조회한 뒤, 해당 주문과 사용자에 속한 대기 중 결제를 취소 상태로 바꾼다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:46",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:51",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:56"
+      ],
+      "affectedIds": [
+        "payment-service.cancel"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "실패 메시지의 원문과 오류 로그 기록",
+      "description": "실패 메시지에서 원문과 오류 내용을 꺼내 로그에 기록하는 구독 메서드다. 클래스의 빈 등록 근거가 없어 실제 구독 실행 여부는 단정할 수 없다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:10",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:11",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:20",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:22",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:25"
+      ],
+      "affectedIds": [
+        "payment-service.dlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 준비 요청 메시지 처리",
+      "description": "메시지의 주문 번호로 조회한 주문 정보를 사용해 결제 준비를 요청한다. 준비 응답을 받으면 거래 번호와 결제 화면 주소를 포함한 대기 상태의 결제 내역을 저장한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:17",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:31",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:39"
+      ],
+      "affectedIds": [
+        "payment-service.ready"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "payment-service",
+      "kind": "설명",
+      "title": "결제 환불 요청 메시지 처리",
+      "description": "메시지의 주문 번호로 주문 정보를 조회한 뒤, 해당 주문과 사용자에 속한 완료된 결제의 전액 환불을 요청한다. 환불 응답을 받으면 환불액·환불 상태·환불 시각을 저장한다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:62",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:63",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:66",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:70",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:89",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:92",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:97",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:79",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:80",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:81",
+        "payment/src/main/java/com/sparta/hotdeal/payment/domain/entity/payment/Payment.java:82"
+      ],
+      "affectedIds": [
+        "payment-service.refund"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }

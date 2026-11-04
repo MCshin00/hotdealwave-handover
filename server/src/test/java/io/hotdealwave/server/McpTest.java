@@ -43,7 +43,7 @@ class McpTest {
         assertTrue(endpoint.contains("order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40"));
 
         String flow = text(call("trace_flow", "id", "order-service.OrderController.createOrder"));
-        assertTrue(flow.contains("order-service.requestProduct → (구독) 확인 안 됨 — 구독자 확인 안 됨: order-service, spring.kafka.topics.request-product"));
+        assertTrue(flow.contains("order-service.requestProduct → (구독) 확인 안 됨 — 구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐"));
 
         assertTrue(text(call("find_subscribers", "topic", "KAFKA_DLQ_TOPIC")).contains("토픽 실제 값: 저장소에 근거 없음"));
         assertTrue(text(call("search_docs", "query", "createOrder")).contains("/endpoints/order-service.OrderController.createOrder"));

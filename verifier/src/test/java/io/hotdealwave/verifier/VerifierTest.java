@@ -227,6 +227,8 @@ class VerifierTest {
         output = verify(input);
         assertEquals(1, output.path("kafkaLinks").size());
         assertEquals(2, output.at("/checks/kafka-topics/warningCount").asInt());
+        assertTrue(output.path("warnings").toString().contains("구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. "
+                + "토픽 실제 값은 저장소 밖 환경에서 정해짐 (order-service, spring.kafka.topics.request-product)"));
         assertEquals("확인됨", output.at("/kafkaPublications/1/status").asText());
         assertEquals("확인됨", output.at("/kafkaSubscriptions/1/status").asText());
 

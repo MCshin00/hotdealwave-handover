@@ -9,6 +9,7 @@
 <p class="line" th:text="|경로: ${@view.fact(endpoint.path('path'))}|"></p>
 <p class="line" th:text="|확인 상태: ${@view.status(endpoint)} ${@view.evidence(endpoint)}|"></p>
 <p class="line" th:text="|응답 확인: ${@view.responseCheck(endpoint.path('responseCheck'))}|"></p>
+<section th:replace="~{items :: descriptions(${descriptions})}"></section>
 <h2>게이트웨이 외부 경로</h2>
 <p class="line" th:each="x : ${endpoint.path('externalPaths')}"
    th:text="|${x.path('path').asText()} (경로 규칙 ${x.path('routeId').asText()}) ${@view.status(x)} ${@view.evidence(x)} · 토큰 필요: ${@view.fact(x.path('tokenRequired'))}|"></p>

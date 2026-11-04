@@ -719,6 +719,353 @@
       "source": "AI 해석",
       "discoveryPath": "코드",
       "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "배송지 등록",
+      "description": "요청한 회원의 배송지를 등록하고 새 배송지 ID를 돌려준다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:38",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:40",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:43"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.createAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "배송지 한 건 조회",
+      "description": "배송지 ID로 본인 소유의 삭제되지 않은 배송지를 찾아 주소 정보를 돌려준다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:57",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:48",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:57",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:144"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.getAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "기본 배송지 조회",
+      "description": "요청한 회원의 기본 배송지 정보를 돌려준다. 기본 배송지가 설정되어 있지 않으면 오류를 반환한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:61",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:64",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:65",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:67"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.getDefaultAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "배송지 목록 조회",
+      "description": "요청한 회원의 삭제되지 않은 배송지를 페이지별로 조회한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:79",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:71",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:73"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.getAddresses"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "배송지 주소 수정",
+      "description": "본인 소유의 삭제되지 않은 배송지에 요청한 주소 정보를 덮어쓰고 배송지 ID를 돌려준다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:91",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:95",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:58"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.updateAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "기본 배송지 지정",
+      "description": "본인 소유의 삭제되지 않은 배송지를 기본 배송지로 지정하고 배송지 ID를 돌려준다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:103",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:104",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:108",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:112",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:115"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.updateDefaultAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "배송지 삭제",
+      "description": "본인 배송지에 삭제 시각과 삭제자를 기록하고, 해당 배송지가 기본 배송지이면 기본 지정을 해제한다. 기본 배송지가 없는 상태에서는 오류로 삭제가 완료되지 않는다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:116",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:119",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:132",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:134",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:135",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Audit.java:40",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Audit.java:41"
+      ],
+      "affectedIds": [
+        "user-service.AddressController.deleteAddress"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "회원가입",
+      "description": "이메일 인증 여부와 닉네임 중복, 가입할 권한을 확인한 뒤 회원을 등록하고 회원 ID를 돌려준다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:35",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:50",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:54",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:55",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:60",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:64"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.signUp"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "이메일 중복 확인",
+      "description": "입력한 이메일로 등록된 회원이 있는지 확인한다. 중복이면 오류를, 중복이 아니면 사용할 수 있다는 안내를 반환한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:43",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:69",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:70",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:45"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.checkEmail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "이메일 인증 코드 발송 요청",
+      "description": "회원가입에 사용할 이메일의 중복 여부를 확인한 뒤 인증 코드를 만들어 메일 발송을 요청하고, 코드를 유효기간과 함께 저장한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:76",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:84",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:85",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:21",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/redis/RedisUtilImpl.java:17"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.sendVerifyEmail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "이메일 인증 코드 확인",
+      "description": "입력한 인증 코드를 저장된 코드와 대조한다. 일치하면 이메일을 인증 완료로 표시하고 저장된 코드를 지운다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:59",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:90",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:95",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:99",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:100",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:26"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.confirmEmail"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "로그인과 토큰 발급",
+      "description": "이메일과 비밀번호를 확인해 로그인하고, 접근 토큰과 갱신 토큰을 발급한다. 갱신 토큰은 회원별로 저장한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:104",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:105",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:109",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:111",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:112",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:114",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:117",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:118"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.login"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "로그인 토큰 재발급",
+      "description": "제출한 갱신 토큰의 유효성과 저장된 토큰과의 일치 여부를 확인한 뒤 접근 토큰과 갱신 토큰을 다시 발급한다. 저장된 갱신 토큰도 새 값으로 바꾼다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:125",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:131",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:138",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:139",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:141",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:144",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:145",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:187"
+      ],
+      "affectedIds": [
+        "user-service.AuthController.refresh"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "회원 정보 조회",
+      "description": "회원 ID로 이메일과 닉네임 등 회원 정보를 조회한다. 본인 정보를 조회할 수 있고, 최고 관리자는 다른 회원의 정보도 조회할 수 있다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:37",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:27",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:28",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:34",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/users/response/ResGetUsersByIdDto.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/users/response/ResGetUsersByIdDto.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/users/response/ResGetUsersByIdDto.java:19"
+      ],
+      "affectedIds": [
+        "user-service.UserController.getUser"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "회원 닉네임 수정",
+      "description": "회원의 닉네임을 바꾸고 회원 ID를 돌려준다. 본인 정보를 수정할 수 있고, 최고 관리자는 다른 회원의 닉네임도 수정할 수 있다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:45",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:52",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:55",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/User.java:58"
+      ],
+      "affectedIds": [
+        "user-service.UserController.updateUserInfos"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "비밀번호 변경",
+      "description": "본인 계정의 비밀번호를 새 비밀번호로 바꾸고 회원 ID를 돌려준다. 새 비밀번호는 해시로 변환해 저장한다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:71",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:66",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:71",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:73",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:76",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/SecurityConfig.java:23",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/User.java:62"
+      ],
+      "affectedIds": [
+        "user-service.UserController.updateUserPassword"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "user-service",
+      "kind": "설명",
+      "title": "회원탈퇴 처리",
+      "description": "회원 기록에 삭제 시각과 삭제자를 남겨 탈퇴 처리하고 회원 ID를 돌려준다. 본인 계정을 탈퇴 처리할 수 있고, 최고 관리자는 다른 회원도 탈퇴 처리할 수 있다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:88",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:94",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:97",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Audit.java:40",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Audit.java:41"
+      ],
+      "affectedIds": [
+        "user-service.UserController.deleteUser"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }

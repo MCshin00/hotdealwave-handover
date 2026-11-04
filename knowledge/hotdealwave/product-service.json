@@ -864,6 +864,460 @@
       "source": "AI 해석",
       "discoveryPath": "실제 응답",
       "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 등록",
+      "description": "상품명·가격·재고·분류·설명과 상세 이미지·대표 이미지를 받아 새 상품을 등록하고 상품 ID를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:79",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:85"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.createProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 정보와 이미지 수정",
+      "description": "상품 ID로 상품을 찾아 이름·가격·재고·분류·설명·상태와 요청에 담긴 이미지를 수정하고 상품 ID를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:90",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:98",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:124"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.updateProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 상태 변경",
+      "description": "상품 ID로 상품을 찾아 요청한 상태로 바꾸고 상품 ID를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:130",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:133",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:138"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.updateProductStatus"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 삭제 처리",
+      "description": "상품 ID로 상품을 찾아 관련 이미지와 검색 자료를 삭제하고, 상품에 삭제 시각과 삭제자를 기록한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:149",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:153",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:157",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:160",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/AuditingDate.java:29"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.deleteProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 재고 차감",
+      "description": "상품 ID와 수량 목록을 받아 각 상품의 재고를 차감하고 요청에 담긴 주문 ID를 돌려준다. 할인 중인 상품은 진행 중인 할인 행사의 남은 수량도 함께 차감한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:81",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:109",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:43"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.reduceQuantity"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 재고 복구",
+      "description": "상품 ID와 수량 목록을 받아 각 상품의 재고에 요청 수량을 더하고 요청에 담긴 주문 ID를 돌려준다. 할인 중인 상품은 진행 중인 할인 행사의 남은 수량도 함께 늘린다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:81",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:109",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:41"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.restoreQuantity"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 상세 조회",
+      "description": "상품 ID로 상품을 찾아 이름·가격·재고·이미지·상태·평점·리뷰 수와 할인가 등 상세 정보를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:169",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:204"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.getProduct"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 검색과 목록 조회",
+      "description": "검색어와 상품 ID 목록으로 상품을 찾고, 요청한 정렬과 페이지 조건에 맞는 상품 목록을 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:175",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:188",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:40"
+      ],
+      "affectedIds": [
+        "product-service.ProductController.getAllProducts"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "시간 한정 할인 행사 등록",
+      "description": "상품과 할인 기간·가격·수량을 받아 시간 한정 할인 행사를 등록하고 행사 ID를 돌려준다. 새 행사는 대기 상태로 시작한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:69",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:71",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:65",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:72"
+      ],
+      "affectedIds": [
+        "product-service.PromotionController.createPromotion"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "시간 한정 할인 행사 수정",
+      "description": "할인 행사 ID로 행사를 찾아 대상 상품·기간·할인가·수량을 수정하고 행사 ID를 돌려준다. 진행 중인 행사는 수정할 수 없다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:76",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:79",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:114",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:76"
+      ],
+      "affectedIds": [
+        "product-service.PromotionController.updatePromotion"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "시간 한정 할인 행사 삭제 처리",
+      "description": "할인 행사 ID로 행사를 찾아 삭제 시각과 삭제자를 기록한다. 진행 중인 행사는 삭제할 수 없다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:118",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:127",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/AuditingDate.java:29"
+      ],
+      "affectedIds": [
+        "product-service.PromotionController.deletePromotion"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "시간 한정 할인 행사 상세 조회",
+      "description": "할인 행사 ID로 행사를 찾아 대상 상품·기간·할인율·할인가·판매 수량·남은 수량·상태를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:132",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:135",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:175"
+      ],
+      "affectedIds": [
+        "product-service.PromotionController.getPromotion"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "시간 한정 할인 행사 목록 조회",
+      "description": "상품 ID 목록과 행사 상태로 할인 행사를 걸러 요청한 정렬과 페이지 조건에 맞는 목록을 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:142",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:145",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:151",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryCustomImpl.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryCustomImpl.java:41"
+      ],
+      "affectedIds": [
+        "product-service.PromotionController.getAllPromotions"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 리뷰 등록",
+      "description": "주문·상품·사용자 ID와 평점·리뷰 내용·이미지를 받아 상품 리뷰를 등록한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:46",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:51",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:61",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:65"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.createReview"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 리뷰 수정",
+      "description": "리뷰 ID로 리뷰를 찾아 평점과 내용을 바꾸고, 이미지가 전달되면 이미지도 갱신한다. 상품의 평점 집계도 변경된 평점에 맞춰 조정한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:71",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:80",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:81",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:84",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:88"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.updateReview"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 리뷰 삭제 처리",
+      "description": "리뷰 ID로 리뷰를 찾아 상품의 평점 합계와 리뷰 수를 줄이고 관련 이미지의 삭제 처리를 수행한다. 리뷰에는 삭제 시각과 삭제자를 기록한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:93",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:102",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:108",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:156",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/AuditingDate.java:29"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.deleteReview"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 리뷰 상세 조회",
+      "description": "리뷰 ID로 리뷰를 찾아 작성자 별명·평점·내용·이미지 주소를 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:114",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:118",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/review/ResGetReviewByIdDto.java:22"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.getReviewById"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "상품 리뷰 목록 조회",
+      "description": "리뷰를 페이지 단위로 조회하고, 각 리뷰의 작성자 별명·평점·내용·이미지 주소를 담은 목록을 돌려준다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:123",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/review/ResGetReviewByIdDto.java:22"
+      ],
+      "affectedIds": [
+        "product-service.ReviewController.getReviewList"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "처리에 실패한 메시지 별도 보관",
+      "description": "메시지 처리 오류가 공통 오류 처리기로 넘어오면, 실패한 메시지를 product-dlq 토픽의 원래 파티션 번호로 보낸다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:61",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64"
+      ],
+      "affectedIds": [
+        "product-service.literalDlq"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "재고 차감 실패 시 주문 되돌리기 요청 발행",
+      "description": "재고 차감 메시지를 처리하다 업무 예외가 발생하면, 주문을 되돌리기 위한 요청으로 주문 ID를 담은 메시지를 발행한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:35",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:125",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:14"
+      ],
+      "affectedIds": [
+        "product-service.rollbackOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "재고 차감 후 결제 요청 발행",
+      "description": "재고 차감 메시지의 처리가 성공하면, 결제를 요청하기 위해 주문 ID를 담은 메시지를 발행한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:35",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:134",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:18"
+      ],
+      "affectedIds": [
+        "product-service.requestPayment"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "재고 복구 후 주문 취소 요청 발행",
+      "description": "재고 복구 메시지의 처리가 성공하면, 주문 취소를 요청하기 위해 주문 ID를 담은 메시지를 발행한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:63",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:66",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:69",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:22"
+      ],
+      "affectedIds": [
+        "product-service.requestOrder"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "재고 차감 요청 메시지 처리",
+      "description": "주문 ID와 상품별 수량이 담긴 메시지를 받아 재고를 차감한다. 차감에 성공하면 결제 요청을, 업무 예외가 발생하면 주문을 되돌리기 위한 요청을 발행한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:33",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:42",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:48"
+      ],
+      "affectedIds": [
+        "product-service.reduce"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
+    },
+    {
+      "service": "product-service",
+      "kind": "설명",
+      "title": "재고 복구 요청 메시지 처리",
+      "description": "주문 ID와 상품별 수량이 담긴 메시지를 받아 재고를 복구하고, 복구에 성공하면 주문 취소 요청을 발행한다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:61",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:66",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70"
+      ],
+      "affectedIds": [
+        "product-service.restore"
+      ],
+      "source": "AI 해석",
+      "discoveryPath": "코드",
+      "confirmationStatus": "미확인"
     }
   ]
 }

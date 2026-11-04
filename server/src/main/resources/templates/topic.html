@@ -5,6 +5,7 @@
 <p><a href="/">처음</a></p>
 <h1 th:text="|토픽 ${topic.name()}|"></h1>
 <p class="line">검증 범위: 코드만</p>
+<section th:replace="~{items :: descriptions(${descriptions})}"></section>
 <h2>발행</h2>
 <p th:if="${topic.publications().isEmpty()}">확인된 발행 없음</p>
 <div th:each="p : ${topic.publications()}">
