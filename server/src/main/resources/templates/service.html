@@ -4,7 +4,7 @@
 <body>
 <p><a href="/">처음</a></p>
 <h1 th:text="${name}"></h1>
-<p class="line" th:unless="${endpoints.isEmpty()}" th:text="|검증 범위: ${@view.verificationSummary(endpoints)}|"></p>
+<p class="line" th:text="|검증 범위: ${@view.verificationSummary(endpoints)}|"></p>
 <p class="line" th:text="|디렉터리: ${service.path('directory').asText()} · compose 서비스: ${@view.fact(service.path('composeService'))}|"></p>
 <h2 th:text="|엔드포인트 ${#lists.size(endpoints)}개|"></h2>
 <p class="line" th:each="e : ${endpoints}">

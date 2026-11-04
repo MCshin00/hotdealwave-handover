@@ -54,6 +54,7 @@ public class View {
 
     /** Endpoint count per verification scope, error codes merged. */
     public String verificationSummary(List<JsonNode> endpoints) {
+        if (endpoints.isEmpty()) return "코드만(엔드포인트 없음)";
         var counts = new LinkedHashMap<String, Integer>();
         for (var scope : List.of("코드 + 실제 응답", "코드 + 실제 응답(오류)", "코드만")) counts.put(scope, 0);
         for (var endpoint : endpoints) counts.merge(verification(endpoint).replaceFirst(" \\d+\\)", ")"), 1, Integer::sum);

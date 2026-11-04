@@ -40,6 +40,7 @@ class PagesTest {
         assertTrue(page("/endpoints/product-service.ReviewController.getReviewList").contains("검증 범위: 코드 + 실제 응답(오류 500)"));
         assertTrue(page("/endpoints/payment-service.PaymentController.readyPayment").contains("검증 범위: 코드만"));
         assertTrue(page("/services/payment-service").contains("검증 범위: 엔드포인트 9개 중 코드 + 실제 응답 1개, 코드 + 실제 응답(오류) 1개, 코드만 7개"));
+        assertTrue(page("/services/gateway-service").contains("검증 범위: 코드만(엔드포인트 없음)"));
         assertTrue(page("/topics/KAFKA_DLQ_TOPIC").contains("검증 범위: 코드만"));
     }
 
