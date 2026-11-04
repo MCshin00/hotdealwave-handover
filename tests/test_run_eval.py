@@ -12,7 +12,8 @@ class RunEvalTest(unittest.TestCase):
     def test_base_and_mcp_differ_only_by_the_mcp_server(self):
         base = run_eval.codex_command("base", "checkout", "answer.md", "http://localhost:8080")
         mcp = run_eval.codex_command("mcp", "checkout", "answer.md", "http://localhost:8080")
-        added = ["-c", 'mcp_servers.hotdealwave.url="http://localhost:8080/mcp"']
+        added = ["-c", 'mcp_servers.hotdealwave.url="http://localhost:8080/mcp"',
+                 "-c", 'mcp_servers.hotdealwave.default_tools_approval_mode="approve"']
         self.assertNotIn(added[1], base)
         self.assertEqual(mcp, base[:-1] + added + base[-1:])
         for setting in ("--ignore-user-config", "--ephemeral", "read-only", "apps", "memories", 'web_search="disabled"'):
@@ -28,13 +29,17 @@ class RunEvalTest(unittest.TestCase):
     def test_events_give_tokens_tools_and_commands(self):
         events = [
             {"type": "item.completed", "item": {"type": "command_execution", "command": "rg createOrder"}},
-            {"type": "item.completed", "item": {"type": "mcp_tool_call", "server": "hotdealwave", "tool": "trace_flow"}},
-            {"type": "item.completed", "item": {"type": "mcp_tool_call", "server": "codex", "tool": "list_mcp_resources"}},
+            {"type": "item.completed", "item": {"type": "mcp_tool_call", "server": "hotdealwave", "tool": "trace_flow",
+                                                "status": "completed", "error": None}},
+            {"type": "item.completed", "item": {"type": "mcp_tool_call", "server": "hotdealwave", "tool": "search_docs",
+                                                "status": "failed", "error": {"message": "approval required"}}},
+            {"type": "item.completed", "item": {"type": "mcp_tool_call", "server": "codex", "tool": "list_mcp_resources",
+                                                "status": "completed", "error": None}},
             {"type": "turn.completed", "usage": {"input_tokens": 100, "cached_input_tokens": 60, "output_tokens": 7}},
         ]
         summary = run_eval.summarize(json.dumps(event) for event in events)
         self.assertEqual(summary, {"tokens": {"input": 100, "cachedInput": 60, "output": 7},
-                                   "mcpTools": ["trace_flow"], "commands": 1})
+                                   "mcpTools": ["trace_flow"], "mcpFailed": ["search_docs"], "commands": 1})
 
     def test_ask_reply_keeps_abstain(self):
         reply = {"status": "보류", "answer": None, "citations": [], "reason": "모델 보류",

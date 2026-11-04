@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "target/HotDealWave"
 COMMIT = "cc43016b907331a3ce8471475cbf44412e8a6954"
 
-# 경로:줄, 또는 앞 인용과 같은 파일인 `:줄`. 범위는 `:16`–`:17`, `:16-18`처럼 쓴다.
-CITE = re.compile(r"(?:(?P<path>(?:[\w.\-]+/)+[\w.\-]+\.\w+)|(?<=`)):(?P<start>\d+)"
+# 저장소 루트 기준 경로:줄, 또는 앞 인용과 같은 파일인 `:줄`. 범위는 `:16`–`:17`, `:16-18`처럼 쓴다.
+CITE = re.compile(r"(?:(?P<path>(?:[\w.\-]+/)*[\w.\-]+\.\w+)|(?<=`)):(?P<start>\d+)"
                   r"(?:`?\s*[–-]\s*`?:?(?P<end>\d+)(?![\w.]))?")
 CODE = re.compile(r"`([^`]+)`")
 WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")

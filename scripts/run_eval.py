@@ -46,14 +46,15 @@ def codex_command(condition, checkout, last_message, server):
                "--disable", "apps", "--disable", "memories", "-c", 'web_search="disabled"',
                "-m", MODEL, "-c", f'model_reasoning_effort="{REASONING}"', "-c", 'service_tier="fast"',
                "-C", str(checkout), "-o", str(last_message)]
-    if condition == "mcp":
-        command += ["-c", f'mcp_servers.hotdealwave.url="{server}/mcp"']
+    if condition == "mcp":  # 승인 정책이 never라 도구 호출도 승인 없이 통과시켜야 한다.
+        command += ["-c", f'mcp_servers.hotdealwave.url="{server}/mcp"',
+                    "-c", 'mcp_servers.hotdealwave.default_tools_approval_mode="approve"']
     return command + ["-"]
 
 
 def summarize(lines):
-    """codex exec --json 이벤트에서 토큰, 이 서버의 MCP 도구 호출, 셸 명령 수."""
-    summary = {"tokens": {"input": 0, "cachedInput": 0, "output": 0}, "mcpTools": [], "commands": 0}
+    """codex exec --json 이벤트에서 토큰, 이 서버의 MCP 도구 호출(성공·실패), 셸 명령 수."""
+    summary = {"tokens": {"input": 0, "cachedInput": 0, "output": 0}, "mcpTools": [], "mcpFailed": [], "commands": 0}
     for line in lines:
         event = json.loads(line)
         item = event.get("item", {})
@@ -62,7 +63,8 @@ def summarize(lines):
             summary["tokens"] = {"input": usage["input_tokens"], "cachedInput": usage["cached_input_tokens"],
                                  "output": usage["output_tokens"]}
         elif event["type"] == "item.completed" and item.get("type") == "mcp_tool_call" and item["server"] == "hotdealwave":
-            summary["mcpTools"].append(item["tool"])
+            succeeded = item.get("status") == "completed" and not item.get("error")
+            summary["mcpTools" if succeeded else "mcpFailed"].append(item["tool"])
         elif event["type"] == "item.completed" and item.get("type") == "command_execution":
             summary["commands"] += 1
     return summary
@@ -154,7 +156,8 @@ def main():
             record = run_codex(args.condition, row["질문"], checkout, args.server, args.timeout)
         record = {"id": row["id"], "condition": args.condition, "question": row["질문"], **record}
         (out / f"{row['id']}.json").write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(f"{row['id']} {args.condition}: {record['status']}, {record['seconds']}초")
+        tools = f", 도구 성공 {len(record['mcpTools'])}·실패 {len(record['mcpFailed'])}" if args.condition == "mcp" else ""
+        print(f"{row['id']} {args.condition}: {record['status']}, {record['seconds']}초{tools}", flush=True)
 
 
 if __name__ == "__main__":

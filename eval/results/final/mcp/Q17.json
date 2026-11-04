@@ -3,17 +3,19 @@
   "condition": "mcp",
   "question": "외부 메일 발송 계정의 인증 상태와 발송 제한, 수신 거부나 발송 실패 기록은 어디서 확인할 수 있나요?",
   "status": "완료",
-  "seconds": 64.6,
+  "seconds": 54.4,
   "tokens": {
-    "input": 158950,
-    "cachedInput": 136960,
-    "output": 1892
+    "input": 129126,
+    "cachedInput": 90240,
+    "output": 1647
   },
   "mcpTools": [
-    "search_docs"
+    "search_docs",
+    "get_page"
   ],
-  "commands": 6,
-  "answer": "확인할 곳은 **발송 계정의 외부 관리 화면**과 **애플리케이션 로그**로 나뉩니다. 다만 저장소만으로는 현재 계정 상태나 실제 발송 이력을 확인할 수 없습니다.\n\n- **발송 계정·인증 상태**: Gmail SMTP(`smtp.gmail.com:587`)를 사용하며, 계정과 비밀번호는 `EMAIL_SERVICE_USERNAME`, `EMAIL_SERVICE_PASSWORD`로 주입합니다. `auth: true`는 인증을 사용한다는 설정이지, 현재 인증이 정상이라는 증거는 아닙니다. 실제 상태는 배포에 사용한 Google 계정 측에서 확인해야 하며, 해당 관리 화면이나 현재 상태는 저장소에서 확인할 수 없습니다.  \n  근거: `user/src/main/resources/application.yml:8`, `user/src/main/resources/application.yml:10`, `user/src/main/resources/application.yml:15`, `docker-compose.yml:34`\n\n- **발송 제한·잔여 한도**: 저장소의 발송 메서드에는 횟수 제한이나 잔여 한도 조회가 없습니다. 설정된 `5000`은 SMTP 타임아웃이고, `1800000`은 인증 코드 유효기간입니다. 외부 계정에 적용되는 실제 발송 한도와 차단 여부는 Gmail 측에서 별도로 확인해야 하며, 저장소에서는 확인할 수 없습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:75`, `user/src/main/resources/application.yml:19`, `user/src/main/resources/application.yml:22`\n\n- **수신 거부·반송 기록**: 관련 저장·조회 구현은 찾지 못했습니다. `p_email`에는 이메일 주소와 `is_verified`만 있으며, 이는 사용자가 인증 코드를 확인했는지를 나타냅니다. 외부 발송 계정의 인증 상태나 수신 거부·발송 결과를 기록하는 테이블이 아닙니다. 외부 서비스에 별도 기록이 있는지도 저장소에서는 확인할 수 없습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:17`, `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:22`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:89`\n\n- **발송 실패 기록**: 운영 Loki에서 `{app=\"user-service\"}` 로그를 확인하는 것이 출발점입니다. 다만 직접 작성된 실패 로그는 DEBUG이고 기본 수준은 INFO이므로, 저장소 설정 그대로라면 이 로그는 출력되지 않습니다. 또한 원래 예외를 로그에 넣지 않고 원인 없는 `IllegalArgumentException`으로 바꾸므로 상세 SMTP 실패 원인도 보존하지 않습니다. 실제 로그 수집·보관 여부는 확인할 수 없습니다.  \n  근거: `user/src/main/resources/logback.xml:4`, `user/src/main/resources/logback.xml:8`, `user/src/main/resources/logback.xml:14`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:22`\n\n메일 발송은 비동기이므로 **인증 메일 요청 API의 성공 응답만으로 발송 성공을 판단할 수 없습니다.**  \n근거: `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:51`\n\n파일은 변경하지 않았습니다. `hotdealwave` MCP 문서 조회는 승인 필요 오류와 현재 승인 금지 정책으로 차단되어, 위 답변은 저장소 파일을 직접 확인한 결과입니다.",
+  "mcpFailed": [],
+  "commands": 4,
+  "answer": "**저장소에서 확인되는 것은 Gmail SMTP 설정과 애플리케이션 로그 경로입니다. 외부 계정의 실제 인증 상태·발송 한도·수신 거부 내역은 저장소만으로 확인할 수 없습니다.** 항목별 확인 위치는 다음과 같습니다.\n\n- **발송 계정·인증 상태**: `smtp.gmail.com:587`을 사용하며, 계정과 비밀번호는 `EMAIL_SERVICE_USERNAME`, `EMAIL_SERVICE_PASSWORD`로 주입됩니다. SMTP 인증과 STARTTLS가 활성화되어 있지만, 이는 설정일 뿐 현재 인증 성공을 뜻하지 않습니다. 실제 상태는 배포 환경에 연결된 Google 계정 측에서 별도로 확인해야 하며, 해당 관리 화면이나 현재 상태는 저장소에서 확인할 수 없습니다.  \n  근거: `user/src/main/resources/application.yml:8`, `user/src/main/resources/application.yml:10`, `user/src/main/resources/application.yml:15`, `docker-compose.yml:34`\n\n- **발송 제한**: 인증 메일 요청 코드에는 발송 횟수·재발송 간격을 제한하는 처리가 없습니다. 설정의 `5000`은 SMTP 타임아웃이고, `1800000`은 인증 코드 유효기간입니다. 외부 제공자의 계정별 발송 한도와 현재 사용량은 저장소에서 확인할 수 없습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:75`, `user/src/main/resources/application.yml:19`, `user/src/main/resources/application.yml:22`\n\n- **수신 거부·반송 기록**: 확인한 메일 구현에는 이를 저장하거나 조회하는 처리가 없습니다. `p_email`은 이메일 주소와 회원가입용 인증 여부(`is_verified`)를 저장하며, 외부 발송 계정의 인증 상태나 수신 거부 이력이 아닙니다. 외부 서비스에 별도 기록이 있는지도 저장소에서는 확인할 수 없습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:17`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:89`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:18`\n\n- **발송 실패 확인**: 운영 로그를 조회한다면 Loki의 `{app=\"user-service\"}`가 출발점입니다. 전송 대상은 `http://${HOST}:3100/loki/api/v1/push`입니다. 다만 메일 실패 시 직접 남기는 로그는 **DEBUG**이고 기본 로그 수준은 **INFO**여서, 저장소 설정 그대로라면 해당 로그는 남지 않습니다. 또한 원래 SMTP 예외를 로그에 포함하지 않고 원인 없는 `IllegalArgumentException`으로 바꾸므로 상세 실패 원인 추적에 한계가 있습니다. 실제 로그 수집 여부와 보존된 실패 기록은 확인할 수 없습니다.  \n  근거: `user/src/main/resources/logback.xml:4`, `user/src/main/resources/logback.xml:8`, `user/src/main/resources/logback.xml:14`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:22`\n\n**인증 메일 API의 성공 응답도 실제 발송 성공의 증거는 아닙니다.** 발송은 비동기 `void` 메서드로 실행되고 컨트롤러는 결과를 기다리지 않아, SMTP 발송이 실패해도 요청 성공 응답이 나갈 수 있습니다.  \n근거: `user/src/main/java/com/sparta/hotdeal/user/libs/config/AsyncConfig.java:7`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:51`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:53`",
   "settings": {
     "model": "gpt-6-astra",
     "reasoning": "high",

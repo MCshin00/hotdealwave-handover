@@ -3,17 +3,21 @@
   "condition": "mcp",
   "question": "배송지 요청의 필수값이 빠졌거나 다른 사용자의 배송지를 수정·삭제하려고 하면 어떤 상태 코드와 오류 본문이 내려오나요?",
   "status": "완료",
-  "seconds": 65.7,
+  "seconds": 47.5,
   "tokens": {
-    "input": 130108,
-    "cachedInput": 112512,
-    "output": 1746
+    "input": 142198,
+    "cachedInput": 114176,
+    "output": 1427
   },
   "mcpTools": [
+    "find_endpoint",
     "search_docs"
   ],
-  "commands": 5,
-  "answer": "**다른 사용자의 배송지 수정·삭제는 `400 Bad Request`입니다. 필수값 누락은 검증용 400 응답이 보장되지 않습니다.**\n\n1. **다른 사용자의 배송지 수정·삭제**\n\n   존재하고 삭제되지 않은 배송지라면, 소유자 ID가 요청 사용자 ID와 다를 때 `IllegalArgumentException`을 던집니다. 수정·삭제 모두 동일합니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:78`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:121`\n\n   이 예외는 **HTTP 400**으로 처리되며 본문은 다음과 같습니다.\n   ```json\n   {\"errorMessage\":\"접근 권한이 없습니다.\"}\n   ```\n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9`\n\n2. **배송지 등록·수정 요청의 필수 필드 누락**\n\n   요청 DTO에는 `@NotNull`·`@NotBlank` 같은 제약이 없고, 컨트롤러에도 `@Valid`가 없습니다. 따라서 필드 누락을 요청 검증 단계에서 잡아 **400과 필드별 오류 메시지를 반환하는 구현은 없습니다.**  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:10`, `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:42`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:87`\n\n   대신 `zipNum`, `city`, `district`, `streetName`, `streetNum`, `detailAddr`에는 엔티티의 `nullable = false`가 설정되어 있습니다. 수정도 누락 필드를 기존 값으로 유지하지 않고 전달받은 값으로 덮어씁니다. 따라서 누락값이 `null`로 바인딩되면 저장 시 제약 위반이 예상됩니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33`, `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51`\n\n   **이 저장 오류를 처리하는 전용 핸들러는 없어 일반적인 미처리 오류인 500이 예상되지만, 실제 상태 코드와 정확한 오류 본문은 저장소만으로 확정할 수 없습니다.** 존재하는 검증 예외 핸들러의 `400 / {\"errorMessage\":\"필드명 : 메시지 \"}` 형식을 배송지 필드 누락 응답이라고 단정하면 안 됩니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:29`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:45`\n\n파일은 수정하지 않았습니다. MCP 문서 조회는 승인 정책(`never`)에 의해 거부되어, 위 답변은 저장소 소스를 직접 확인한 결과입니다.",
+  "mcpFailed": [
+    "find_endpoint"
+  ],
+  "commands": 3,
+  "answer": "**다른 사용자의 배송지 수정·삭제는 `400 Bad Request`입니다. 필수값 누락은 같은 400 응답이 보장되지 않습니다.**\n\n1. **다른 사용자의 배송지 수정·삭제**\n\n   존재하고 삭제되지 않은 배송지라면, 소유자 ID가 요청자와 다를 때 `IllegalArgumentException`을 던집니다. 수정·삭제 모두 같습니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128`\n\n   예외 처리기가 이를 **HTTP 400**으로 변환하며, 본문은 다음과 같습니다.\n   ```json\n   {\"errorMessage\":\"접근 권한이 없습니다.\"}\n   ```\n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9`\n\n2. **배송지 등록·수정 JSON에서 필수 필드 누락**\n\n   현재 요청 DTO에는 `@NotNull`·`@NotBlank` 같은 검증이 없고, 컨트롤러에도 `@Valid`가 없습니다. 따라서 **필수값 누락을 검증하여 400과 정해진 오류 본문을 반환하는 구현은 확인되지 않습니다.**  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:10`, `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:42`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:87`\n\n   엔티티의 주소 필드 6개에는 `nullable = false`가 있고, 수정도 누락 필드를 보존하지 않고 전달값으로 덮어씁니다. 따라서 null 저장 시 영속성 오류가 발생할 가능성이 있지만, **이 경우 실제 HTTP 상태 코드와 오류 본문은 저장소 근거만으로 확정할 수 없습니다.**  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33`, `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51`\n\n   참고로 검증 예외가 발생했을 때의 공통 처리는 **400**, `{\"errorMessage\":\"필드명 : 검증 메시지 \"}` 형식입니다. 다만 위 배송지 요청에는 해당 검증 연결이 빠져 있습니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:45`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:51`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:62`",
   "settings": {
     "model": "gpt-6-astra",
     "reasoning": "high",

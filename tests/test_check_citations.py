@@ -28,6 +28,12 @@ class CheckCitationsTest(unittest.TestCase):
         found = check(f"`couponId` 값은 `{RESPONSE}:10`에 있다.")
         self.assertEqual((found[0]["exists"], found[0]["name"]), ("있음", "일치"))
 
+    def test_root_file_citation(self):
+        found = check("`ACTIVE_PROFILE`은 `docker-compose.yml:32`, 없는 줄은 `docker-compose.yml:99999`")
+        self.assertEqual([(c["path"], c["exists"]) for c in found],
+                         [("docker-compose.yml", "있음"), ("docker-compose.yml", "없음")])
+        self.assertEqual(found[0]["name"], "일치")
+
     def test_answer_without_citations(self):
         self.assertEqual(check("저장소에서 확인할 수 없습니다."), [])
 

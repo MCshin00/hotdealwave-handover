@@ -3,21 +3,22 @@
   "condition": "mcp",
   "question": "createOrder 요청 필드는?",
   "status": "완료",
-  "seconds": 30.0,
+  "seconds": 25.2,
   "tokens": {
-    "input": 56769,
-    "cachedInput": 18688,
-    "output": 685
+    "input": 63263,
+    "cachedInput": 53376,
+    "output": 587
   },
   "mcpTools": [
     "find_endpoint"
   ],
+  "mcpFailed": [],
   "commands": 2,
-  "answer": "`createOrder`는 **POST `/api/v1/orders`**이며, 요청 본문으로 `ReqPostOrderDto`를 받습니다.  \n근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35`, `:40`, `:43`, `:44`\n\n| 요청 필드 | 타입 | 필수 여부 | 근거 (`파일:줄`, 저장소 루트 기준) |\n|---|---|---|---|\n| `basketList` | UUID 배열 | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16`–`:17` |\n| `addressId` | UUID | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:18`–`:19` |\n| `couponId` | UUID | 선택 (`@NotNull` 없음) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20` |\n\n`userId`, `email`, `role`은 인증 정보에서 가져옵니다.  \n근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43`, `:46`\n\n`hotdealwave` MCP 조회는 자동 승인 검토에서 승인 필요·승인 불가 정책으로 거부되어 분석 문서는 확인하지 못했습니다. 위 내용은 저장소 코드를 직접 확인한 결과입니다.",
+  "answer": "`createOrder`의 요청 본문은 `ReqPostOrderDto`이며 `@Valid` 검증을 적용합니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:44`\n\n| 필드 | 타입 | 필수 여부 | 근거 (저장소 루트 기준) |\n|---|---|---|---|\n| `basketList` | `List<UUID>` — 장바구니 ID 목록 | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16`, `:17` |\n| `addressId` | `UUID` — 주소 ID | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:18`, `:19` |\n| `couponId` | `UUID` — 쿠폰 ID | 선택 (필수 검증 없음) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20` |\n\n사용자 ID·이메일·역할은 요청 본문이 아니라 인증된 `userDetails`에서 가져옵니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43`, `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46`",
   "settings": {
     "model": "gpt-6-astra",
     "reasoning": "high",
     "serviceTier": "fast",
-    "timeout": 900
+    "timeout": 300
   }
 }
