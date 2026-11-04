@@ -1,0 +1,33 @@
+{
+  "id": "Q10",
+  "condition": "ask",
+  "question": "배송지 요청의 필수값이 빠졌거나 다른 사용자의 배송지를 수정·삭제하려고 하면 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "answer": "다른 사용자의 배송지를 수정·삭제하려는 경우 소유자 불일치 예외가 발생하며 HTTP 400으로 반환된다고 확인됩니다. 다만 구체적인 오류 본문 형식과 메시지는 조각에 명시되어 있지 않습니다. 배송지 요청의 필수값 누락 시 상태 코드와 오류 본문도 확인할 수 없습니다. [업무 규칙 · AI 해석] 근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:77`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:81`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:100`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:104`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25`",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C2",
+      "page": "/endpoints/user-service.AddressController.deleteAddress",
+      "title": "user-service.AddressController.deleteAddress",
+      "section": ""
+    },
+    {
+      "id": "C3",
+      "page": "/endpoints/user-service.AddressController.updateDefaultAddress",
+      "title": "user-service.AddressController.updateDefaultAddress",
+      "section": ""
+    },
+    {
+      "id": "C4",
+      "page": "/endpoints/user-service.AddressController.createAddress",
+      "title": "user-service.AddressController.createAddress",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 13405,
+    "output": 255
+  },
+  "seconds": 3.7
+}

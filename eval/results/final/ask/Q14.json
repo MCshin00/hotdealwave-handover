@@ -1,0 +1,14 @@
+{
+  "id": "Q14",
+  "condition": "ask",
+  "question": "프로모션 응답의 시간 필드는 어떤 시간대와 시작·종료 기준을 쓰고, 가격 필드는 각각 어떤 금액을 뜻하나요?",
+  "status": "보류",
+  "answer": "확인할 수 없습니다. 조각에는 프로모션 응답의 start/end가 Timestamp 타입이라는 정보만 있고, 시간대나 시작·종료 기준은 확인되지 않습니다. 응답 DTO의 discountPrice는 할인 가격으로 설명되지만, 가격 필드별 금액 의미를 구분할 충분한 정보는 없습니다. Timestamp의 구조도 조각에서 확인 안 됨으로 표시되어 있습니다.",
+  "reason": "모델 보류",
+  "citations": [],
+  "tokens": {
+    "input": 16466,
+    "output": 115
+  },
+  "seconds": 3.3
+}

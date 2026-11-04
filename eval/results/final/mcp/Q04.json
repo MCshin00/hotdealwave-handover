@@ -1,0 +1,26 @@
+{
+  "id": "Q04",
+  "condition": "mcp",
+  "question": "운영 RDS와 Redis의 실제 접속 대상과 인증 정보는 어디서 확인하고, 배포된 서비스가 그 대상으로 접속하는지는 어떻게 확인하나요?",
+  "status": "완료",
+  "seconds": 82.8,
+  "tokens": {
+    "input": 136801,
+    "cachedInput": 112896,
+    "output": 2568
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "get_page"
+  ],
+  "mcpFailed": [],
+  "commands": 4,
+  "answer": "**저장소에서 확인되는 것은 접속 정보의 변수명과 주입 경로입니다. 실제 운영 주소·계정·비밀번호와 현재 접속 성공 여부는 확인할 수 없습니다.** 운영 설정은 값을 직접 기록하지 않고 `${…}`를 참조합니다. (`user/src/main/resources/application-prod.yml:3`, `user/src/main/resources/application-prod.yml:15`)\n\n1. **실제 접속 정보는 어디서 확인하나요?**\n\n   | 대상 | 확인할 운영 변수 | 저장소 근거 |\n   |---|---|---|\n   | RDS/MySQL 주소 | `PROD_DB_ENDPOINT` — JDBC URL의 호스트·포트 부분 | `user/src/main/resources/application-prod.yml:3` |\n   | DB 인증 | `PROD_DB_USERNAME`, `PROD_DB_PASSWORD` | `user/src/main/resources/application-prod.yml:4`, `user/src/main/resources/application-prod.yml:5` |\n   | Redis 주소 | `REDIS_PROD_HOST`, `REDIS_PROD_PORT` | `user/src/main/resources/application-prod.yml:15`, `user/src/main/resources/application-prod.yml:16` |\n   | Redis 인증 | `REDIS_PROD_USERNAME`, `REDIS_PROD_PASSWORD` | `user/src/main/resources/application-prod.yml:17`, `user/src/main/resources/application-prod.yml:18` |\n\n   확인 시작점은 **배포 EC2의 `/home/ubuntu/HotDealWave`에서 Compose를 실행할 때 사용한 환경변수와 `.env` 등 공급원**입니다. 배포 스크립트가 그 디렉터리에서 `docker-compose pull`과 `up -d`를 실행하고, Compose가 위 변수를 컨테이너에 전달합니다. 다만 `.env`는 Git에서 제외되어 있으므로, **실제로 그 파일이 존재하거나 유일한 공급원이라고 단정할 수 없습니다.** (`.github/workflows/actions.yml:87`, `.github/workflows/actions.yml:94`, `.github/workflows/actions.yml:95`, `docker-compose.yml:37`, `docker-compose.yml:41`, `.gitignore:2`)\n\n   **“GitHub Secrets에 DB·Redis 비밀번호가 있다”는 근거도 없습니다.** 워크플로에서 확인되는 Secrets 참조는 AWS 및 EC2 접속용이며, 배포 스크립트에는 DB·Redis 변수를 생성하거나 전달하는 단계가 없습니다. 별도 비밀 저장소 사용 여부와 위치는 운영 환경에서 확인해야 합니다. (`.github/workflows/actions.yml:22`, `.github/workflows/actions.yml:23`, `.github/workflows/actions.yml:74`, `.github/workflows/actions.yml:75`, `.github/workflows/actions.yml:76`, `.github/workflows/actions.yml:77`)\n\n2. **배포된 서비스가 그 대상으로 접속하는지는 어떻게 확인하나요?**\n\n   다음은 **운영 환경에서 수행할 검증 절차이며, 이번 저장소 분석에서 실행하거나 성공을 확인한 결과는 아닙니다.**\n\n   - **실행 중인 설정부터 대조합니다.** EC2에서 `docker-compose ps`로 대상 컨테이너를 찾고, `docker inspect`로 실제 주입된 위 변수와 실행 인자를 확인합니다. 비밀번호는 출력·공유하지 않고 존재 여부와 공급원 일치 여부를 확인합니다. 특히 `ACTIVE_PROFILE=prod` 및 시작 로그의 활성 프로필을 확인해야 합니다. 저장소는 프로필을 `prod`로 고정하지 않고 외부 값으로 받습니다. (`docker-compose.yml:28`, `docker-compose.yml:32`, `user/src/main/resources/application.yml:5`)\n\n   - **DB는 주소뿐 아니라 스키마까지 대조합니다.** 같은 `PROD_DB_ENDPOINT`를 사용하더라도 서비스별 DB 이름이 다릅니다. 예를 들어 user는 `hotdeal_ecommerce_user_address`, order는 `hotdeal_ecommerce_order`, payment는 `hotdeal_ecommerce_payment`에 연결하도록 작성되어 있습니다. (`user/src/main/resources/application-prod.yml:3`, `order/src/main/resources/application-prod.yml:3`, `payment/src/main/resources/application-prod.yml:3`)\n\n   - **애플리케이션 연결 상태를 확인합니다.** 접근 가능한 내부 경로에서 `/actuator/health`의 DB·Redis 구성요소가 제공되는지와 그 상태를 확인하고, 서비스 로그의 연결·인증 오류를 함께 봅니다. health 상세 노출 설정은 있지만, 무인증 호출 성공은 보장되지 않습니다. 예를 들어 user의 인증 필터는 `/actuator/prometheus`만 예외로 두고, 그 밖의 요청에서는 사용자 헤더를 읽습니다. (`user/src/main/resources/application.yml:30`, `user/src/main/resources/application.yml:37`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/filter/AuthenticationFilter.java:22`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/filter/AuthenticationFilter.java:31`)\n\n   - **최종적으로 실제 서비스 연결과 서버 측 관측을 맞춥니다.** 운영 담당자가 확인한 RDS 엔드포인트·포트와 런타임 JDBC 대상을 대조하고, 해당 RDS의 세션에서 서비스 연결·계정·스키마를 확인합니다. Redis도 실제 서버의 연결 목록과 서비스 연결을 대조합니다. 별도 클라이언트의 SQL 성공이나 `PING`만으로 배포 애플리케이션의 접속을 입증했다고 판단하지 말고, 애플리케이션 연결 또는 동작과 함께 확인해야 합니다. 이는 저장소의 JDBC 및 Redis 클라이언트 구성을 런타임에서 검증하기 위한 절차입니다. (`user/src/main/resources/application-prod.yml:3`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/RedisConfig.java:13`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:24`)\n\n   Redis는 **user·coupon·order를 각각 확인**해야 합니다. 세 서비스에 변수가 별도로 주입되며, coupon의 Redisson은 사용자명·비밀번호가 비어 있으면 해당 인증 설정을 적용하지 않습니다. (`docker-compose.yml:41`, `docker-compose.yml:120`, `docker-compose.yml:159`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:28`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:33`)\n\n현재 배포 스크립트는 `docker-compose up -d`에서 끝나므로, **저장소에 있는 배포 절차만으로 운영 RDS·Redis 접속 검증이 완료됐다고 볼 수 없습니다.** (`.github/workflows/actions.yml:95`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

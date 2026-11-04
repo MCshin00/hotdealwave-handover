@@ -1,0 +1,27 @@
+{
+  "id": "Q16",
+  "condition": "ask",
+  "question": "Elasticsearch 반영에 실패하면 어떻게 재시도하고, 누락되거나 순서가 뒤바뀐 변경 사항은 어떻게 맞추나요?",
+  "status": "완료",
+  "answer": "조각에는 Elasticsearch 반영 실패에 대한 재시도 방식이나, 누락·순서가 뒤바뀐 변경 사항을 맞추는 절차가 확인되어 있지 않습니다. 확인되는 것은 상품 생성·수정·상태 변경 중 색인 실패가 발생하면 `indexProduct`가 예외를 로그만 남기고 삼켜 호출자가 성공 응답을 만들 수 있다는 점뿐입니다(AI 해석). 따라서 이 근거만으로 재시도나 정합성 복구가 수행된다고 말할 수 없습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:85`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:136`",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C2",
+      "page": "/endpoints/product-service.ProductController.getAllProducts",
+      "title": "product-service.ProductController.getAllProducts",
+      "section": ""
+    },
+    {
+      "id": "C4",
+      "page": "/endpoints/product-service.ProductController.getProduct",
+      "title": "product-service.ProductController.getProduct",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 17782,
+    "output": 277
+  },
+  "seconds": 5.7
+}

@@ -8,8 +8,10 @@ from pathlib import Path
 PATTERNS = [
     re.compile(rb"sk-[A-Za-z0-9_-]{20,}"),  # OpenAI·Anthropic 형식 키
     re.compile(rb"(?<![A-Za-z0-9])[A-Za-z]:[\\/]"),  # Windows 드라이브 경로
-    re.compile(rb"/(?:Users|home)/[^/\s]+/"),  # macOS·Linux 홈 경로
 ]
+HOME = re.compile(rb"/(?:Users|home)/[^/\s]+/")  # macOS·Linux 홈 경로
+# 비교 실험 답 원문은 분석 대상의 배포 스크립트에 적힌 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
+ANSWERS = "eval/results/"
 
 
 def main() -> int:
@@ -25,8 +27,9 @@ def main() -> int:
             print(f"{name}:1")
             failed = True
             continue
+        patterns = PATTERNS if name.startswith(ANSWERS) else PATTERNS + [HOME]
         for number, line in enumerate(path.read_bytes().splitlines(), 1):
-            if any(pattern.search(line) for pattern in PATTERNS):
+            if any(pattern.search(line) for pattern in patterns):
                 print(f"{name}:{number}")
                 failed = True
     return int(failed)

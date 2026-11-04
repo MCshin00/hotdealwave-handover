@@ -1,0 +1,21 @@
+{
+  "id": "Q06",
+  "condition": "base",
+  "question": "쿠폰 발급 요청에 성공을 응답하는 시점은 언제고, 그 뒤 사용자에게 발급된 쿠폰이 저장되기까지 어떤 처리를 거치나요?",
+  "status": "완료",
+  "seconds": 50.9,
+  "tokens": {
+    "input": 79898,
+    "cachedInput": 58240,
+    "output": 1815
+  },
+  "mcpTools": [],
+  "commands": 5,
+  "answer": "**현재 코드는 쿠폰 저장 처리를 마친 뒤 성공을 응답하는 동기 방식입니다.** 컨트롤러는 발급 서비스가 정상 반환한 다음 HTTP **201 Created**, 메시지 `\"선착순 쿠폰 발급 성공\"`, `data: null`을 반환합니다. 따라서 질문의 “성공 응답 후 저장”에 해당하는 후속 비동기 처리는 이 발급 경로에 없습니다.  \n근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53`\n\n실제 처리 순서는 다음과 같습니다.\n\n1. **요청 접수와 락 획득**  \n   `POST /api/v1/coupons/issue`에서 인증된 사용자의 ID와 요청 DTO를 서비스에 전달합니다. 서비스는 `LOCK_COUPON_<couponInfoId>`라는 Redisson 락을 최대 10초 기다리고, 임대 시간을 5초로 설정합니다. 획득하지 못하면 `REQUEST_TIMEOUT` 예외를 발생시킵니다.  \n   근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:23`, `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35`\n\n2. **트랜잭션 안에서 발급 조건 검사**  \n   별도 서비스인 `CouponIssueHelper.processCouponIssue()`가 `@Transactional`로 실행됩니다. 쿠폰 정보를 조회하고, 상태가 `ISSUED`인지, 발급 수량이 남았는지, 해당 사용자가 같은 쿠폰을 이미 발급받았는지 검사합니다. 조건을 만족하지 않으면 예외를 발생시킵니다.  \n   근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26`\n\n3. **발급 수량과 상태 갱신**  \n   발급 수량을 1 증가시키고, 총수량에 도달하면 쿠폰 정보의 상태를 `OUT_OF_STOCK`으로 변경합니다.  \n   근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44`, `coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:67`\n\n4. **사용자 쿠폰 생성·저장**  \n   사용자 ID, 쿠폰 정보, 오늘 날짜인 `dailyIssuedDate`, `isUsed=false`, `usedDate=null`을 넣어 `Coupon`을 만들고 `couponRepository.save()`를 호출합니다. 저장소는 Spring Data JPA이며, 엔티티의 테이블 매핑은 `p_coupon`입니다.  \n   근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:46`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponRepositoryImpl.java:9`, `coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:14`\n\n5. **트랜잭션 완료 → 락 해제 → 성공 응답**  \n   선언된 Spring 트랜잭션의 정상 동작 기준으로, 헬퍼 호출이 성공적으로 반환될 때 커밋이 완료됩니다. 서비스는 `finally`에서 현재 스레드가 락을 보유하고 있으면 해제하고, 이후 컨트롤러가 성공을 반환합니다. 즉, `save()` 호출 자체와 커밋은 구분되지만 둘 다 성공 응답보다 앞선 흐름입니다.  \n   근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44`, `coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34`\n\n실제 운영 요청의 커밋 여부나 처리 시간은 저장소 코드만으로 확인할 수 없습니다. 발급 컨트롤러 테스트도 서비스를 mock으로 대체하고 HTTP 201을 검사하므로, 실제 DB 저장 완료를 검증하는 근거는 아닙니다.  \n근거: `coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:42`, `coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:75`, `coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:84`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

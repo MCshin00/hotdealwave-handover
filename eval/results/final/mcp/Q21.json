@@ -1,0 +1,26 @@
+{
+  "id": "Q21",
+  "condition": "mcp",
+  "question": "Grafana에 실제 연결된 데이터 소스와 대시보드 조회 조건은 어디서 관리하고, 누락된 서비스의 지표와 로그가 저장된 대상을 보고 있나요?",
+  "status": "완료",
+  "seconds": 60.7,
+  "tokens": {
+    "input": 125253,
+    "cachedInput": 108032,
+    "output": 1880
+  },
+  "mcpTools": [
+    "search_docs"
+  ],
+  "mcpFailed": [
+    "search_docs"
+  ],
+  "commands": 4,
+  "answer": "**저장소만으로는 Grafana가 누락된 서비스의 지표·로그가 저장된 대상을 실제로 조회하는지 확인할 수 없습니다.** 확인되는 것은 수집·전송 설정이며, Grafana의 실제 데이터 소스와 대시보드 조회 정의는 찾지 못했습니다. (`monitoring/prometheus/prometheus.yml:4`, `payment/src/main/resources/logback.xml:4`, `README.md:54`)\n\n| 항목 | 저장소에서 확인한 관리 위치와 내용 |\n|---|---|\n| **Grafana 데이터 소스·대시보드** | 데이터 소스 URL·UID, 대시보드 JSON, PromQL·LogQL, 변수·시간 범위에 관한 정의는 발견되지 않았습니다. README에는 기술 스택과 외부 ‘로그 모니터링 시스템 구축’ 문서 링크만 있어, 실제 설정을 UI나 별도 인프라 저장소 중 어디서 관리하는지는 **확인 불가**입니다. (`README.md:54`, `README.md:147`) |\n| **지표 수집 대상** | `monitoring/prometheus/prometheus.yml`에서 관리합니다. 15초마다 `/actuator/prometheus`를 수집하며 gateway·user·product·order·payment·coupon·company 7개 서비스가 등록되어 있습니다. 이는 수집 대상 선언이며 실제 수집 성공이나 Grafana 연결 증거는 아닙니다. (`monitoring/prometheus/prometheus.yml:2`, `monitoring/prometheus/prometheus.yml:5`, `monitoring/prometheus/prometheus.yml:10`, `monitoring/prometheus/prometheus.yml:15`, `monitoring/prometheus/prometheus.yml:20`, `monitoring/prometheus/prometheus.yml:25`, `monitoring/prometheus/prometheus.yml:30`, `monitoring/prometheus/prometheus.yml:35`) |\n| **로그 전송 대상·조회 라벨** | 각 서비스의 `logback.xml`에서 관리합니다. 예를 들어 payment는 `http://${HOST}:3100/loki/api/v1/push`로 전송하며 라벨은 `app=payment-service`, `host=${HOSTNAME}`입니다. `HOST`는 Compose에서 외부 값으로 주입하므로 실제 주소는 확인할 수 없습니다. (`payment/src/main/resources/logback.xml:4`, `payment/src/main/resources/logback.xml:8`, `docker-compose.yml:188`) |\n| **로그 저장소** | Loki 설정은 filesystem 저장을 사용하며 청크 경로는 `/tmp/loki/chunks`입니다. 다만 이 설정이 운영 Loki에 적용됐는지, 어떤 볼륨으로 보존되는지는 확인할 수 없습니다. 저장소 Compose에는 Grafana·Prometheus·Loki 실행 및 볼륨 연결 정의가 없습니다. (`monitoring/loki/loki-config.yml:9`, `monitoring/loki/loki-config.yml:12`, `monitoring/loki/loki-config.yml:29`, `docker-compose.yml:3`, `docker-compose.yml:203`) |\n\n**‘누락된 서비스’가 무엇인지에 따라 판단이 달라집니다.**\n\n- **Eureka 서버라면:** Compose에는 있지만 Prometheus 수집 목록에는 없습니다. 서버의 직접 선언 의존성에도 Prometheus registry와 Loki appender가 없어, 이 저장소 설정으로 지표·로그가 해당 저장소에 수집된다고 볼 근거가 없습니다. (`docker-compose.yml:4`, `monitoring/prometheus/prometheus.yml:4`, `server/build.gradle:24`)\n- **위 7개 서비스 중 하나라면:** 수집 목록에는 있으므로 대시보드에 안 보인다는 이유만으로 수집 누락이라고 단정할 수 없습니다. 예를 들어 payment는 지표의 `job`이 `payment-service`이고 로그의 서비스 라벨은 `app`입니다. 실제 패널이 이 조건과 맞는지는 대시보드 정의가 없어 확인할 수 없습니다. (`monitoring/prometheus/prometheus.yml:25`, `payment/src/main/resources/logback.xml:8`)\n\n판별하려면 **운영 Grafana의 데이터 소스 URL·UID와 패널 쿼리·변수·시간 범위**를 확보해, 실제 Prometheus 수집 대상 및 `${HOST}:3100`의 Loki와 대조해야 합니다. 현재 저장소에는 그 연결을 입증할 정보가 없습니다. (`monitoring/prometheus/prometheus.yml:25`, `payment/src/main/resources/logback.xml:4`, `docker-compose.yml:188`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

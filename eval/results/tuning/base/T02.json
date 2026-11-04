@@ -1,0 +1,21 @@
+{
+  "id": "T02",
+  "condition": "base",
+  "question": "createOrder 요청 필드는?",
+  "status": "완료",
+  "seconds": 30.1,
+  "tokens": {
+    "input": 77553,
+    "cachedInput": 55680,
+    "output": 743
+  },
+  "mcpTools": [],
+  "commands": 4,
+  "answer": "`createOrder`의 요청 본문은 `ReqPostOrderDto`입니다. (`order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:44`)\n\n| 필드 | 타입 | 필수 여부 | 근거 (`파일:줄`, 저장소 루트 기준) |\n|---|---|---|---|\n| `basketList` | `List<UUID>` — 장바구니 ID 목록 | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:16`–`17` |\n| `addressId` | `UUID` — 주소 ID | 필수 (`@NotNull`) | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:18`–`19` |\n| `couponId` | `UUID` — 쿠폰 ID | DTO에 필수 검증 없음 | `order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20` |\n\n`userId`, `email`, `role`은 요청 본문이 아니라 인증된 사용자 정보에서 가져옵니다. (`order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:43`, `order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 900
+  }
+}

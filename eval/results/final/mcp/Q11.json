@@ -1,0 +1,27 @@
+{
+  "id": "Q11",
+  "condition": "mcp",
+  "question": "결제 완료 안내는 어떤 처리 결과를 기준으로 표시되고, Payment의 결제 결과가 Order에 전달돼 주문 상태가 바뀌기까지 어떤 경로를 거치나요?",
+  "status": "완료",
+  "seconds": 69.6,
+  "tokens": {
+    "input": 139815,
+    "cachedInput": 116224,
+    "output": 2435
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "trace_flow",
+    "find_subscribers"
+  ],
+  "mcpFailed": [],
+  "commands": 5,
+  "answer": "**결제 완료 안내는 Payment 승인 성공이나 Order 상태 변경을 확인해서 표시하는 화면이 아닙니다.** `GET /payment/success`에 접근하면 컨트롤러가 바로 템플릿을 반환하고, 템플릿은 “결제 완료 페이지”라는 고정 문구를 표시합니다. 따라서 이 화면이 보인다는 사실만으로 결제 승인·주문 완료를 판단할 수 없습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:9`)\n\n카카오페이 **결제 준비 요청의 `approvalUrl`**은 이 화면으로 설정되어 있습니다. 하지만 화면 처리기와 템플릿에는 `pg_token`을 받아 승인 API를 호출하거나 결제·주문 상태를 조회하는 코드가 없습니다. **성공 화면 진입 → 실제 결제 승인**을 자동으로 이어주는 구현은 해당 화면에서 확인되지 않습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:19`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n실제 승인 결과가 주문 상태에 반영되는 코드 경로는 다음과 같습니다.\n\n1. **별도 승인 API를 호출합니다.** `POST /api/v1/payments/confirm`은 `tid`와 `pgToken`을 받아 `PaymentService.approvePayment()`를 실행합니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:13`)\n\n2. **Payment가 카카오페이 승인을 요청합니다.** `tid`로 Payment를 찾고, `KakaoPayClientPort → KakaoPayClientAdapter → KakaoPayClient`를 거쳐 외부 `POST https://open-api.kakaopay.com/online/v1/payment/approve`를 호출합니다. 승인 호출이 정상 반환하면 Payment 상태를 `COMPLETE`로 바꾸고 주문 상태 변경 메시지 발행을 호출합니다. (`payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:70`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64`)\n\n3. **Payment의 결과를 Kafka 메시지로 전달합니다.** `PaymentProducerService → PaymentEventProducer`가 `orderId`와 `status=COMPLETE`를 JSON으로 만들고, 주문 ID를 메시지 키로 사용해 `kafkaTemplate.send()`를 호출합니다. 이 승인 경로에서 Order로 전달하는 것은 주문 상태 변경 메시지입니다. (`payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65`, `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:24`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51`)\n\n4. **양쪽 서비스는 같은 토픽 환경변수로 연결됩니다.** Payment 발행과 Order 구독 모두 `spring.kafka.topics.update-order-status`를 사용하고, 양쪽 설정은 이를 `${KAFKA_UPDATE_ORDER_STATUS_TOPIC}`에 매핑합니다. Compose도 같은 변수를 양쪽에 전달합니다. **실제 배포 토픽 이름은 이 설정만으로 확인할 수 없습니다.** (`payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:23`, `payment/src/main/resources/application.yml:18`, `order/src/main/resources/application.yml:17`, `docker-compose.yml:157`, `docker-compose.yml:196`)\n\n5. **Order가 메시지를 소비한 뒤 상태를 변경합니다.** `OrderStatusUpdateEventConsumer`가 `order-group`으로 구독하고 JSON을 역직렬화하여 `OrderConsumerService.updateOrderStatus(orderId, status)`를 호출합니다. 서비스는 삭제되지 않은 주문을 조회하고 `OrderStatus.valueOf(status)`를 적용하므로, 승인 메시지의 `COMPLETE`가 주문 상태에 반영됩니다. 엔티티 변경은 트랜잭션 안에서 수행됩니다. (`order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:24`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:37`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:14`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`, `order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70`)\n\n**승인 API의 정상 응답도 Order 갱신 완료를 기다린 결과는 아닙니다.** Payment는 Kafka `send()`의 반환값으로 전송 완료를 확인하지 않고 승인 결과를 반환합니다. Order에서는 별도로 메시지를 처리하며, 파싱·상태 변경 오류가 발생하면 DLQ 발행 처리를 호출합니다. 따라서 실제 외부 승인 성공, Kafka 전달 성공, Order DB 반영 완료 여부는 저장소 코드만으로 확인할 수 없습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

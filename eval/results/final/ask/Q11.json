@@ -1,0 +1,27 @@
+{
+  "id": "Q11",
+  "condition": "ask",
+  "question": "결제 완료 안내는 어떤 처리 결과를 기준으로 표시되고, Payment의 결제 결과가 Order에 전달돼 주문 상태가 바뀌기까지 어떤 경로를 거치나요?",
+  "status": "완료",
+  "answer": "결제 완료 안내 화면 자체는 승인 처리 결과를 확인해 표시하는 것이 아닙니다. `/payment/success` GET은 결제 완료 문구가 있는 템플릿을 반환할 뿐이며, pg_token 수신·승인 호출·상태 변경은 하지 않습니다. 실제 결제 완료 처리는 별도 `POST /api/v1/payments/confirm`에서 `tid`와 `pgToken`으로 승인 요청을 하고, 승인 응답을 받으면 Payment를 COMPLETE로 바꾼 뒤 주문 상태 갱신 이벤트를 발행하는 경로입니다. 따라서 안내 화면 진입만으로 승인 완료를 판단할 수 없습니다. [C3, C5]\n\n흐름은 다음과 같습니다.\n1. `POST /api/v1/payments/confirm`이 `tid`, `pgToken`을 받습니다.\n2. Payment 서비스가 `tid`와 미삭제 조건으로 결제를 조회하고 카카오페이 승인을 요청합니다. 승인 응답 매핑이 정상 반환되면 Payment 상태를 COMPLETE로 변경합니다.\n3. PaymentProducerService가 주문 상태 갱신을 요청하고, PaymentEventProducer가 `orderId`와 상태를 Kafka 메시지로 발행합니다.\n4. 주문 서비스의 `OrderStatusUpdateEventConsumer`가 메시지를 받아 OrderConsumerService를 거쳐 해당 주문 상태를 메시지의 상태로 갱신합니다. [C3, C5]\n\n이 경로 설명은 조각의 **AI 해석**입니다. 또 Kafka 발행은 비동기 결과를 확인하지 않으므로, Payment 측 발행 호출이 반환되거나 성공 DTO가 만들어졌다는 사실만으로 Order에 전달되어 소비·갱신까지 완료됐다고 단정할 수 없습니다. [C3, C5]",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C3",
+      "page": "/endpoints/payment-service.PaymentController.confirmPayment",
+      "title": "payment-service.PaymentController.confirmPayment",
+      "section": ""
+    },
+    {
+      "id": "C5",
+      "page": "/services/payment-service",
+      "title": "payment-service",
+      "section": "업무 규칙·함정 24개"
+    }
+  ],
+  "tokens": {
+    "input": 39559,
+    "output": 413
+  },
+  "seconds": 5.9
+}

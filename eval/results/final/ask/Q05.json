@@ -1,0 +1,21 @@
+{
+  "id": "Q05",
+  "condition": "ask",
+  "question": "상품 목록 응답에는 어떤 상품 정보와 페이지 정보가 들어가고, 검색 결과가 없을 때는 어떤 형식으로 내려오나요?",
+  "status": "완료",
+  "answer": "상품 목록 응답은 `ResponseDto<Page<ResGetProductDto>>` 형태로, `message`와 `data`를 포함합니다. 각 상품에는 `productId`, `name`, `price`, `quantity`, `category`, `companyId`, `description`, `detailImgs`, `thumbImg`, `status`, `rating`, `reviewCnt`, `discountPrice`가 확인됩니다. `data`가 페이지 타입이라는 점은 확인되지만, 외부 `Page` 타입의 페이지 메타데이터 구조는 확인 안 됨입니다. 검색 결과가 없을 때의 응답 형식이나 내용도 조각에 근거가 없어 확인할 수 없습니다.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/product-service.ProductController.getAllProducts",
+      "title": "product-service.ProductController.getAllProducts",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 25407,
+    "output": 168
+  },
+  "seconds": 3.8
+}

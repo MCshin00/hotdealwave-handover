@@ -1,0 +1,21 @@
+{
+  "id": "T02",
+  "condition": "ask",
+  "question": "createOrder 요청 필드는?",
+  "status": "완료",
+  "answer": "createOrder 본문은 `ReqPostOrderDto`이며 필드는 다음과 같습니다.\n- `basketList`: `List<UUID>`, `@NotNull`\n- `addressId`: `UUID`, `@NotNull`\n- `couponId`: `UUID`, 검증 어노테이션 없음\n근거: [order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:17], [order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:19], [order/src/main/java/com/sparta/hotdeal/order/application/dtos/order/req/ReqPostOrderDto.java:20]",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/order-service.OrderController.createOrder",
+      "title": "order-service.OrderController.createOrder",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 18325,
+    "output": 178
+  },
+  "seconds": 4.6
+}

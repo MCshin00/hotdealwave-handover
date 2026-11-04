@@ -1,0 +1,21 @@
+{
+  "id": "Q13",
+  "condition": "base",
+  "question": "실패한 ECR 업로드 단계는 어떤 방식으로 AWS 인증을 받고, GitHub에 등록된 인증 설정이 워크플로에서 참조하는 값과 맞나요?",
+  "status": "완료",
+  "seconds": 42.8,
+  "tokens": {
+    "input": 60332,
+    "cachedInput": 46208,
+    "output": 1231
+  },
+  "mcpTools": [],
+  "commands": 6,
+  "answer": "**AWS 인증은 GitHub Secrets의 액세스 키를 사용하는 방식입니다. 다만 GitHub에 실제 등록된 설정과 일치하는지는 확인할 수 없습니다.** 저장소에는 Secret 이름 참조만 있습니다. (`.github/workflows/actions.yml:22`, `.github/workflows/actions.yml:23`)\n\n- **인증 방식:** `aws-actions/configure-aws-credentials@v4`에 `secrets.AWS_ACCESS_KEY_ID`와 `secrets.AWS_SECRET_ACCESS_KEY`를 전달합니다. 해당 설정에는 OIDC 역할 인수를 위한 `role-to-assume`이나 세션 토큰 입력이 없습니다. (`.github/workflows/actions.yml:19`, `.github/workflows/actions.yml:20`, `.github/workflows/actions.yml:22`, `.github/workflows/actions.yml:23`, `.github/workflows/actions.yml:24`)\n- **ECR 업로드 흐름:** AWS 자격 증명 설정 후 `amazon-ecr-login@v2`로 로그인하고, 로그인 결과의 레지스트리 주소를 이용해 이미지를 태깅한 뒤 `docker push`합니다. 리전은 `ap-northeast-2`입니다. (`.github/workflows/actions.yml:9`, `.github/workflows/actions.yml:28`, `.github/workflows/actions.yml:33`, `.github/workflows/actions.yml:54`, `.github/workflows/actions.yml:60`)\n- **등록 설정과의 일치 여부:** 워크플로가 요구하는 이름은 정확히 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`이며, `vars`가 아닌 `secrets`를 참조합니다. GitHub에 이 이름으로 등록되어 있는지, 값이 올바른 키 쌍인지, 유효한지와 ECR 권한이 있는지는 저장소만으로 확인할 수 없습니다. (`.github/workflows/actions.yml:22`, `.github/workflows/actions.yml:23`)\n\n실패한 실행의 로그와 당시 GitHub 설정은 확인하지 못했으므로, **인증 설정 불일치가 실패 원인이라고 단정할 수 없습니다.** 위 설명은 현재 저장소의 워크플로 기준입니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "Q12",
+  "condition": "ask",
+  "question": "결제 결과 전달이나 Order의 상태 변경에 실패하면 어디에서 재시도하고, 같은 결과가 여러 번 전달되면 어떻게 처리하나요?",
+  "status": "완료",
+  "answer": "조각에는 결제 결과 전달이나 주문 상태 변경 실패 시 재시도하는 위치·정책이 확인되지 않습니다. 확인되는 범위에서는 상태 갱신 리스너가 처리 예외를 직접 DLQ 발행 경로로 넘기지만, DLQ 전송 완료도 확인하지 않아 재시도나 전달 성공을 보장한다고 볼 수 없습니다. 또한 주문 상태를 메시지의 enum 값으로 덮어쓰며 이전 상태별 전이 제한이 없다고 AI 해석되어 있습니다. 같은 결과가 여러 번 전달될 때의 중복 처리·멱등성 동작은 조각에서 확인할 수 없습니다.\n\n근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48`, `order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`, `order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/OrderStatus.java:9`.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C4",
+      "page": "/topics/KAFKA_UPDATE_ORDER_STATUS_TOPIC",
+      "title": "토픽 KAFKA_UPDATE_ORDER_STATUS_TOPIC",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 18861,
+    "output": 285
+  },
+  "seconds": 4.7
+}
