@@ -31,11 +31,11 @@ public class View {
         return texts(node.path("evidence"));
     }
 
-    /** The first line of an evidence list and how many more there are. */
+    /** The first line of an evidence list, which pages link like any evidence, and how many more there are. */
     public String brief(JsonNode list) {
         var lines = Analysis.listOf(list);
         if (lines.isEmpty()) return "[]";
-        return "[" + lines.get(0).asText() + (lines.size() > 1 ? " 외 " + (lines.size() - 1) + "줄" : "") + "]";
+        return "[" + lines.get(0).asText() + "]" + (lines.size() > 1 ? " 외 " + (lines.size() - 1) + "줄" : "");
     }
 
     public String texts(JsonNode list) {

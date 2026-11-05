@@ -41,6 +41,9 @@ class RevivalTest {
         assertFalse(text.contains("[업무 규칙 · AI 해석]"));
         assertTrue(text.contains("도구가 다루지 않은 위치\n없음"));
 
+        String page = html("/revival");
+        assertTrue(page.contains("/payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java#L29\">"));
+        assertTrue(page.contains(" 외 12줄"));
         assertTrue(html("/").contains("<a href=\"/revival\">"));
         assertTrue(html("/repository").contains("<a href=\"/revival\">"));
     }
