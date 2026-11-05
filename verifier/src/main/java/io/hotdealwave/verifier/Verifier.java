@@ -23,8 +23,8 @@ public final class Verifier {
         var source = new SourceText(target);
         new EvidenceChecks(source, analysis).run();
         var lines = source.javaLines();
-        new CrossChecks().run(lines, analysis);
-        new KafkaChecks().run(lines, analysis);
+        new CrossChecks().run(lines, analysis, source);
+        new KafkaChecks().run(lines, analysis, source.composeFile());
         new CallChecks().run(source, analysis);
         new ThrowChecks().run(source, analysis);
         return analysis;

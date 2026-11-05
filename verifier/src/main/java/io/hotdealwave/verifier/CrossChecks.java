@@ -2,6 +2,7 @@ package io.hotdealwave.verifier;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import static io.hotdealwave.verifier.Checks.*;
@@ -9,9 +10,13 @@ import static io.hotdealwave.verifier.Checks.*;
 final class CrossChecks {
     // Declarations inside comments are not counted.
     private static final Pattern DECLARATION = Pattern.compile("@(?:[\\w]+\\.)*([\\w$]*Mapping|FeignClient)\\b");
+    private static final Pattern STRIP_PREFIX = Pattern.compile("StripPrefix=(\\d+)");
+    private static final Pattern RULE = Pattern.compile("(?:path|request)Matchers\\s*\\(([^)]*)\\)\\s*\\.\\s*(\\w+)\\s*\\(");
+    private SourceText source;
     private static final Pattern PREFIX_REWRITE = Pattern.compile("^(/[^\\s(),?*]+/)\\(\\?<segment>\\.\\*\\),\\s*/\\$\\\\?\\{segment}$");
 
-    void run(Map<String, String> lines, ObjectNode analysis) {
+    void run(Map<String, String> lines, ObjectNode analysis, SourceText source) throws IOException {
+        this.source = source;
         var raw = new LinkedHashMap<String, String>();
         for (var line : lines.entrySet()) {
             var matcher = DECLARATION.matcher(line.getValue());
@@ -86,8 +91,9 @@ final class CrossChecks {
         }
         for (var route : analysis.path("gatewayRoutes")) {
             var inverse = PREFIX_REWRITE.matcher(Objects.toString(value(route.path("rewritePath")), ""));
-            String prefix = inverse.matches() ? inverse.group(1) : "";
+            var strip = STRIP_PREFIX.matcher(Objects.toString(value(route.path("rewritePath")), ""));
             for (var path : route.path("paths")) {
+                String prefix = inverse.matches() ? inverse.group(1) : strip.matches() ? stripped(Objects.toString(value(path), ""), Integer.parseInt(strip.group(1))) : "";
                 boolean connected = known(route) && known(path) && known(route.path("targetService")) && items(analysis.path("endpoints")).stream()
                         .filter(e -> known(e.path("path")) && Objects.equals(e.path("service").asText(), value(route.path("targetService"))))
                         .anyMatch(e -> {
@@ -113,12 +119,52 @@ final class CrossChecks {
         if (!known(route.path("rewritePath"))) return null;
         String value = value(route.path("rewritePath"));
         if (value.isEmpty()) return path;
+        var strip = STRIP_PREFIX.matcher(value);
+        if (strip.matches()) {
+            var parts = path.substring(1).split("/", -1);
+            int count = Integer.parseInt(strip.group(1));
+            return parts.length <= count ? "/" : "/" + String.join("/", Arrays.asList(parts).subList(count, parts.length));
+        }
         var rewrite = PREFIX_REWRITE.matcher(value);
         if (!rewrite.matches()) return null;
         return path.startsWith(rewrite.group(1)) ? "/" + path.substring(rewrite.group(1).length()) : path;
     }
 
-    private static void token(ObjectNode analysis, JsonNode fact, String path, String method, boolean connected) {
+    /** The literal first segments a StripPrefix removes from a route pattern, as "/a/", or "" when they are not literal. */
+    private static String stripped(String pattern, int count) {
+        var parts = pattern.substring(Math.min(1, pattern.length())).split("/");
+        if (parts.length <= count) return "";
+        var removed = Arrays.asList(parts).subList(0, count);
+        return removed.stream().anyMatch(p -> p.isEmpty() || p.contains("*") || p.contains("{")) ? "" : "/" + String.join("/", removed) + "/";
+    }
+
+    /** Why the allowed list cannot decide tokens by prefix, or null. Security rules apply the first match; a custom filter must compare with startsWith. */
+    private String tokenRule(List<JsonNode> allowedPaths, JsonNode fact) throws IOException {
+        String securityFile = null;
+        for (var allowed : allowedPaths)
+            for (var evidence : allowed.path("evidence"))
+                if (Objects.toString(source.line(evidence.asText()), "").contains("Matchers(")) securityFile = evidence.asText().substring(0, evidence.asText().lastIndexOf(':'));
+        var factLines = source.evidenceLines(fact);
+        if (securityFile == null)
+            return factLines.stream().anyMatch(l -> l.contains("startsWith")) ? null : "허용 목록 비교가 앞부분 일치(startsWith)가 아님";
+        if (allowedPaths.stream().map(a -> value(a.path("path"))).anyMatch(p -> !p.endsWith("/**") || p.substring(0, p.length() - 3).matches(".*[*{].*")))
+            return "끝이 /**가 아닌 허용 패턴이 있음";
+        if (factLines.stream().noneMatch(l -> l.contains("anyExchange().authenticated()") || l.contains("anyRequest().authenticated()")))
+            return "나머지 요청에 인증을 요구하는 규칙을 근거에서 확인하지 못함";
+        var rules = RULE.matcher(String.join("\n", source.lines(securityFile))).results().map(r -> r.group(2)).toList();
+        if (rules.subList(0, rules.lastIndexOf("permitAll") + 1).stream().anyMatch(r -> !r.equals("permitAll")))
+            return "허용 규칙 앞에 다른 규칙이 있어 겹칠 수 있음";
+        return null;
+    }
+
+    private static boolean allows(JsonNode allowed, String path, String method) {
+        String pattern = value(allowed.path("path"));
+        boolean prefix = pattern.endsWith("/**") ? path.equals(pattern.substring(0, pattern.length() - 3)) || path.startsWith(pattern.substring(0, pattern.length() - 2))
+                : path.startsWith(pattern);
+        return prefix && ("*".equals(value(allowed.path("httpMethod"))) || method.equalsIgnoreCase(value(allowed.path("httpMethod"))));
+    }
+
+    private void token(ObjectNode analysis, JsonNode fact, String path, String method, boolean connected) throws IOException {
         if (fact.isMissingNode()) return;
         var allowedPaths = items(analysis.path("allowedPaths"));
         if (!connected || path == null || method == null || method.equals("*") || allowedPaths.isEmpty()
@@ -127,8 +173,9 @@ final class CrossChecks {
             verdict(fact, UNKNOWN, "외부 경로·허용 목록·HTTP 메서드를 확인하지 못함");
             return;
         }
-        boolean required = allowedPaths.stream().noneMatch(a -> path.startsWith(value(a.path("path")))
-                && ("*".equals(value(a.path("httpMethod"))) || method.equalsIgnoreCase(value(a.path("httpMethod")))));
+        String rule = tokenRule(allowedPaths, fact);
+        if (rule != null) { verdict(fact, UNKNOWN, rule); return; }
+        boolean required = allowedPaths.stream().noneMatch(a -> allows(a, path, method));
         if (fact.path("value").isBoolean() && fact.path("value").asBoolean() == required) verdict(fact, CONFIRMED, null);
         else {
             verdict(fact, UNKNOWN, "토큰 허용 목록과 값이 일치하지 않음");

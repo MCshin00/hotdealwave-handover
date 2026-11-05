@@ -8,8 +8,10 @@ import java.util.regex.Pattern;
 import static io.hotdealwave.verifier.Checks.*;
 
 final class EvidenceChecks {
-    private static final Pattern ENV = Pattern.compile("\\$\\{[A-Z][A-Z0-9_]*}");
+    private static final Pattern ENV = Pattern.compile("\\$\\{[A-Z][A-Z0-9_]*(?::[^}]*)?}");
     private static final Pattern QUOTED = Pattern.compile("\"((?:\\\\.|[^\"\\\\])*)\"");
+    private static final Pattern SETTINGS = Pattern.compile("/src/main/resources/application\\.(?:yml|yaml|properties):");
+    private static final Pattern JSON_PROPERTY = Pattern.compile("@JsonProperty\\(\\s*(?:value\\s*=\\s*)?\"([^\"]*)\"");
     private static final Pattern MAPPING = Pattern.compile("@(?:\\w*Mapping|FeignClient)\\b");
     private final SourceText source;
     private final ObjectNode analysis;
@@ -61,8 +63,8 @@ final class EvidenceChecks {
             case "feignClients" -> lines.get(0).contains("@FeignClient");
             case "gatewayRoutes" -> contains(lines, object.path("id").asText());
             case "allowedPaths" -> contains(lines, object.path("name").asText());
-            case "declarations", "kafkaDeclarations" -> declaration(lines.get(0), object.path("kind").asText());
-            case "kafkaPublications", "kafkaSubscriptions" -> declaration(lines.get(0), object.path("kind").asText());
+            case "declarations", "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions" ->
+                    declaration(lines.get(0), object.path("kind").asText(), kafkaTemplates(evidence.get(0).asText()));
             case "environmentVariables", "fields", "parameters" -> contains(lines, object.path("name").asText(null));
             case "annotations" -> contains(lines, "@" + object.path("name").asText());
             case "externalResources" -> resource(object);
@@ -124,8 +126,20 @@ final class EvidenceChecks {
             else reject(fact, "body: 근거 줄에서 본문 없이 끝내는 줄을 확인하지 못함");
             return;
         }
+        if (role.equals("value") && parent.has("location")) {
+            var reference = Pattern.compile("\\$\\{" + Pattern.quote(parent.path("name").asText()) + "(?::([^}]*))?}");
+            var used = lines.stream().map(reference::matcher).filter(java.util.regex.Matcher::find).findFirst();
+            if (used.isPresent()) {
+                String fallback = used.get().group(1);
+                verdict(fact, ABSENT, "실제 값은 저장소 밖의 환경변수에서 정해짐" + (fallback == null ? "" : ", 없으면 기본값 " + fallback));
+                return;
+            }
+        }
+        if (role.equals("jsonName")) {
+            String reason = namingOverride(parent);
+            if (reason != null) { verdict(fact, UNKNOWN, reason); return; }
+        }
         boolean externalValue = switch (role) {
-            case "value" -> parent.has("location") && contains(lines, "${" + parent.path("name").asText() + "}");
             case "topicName" -> known(parent.path("environment")) && !Objects.toString(value(parent.path("environment")), "").isEmpty()
                     || lines.stream().anyMatch(l -> ENV.matcher(l).find());
             case "connectionValues", "bucketName" -> lines.stream().anyMatch(l -> ENV.matcher(l).find());
@@ -135,11 +149,13 @@ final class EvidenceChecks {
         if (value == null) { verdict(fact, UNKNOWN, role + ": 값 없음"); return; }
         boolean matches = switch (role) {
             case "jsonName" -> value.equals(jsonName(parent, lines));
-            case "httpMethod" -> method(lines, value) || contains(lines, "\"" + value + "\"");
+            case "httpMethod" -> method(lines, value) || contains(lines, "\"" + value + "\"") || contains(lines, "HttpMethod." + value)
+                    || value.equals("*") && lines.stream().anyMatch(l -> l.contains("Matchers(") && !l.contains("HttpMethod."));
             case "path" -> parent.has("clientId") || parent.has("controller") || parent.has("externalPaths")
                     ? mappingPath(lines, value) : value.isEmpty() ? emptyAttribute(lines, "path") : contains(lines, value);
             case "url" -> value.isEmpty() ? emptyAttribute(lines, "url") : contains(lines, value);
-            case "rewritePath" -> value.isEmpty() ? lines.stream().anyMatch(l -> l.contains("id:")) : contains(lines, value);
+            case "rewritePath" -> value.isEmpty() ? lines.stream().anyMatch(l -> l.contains("id:") || l.contains(".route("))
+                    : contains(lines, value) || routeFilter(lines, value);
             case "topicKey" -> value.isEmpty() ? contains(lines, value(parent.path("topicName"))) : contains(lines, value);
             case "environment" -> value.isEmpty() ? contains(lines, value(parent.path("topicName"))) : topicEnvironment(fact, parent, value);
             default -> contains(lines, value);
@@ -179,10 +195,10 @@ final class EvidenceChecks {
         boolean yaml = false, compose = false;
         for (var ev : fact.path("evidence")) {
             String evidence = ev.asText(), line = source.line(evidence);
-            if (evidence.contains("/src/main/resources/application.yml:") && source.yamlKey(evidence).equals(key)
-                    && line.substring(line.indexOf(':') + 1).trim().equals("${" + name + "}")) yaml = true;
-            if (evidence.startsWith("docker-compose.yml:") && line.contains("${" + name + "}")) {
-                String composeKey = source.yamlKey(evidence);
+            if (SETTINGS.matcher(evidence).find() && source.settingKey(evidence).equals(key)
+                    && Pattern.compile("\\$\\{" + Pattern.quote(name) + "(?::[^}]*)?}").matcher(SourceText.settingValue(line)).matches()) yaml = true;
+            if (!source.composeFile().isEmpty() && evidence.startsWith(source.composeFile() + ":") && line.contains("${" + name + "}")) {
+                String composeKey = source.settingKey(evidence);
                 if (composeKey.equals(composePath) || composeKey.startsWith(composePath + ".")) compose = true;
             }
         }
@@ -195,7 +211,7 @@ final class EvidenceChecks {
         if (name.isBlank()) return false;
         for (var ev : node.path("configurationEvidence")) {
             String line = source.line(ev.asText());
-            if (line != null && (source.yamlKey(ev.asText()).toLowerCase(Locale.ROOT).contains(name)
+            if (line != null && (source.settingKey(ev.asText()).toLowerCase(Locale.ROOT).contains(name)
                     || line.toLowerCase(Locale.ROOT).contains(name))) return true;
         }
         for (var ev : node.path("codeEvidence")) {
@@ -205,10 +221,48 @@ final class EvidenceChecks {
         return false;
     }
 
+    /** Why a class-wide or global naming rule leaves the field's JSON name open, or null. */
+    private String namingOverride(JsonNode field) throws IOException {
+        for (var evidence : field.path("evidence")) {
+            String file = file(evidence.asText());
+            if (file != null && source.lines(file).stream().anyMatch(l -> l.contains("@JsonNaming")))
+                return "클래스의 @JsonNaming이 JSON 이름을 바꿈";
+        }
+        if (source.namingStrategy()) return "설정의 spring.jackson.property-naming-strategy가 JSON 이름을 바꿈";
+        return null;
+    }
+
     private String jsonName(JsonNode field, List<String> lines) throws IOException {
         String name = field.path("name").asText();
         if (name.isEmpty() || !contains(source.evidenceLines(field), name)) return null;
-        String declaration = lines.stream().filter(l -> Pattern.compile("\\b" + Pattern.quote(name) + "\\s*[;=]").matcher(l).find()).findFirst().orElse(null);
+        var declared = Pattern.compile("\\b" + Pattern.quote(name) + "\\s*[;=]");
+        var component = Pattern.compile("\\b" + Pattern.quote(name) + "\\s*[,)]");
+        for (var evidence : field.path("evidence")) {
+            String file = file(evidence.asText());
+            if (file == null) continue;
+            int number = Integer.parseInt(evidence.asText().substring(file.length() + 1));
+            var all = source.lines(file);
+            String line = all.get(number - 1);
+            var inRecord = component.matcher(line);
+            boolean record = inRecord.find() && all.subList(0, number).stream().anyMatch(l -> l.contains("record "));
+            if (!record && !declared.matcher(line).find()) continue;
+            // The annotation is on the field's own line, or on the annotation lines just above it; a record component carries it before its type.
+            var annotations = new ArrayList<String>();
+            if (record) {
+                String before = line.substring(0, inRecord.start());
+                annotations.add(before.substring((before.contains(",") ? before.lastIndexOf(',') : before.indexOf('(')) + 1));
+            } else {
+                annotations.add(line);
+                for (int i = number - 2; i >= 0 && all.get(i).trim().startsWith("@"); i--) annotations.add(all.get(i));
+            }
+            for (String annotation : annotations) {
+                var property = JSON_PROPERTY.matcher(annotation);
+                if (property.find()) return property.group(1);
+            }
+            if (record) return name;
+            break;
+        }
+        String declaration = lines.stream().filter(l -> declared.matcher(l).find()).findFirst().orElse(null);
         if (declaration == null) return null;
         String suffix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
         boolean primitive = Pattern.compile("\\bboolean\\s+" + Pattern.quote(name) + "\\b").matcher(declaration).find();
@@ -225,6 +279,31 @@ final class EvidenceChecks {
         return Pattern.compile("\\bpublic\\b").matcher(declaration).find() ? name : null;
     }
 
+    /** The source file of a file:line evidence whose line exists, or null. */
+    private String file(String evidence) throws IOException {
+        int colon = evidence.lastIndexOf(':');
+        if (colon < 1 || SourceText.isResponseEvidence(evidence)) return null;
+        String file = evidence.substring(0, colon);
+        try {
+            int number = Integer.parseInt(evidence.substring(colon + 1));
+            return number > 0 && number <= source.lines(file).size() ? file : null;
+        } catch (NumberFormatException e) { return null; }
+    }
+
+    /** Java DSL route filters: rewritePath with its two arguments joined by ", ", and StripPrefix=N. */
+    private static boolean routeFilter(List<String> lines, String value) {
+        var strip = Pattern.compile("StripPrefix=(\\d+)").matcher(value);
+        if (strip.matches()) return lines.stream().anyMatch(l -> Pattern.compile("\\.stripPrefix\\(\\s*" + strip.group(1) + "\\s*\\)").matcher(l).find());
+        var parts = value.split(",\\s*", 2);
+        return parts.length == 2 && lines.stream().anyMatch(l -> l.contains("rewritePath(\"" + parts[0] + "\"") && l.contains("\"" + parts[1] + "\""));
+    }
+
+    /** Names of KafkaTemplate fields and parameters in the evidence file, and kafkaTemplate. */
+    private Set<String> kafkaTemplates(String evidence) throws IOException {
+        String file = file(evidence);
+        return file == null ? Set.of("kafkaTemplate") : KafkaChecks.templates(source.lines(file));
+    }
+
     private static String property(String getter) {
         String suffix = getter.substring(getter.startsWith("is") ? 2 : 3);
         var result = new StringBuilder(suffix);
@@ -236,9 +315,9 @@ final class EvidenceChecks {
         return result.toString();
     }
 
-    static boolean declaration(String line, String kind) {
+    static boolean declaration(String line, String kind, Set<String> templates) {
         return switch (kind) {
-            case "kafkaTemplate.send" -> Pattern.compile("\\bkafkaTemplate\\s*\\.\\s*send\\s*\\(").matcher(line).find();
+            case "kafkaTemplate.send" -> templates.stream().anyMatch(t -> Pattern.compile("\\b" + Pattern.quote(t) + "\\s*\\.\\s*send\\s*\\(").matcher(line).find());
             case "DeadLetterPublishingRecoverer" -> line.contains("new DeadLetterPublishingRecoverer(");
             default -> line.contains("@" + kind);
         };
