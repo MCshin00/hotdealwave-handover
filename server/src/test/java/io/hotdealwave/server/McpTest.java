@@ -58,6 +58,12 @@ class McpTest {
         assertTrue(text(call("get_page", "page", "/services/payment-service")).contains("검증 범위: 엔드포인트 9개 중"));
     }
 
+    @Test void resultsOpenWithWhatConfirmedMeans() {
+        assertTrue(text(call("trace_flow", "id", "order-service.OrderController.createOrder")).startsWith("확인됨의 뜻\n- 출발 항목의 첫 줄과 도착 줄"));
+        assertTrue(text(call("find_endpoint", "query", "POST /api/v1/orders")).startsWith("확인됨의 뜻\n- HTTP 메서드와 전체 경로"));
+        assertTrue(text(call("get_page", "page", "/repository")).startsWith("확인됨의 뜻\n- 항목의 설정 파일"));
+    }
+
     @Test void unknownInputIsAnError() {
         var result = call("find_endpoint", "query", "GET /api/v1/none");
         assertTrue(result.isError());

@@ -83,6 +83,10 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 `pageSerialization`은 `@EnableSpringDataWebSupport`의 `pageSerializationMode` 값이다. 어노테이션이 없는 서비스에는 항목을 만들지 않는다.
 
+### 다루지 않는 방식
+
+`unsupported`는 형식에 담을 자리가 없어 항목으로 만들지 않은 방식이다(예: `RestTemplate`·`WebClient` 호출, 회로 차단기 fallback, RabbitMQ). 위치마다 한 항목이고, `mechanism`은 방식 이름, `description`은 무엇을 하는지 한 줄, 근거는 그 방식 이름이 있는 줄이다. 검증기는 근거 줄에 방식 이름이 있는지만 본다. 서버는 서비스 페이지와 그 서비스를 지나는 흐름 결과에 "도구가 다루지 않는 방식"으로 붙인다.
+
 ### 환경변수·외부 자원
 
 환경변수는 사용 위치별로 기록한다. `profile`은 기본 YAML의 `base`, 파일 이름의 `local`·`prod` 등, compose의 `compose`다. 프로필을 병합하거나 실행할 프로필을 추정하지 않는다. Java `@Value`가 설정 키를 참조하면 해당 프로필의 YAML 환경변수와 코드 근거를 함께 남긴다. 같은 이름이 여러 항목에 나올 수 있으므로 환경변수 이름 수는 `name`의 중복을 제거해서 센다. 값은 모두 `null`·`저장소에 근거 없음`이다. `${ENV:기본값}`처럼 기본값이 있으면 이유에 기본값을 적는다.

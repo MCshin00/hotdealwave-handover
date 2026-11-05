@@ -23,11 +23,13 @@ class Pages {
     private final Analysis analysis;
     private final Queries queries;
     private final SpringTemplateEngine engine;
+    private final Legend legend;
     private final ThymeleafEvaluationContext evaluation;
     private Map<String, List<Section>> sections;
 
-    Pages(Analysis analysis, Queries queries, SpringTemplateEngine engine, ApplicationContext context) {
+    Pages(Analysis analysis, Queries queries, SpringTemplateEngine engine, ApplicationContext context, Legend legend) {
         this.analysis = analysis;
+        this.legend = legend;
         this.queries = queries;
         this.engine = engine;
         this.evaluation = new ThymeleafEvaluationContext(context, null);
@@ -80,7 +82,10 @@ class Pages {
     /** The page as HTML for the browser, with display-only markup, or null. */
     String html(String path) {
         var page = page(path);
-        return page == null ? null : Decor.html(process(page.template(), page.model()), analysis.target());
+        if (page == null) return null;
+        String html = Decor.html(process(page.template(), page.model()), analysis.target());
+        int title = html.indexOf("</h1>") + "</h1>".length();
+        return html.substring(0, title) + legend.html(page.kind()) + html.substring(title);
     }
 
     /** Any other template as HTML for the browser, with display-only markup. */
@@ -116,7 +121,7 @@ class Pages {
         var model = new HashMap<String, Object>(Map.of("service", service, "name", name));
         var ids = new ArrayList<String>();
         for (var key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources",
-                "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization")) {
+                "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization", "unsupported")) {
             var owned = analysis.list(key).stream().filter(n -> n.path("service").asText().equals(name)).toList();
             model.put(key, owned);
             owned.forEach(n -> { if (n.has("id")) ids.add(n.path("id").asText()); });

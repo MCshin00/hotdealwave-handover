@@ -76,6 +76,13 @@ public class View {
         return "엔드포인트 " + endpoints.size() + "개 중 " + String.join(", ", parts);
     }
 
+    /** How the observed keys compare with the code: the differences, "차이 없음", or nothing when no response was observed. */
+    public List<String> comparison(JsonNode check) {
+        if (!"응답 기록 있음".equals(check.path("status").asText())) return List.of();
+        var differences = Analysis.listOf(check.path("comparison")).stream().map(JsonNode::asText).toList();
+        return differences.isEmpty() ? List.of("차이 없음") : differences;
+    }
+
     public String responseCheck(JsonNode check) {
         String status = check.path("status").asText();
         if (check.path("statusCode").isNumber()) status += " " + check.path("statusCode").asInt();

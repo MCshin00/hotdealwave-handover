@@ -10,6 +10,7 @@
 <p class="line" th:text="|경로: ${@view.fact(endpoint.path('path'))}|"></p>
 <p class="line" th:text="|확인 상태: ${@view.status(endpoint)} ${@view.evidence(endpoint)}|"></p>
 <p class="line" th:with="file=${@view.responseFile(endpoint.path('responseCheck'))}">응답 확인: <a th:if="${file != null}" th:href="|/responses/${file}|" th:text="${@view.responseCheck(endpoint.path('responseCheck'))}"></a><span th:if="${file == null}" th:text="${@view.responseCheck(endpoint.path('responseCheck'))}"></span></p>
+<p class="line" th:each="c : ${@view.comparison(endpoint.path('responseCheck'))}" th:text="|코드와 실제 응답: ${c}|"></p>
 </header>
 <section th:replace="~{items :: descriptions(${descriptions})}"></section>
 <h2>게이트웨이 외부 경로</h2>

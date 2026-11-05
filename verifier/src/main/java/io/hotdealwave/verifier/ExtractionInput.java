@@ -17,7 +17,7 @@ final class ExtractionInput {
     private static final List<String> SERVICE_ARRAYS = List.of("endpoints", "feignClients", "feignCalls",
             "gatewayRoutes", "allowedPaths", "declarations", "kafkaDeclarations", "kafkaPublications",
             "kafkaSubscriptions", "environmentVariables", "externalResources", "errorCodes", "exceptionHandlers",
-            "gatewayRejections", "pageSerialization");
+            "gatewayRejections", "pageSerialization", "unsupported");
     private final ObjectMapper json = new ObjectMapper();
 
     ObjectNode read(Path directory) throws Exception {
@@ -74,6 +74,6 @@ final class ExtractionInput {
 
     private void validate(Schema schema, JsonNode document, String file, ObjectNode merged) {
         schema.validate(document).stream().sorted(Comparator.comparing(message -> message.toString()))
-                .forEach(message -> Checks.warn(merged, "schema", json.createArrayNode(), file + ": " + message));
+                .forEach(message -> Checks.warn(merged, "schema", "schema-invalid", json.createArrayNode(), file + ": " + message));
     }
 }

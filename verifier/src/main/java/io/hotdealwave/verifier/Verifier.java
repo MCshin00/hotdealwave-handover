@@ -12,6 +12,8 @@ public final class Verifier {
         new KnowledgeChecks().run(input, target, analysis);
         new ResponseChecks().run(input, analysis);
         Checks.count(analysis, "schema");
+        Checks.count(analysis, "evidence-lines");
+        Checks.legend(analysis);
         return analysis;
     }
 
@@ -27,6 +29,7 @@ public final class Verifier {
         new KafkaChecks().run(lines, analysis, source.composeFile());
         new CallChecks().run(source, analysis);
         new ThrowChecks().run(source, analysis);
+        Checks.legend(analysis);
         return analysis;
     }
 }

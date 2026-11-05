@@ -62,7 +62,7 @@ final class CrossChecks {
                         : candidates.size() > 1 ? "동일한 대상 엔드포인트가 여러 개임" : "추출한 대상과 서비스·HTTP 메서드·경로가 일치하지 않음";
                 verdict(target, UNKNOWN, reason);
                 verdict(call, UNKNOWN, reason);
-                warn(analysis, "feign-targets", target.path("evidence"), reason);
+                warn(analysis, "feign-targets", "target-mismatch", target.path("evidence"), reason);
             }
         }
         count(analysis, "feign-targets");
@@ -84,7 +84,7 @@ final class CrossChecks {
             boolean connected = items(endpoint.path("externalPaths")).stream().anyMatch(Checks::known);
             token(analysis, endpoint.path("tokenRequired"), value(endpoint.path("path")), value(endpoint.path("httpMethod")), connected);
             if (!connected) {
-                warn(analysis, "gateway-routes", endpoint.path("evidence"), "확인된 게이트웨이 외부 경로 없음: "
+                warn(analysis, "gateway-routes", "unlinked", endpoint.path("evidence"), "확인된 게이트웨이 외부 경로 없음: "
                         + value(endpoint.path("httpMethod")) + " " + value(endpoint.path("path")));
                 verdict(endpoint, UNKNOWN, "확인된 게이트웨이 외부 경로 없음");
             }
@@ -107,7 +107,7 @@ final class CrossChecks {
                 if (!connected) {
                     var evidence = route.path("evidence").deepCopy();
                     for (var ev : path.path("evidence")) if (!items(evidence).contains(ev)) ((com.fasterxml.jackson.databind.node.ArrayNode) evidence).add(ev);
-                    warn(analysis, "gateway-routes", evidence, "컨트롤러에 닿는 외부 경로를 확인하지 못함: " + value(path));
+                    warn(analysis, "gateway-routes", "unlinked", evidence, "컨트롤러에 닿는 외부 경로를 확인하지 못함: " + value(path));
                     verdict(route, UNKNOWN, "컨트롤러에 닿는 외부 경로를 확인하지 못함");
                 }
             }
@@ -179,7 +179,7 @@ final class CrossChecks {
         if (fact.path("value").isBoolean() && fact.path("value").asBoolean() == required) verdict(fact, CONFIRMED, null);
         else {
             verdict(fact, UNKNOWN, "토큰 허용 목록과 값이 일치하지 않음");
-            warn(analysis, "gateway-routes", fact.path("evidence"), "토큰 허용 목록과 값이 일치하지 않음");
+            warn(analysis, "gateway-routes", "extraction-mismatch", fact.path("evidence"), "토큰 허용 목록과 값이 일치하지 않음");
         }
     }
 
@@ -191,6 +191,6 @@ final class CrossChecks {
     }
     private static void inventoryWarning(ObjectNode analysis, String check, Map.Entry<String, String> entry, String reason) {
         var evidence = analysis.arrayNode().add(entry.getKey().substring(entry.getKey().indexOf('@') + 1));
-        warn(analysis, check, evidence, reason + entry.getValue());
+        warn(analysis, check, "inventory-mismatch", evidence, reason + entry.getValue());
     }
 }
