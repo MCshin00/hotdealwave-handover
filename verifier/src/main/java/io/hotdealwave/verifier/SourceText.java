@@ -2,8 +2,11 @@ package io.hotdealwave.verifier;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -11,7 +14,11 @@ import java.util.regex.Pattern;
 final class SourceText {
     private static final Pattern RESPONSE_EVIDENCE = Pattern.compile(
             "responses/(?:[^/:]+/)*[^/:]+\\.json(?::[1-9][0-9]*)?");
+    private static final List<String> BUILD_FILES = List.of("build.gradle", "build.gradle.kts", "pom.xml");
+    private static final List<String> COMPOSE_FILES = List.of("compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml");
     private final Path root;
+    private String composeFile;
+    private Boolean namingStrategy;
     private final Map<Path, List<String>> cache = new HashMap<>();
     SourceText(Path root) throws IOException { this.root = root.toRealPath(); }
 
@@ -41,8 +48,8 @@ final class SourceText {
         var candidate = root.resolve(relative).normalize();
         if (!candidate.startsWith(root) || isExcluded(root.relativize(candidate))) return null;
         String name = candidate.getFileName().toString();
-        if (!(name.endsWith(".java") || name.endsWith(".yml") || name.equals("build.gradle")
-                || name.equals("Dockerfile") || name.endsWith(".xml") || name.endsWith(".md"))) return null;
+        if (!(name.endsWith(".java") || name.endsWith(".yml") || name.endsWith(".yaml") || name.endsWith(".properties")
+                || BUILD_FILES.contains(name) || name.equals("Dockerfile") || name.endsWith(".xml") || name.endsWith(".md"))) return null;
         if (!Files.isRegularFile(candidate)) return null;
         Path real = candidate.toRealPath();
         if (!real.startsWith(root) || isExcluded(root.relativize(real))) return null;
@@ -77,26 +84,73 @@ final class SourceText {
         return result;
     }
 
-    /** Java lines with comments removed, for the declaration inventories only. */
+    /** Java lines with comments removed from every module (a build file and src/main/java), for the declaration inventories only. */
     Map<String, String> javaLines() throws IOException {
         var result = new LinkedHashMap<String, String>();
-        try (var directories = Files.list(root)) {
-            for (var directory : directories.sorted().toList()) {
-                String name = directory.getFileName().toString();
-                if (name.startsWith(".")) continue;
-                Path javaRoot = directory.resolve("src/main/java");
-                if (!Files.isRegularFile(directory.resolve("build.gradle")) || !Files.isDirectory(javaRoot)) continue;
-                try (var files = Files.walk(javaRoot)) {
-                    for (var file : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
-                        String relative = root.relativize(file).toString().replace('\\', '/');
-                        var lines = withoutComments(lines(relative));
-                        for (int i = 0; i < lines.size(); i++) result.put(relative + ":" + (i + 1), lines.get(i));
-                    }
+        for (var module : modules()) {
+            try (var files = Files.walk(module.resolve("src/main/java"))) {
+                for (var file : files.filter(p -> p.toString().endsWith(".java")).sorted().toList()) {
+                    String relative = relative(file);
+                    var lines = withoutComments(lines(relative));
+                    for (int i = 0; i < lines.size(); i++) result.put(relative + ":" + (i + 1), lines.get(i));
                 }
             }
         }
         return result;
     }
+
+    private List<Path> modules() throws IOException {
+        var modules = new ArrayList<Path>();
+        Files.walkFileTree(root, new SimpleFileVisitor<>() {
+            @Override public FileVisitResult preVisitDirectory(Path directory, BasicFileAttributes attributes) {
+                String name = directory.equals(root) ? "" : directory.getFileName().toString();
+                if (name.startsWith(".") || name.equals("build") || name.equals("target") || name.equals("src")) return FileVisitResult.SKIP_SUBTREE;
+                if (BUILD_FILES.stream().anyMatch(f -> Files.isRegularFile(directory.resolve(f))) && Files.isDirectory(directory.resolve("src/main/java")))
+                    modules.add(directory);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        modules.sort(Comparator.comparing(this::relative));
+        return modules;
+    }
+
+    /** Whether a module's Spring setting renames JSON properties globally. */
+    boolean namingStrategy() throws IOException {
+        if (namingStrategy == null) {
+            namingStrategy = false;
+            for (var module : modules()) {
+                Path resources = module.resolve("src/main/resources");
+                if (!Files.isDirectory(resources)) continue;
+                try (var files = Files.list(resources)) {
+                    for (var file : files.filter(f -> f.getFileName().toString().matches("application.*\\.(?:yml|yaml|properties)")).toList())
+                        namingStrategy |= lines(relative(file)).stream().anyMatch(l -> l.contains("property-naming-strategy"));
+                }
+            }
+        }
+        return namingStrategy;
+    }
+
+    /** The compose file: the one at the root, or the only one in the repository. */
+    String composeFile() throws IOException {
+        if (composeFile != null) return composeFile;
+        var atRoot = COMPOSE_FILES.stream().filter(f -> Files.isRegularFile(root.resolve(f))).toList();
+        var found = new ArrayList<String>();
+        if (atRoot.isEmpty()) Files.walkFileTree(root, new SimpleFileVisitor<>() {
+            @Override public FileVisitResult preVisitDirectory(Path directory, BasicFileAttributes attributes) {
+                String name = directory.equals(root) ? "" : directory.getFileName().toString();
+                return name.startsWith(".") || name.equals("build") || name.equals("target") || name.equals("node_modules")
+                        ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
+            }
+            @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+                if (COMPOSE_FILES.contains(file.getFileName().toString())) found.add(relative(file));
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        composeFile = atRoot.size() == 1 ? atRoot.get(0) : atRoot.isEmpty() && found.size() == 1 ? found.get(0) : "";
+        return composeFile;
+    }
+
+    private String relative(Path file) { return root.relativize(file).toString().replace('\\', '/'); }
 
     private static List<String> withoutComments(List<String> lines) {
         var result = new ArrayList<String>();
@@ -127,14 +181,20 @@ final class SourceText {
         return result;
     }
 
-    String yamlKey(String evidence) throws IOException {
+    /** The full setting key on a YAML or properties line, or "" for other files. */
+    String settingKey(String evidence) throws IOException {
         int colon = evidence.lastIndexOf(':');
         String file = evidence.substring(0, colon);
-        if (!file.endsWith(".yml")) return "";
         int number = Integer.parseInt(evidence.substring(colon + 1));
+        var lines = lines(file);
+        if (file.endsWith(".properties")) {
+            if (number < 1 || number > lines.size()) return "";
+            var match = Pattern.compile("^\\s*([^#!=:\\s][^=:\\s]*)\\s*[=:]").matcher(lines.get(number - 1));
+            return match.find() ? match.group(1) : "";
+        }
+        if (!file.endsWith(".yml") && !file.endsWith(".yaml")) return "";
         var parents = new TreeMap<Integer, String>();
         var pattern = Pattern.compile("^(\\s*)([\\w-]+):(?:\\s|$)");
-        var lines = lines(file);
         for (int i = 0; i < Math.min(number, lines.size()); i++) {
             var match = pattern.matcher(lines.get(i));
             if (!match.find()) continue;
@@ -143,5 +203,11 @@ final class SourceText {
             parents.put(indent, match.group(2));
         }
         return String.join(".", parents.values());
+    }
+
+    /** The value on a YAML or properties setting line. */
+    static String settingValue(String line) {
+        var match = Pattern.compile("^\\s*[^=:\\s]+\\s*[=:]\\s*(.*)$").matcher(line);
+        return match.find() ? match.group(1).trim() : "";
     }
 }

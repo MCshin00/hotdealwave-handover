@@ -114,7 +114,7 @@ AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/R
 
 업무 규칙·함정은 별도 `rules-msa-java-spring` Skill로 추출 결과에서 출발해 코드와 저장된 응답을 읽고 작업 폴더의 `knowledge/<spring.application.name>.json`에 쓴다. 관계 추출 형식은 그대로 두고, 검증기가 항목도 같은 출력에 합친다.
 
-ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka). ID 앞부분으로 `services/<spring.application.name>.json`을 찾을 수 있게 하며, 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. `service` 필드가 없는 항목은 근거 경로의 첫 디렉터리로 소속을 정하고, 정할 수 없으면 멈추고 보고한다.
+ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka). ID 앞부분으로 `services/<spring.application.name>.json`을 찾을 수 있게 하며, 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. `service` 필드가 없는 항목은 근거 경로가 `service.directory`로 시작하는 서비스에 속하고, 정할 수 없으면 멈추고 보고한다. 서비스가 하위 폴더(`services/order`)에 있어도 같다.
 
 형식에 담을 자리가 없는 방식(예: `RestTemplate` 호출, 회로 차단기 fallback)은 항목으로 만들지 않고, 위치와 방식 이름, 한 줄 설명을 `unsupported` 배열에 남긴다. 완료 보고에만 남기면 결과를 보는 사람은 그 서비스의 흐름이 완전한지 알 수 없다. 페이지와 흐름 결과에는 그 서비스에 도구가 다루지 않는 방식이 있다고 한 줄로 붙인다.
 
@@ -127,6 +127,7 @@ ID는 애플리케이션 이름으로 시작한다(엔드포인트·Feign·Kafka
 DLQ 발행 두 곳(문자열 `payment-dlq`·`product-dlq`)을 빼면 토픽 이름은 코드와 설정 어디에도 값으로 없다. `@Value("${spring.kafka.topics.x}")` → `application.yml`의 `${KAFKA_..._TOPIC}` → `docker-compose.yml`의 `${KAFKA_..._TOPIC}`으로 이어지고, 값은 배포 서버의 환경에서 들어온다(`.github/workflows/actions.yml`이 EC2에서 `docker-compose`를 실행).
 
 - 발행 쪽과 구독 쪽이 같은 환경변수 이름을 쓰면 연결한다. 한 compose 파일 안의 같은 `${변수}`는 같은 값으로 채워지기 때문이다. 근거는 양쪽 서비스의 compose 줄이다.
+- 토픽 이름이 코드나 설정 파일에 값으로 적혀 있고 양쪽이 같으면 연결한다. 같은 이름은 같은 토픽이기 때문이다. 근거는 양쪽의 토픽 이름 줄이다(#58). HotDealWave에서는 문자열 토픽(DLQ 두 곳)을 구독하는 곳이 없어 이 연결이 없다.
 - 이름이 다르면 "확인 안 됨"으로 둔다. 이름·필드명·로그 문구가 비슷해도 후보로 내지 않는다.
 - 실제 값은 쓰지 않는다. 저장소만 받은 사람은 그 값을 알 수 없다.
 

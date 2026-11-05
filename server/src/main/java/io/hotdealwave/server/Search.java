@@ -32,7 +32,8 @@ class Search {
         for (var service : analysis.list("services")) {
             String name = Analysis.value(service.path("name"));
             serviceNames.put(name.toLowerCase(), name);
-            serviceNames.put(service.path("directory").asText().toLowerCase(), name);
+            String directory = service.path("directory").asText();
+            serviceNames.put(directory.substring(directory.lastIndexOf('/') + 1).toLowerCase(), name);
         }
     }
 
