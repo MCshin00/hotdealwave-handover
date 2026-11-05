@@ -29,7 +29,7 @@ description: Spring Boot·Spring Cloud MSA의 대상·결과 디렉터리 경로
 ## 추출 순서
 
 1. 서비스: 매번 저장소 전체에서 서비스를 찾고 `spring.application.name`을 확인한다. 디렉터리 이름으로 서비스 이름을 추정하지 않는다. `spring.application.name`이 없는 공통 모듈은 서비스로 만들지 않고, 그 안의 DTO·상수·예외 처리기는 그것을 쓰는 서비스에서 따라간다. 선택한 서비스마다 2~10단계를 한다.
-2. API: 클래스·메서드 매핑을 합쳐 HTTP 메서드와 전체 경로를 구하고, 파라미터와 요청·응답 DTO를 따라가 형식대로 기록한다. 외부 타입의 구조나 프레임워크 기본값은 만들지 않는다.
+2. API: 클래스·메서드 매핑의 첫 위치 인자 또는 `value`·`path` 속성만 경로로 읽어 합치고 HTTP 메서드와 전체 경로를 구한다. `headers`·`params`·`produces`·`consumes`·`name` 문자열은 경로에 넣지 않는다. 파라미터와 요청·응답 DTO를 따라가 형식대로 기록한다. 외부 타입의 구조나 프레임워크 기본값은 만들지 않는다.
 3. HTTP 호출: 아래 종류별 읽는 법으로 `httpClients`·`httpCalls`를 쓴다. 대상 서비스 파일에 기대지 않고 대상 컨트롤러를 직접 읽어 서비스 이름·HTTP 메서드·전체 경로로 엔드포인트 ID를 정한다. 메서드 이름이 비슷하다고 연결하지 않는다.
 4. 게이트웨이: YAML 또는 Java DSL 경로 규칙으로 외부 경로를 만들고, 토큰 허용 목록과 실제 비교 코드로 토큰 필요 여부를 정한다. 서비스 안의 권한 검사와 섞지 않는다.
 5. 메시지 선언: 아래 종류별 읽는 법으로 `messageDeclarations`·`messagePublications`·`messageSubscriptions`를 쓴다. 목적지는 래퍼와 메서드 인자를 거슬러 호출 지점까지 따라간다.
@@ -37,7 +37,7 @@ description: Spring Boot·Spring Cloud MSA의 대상·결과 디렉터리 경로
 7. 환경변수·외부 자원: 형식대로 기록한다. 환경변수 `location`은 설정 파일과 그것을 참조하는 `@Value`면 전체 설정 키, compose면 `environment`다. compose는 서비스의 `environment` 항목만 본다. 근거 없는 자원은 만들지 않는다.
 8. 오류 응답: 오류 코드 enum 상수, 예외 처리기, 게이트웨이 필터의 거부 응답, `@EnableSpringDataWebSupport`의 페이지 직렬화 설정을 형식대로 기록한다. 처리기의 상태·오류 코드·메시지는 오류 응답 DTO 생성자까지 따라가 어디서 정해지는지 적고, 처리기 안의 조건에 따라 갈리면 `분기`로 적는다.
 9. 다루지 않는 방식: 가정 표에 없는 호출·메시징 방식을 찾아 `unsupported`에 근거 줄(그 방식 이름이 있는 줄), 방식 이름, 한 줄 설명으로 남긴다.
-10. 누락 확인: 매핑·HTTP 클라이언트·메시지 선언과 `@ExceptionHandler`·오류 코드 enum을 직접 검색해 추출 항목과 대조한다. 주석 속 선언은 항목으로 만들지 않는다. 검증 경고를 피하려고 사실이나 근거를 바꾸지 않는다.
+10. 누락 확인: 매핑·HTTP 클라이언트·메시지 선언과 `@ExceptionHandler`·오류 코드 enum을 직접 검색해 추출 항목과 대조한다. `declarations`에는 컨트롤러뿐 아니라 Feign 인터페이스의 매핑 선언도 원래 위치로 기록한다. `httpCalls`에 썼어도 매핑 선언 목록에서 빼지 않는다. 주석 속 선언은 항목으로 만들지 않는다. 검증 경고를 피하려고 사실이나 근거를 바꾸지 않는다.
 11. 관계: 1단계에서 찾은 모든 서비스 파일이 있을 때 따로 실행하고, 서비스를 하나라도 다시 추출했으면 다시 한다. 서비스 파일의 같은 종류 메시지 발행·구독을 목적지와 연결 근거로 대조해 `messageLinks`를 쓰고, 엔드포인트·메시지 구독의 핸들러에서 서비스·포트·어댑터·래퍼를 따라가 같은 서비스의 HTTP 호출·직접 메시지 발행에 닿는 `calls`를 쓴다. 프레임워크가 실행하는 DLQ 복구기·함수형 발행은 `calls`의 도착점으로 만들지 않는다. 엔드포인트 핸들러에서 같은 방식으로 따라가 같은 서비스의 예외 생성 줄에 닿는 `throws`를 쓰고, 그 예외를 받는 처리기를 상속을 따라 정한다. 거치는 길의 `catch`가 잡는 예외는 쓰지 않고, `join()` 등으로 감싸여 나가는 예외는 감싼 예외의 처리기로 잇는다. 셋을 `relations.json` 하나로 낸다. HTTP 대상 ID가 대상 서비스 파일에 없으면 완료 보고에 적는다.
 12. 저장소 수준: 서비스 단계와 따로 실행한다. 배포 파이프라인, 컨테이너 실행 정의와 빌드 정의, 메트릭 수집 대상, 로그 전송, 모니터링 도구 자체 설정, 저장소에 설정이나 언급이 있는 모니터링 도구와 그 실행 정의를 범주별로 형식대로 `repository.json` 하나에 쓴다. 항목마다 그 설정 파일의 도구 이름을 쓴다. 실행 정의를 저장소 전체에서 찾지 못한 도구는 빈 근거로 둔다. 파이프라인에 적힌 변수 값은 쓴 그대로 두고, 비밀값과 실행 환경에서 들어오는 변수 값은 쓰지 않고 그 값을 쓰는 모양만 적는다.
 
@@ -47,7 +47,7 @@ description: Spring Boot·Spring Cloud MSA의 대상·결과 디렉터리 경로
 
 | kind | 선언 줄과 읽는 법 |
 |---|---|
-| `feign` | `@FeignClient`를 클라이언트로, 인터페이스의 매핑 어노테이션을 호출로 읽는다. `name`·`url`·`path`와 클래스·메서드 매핑을 합친다. |
+| `feign` | `@FeignClient`를 클라이언트로, 인터페이스의 매핑 어노테이션을 호출로 읽는다. `name`·`url`·`path`를 기록하고, 클라이언트 `path`와 클래스·메서드 매핑의 경로만 2단계 규칙대로 합친다. `url`이 비어 있지 않으면 `${...}` 설정값이어도 `external: true`로 쓴다. 실제 주소가 저장소 밖에서 정해지면 대상 ID를 만들지 않는다. |
 | `restTemplate` | `RestTemplate` 필드·파라미터의 `getForObject`·`getForEntity`·`postForObject`·`postForEntity`·`put`·`patchForObject`·`delete`·`headForHeaders`·`optionsForAllow`·`exchange`·`execute` 호출 줄이다. 첫 URL 인자와 메서드 이름 또는 `HttpMethod` 인자를 읽는다. 클라이언트 선언 없이 `clientId`를 비운다. |
 | `restClient` | `RestClient` 빈의 `baseUrl` 줄을 클라이언트로 읽는다. 타입을 선언한 필드·파라미터의 `get`·`post`·`put`·`patch`·`delete`·`head`·`options`·`method` 줄을 호출로, 이어지는 `uri`를 경로로 읽는다. 전체 URL이면 `clientId`를 비운다. |
 | `webClient` | `WebClient` 빈의 `baseUrl` 줄과 타입을 선언한 필드·파라미터의 fluent 호출 시작 줄이다. 메서드와 `uri`, 기본 주소를 함께 읽는다. URI 빌더·람다의 값을 정할 수 없으면 `null`로 둔다. |

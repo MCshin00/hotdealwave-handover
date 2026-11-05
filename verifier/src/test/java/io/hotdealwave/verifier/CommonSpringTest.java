@@ -399,6 +399,15 @@ class CommonSpringTest {
         assertTrue(output.at("/endpoints/0/externalPaths/0/tokenRequired/reason").asText().contains("startsWith"));
     }
 
+    @Test void emptyAllowedHttpMethodIsUnknownWithAWarning() throws Exception {
+        var input = document();
+        input.withArray("allowedPaths").add(allowed("/order/**", "", GATEWAY + "Security.java:6"));
+        var output = verify(input);
+        assertEquals(Checks.UNKNOWN, output.at("/allowedPaths/0/httpMethod/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/allowedPaths/0/status").asText());
+        assertEquals("extraction-mismatch", code(output, "Security.java:6"));
+    }
+
     private ObjectNode field(String name, String jsonName, String... evidence) {
         var field = item(evidence).put("name", name);
         field.set("schema", item(evidence).put("type", "String").put("kind", "scalar"));
