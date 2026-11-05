@@ -1,0 +1,64 @@
+{
+  "id": "Q17",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 78.2,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "외부 계정 상태·한도·수신 거부 이력을 확인할 근거가 없다는 설명은 맞습니다. 다만 저장소에는 실패 조사에 활용할 Loki 로그 전송 경로와 서비스 라벨이 있어, 확인 경로를 전혀 제시하지 않은 답은 불완전합니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:10",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "환경변수 주입, 인증코드 유효기간, 가입 이메일 인증 상태, 비동기 발송과 성공 응답의 관계가 코드와 일치합니다. 운영 로그와 제공자 화면은 추가 확인 대상으로 제안하고, 실제 계정 상태와 로그 보관·조회 위치는 확인되지 않았다고 구분했습니다.",
+      "evidence": [
+        "docker-compose.yml:34",
+        "docker-compose.yml:35",
+        "user/src/main/resources/application.yml:22",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/redis/RedisUtilImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:99",
+        "user/src/main/java/com/sparta/hotdeal/user/libs/config/AsyncConfig.java:7",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:53"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "SMTP 설정과 제한 관련 값의 의미, 이메일 인증 상태, Loki 전송 설정을 정확히 설명했습니다. 직접 작성한 DEBUG 실패 메시지가 INFO 설정에서 제외된다는 설명과 원본 예외 손실도 맞으며, 실제 로그 존재 여부와 외부 계정 상태는 별도로 구분했습니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:8",
+        "user/src/main/resources/application.yml:15",
+        "user/src/main/resources/application.yml:19",
+        "user/src/main/resources/application.yml:22",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:75",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:22",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8",
+        "user/src/main/resources/logback.xml:14",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:23",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:25"
+      ]
+    }
+  },
+  "usage": {
+    "input": 124700,
+    "cachedInput": 92160,
+    "output": 2176
+  },
+  "seed": 45
+}

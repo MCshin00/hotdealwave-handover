@@ -1,0 +1,70 @@
+{
+  "id": "Q10",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 50.1,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "필수값 검증 부재와 소유자 불일치 시 400이라는 설명은 맞습니다. 다만 코드로 확인 가능한 오류 본문 {\"errorMessage\":\"접근 권한이 없습니다.\"}을 확인 불가로 남겨 핵심 답변이 빠졌습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:11",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:20",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "소유자 불일치 시 400이라는 핵심은 맞고 확인하지 못한 범위도 명시했습니다. 하지만 코드에 명시된 오류 본문을 빠뜨렸으며, 인용한 서비스 100·104줄은 삭제가 아니라 기본 배송지 변경 코드입니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:100",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:104",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:20",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소유자 불일치의 조건·400 상태·정확한 오류 본문이 코드와 일치합니다. 필수값 검증 부재와 null 저장 가능성을 설명하고, 공통 검증 응답과 실제 누락 요청의 확정할 수 없는 응답을 구분했습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:19",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:10",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:42",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:62"
+      ]
+    }
+  },
+  "usage": {
+    "input": 73409,
+    "cachedInput": 19584,
+    "output": 1554
+  },
+  "seed": 45
+}

@@ -1,0 +1,70 @@
+{
+  "id": "Q14",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 73.9,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "정각 스케줄러의 시각 일치 조건, 기간 검증과 중복 기준, 할인 후 판매가와 할인율 계산 설명이 코드와 일치합니다. 배포·직렬화 시간대와 통화는 미확정으로 남기고, 중복 검사와 실제 판매 시간 경계도 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:32",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:46",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:86",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:163"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "LocalDateTime과 Timestamp 변환, 기본 시간대 의존, 시작·종료 처리 및 가격 의미가 코드와 일치하며, 할인 판매가에 수량을 곱하는 주문 계산도 확인됩니다. 코드상 동작과 배포 환경의 시간대·통화, 판매 기간 경계의 보장을 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:178",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:52",
+        "product/Dockerfile:19"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "Timestamp 타입과 시간대 확정의 한계를 짚은 부분은 맞지만, 저장소에서 확인 가능한 시작·종료의 시각 일치 조건과 할인 후 판매가·할인율의 의미까지 확인 불가로 처리해 핵심 답변이 빠졌습니다. 확인하지 못한 사항을 명시했고 이를 확인된 사실로 단정하지는 않았습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:32",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:50",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:49",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:53"
+      ]
+    }
+  },
+  "usage": {
+    "input": 93848,
+    "cachedInput": 73472,
+    "output": 2453
+  },
+  "seed": 45
+}

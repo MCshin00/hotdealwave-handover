@@ -1,0 +1,95 @@
+{
+  "id": "Q17",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 49.5,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "A의 핵심 결론은 틀리지 않았습니다. 외부 계정의 인증 상태, 발송 한도, 수신 거부 기록은 저장소에서 확인되지 않고, 비동기 발송이 실패해도 요청 응답에는 드러나지 않습니다. 다만 저장소에서 확인되는 것을 하나도 짚지 않았습니다. 빠진 것은 Gmail SMTP 설정, 환경변수로 넣는 계정 정보, Loki로 보내는 로그 설정입니다. 근거 위치도 하나도 대지 않았고, '조각'이라는 표현에 기대어 확인된 것과 확인되지 않은 것을 나누지 못했습니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:8",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:53"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "B가 든 근거는 모두 코드와 맞습니다. 환경변수로 넣는 계정 정보, 1800000이 발송 한도가 아니라 인증 코드 유효기간이라는 점, verified는 가입 이메일 인증 여부라는 점이 그렇습니다. @Async 안에서 예외를 IllegalArgumentException으로 바꾸고 컨트롤러는 그대로 성공 응답을 돌려준다는 점도 맞습니다. 메일 제공자 쪽 값은 저장소 밖이라고 구분했습니다. 아쉬운 점은 logback.xml의 Loki 설정을 언급하지 않은 것 하나입니다.",
+      "evidence": [
+        "docker-compose.yml:34",
+        "docker-compose.yml:35",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:19",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:22",
+        "user/src/main/resources/application.yml:22",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/redis/RedisUtilImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:99",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:53"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "C가 짚은 설정은 모두 코드와 맞습니다. Gmail SMTP 587과 auth true, 5000은 타임아웃이고 1800000은 인증 코드 유효기간이라는 점, 재발송 횟수 제한이 없다는 점이 그렇습니다. p_email의 is_verified가 가입자의 이메일 인증 여부라는 설명도 맞습니다. Loki의 app=user-service 로그를 확인 위치로 들었고, 실패 시 남기는 로그가 DEBUG인데 root 수준이 INFO라서 그 메시지는 기록되지 않는다는 점과 원본 예외가 보존되지 않는다는 점도 맞습니다. 실제 계정 상태, 한도, 로그 조회 주소는 저장소 밖이라고 구분했습니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:8",
+        "user/src/main/resources/application.yml:15",
+        "user/src/main/resources/application.yml:19",
+        "user/src/main/resources/application.yml:22",
+        "docker-compose.yml:34",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:75",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:22",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8",
+        "user/src/main/resources/logback.xml:14",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:23"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 22275,
+    "cache_read_input_tokens": 97670,
+    "output_tokens": 4827,
+    "output_tokens_details": {
+      "thinking_tokens": 1757
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22275,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2788,
+        "cache_read_input_tokens": 22890,
+        "cache_creation_input_tokens": 4556,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4556
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.29432200000000003
+  },
+  "seed": 45
+}

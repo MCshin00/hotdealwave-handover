@@ -1,0 +1,101 @@
+{
+  "id": "Q01",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 59.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "주문 저장 후 Kafka 발행, 상품 쪽 차감 처리, send() 결과를 확인하지 않는 점은 코드와 맞습니다. 하지만 2단계에서 상품 조회 다음에 배송지를 '순서대로' 조회한다고 썼는데, 실제로는 CompletableFuture.supplyAsync로 두 조회를 동시에 실행합니다. 확인 범위는 잘 구분했습니다. 발행 토픽(KAFKA_REQUEST_PRODUCT_TOPIC)과 구독 토픽(KAFKA_REDUCE_QUANTITY_TOPIC)이 서로 다른 환경변수라 실제 연결은 저장소 밖에서 정해진다고 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:98",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:61",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "장바구니 조회, 저장 후 Kafka 발행, 고정 삭제자 문자열은 코드와 맞습니다. 하지만 금액 계산(3단계)을 쿠폰 처리(4단계)보다 앞에 두었는데, 코드는 쿠폰 처리(102행)를 먼저 하고 금액 계산(105행)을 나중에 합니다. 상품·주소 병렬 조회도 빠졌고, 질문의 핵심인 상품 서비스의 재고 차감 처리도 설명하지 않았습니다. Kafka 전달이 보장되지 않는다는 점은 밝혔지만, 발행 토픽과 구독 토픽이 서로 다른 환경변수라 연결이 저장소 밖에서 정해진다는 점은 구분하지 않았습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:22",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:29",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:14",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Gateway 라우팅부터 병렬 상품·주소 조회, 쿠폰 처리 후 금액 계산, 주문→주문상품 저장, 장바구니 논리 삭제, Kafka 발행(키는 주문 ID), 201 응답, 상품 서비스의 프로모션 잔량 차감과 decreaseQuantity, 결제 요청·롤백 분기까지 모두 코드와 맞습니다. @Transactional 안에서 전송하므로 커밋 순서가 보장되지 않는다는 점을 밝혔습니다. 차감 경로(request-product↔reduce-quantity)와 취소 경로(request-order↔cancel-order) 토픽이 각각 별도 환경변수라 실제 연결은 확인되지 않는다는 점도 구분했습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:41",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:22",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:26",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:39",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:23",
+        "order/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:17"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 38408,
+    "cache_read_input_tokens": 188636,
+    "output_tokens": 6552,
+    "output_tokens_details": {
+      "thinking_tokens": 1860
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 38408,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2282,
+        "cache_read_input_tokens": 38296,
+        "cache_creation_input_tokens": 5283,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5283
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.47608720000000004
+  },
+  "seed": 45
+}

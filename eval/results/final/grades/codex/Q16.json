@@ -1,0 +1,59 @@
+{
+  "id": "Q16",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 58.9,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "색인 예외를 로그만 남기고 삼키는 처리, 재고·할인 변경의 색인 누락, 조회 시 보정 부재와 Kafka DLQ의 한계를 코드와 맞게 설명했다. 애플리케이션에서 확인한 범위와 실제 장애 복구·외부 운영 체계의 미확인 범위를 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:246",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "저장 실패의 예외 흡수와 삭제 실패의 예외 전파를 정확히 구분했고, 자동 복구·변경 순서 검증이 없는 점도 코드와 일치한다. Kafka 설정을 ES 복구 정책으로 연결하지 않았으며 외부 운영과 클라이언트 내부 재시도는 확인 범위 밖임을 밝혔다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:157",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:160",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ElasticsearchConfig.java:31"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "재시도와 누락·역순 변경 복구 절차가 확인되지 않는다는 핵심 결론 및 색인 실패 후에도 성공 응답을 만들 수 있다는 설명이 코드와 일치한다. 주장을 인용된 생성·수정·상태 변경 경로로 제한하고, 복구 동작을 추정하지 않았다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:136"
+      ]
+    }
+  },
+  "usage": {
+    "input": 110611,
+    "cachedInput": 91264,
+    "output": 1829
+  },
+  "seed": 45
+}

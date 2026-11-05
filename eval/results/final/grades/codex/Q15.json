@@ -1,0 +1,67 @@
+{
+  "id": "Q15",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 47.1,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "트랜잭션 안에서 엔티티 변경 후 문서 변환·색인 저장을 직접 호출하며, 색인 예외는 로그만 남긴다는 설명이 코드와 일치한다. 상세는 JPA/MySQL, 검색은 Elasticsearch에서 읽으며, 커밋 이후 실행 보장과 실제 운영 반영 여부도 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryImpl.java:31",
+        "product/src/main/resources/application-prod.yml:3",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "직접 색인 호출, 예외를 삼켜 수정 성공 응답이 가능하다는 설명, 상세와 검색의 데이터 원천이 모두 코드와 일치한다. 커밋 이후 실행이나 외부 동기화 체계를 단정하지 않으며, ‘AI 해석’이라는 표현 자체는 감점 근거가 아니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryImpl.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "수정 후 직접 문서 변환·저장, 색인 실패 처리, 상세의 삭제 제외 조건과 검색의 문서 기반 응답 설명이 코드와 일치한다. 커밋 완료 후 실행을 단정하지 않고, 재고용 Kafka 구독과 상품 수정 색인 경로 및 저장소 밖 CDC 여부를 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57"
+      ]
+    }
+  },
+  "usage": {
+    "input": 50591,
+    "cachedInput": 20352,
+    "output": 1629
+  },
+  "seed": 45
+}

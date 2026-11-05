@@ -1,0 +1,61 @@
+{
+  "id": "Q21",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 56.6,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Prometheus 수집 대상, Loki 전송 주소·라벨·저장 경로, Eureka 관련 설명이 코드와 일치한다. 이 설정들과 실제 Grafana 연결·조회 조건 및 운영 환경의 설정 적용 여부를 명확히 구분했다.",
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:2",
+        "monitoring/prometheus/prometheus.yml:20",
+        "monitoring/prometheus/prometheus.yml:35",
+        "order/src/main/resources/logback.xml:4",
+        "order/src/main/resources/logback.xml:8",
+        "docker-compose.yml:149",
+        "monitoring/loki/loki-config.yml:12",
+        "monitoring/loki/loki-config.yml:30",
+        "server/build.gradle:24",
+        ".github/workflows/actions.yml:95"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "질문의 핵심인 실제 Grafana 관리 위치와 저장 대상 조회 여부는 저장소에서 확인되지 않으므로 확인 불가라는 결론은 맞다. 제공된 조각으로 판단 범위를 한정했으며, 운영 연결을 단정하지 않았다.",
+      "evidence": [
+        "docker-compose.yml:3",
+        "docker-compose.yml:203",
+        ".github/workflows/actions.yml:95",
+        "monitoring/prometheus/prometheus.yml:4",
+        "order/src/main/resources/logback.xml:4"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "실제 Grafana 연결과 대시보드 조건을 확인할 수 없다는 결론 및 애플리케이션 DB·Redis 설정이 그 연결의 증거가 아니라는 설명이 타당하다. 검색 결과 부재를 저장소 설정 부재로 단정하지 않고, 외부 환경변수와 확인되지 않은 연결을 구분했다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3",
+        "user/src/main/resources/application-prod.yml:15",
+        "monitoring/prometheus/prometheus.yml:4",
+        "user/src/main/resources/logback.xml:4",
+        "docker-compose.yml:47",
+        ".github/workflows/actions.yml:95"
+      ]
+    }
+  },
+  "usage": {
+    "input": 83071,
+    "cachedInput": 56960,
+    "output": 1571
+  },
+  "seed": 45
+}

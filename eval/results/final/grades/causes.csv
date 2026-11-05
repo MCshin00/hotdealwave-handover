@@ -1,0 +1,9 @@
+id,조건,원인,메모
+Q01,mcp,문서에 없음,"상품·주소 병렬 조회(CompletableFuture.supplyAsync)를 순차라고 썼다. 문서 어디에도 병렬 조회 언급이 없어, 답이 순서를 추정했다."
+Q03,mcp,문서에 없음,배포 워크플로(GitHub Secrets·EC2 SSH·docker-compose up)와 ECR_REGISTRY·ECR_REPOSITORY_PREFIX가 빠졌다. 문서에 actions.yml·EC2·ECR_REPOSITORY_PREFIX 언급이 없다. HOST의 logback 사용처도 문서에 없다.
+Q05,mcp,문서에 없음,VIA_DTO 페이지 직렬화 설정이 문서에 없다(VIA_DTO·PageSerialization 검색 0건). 빈 결과 형식도 문서에 직접 기술이 없다.
+Q10,ask,문서에 없음,"소유자 불일치의 오류 본문 {""errorMessage"":""접근 권한이 없습니다.""}가 빠졌다. 메시지 문자열이 문서에 없다(knowledge[199]는 400만 기술). 필수값 검증 부재는 knowledge[201](updateAddress 페이지)에 있으나 받지 못했다."
+Q10,mcp,문서에 없음,"소유자 불일치 메시지 ""접근 권한이 없습니다""가 문서에 없다. 문서는 400과 errorMessage 필드까지만 기술한다(knowledge[199] 등)."
+Q11,mcp,답이 틀림,"메서드 이름을 PaymentEventProducer.updateOrderStatus, OrderStatusUpdateEventConsumer.updateStatus로 썼다. 문서의 Kafka ID payment-service.updateOrderStatus·order-service.updateStatus를 메서드 이름으로 옮긴 것이다. 문서는 메서드 이름을 적지 않았고 ID 자체는 틀리지 않다."
+Q19,mcp,문서에 있는데 답에 없음,RewritePath 식이 빠졌다. 문서 gatewayRoutes[].rewritePath에 있다. JWT 검증 실패 시 401(setComplete)은 문서에 없다.
+Q20,mcp,문서에 없음,Gateway 자체 거부(본문 없는 401로 setComplete)가 문서에 없다. gateway knowledge는 리뷰 GET 함정 하나뿐이다.

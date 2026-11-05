@@ -1,0 +1,68 @@
+{
+  "id": "Q12",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 60.4,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "직접 DLQ 발행과 비동기 완료 미확인 설명은 맞습니다. 다만 저장소에서 확인되는 컨테이너 재시도 0회 설정과 중복 메시지의 무조건 상태 재대입을 확인 불가로 남겨 핵심 답변이 빠졌습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:71"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "발행의 비동기 실패 미처리, 동기 예외의 트랜잭션 한계, Order의 재시도 없는 DLQ 처리와 중복 상태 재적용이 코드와 일치합니다. 실제 재전달·전송 성공 및 외부 결제사의 중복 승인 처리는 저장소에서 확인되는 동작과 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:17",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ApplicationException.java:8",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:12",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:71"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "애플리케이션 재발행 부재, 재시도 0회의 DLQ 경로, 자동 재처리 부재와 중복 상태 덮어쓰기 설명이 코드와 일치합니다. Kafka 내부 재시도·운영 재처리·오프셋에 따른 재전달 및 트랜잭션 확정 여부도 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ProducerApplicationKafkaConfig.java:22",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ApplicationException.java:8",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:71"
+      ]
+    }
+  },
+  "usage": {
+    "input": 101886,
+    "cachedInput": 72192,
+    "output": 1998
+  },
+  "seed": 45
+}

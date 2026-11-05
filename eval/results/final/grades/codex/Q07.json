@@ -1,0 +1,61 @@
+{
+  "id": "Q07",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 53.1,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "DB 조회 조건과 표시 데이터, 성공 응답 전 트랜잭션 저장, 일반 런타임 예외의 500 처리가 코드와 일치합니다. 코드상 롤백 구조와 실제 장애 복구 결과·화면 정책의 확인 한계도 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/repository/CouponRepository.java:17",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:15",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "조회 조건과 표시 데이터는 맞지만, 코드로 확인되는 성공 응답 전 동기 저장·트랜잭션 롤백 구조·일반 런타임 예외의 500 처리를 설명하지 않아 실패 처리라는 핵심에 불완전하게 답했습니다. 확인하지 못한 동작을 단정하지 않고 한계를 명시했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:37"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "조회 기준, 성공 응답 전 저장과 롤백 구조, 자동 재시도·보상 부재 및 조건부 중복 발급 거절 설명이 코드와 일치합니다. 실제 장애 검증과 화면 정책의 한계도 구분했으며, 응답 기록의 201은 인용한 6줄이 아닌 9줄에서 확인됩니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:35",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12"
+      ]
+    }
+  },
+  "usage": {
+    "input": 78066,
+    "cachedInput": 49024,
+    "output": 1586
+  },
+  "seed": 45
+}

@@ -1,0 +1,100 @@
+{
+  "id": "Q12",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 56.7,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "리스너가 예외를 잡아 DLQ로 보내고, 그 전송 결과를 확인하지 않으며, 상태를 이전 상태와 상관없이 덮어쓴다는 점은 코드와 맞습니다. 하지만 컨테이너의 FixedBackOff(0L, 0)라는 재시도 0회 정책을 빠뜨렸습니다. 중복 처리가 없다는 점도 코드로 확인되는데 '확인할 수 없다'고 해서, 확인 가능한 사실을 미확인으로 잘못 나눴습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/OrderStatus.java:9"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "다음 주장이 모두 코드와 맞습니다: send() 비동기 결과를 확인하지 않음, 동기 예외가 나면 CANCEL로 바꾸고 saveAndFlush한 뒤 PA005를 던지지만 같은 트랜잭션이 롤백됨, 리스너가 직접 DLQ로 보냄, FixedBackOff(0L, 0)로 재시도 0회, OrderDlqConsumer가 빈으로 등록되지 않고 로그만 남김, 중복 제거와 상태 전이 검사 없이 valueOf로 덮어씀, 승인 API에 로컬 상태 검사가 없음, MANUAL ACK인데 ack 호출이 없음. 카카오페이의 중복 승인 처리와 실제 재전달·재시도 횟수는 저장소 밖에서 정해진다고 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/resources/application.yml:18",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "다음 주장이 코드와 맞습니다: orderId를 키로 발행함, 실패 콜백과 producer retries 설정이 없음, CANCEL 보상은 RuntimeException으로 롤백됨, DLQ 전송과 FixedBackOff(0L, 0), OrderDlqConsumer에 @Component가 없음, 메시지에 orderId와 status만 있고 this.status = status로 덮어씀, MANUAL ACK인데 ack 호출이 없음. Kafka 클라이언트 내부 재시도와 운영자의 외부 재처리, 실제 재전달 여부는 저장소만으로 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ProducerApplicationKafkaConfig.java:22",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ApplicationException.java:8",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/order/ReqOrderUpdateStatusMessage.java:11",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 25601,
+    "cache_read_input_tokens": 68073,
+    "output_tokens": 6559,
+    "output_tokens_details": {
+      "thinking_tokens": 2223
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 25601,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3834,
+        "cache_read_input_tokens": 27480,
+        "cache_creation_input_tokens": 3292,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3292
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.3496346
+  },
+  "seed": 45
+}

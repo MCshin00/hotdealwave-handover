@@ -1,0 +1,64 @@
+{
+  "id": "T01",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 80.9,
+  "order": {
+    "A": "base",
+    "B": "mcp",
+    "C": "ask"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "병렬 조회, 조건부 쿠폰 처리, 재고 차감 메시지와 후속·보상 경로 설명이 코드와 일치한다. 토픽 연결의 환경변수 의존성, 비동기 전송 완료 미확인, 보상이 이어지지 않는 지점도 구분했다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:36",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:19"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "호출 대상·메시지 내용은 맞고 실제 토픽 연결과 쿠폰 역직렬화의 확인 한계도 밝혔다. 다만 상품 조회→배송지 조회를 순차적인 동기 흐름으로 설명했는데, 실제로는 두 조회를 supplyAsync로 병렬 실행한 뒤 join한다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:98",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:36",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/dtos/coupon/res/ResPostCouponValidateDto.java:14",
+        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:20"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "주요 호출 대상과 실제 Kafka 연결을 확정할 수 없다는 설명은 맞다. 그러나 발행 내용을 requestProduct라는 이름만으로 설명해 재고 차감 목적과 주문 ID·상품별 ID·수량을 빠뜨렸고, 쿠폰이 없으면 검증 서비스 호출을 생략한다는 조건도 누락했다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:36",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:141",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:34",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/product/req/ReqProductReduceQuantityDto.java:25",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    }
+  },
+  "usage": {
+    "input": 182201,
+    "cachedInput": 131840,
+    "output": 2830
+  },
+  "seed": 45
+}

@@ -1,0 +1,103 @@
+{
+  "id": "Q11",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 57.2,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "/payment/success는 템플릿만 반환하는 고정 화면이고 approvalUrl로 쓰인다는 점, confirm부터 카카오 승인, Payment COMPLETE, Kafka 발행, Order 소비자를 거쳐 valueOf로 상태가 바뀌는 경로가 모두 코드와 맞습니다. 화면에서 승인 API로 이어지는 연결과 실제 주문 반영의 성공 여부·시점은 저장소로 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51",
+        "payment/src/main/resources/application.yml:18",
+        "order/src/main/resources/application.yml:17",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "성공 화면은 승인 결과를 확인하지 않는다는 점과 confirm부터 tid·미삭제 조건 조회, 승인, COMPLETE 변경, Kafka 발행, Order 소비자를 거쳐 상태가 갱신되는 흐름이 코드와 맞습니다. 다만 근거로 파일:줄 대신 [C3, C5] 같은 조각 표기만 썼습니다. 비동기 발행 때문에 Order 반영 완료는 단정할 수 없다고 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:19",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/repository/PaymentRepositoryImpl.java:21",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:29",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "화면 기준, 승인부터 주문 갱신까지의 경로, 전이 제한이 없다는 점, DLQ 처리, MANUAL ack인데 ack 호출이 없다는 점까지 코드와 대부분 맞습니다. 그러나 소비자 메서드 이름을 `updateStatus`라고 적었는데, 실제 이름은 `consumeUpdateOrderStatus`라 코드와 다릅니다. 실제 토픽 문자열이 외부 환경변수로 정해진다는 점과 카카오페이 내부가 저장소 밖이라는 점은 구분해 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "docker-compose.yml:157",
+        "docker-compose.yml:196",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/order/ReqOrderUpdateStatusMessage.java:10",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:53",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 32267,
+    "cache_read_input_tokens": 126093,
+    "output_tokens": 6312,
+    "output_tokens_details": {
+      "thinking_tokens": 2011
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32267,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2531,
+        "cache_read_input_tokens": 32430,
+        "cache_creation_input_tokens": 5008,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5008
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.40964259999999997
+  },
+  "seed": 45
+}

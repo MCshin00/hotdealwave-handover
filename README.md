@@ -15,7 +15,7 @@ target/HotDealWave (@cc43016)
                             +--> /mcp
 ```
 
-모든 결과에는 근거 `파일:줄`과 상태가 붙는다. 저장소만으로 확정할 수 없는 연결은 추측하지 않는다.
+모든 결과에는 근거 `파일:줄`과 상태가 붙는다. 다루는 범위는 근거 위치로 가른다. 저장소 안에 근거가 있으면 API든 배포·운영 설정이든 뽑을 대상이고(아직 뽑지 않는 것은 [결정 기록](docs/decisions.md#문제-상황)에 있다), 저장소 밖에만 있는 사실은 "저장소에 근거 없음"으로 밝힌다. 저장소만으로 확정할 수 없는 연결은 추측하지 않는다.
 
 업무 규칙·함정은 `rules-msa-java-spring` Skill이 추출 결과에서 출발해 코드·저장된 응답을 읽고 서비스별 항목 파일로 쓴다. 검증기가 이 항목도 `out/analysis.json`에 합친다. 아래는 추출의 상태이며, 업무 규칙·함정은 개발자가 정하는 `확인함`·`틀림`·`미확인`을 쓴다.
 
@@ -141,3 +141,13 @@ python scripts/check_citations.py eval/results/tuning
 ```
 
 결과는 `eval/results/<질문 파일 이름>/<조건>/<id>.json`(답, 걸린 시간, 토큰, 결과, 부른 MCP 도구)이다. 기계 검사는 답의 `파일:줄`이 고정 커밋(응답 근거는 이 저장소)에 있는지와 같은 답 줄의 코드 이름이 그 줄에 있는지를 `check.csv`에 남긴다. 이름 확인은 참고용이고, 답이 맞는지는 판단하지 않는다. `repo-mcp`는 체크아웃과 MCP를 함께 준 #41 실행 결과이고, 그 스크립트는 `7274f6f`에 있다.
+
+AI 교차 채점은 Codex CLI와 Claude Code CLI가 필요하다. 질문마다 기준선·MCP·질의응답의 답을 섞어 A·B·C로 한 세션에 넘기고, 채점자는 고정 커밋 체크아웃과 응답 근거 복사본만 읽는다.
+
+```bash
+python -m scripts.grade_eval grade eval/results/tuning codex --checkout ../HotDealWave-cc43016 --timeout 900 --jobs 2
+python -m scripts.grade_eval grade eval/results/tuning opus --checkout ../HotDealWave-cc43016 --timeout 900 --jobs 2
+python -m scripts.grade_eval merge eval/results/tuning
+```
+
+채점은 `grades/<채점자>/<id>.json`(답 순서, 답마다 정확도·확인 범위·이유·근거)에 남는다. `merge`는 두 채점이 같은 값과 "갈림"을 `grades/grades.csv`에, 갈린 답 전부와 갈리지 않은 답 가운데 무작위 5개를 `grades/review.md`에 쓴다. `grades/judgments.csv`(판정한 칸의 정확도·확인 범위·판정 경로·원인·메모)가 있으면 그 칸은 판정값을, 나머지는 두 채점이 같은 값을 `grades.csv`의 최종 정확도·최종 확인 범위로 쓴다. 판정하지 않은 칸 가운데 맞음이 아닌 칸의 원인은 `grades/causes.csv`에, 판정 기록은 `grades/judge-*.md`에 있다.
