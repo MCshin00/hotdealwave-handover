@@ -116,7 +116,7 @@ python -m unittest discover tests
 python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/responses
 ```
 
-`./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 같은 기준 위치의 `knowledge/hotdealwave/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
+`./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`, `relations.json`, `target.json`(대상 이름·고정 커밋)을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 같은 기준 위치의 `knowledge/hotdealwave/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
 
 공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 비교 실험 답 원문(`eval/results/`)은 분석 대상이 적어 둔 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다.
 

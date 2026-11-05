@@ -22,11 +22,13 @@ class AskTest {
         Reply next;
         RuntimeException failure;
         String lastInput;
+        String lastInstructions;
         int calls;
 
         @Override public Reply reply(String instructions, String input) {
             calls++;
             lastInput = input;
+            lastInstructions = instructions;
             if (failure != null) throw failure;
             return next;
         }
@@ -53,6 +55,8 @@ class AskTest {
         assertEquals("답", answer.status());
         assertEquals("/endpoints/order-service.OrderController.createOrder", answer.citations().get(0).page());
         assertTrue(model.lastInput.startsWith("조각:\n[C1] order-service.OrderController.createOrder"));
+        // The instructions name the analysed repository from the analysis data.
+        assertTrue(model.lastInstructions.startsWith("너는 HotDealWave 저장소를 넘겨받은 개발자의 질문에"));
     }
 
     @Test void citationCheckTurnsBadCitationsIntoAbstain() {

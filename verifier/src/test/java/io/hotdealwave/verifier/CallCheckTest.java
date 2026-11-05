@@ -77,6 +77,7 @@ class CallCheckTest {
                             "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:26"));
                 });
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
+        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
 
         var analysis = run(input);
         var checked = Checks.items(analysis.path("calls")).stream()

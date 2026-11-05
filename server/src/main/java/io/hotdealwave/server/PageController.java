@@ -80,7 +80,7 @@ class PageController {
     @GetMapping("/responses/{file:.+}")
     String response(@PathVariable String file, Model model) {
         var endpoint = analysis.list("endpoints").stream()
-                .filter(e -> (Decor.RESPONSES + file).equals(e.path("responseCheck").path("file").asText())).findFirst()
+                .filter(e -> { var m = Decor.RESPONSE_FILE.matcher(e.path("responseCheck").path("file").asText()); return m.matches() && m.group(1).equals(file); }).findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         model.addAttribute("file", file);
         model.addAttribute("endpoint", endpoint.path("id").asText());

@@ -107,6 +107,7 @@ class ErrorResponseCheckTest {
                 && t.path("errorCode").asText().equals("NOT_ALLOWED_CONTENT"));
         owner.put("handlerId", "user-service.GlobalExceptionHandler.missing");
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
+        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
 
         var analysis = run(input);
         var reasons = Checks.items(analysis.path("warnings")).stream()

@@ -1,6 +1,6 @@
 # 검증기
 
-`./gradlew :verifier:run`은 기본 입력 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`을 [서비스 스키마](../docs/format/service.schema.json)·[관계 스키마](../docs/format/relations.schema.json)로 먼저 검사한다. 어긋남은 `schema` 경고로 내고, 파일들을 합쳐 기존 검사를 실행한다. 출력은 `out/analysis.json` 하나다. 입력·대상·출력은 `./gradlew :verifier:run --args="analysis/hotdealwave target/HotDealWave out/analysis.json"`으로 지정한다.
+`./gradlew :verifier:run`은 기본 입력 `analysis/hotdealwave`의 `services/*.json`과 `relations.json`, `target.json`을 [서비스 스키마](../docs/format/service.schema.json)·[관계 스키마](../docs/format/relations.schema.json)·[대상 스키마](../docs/format/target.schema.json)로 먼저 검사한다. 어긋남은 `schema` 경고로 내고, 파일들을 합쳐 기존 검사를 실행한다. 출력은 `out/analysis.json` 하나다. 입력·대상·출력은 `./gradlew :verifier:run --args="analysis/hotdealwave target/HotDealWave out/analysis.json"`으로 지정한다.
 
 선언 검사는 Java 파일을 줄 단위 정규식으로 읽는다. 매핑·Feign 선언의 종류와 `파일:줄`을 [추출 결과](../docs/format/README.md)와 대조하며, 줄 주석과 블록 주석 안의 선언은 세지 않는다. 문자열 안의 `//`·`/*`는 주석으로 보지 않는다. 근거 줄 검사는 주석을 지우지 않은 원문을 읽는다. 근거로 읽는 파일은 `.java`, `.yml`, `build.gradle`, `Dockerfile`, `.xml`, `.md`다. 입력 디렉터리에 `repository.json`(배포·모니터링)이 있으면 스키마로 검사해 출력의 `repository`에 넣고 같은 근거 줄 검사를 한다. 배포·모니터링 항목은 첫 근거가 항목의 설정 파일에 있어야 한다. 비밀값과 로그 전송 주소의 실행 환경 값은 추출이 적은 사용 모양(`reference`·`hostReference`)이 근거 줄에 있으면 `저장소에 근거 없음`, 실행 정의를 찾지 못한 모니터링 도구는 근거 없이 `저장소에 근거 없음`이다. Feign 검사는 이름·HTTP 메서드·경로로 연결되지 않은 내부 호출을, 게이트웨이 검사는 어느 컨트롤러에도 닿지 않는 각 Path 패턴과 외부 경로가 없는 엔드포인트를 경고로 낸다. 경로 변수 이름은 연결에 영향을 주지 않는다.
 

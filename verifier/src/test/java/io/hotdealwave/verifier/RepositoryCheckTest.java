@@ -36,6 +36,7 @@ class RepositoryCheckTest {
             for (var file : files.toList()) Files.copy(file, services.resolve(file.getFileName()));
         }
         Files.copy(Path.of("analysis/hotdealwave/relations.json"), input.resolve("relations.json"));
+        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
         var repository = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/repository.json").toFile());
         change.accept(repository);
         JSON.writeValue(input.resolve("repository.json").toFile(), repository);

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>배포·모니터링</title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<nav class="top"><span><a href="/">처음</a></span><span class="target">HotDealWave · 고정 커밋 cc43016</span></nav>
+<nav class="top"><span><a href="/">처음</a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
 <header class="summary">
 <h1>배포·모니터링</h1>
 <p class="line">서비스 하나에 속하지 않는 배포 파이프라인, 컨테이너, 모니터링 설정을 역할별로 묶었다. 줄 앞은 그 설정 파일의 도구다. 저장소 밖에서 정해지는 값은 "저장소에 근거 없음"으로 남는다.</p>
