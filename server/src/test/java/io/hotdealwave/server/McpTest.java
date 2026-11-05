@@ -16,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class McpTest {
     @LocalServerPort int port;
     McpSyncClient client;
+    McpSchema.InitializeResult initialized;
 
     @BeforeEach void connect() {
         client = McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + port).endpoint("/mcp").build()).build();
-        client.initialize();
+        initialized = client.initialize();
     }
 
     @AfterEach void close() { client.closeGracefully(); }
@@ -30,6 +31,13 @@ class McpTest {
 
     private static String text(McpSchema.CallToolResult result) {
         return ((McpSchema.TextContent) result.content().get(0)).text();
+    }
+
+    @Test void initializeTellsTheClientThatValuesCarryStatusAndEvidence() {
+        String instructions = initialized.instructions();
+        assertTrue(instructions.contains("cc43016"));
+        assertTrue(instructions.contains("확인 상태"));
+        assertTrue(instructions.contains("파일:줄"));
     }
 
     @Test void listsFiveTools() {

@@ -4,7 +4,7 @@
 
 업무 규칙·함정은 별도 [항목 스키마](knowledge.schema.json)를 따른다. 아래 추출 결과의 상태 판정 규칙과 달리, 항목의 확인 상태는 개발자가 정한다.
 
-UTF-8 JSON으로 `analysis/<대상>/services/<spring.application.name>.json`과 `analysis/<대상>/relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·Feign·Kafka), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, Feign 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, Feign 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
+UTF-8 JSON으로 작업 폴더의 `services/<spring.application.name>.json`과 `relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·Feign·Kafka), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, Feign 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, Feign 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
 
 서비스는 `build.gradle`과 `src/main/java`가 있는 폴더이며, `service` 값은 YAML의 `spring.application.name`이다. `service` 필드가 없는 항목은 근거 경로의 첫 디렉터리와 `service.directory`를 대조해 소속을 정한다. 정할 수 없으면 멈추고 보고한다.
 
@@ -87,9 +87,9 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 ## 저장소 수준 사실(배포·모니터링)
 
-서비스 하나에 속하지 않는 배포·모니터링 설정은 [저장소 스키마](repository.schema.json)를 따라 `analysis/<대상>/repository.json` 하나에 쓴다. 파일이 없으면 검증기는 이 부분 없이 진행한다. 검증기는 합친 결과의 `repository`에 그대로 넣고 상태를 정한다.
+서비스 하나에 속하지 않는 배포·모니터링 설정은 [저장소 스키마](repository.schema.json)를 따라 작업 폴더의 `repository.json` 하나에 쓴다. 파일이 없으면 검증기는 이 부분 없이 진행한다. 검증기는 합친 결과의 `repository`에 그대로 넣고 상태를 정한다.
 
-대상 이름, 원본 저장소 주소, 고정 커밋은 [대상 스키마](target.schema.json)를 따라 `analysis/<대상>/target.json`에 쓴다. 대상 서브모듈을 고정할 때 함께 쓰고 추출 Skill은 쓰지 않는다. 검증기는 합친 결과의 `target`에 그대로 넣고, 서버는 페이지 머리말, 근거 링크 주소, 질의응답 지시문의 대상 이름을 여기서 읽는다.
+대상 이름, 원본 저장소 주소, 고정 커밋은 [대상 스키마](target.schema.json)를 따라 작업 폴더의 `target.json`에 쓴다. `init`이 대상을 복제해 고정할 때 쓰고 추출 Skill은 쓰지 않는다. 검증기는 합친 결과의 `target`에 그대로 넣고, 서버는 페이지 머리말, 근거 링크 주소, 질의응답 지시문의 대상 이름을 여기서 읽는다.
 
 배열은 도구가 아니라 역할(범주)로 나눈다. 항목의 `tool`은 그 항목을 적은 설정 파일의 도구 이름이고(예: `GitHub Actions`, `Docker Compose`, `Prometheus`, `logback`, `Loki`), `file`은 그 설정 파일이다. 첫 근거는 `file`의 줄이다.
 
@@ -103,7 +103,7 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 ## 업무 규칙·함정
 
-UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다.
+UTF-8 JSON으로 작업 폴더의 `knowledge/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다.
 
 | 필드 | 내용 |
 |---|---|
@@ -119,22 +119,22 @@ UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비�
 
 `설명`은 엔드포인트·Kafka 발행·구독 하나가 하는 일을 한국어로 쓴 항목이다. 영향 ID는 그 하나이고, 페이지 맨 위 "설명" 절에 나온다.
 
-코드 근거는 고정 커밋의 대상 루트 기준 경로, 응답 근거는 `analysis/<대상>/responses/<파일>.json:줄`이다. 응답 파일을 근거에 포함하면 발견 경로는 `실제 응답`이다. AI 해석의 출처는 `AI 해석`, 확인 상태는 `미확인`으로 시작한다.
+코드 근거는 고정 커밋의 대상 루트 기준 경로, 응답 근거는 작업 폴더 기준 `responses/<파일>.json:줄`이다. 응답 파일을 근거에 포함하면 발견 경로는 `실제 응답`이다. AI 해석의 출처는 `AI 해석`, 확인 상태는 `미확인`으로 시작한다.
 
 검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions` 중 하나에 있는지, 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids`, `knowledge-duplicates` 경고다.
 
-`analysis/<대상>`을 입력하면 같은 기준 위치의 `knowledge/<대상>`을 읽는다(절대 입력 경로도 같은 구조). 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 세 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
+검증기는 작업 폴더의 `knowledge/`를 읽는다. 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 세 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
 
 ## 응답 확인 상태
 
-검증기는 `out/analysis.json`의 엔드포인트마다 `responseCheck`를 붙인다. 입력 디렉터리의 `responses/<엔드포인트 ID>.json`을 읽는다.
+검증기는 `out/analysis.json`의 엔드포인트마다 `responseCheck`를 붙인다. 작업 폴더의 `responses/<엔드포인트 ID>.json`을 읽는다.
 
 | 필드 | 내용 |
 |---|---|
 | `status` | `응답 기록 있음`(`statusCode`가 null이 아님), `호출 못 함`(`statusCode`가 null), `코드만`(응답 파일 없음) |
 | `statusCode` | 응답 파일의 HTTP 상태 코드. 없으면 null |
 | `reason` | 응답 파일의 `reason`. 없으면 null |
-| `file` | `analysis/<대상>/responses/<엔드포인트 ID>.json`. 응답 파일이 없으면 null |
+| `file` | `responses/<엔드포인트 ID>.json`. 응답 파일이 없으면 null |
 | `lines` | 응답 파일 원문의 줄 배열. N번째 원소가 원문 N줄이라 응답 근거 `파일:N`을 그대로 찾는다. 응답 파일이 없으면 빈 배열 |
 
 응답 기록은 그 요청 조건에서 관찰한 것이며 엔드포인트의 `status`(확인 상태)를 바꾸지 않는다. 오류 응답도 `응답 기록 있음`이고 `statusCode`로 구분한다.

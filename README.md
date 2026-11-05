@@ -20,12 +20,12 @@
 ## 하는 일
 
 ```
-target/HotDealWave (@cc43016)
+작업 폴더의 source/ (대상 @고정 커밋, init이 받음)
   --> AI 추출(Skill)
-  --> analysis/hotdealwave/services/*.json + relations.json
-  --> verifier (Java) <-- knowledge/hotdealwave/*.json (업무 규칙·함정)
-  --> out/analysis.json
-  --> server (Spring Boot) --+--> 문서 페이지
+  --> 작업 폴더의 services/*.json + relations.json + repository.json
+  --> verify (Java 검증기) <-- knowledge/*.json (업무 규칙·함정)
+  --> 작업 폴더의 out/analysis.json
+  --> serve (Spring Boot) --+--> 문서 페이지
                             +--> 검색·질문 페이지
                             +--> /mcp
 ```
@@ -45,11 +45,11 @@ target/HotDealWave (@cc43016)
 ```
 hotdealwave-handover/
 |
-+-- target/HotDealWave/     # 분석 대상 서브모듈 (팀 원본 저장소 cc43016, 읽기만)
-|
-+-- analysis/               # AI 추출 결과
++-- examples/hotdealwave/   # 예시 작업 폴더 (팀 원본 저장소 cc43016)
+|                           #   추출 결과, 응답, 업무 규칙·함정, 검증 출력. source/는 init이 받음
 +-- .claude/skills/         # 추출·응답 검증·업무 규칙 Skill
 |
++-- cli/                    # init·verify·serve 명령. 검증기와 서버를 build/handover.jar 하나로 묶음
 +-- verifier/               # 검증기 (Java 17, Jackson) -> out/analysis.json, 상태·경고
 |
 +-- server/                 # Spring Boot 서버 하나
@@ -57,7 +57,6 @@ hotdealwave-handover/
 |                           #   페이지: 문서·검색·질문 (Thymeleaf)
 |                           #   /api/search, /api/ask(고정 RAG), /mcp(Streamable HTTP)
 |
-+-- knowledge/<대상>/      # 서비스별 업무 규칙·함정 JSON (AI 해석·판정, 개발자 확인 상태)
 +-- eval/                   # 최종 질문, 판정한 사실 목록, 결과
 +-- out/                    # 생성 결과물 (커밋하지 않음)
 ```
@@ -92,41 +91,54 @@ MCP와 질의응답은 같은 조회 계층을 쓰고, 답을 쓰는 모델의 �
 
 결정과 이유는 [docs/decisions.md](docs/decisions.md), 진행 상황은 [docs/progress.md](docs/progress.md)에 있다.
 
-## 받기
+## 받기와 사용 순서
+
+JDK 17 이상, Git, 코딩 에이전트 하나(Claude Code 또는 Codex)가 필요하다. 명령은 bash와 PowerShell에서 같다.
 
 ```bash
-git clone --recurse-submodules https://github.com/MCshin00/hotdealwave-handover.git
+git clone https://github.com/MCshin00/hotdealwave-handover.git
+cd hotdealwave-handover
+./gradlew assemble
 ```
 
-이미 받았다면 `git submodule update --init`으로 분석 대상을 받는다.
+예시(HotDealWave)는 결과가 커밋되어 있어 대상 코드 없이 바로 띄운다.
+
+```bash
+java -jar build/handover.jar serve --workspace examples/hotdealwave
+```
+
+다른 저장소는 이렇게 쓴다.
+
+1. 대상 받기: `java -jar build/handover.jar init --repo <경로 또는 GitHub 주소> --commit <커밋> --workspace <작업 폴더>`. 작업 폴더의 `source/`에 대상을 복제해 그 커밋으로 고정하고, `target.json`과 AI 세션용 지시 파일(`AGENTS.md`, `CLAUDE.md`)을 쓴다. 준 체크아웃은 바꾸지 않는다.
+2. 추출: 작업 폴더에서 AI 세션을 열고 "추출해 줘"라고 한다. 지시 파일이 순서와 Skill 위치를 알려 주고, 세션은 마칠 때 `verify`를 불러 `out/analysis.json`을 쓴다. Claude Code에서 Skill을 슬래시 명령으로도 쓰려면 이 도구 폴더를 세션에 더한다(`claude --add-dir <도구 폴더>`).
+3. 결과 보기: `java -jar <도구 폴더>/build/handover.jar serve --workspace <작업 폴더>`
 
 ## 검사
 
-JDK 17 이상이 필요하다.
+테스트는 예시의 대상 코드가 있어야 한다. 처음 한 번 받는다.
 
 ```bash
+java -jar build/handover.jar init --repo https://github.com/sparta-final-12th-9700/HotDealWave --commit cc43016 --workspace examples/hotdealwave
 ./gradlew build
-./gradlew test
-./gradlew :verifier:run
-# 선택: 입력·대상·출력 경로 변경
-./gradlew :verifier:run --args="analysis/hotdealwave target/HotDealWave out/analysis.json"
 python scripts/check_shared_files.py
 python -m unittest discover tests
 # 4단계: 저장한 응답과 추출의 응답 필드 비교
-python scripts/compare_responses.py analysis/hotdealwave analysis/hotdealwave/responses
+python scripts/compare_responses.py examples/hotdealwave examples/hotdealwave/responses
 ```
 
-`./gradlew :verifier:run`은 AI 추출 디렉터리 `analysis/hotdealwave`의 `services/*.json`, `relations.json`, `target.json`(대상 이름·고정 커밋)을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 같은 기준 위치의 `knowledge/hotdealwave/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
+검증기나 예시 결과를 고치면 예시 작업 폴더에서 `java -jar ../../build/handover.jar verify`로 검증 출력을 다시 만들어 함께 커밋한다. 검증기 테스트가 커밋된 출력이 지금 검증기로 다시 만든 것과 같은지 확인한다.
 
-공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 비교 실험 답 원문(`eval/results/`)은 분석 대상이 적어 둔 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다.
+`verify`는 작업 폴더(생략하면 현재 폴더)의 `source/`가 `target.json`의 커밋이 아니거나 바뀐 파일이 있으면 멈춘다. 아니면 `services/*.json`, `relations.json`, `target.json`(대상 이름·고정 커밋)을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 작업 폴더에 `knowledge/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
+
+공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 비교 실험 답 원문(`eval/results/`)과 예시의 저장소 수준 결과·검증 출력은 분석 대상이 적어 둔 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다. 응답 비교는 엔드포인트별로 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 출력한다.
 
 ## 서버
 
 ```bash
-./gradlew :server:bootRun
+java -jar build/handover.jar serve --workspace examples/hotdealwave
 ```
 
-검증기를 먼저 돌려 `out/analysis.json`을 새로 만든 뒤 `http://localhost:8080`에 문서 페이지를 띄운다. 첫 화면은 서비스·토픽별 개수와 확인 안 된 연결 목록을 보여 준다. 첫 화면에서 서비스(`/services/{이름}`)와 토픽(`/topics/{토픽 환경변수 이름 또는 코드에 적힌 토픽 이름}`)으로 들어가고, 서비스 페이지에서 엔드포인트(`/endpoints/{ID}`)로 들어간다. 배포 파이프라인·컨테이너·모니터링 설정은 `/repository`에 역할별로 있다. 값마다 확인 상태와 근거 `파일:줄`이 붙고, 확인되지 않은 값은 상태와 이유가 대신 나온다. 근거는 접혀 있고, 펼치면 고정 커밋의 원본 줄이나 저장한 응답 원문(`/responses/{파일}`)의 그 줄로 가는 링크다.
+검증하지 않고 작업 폴더의 `out/analysis.json`만 읽어 `http://localhost:8080`에 문서 페이지를 띄운다. 대상 코드가 없는 곳에도 이 파일 하나로 띄울 수 있다. 다른 포트는 `--port 8081`처럼 준다. 첫 화면은 서비스·토픽별 개수와 확인 안 된 연결 목록을 보여 준다. 첫 화면에서 서비스(`/services/{이름}`)와 토픽(`/topics/{토픽 환경변수 이름 또는 코드에 적힌 토픽 이름}`)으로 들어가고, 서비스 페이지에서 엔드포인트(`/endpoints/{ID}`)로 들어간다. 배포 파이프라인·컨테이너·모니터링 설정은 `/repository`에 역할별로 있다. 값마다 확인 상태와 근거 `파일:줄`이 붙고, 확인되지 않은 값은 상태와 이유가 대신 나온다. 근거는 접혀 있고, 펼치면 고정 커밋의 원본 줄이나 저장한 응답 원문(`/responses/{파일}`)의 그 줄로 가는 링크다.
 
 `/api/search?q=찾을 말`은 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 JSON으로 낸다. `/search`는 같은 검색과 질문을 하는 페이지다.
 

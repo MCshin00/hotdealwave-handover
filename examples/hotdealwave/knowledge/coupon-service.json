@@ -47,8 +47,8 @@
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:9",
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/company/ResGetCompanyByIdDto.java:17",
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:76",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyById.json:7",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyById.json:16"
+        "responses/company-service.CompanyController.getCompanyById.json:7",
+        "responses/company-service.CompanyController.getCompanyById.json:16"
       ],
       "affectedIds": [
         "coupon-service.CouponInfoController.createCoupon",
@@ -331,10 +331,10 @@
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:48",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:49",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:37",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:12",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:17",
-        "analysis/hotdealwave/responses/coupon-service.CouponInfoController.getCoupons.json:38",
-        "analysis/hotdealwave/responses/coupon-service.CouponInfoController.getCoupons.json:45"
+        "responses/coupon-service.CouponController.getUserCouponDetail.json:12",
+        "responses/coupon-service.CouponController.getUserCouponDetail.json:17",
+        "responses/coupon-service.CouponInfoController.getCoupons.json:38",
+        "responses/coupon-service.CouponInfoController.getCoupons.json:45"
       ],
       "affectedIds": [
         "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
@@ -375,10 +375,10 @@
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResGetUserCouponsDto.java:16",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResGetUserCouponsDto.java:17",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResGetUserCouponsDto.java:23",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12",
-        "analysis/hotdealwave/responses/coupon-service.CouponInfoController.createCoupon.json:19"
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12",
+        "responses/coupon-service.CouponInfoController.createCoupon.json:19"
       ],
       "affectedIds": [
         "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
@@ -545,11 +545,11 @@
         "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:138",
         "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:141",
         "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:142",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:9",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:10",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:15",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:19",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:20"
+        "responses/coupon-service.CouponController.validateCoupon.json:9",
+        "responses/coupon-service.CouponController.validateCoupon.json:10",
+        "responses/coupon-service.CouponController.validateCoupon.json:15",
+        "responses/coupon-service.CouponController.validateCoupon.json:19",
+        "responses/coupon-service.CouponController.validateCoupon.json:20"
       ],
       "affectedIds": [
         "coupon-service.CouponController.validateCoupon",

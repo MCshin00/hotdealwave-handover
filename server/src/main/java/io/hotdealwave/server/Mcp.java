@@ -36,7 +36,11 @@ class Mcp {
     }
 
     @Bean(destroyMethod = "close") McpStatelessSyncServer mcpServer(HttpServletStatelessServerTransport transport) {
+        var target = analysis.target();
         return McpServer.sync(transport).serverInfo("hotdealwave-handover", "1")
+                .instructions(target.name() + " 저장소의 고정 커밋 " + target.shortCommit() + "을 분석한 문서다. "
+                        + "도구 결과의 값마다 확인 상태(확인됨, 확인 안 됨, 저장소에 근거 없음)와 이유, 근거 파일:줄이 붙는다. "
+                        + "답할 때 확인되지 않은 값은 그 상태와 이유를 함께 밝힌다.")
                 .capabilities(ServerCapabilities.builder().tools(false).build())
                 .tools(
                         tool("find_endpoint", "경로(\"POST /api/v1/orders\"), ID, 핸들러 이름으로 엔드포인트를 찾아 본문(요청·응답 필드, 호출, 검증 범위, 업무 규칙·함정)을 낸다.",

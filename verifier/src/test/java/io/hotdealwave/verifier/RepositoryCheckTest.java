@@ -18,7 +18,7 @@ class RepositoryCheckTest {
 
     private JsonNode run(Path input) throws Exception {
         Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{input.toString(), "target/HotDealWave", output.toString()});
+        Example.verify(input, output);
         return JSON.readTree(output.toFile());
     }
 
@@ -32,12 +32,12 @@ class RepositoryCheckTest {
     private JsonNode runChanged(Consumer<ObjectNode> change) throws Exception {
         Path input = Files.createDirectories(temporary.resolve("hotdealwave"));
         Path services = Files.createDirectories(input.resolve("services"));
-        try (var files = Files.list(Path.of("analysis/hotdealwave/services"))) {
+        try (var files = Files.list(Path.of("examples/hotdealwave/services"))) {
             for (var file : files.toList()) Files.copy(file, services.resolve(file.getFileName()));
         }
-        Files.copy(Path.of("analysis/hotdealwave/relations.json"), input.resolve("relations.json"));
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
-        var repository = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/repository.json").toFile());
+        Files.copy(Path.of("examples/hotdealwave/relations.json"), input.resolve("relations.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), input.resolve("target.json"));
+        var repository = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/repository.json").toFile());
         change.accept(repository);
         JSON.writeValue(input.resolve("repository.json").toFile(), repository);
         return run(input);
@@ -49,7 +49,7 @@ class RepositoryCheckTest {
     }
 
     @Test void deployPipelineAndMonitoringAreCheckedByCategory() throws Exception {
-        var repository = run(Path.of("analysis/hotdealwave")).path("repository");
+        var repository = run(Example.WORKSPACE).path("repository");
 
         var pipeline = only(repository.path("pipelines"), p -> p.path("file").asText().equals(".github/workflows/actions.yml"));
         assertEquals("GitHub Actions", pipeline.path("tool").asText());

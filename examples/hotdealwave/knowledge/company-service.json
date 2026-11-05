@@ -117,8 +117,8 @@
         "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:10",
         "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23",
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:16",
-        "analysis/hotdealwave/responses/company-service.CompanyController.updateCompanyStatus.json:5",
-        "analysis/hotdealwave/responses/company-service.CompanyController.updateCompanyStatus.json:9"
+        "responses/company-service.CompanyController.updateCompanyStatus.json:5",
+        "responses/company-service.CompanyController.updateCompanyStatus.json:9"
       ],
       "affectedIds": ["company-service.CompanyController.updateCompanyStatus"],
       "source": "AI 해석",
@@ -141,9 +141,9 @@
         "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:23",
         "company/src/main/java/com/sparta/hotdeal/company/domain/entity/company/Company.java:28",
         "company/src/main/java/com/sparta/hotdeal/company/domain/entity/Audit.java:25",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:4",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:7",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:18"
+        "responses/company-service.CompanyController.getCompanyList.json:4",
+        "responses/company-service.CompanyController.getCompanyList.json:7",
+        "responses/company-service.CompanyController.getCompanyList.json:18"
       ],
       "affectedIds": ["company-service.CompanyController.getCompanyList"],
       "source": "AI 해석",
@@ -174,8 +174,8 @@
         "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23",
         "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:30",
         "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:20",
-        "analysis/hotdealwave/responses/company-service.CompanyController.updateCompany.json:5",
-        "analysis/hotdealwave/responses/company-service.CompanyController.updateCompany.json:12"
+        "responses/company-service.CompanyController.updateCompany.json:5",
+        "responses/company-service.CompanyController.updateCompany.json:12"
       ],
       "affectedIds": ["company-service.CompanyController.updateCompany"],
       "source": "AI 해석",
@@ -200,14 +200,14 @@
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50",
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
         "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70",
-        "analysis/hotdealwave/responses/company-service.CompanyController.createCompany.json:14",
-        "analysis/hotdealwave/responses/company-service.CompanyController.createCompany.json:17",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:11",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:13",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyList.json:18",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyById.json:4",
-        "analysis/hotdealwave/responses/company-service.CompanyController.getCompanyById.json:10",
-        "analysis/hotdealwave/responses/company-service.CompanyController.updateCompany.json:4"
+        "responses/company-service.CompanyController.createCompany.json:14",
+        "responses/company-service.CompanyController.createCompany.json:17",
+        "responses/company-service.CompanyController.getCompanyList.json:11",
+        "responses/company-service.CompanyController.getCompanyList.json:13",
+        "responses/company-service.CompanyController.getCompanyList.json:18",
+        "responses/company-service.CompanyController.getCompanyById.json:4",
+        "responses/company-service.CompanyController.getCompanyById.json:10",
+        "responses/company-service.CompanyController.updateCompany.json:4"
       ],
       "affectedIds": [
         "company-service.CompanyController.getCompanyById",

@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class CompareResponsesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        extracted = json.loads((ROOT / "analysis/hotdealwave/services/coupon-service.json").read_text(encoding="utf-8"))
+        extracted = json.loads((ROOT / "examples/hotdealwave/services/coupon-service.json").read_text(encoding="utf-8"))
         cls.endpoint = next(
             endpoint for endpoint in extracted["endpoints"]
             if any(line.startswith("coupon/") and line.endswith("CouponController.java:39")
@@ -66,10 +66,10 @@ class CompareResponsesTest(unittest.TestCase):
         self.assertNotIn("추출에만 있음", result.stdout)
 
     def test_company_page_content_reports_a_renamed_field(self):
-        extracted = json.loads((ROOT / "analysis/hotdealwave/services/company-service.json").read_text(encoding="utf-8"))
+        extracted = json.loads((ROOT / "examples/hotdealwave/services/company-service.json").read_text(encoding="utf-8"))
         endpoint = next(endpoint for endpoint in extracted["endpoints"]
                         if endpoint["id"] == "company-service.CompanyController.getCompanyList")
-        record = json.loads((ROOT / "analysis/hotdealwave/responses" / (endpoint["id"] + ".json")).read_text(encoding="utf-8"))
+        record = json.loads((ROOT / "examples/hotdealwave/responses" / (endpoint["id"] + ".json")).read_text(encoding="utf-8"))
         company = record["body"]["data"]["content"][0]
         company["brand_name"] = company.pop("brandName")
 

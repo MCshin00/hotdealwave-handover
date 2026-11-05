@@ -2,7 +2,7 @@
 
 팀이 떠난 뒤 남은 저장소만으로 서비스 구조를 파악하게 돕는 도구. 분석 대상은 마이크로서비스 팀 프로젝트 HotDealWave(Spring Boot, Spring Cloud, Kafka)다.
 
-- 분석 대상: `target/HotDealWave` 서브모듈. 팀 원본 저장소의 `cc43016`에 고정한다.
+- 분석 대상: 예시 작업 폴더 `examples/hotdealwave`. 팀 원본 저장소의 `cc43016`에 고정하고, 대상 코드는 `init`이 `source/`에 받는다.
 - 구조와 결정: [docs/decisions.md](docs/decisions.md)
 - 진행 상황과 다음 할 일: [docs/progress.md](docs/progress.md)
 - 실행·검사 진입점: [README.md](README.md)
@@ -20,7 +20,7 @@
 
 ## 작업 흐름
 
-- 코드(`verifier/`, `scripts/`, `server/`) 변경은 이슈와 PR로 한다([work-issue](.claude/skills/work-issue/SKILL.md)). 문서·Skill·양식·CI 워크플로만 바꾸면 바뀌는 부분을 그대로 보여 주고 커밋 메시지와 함께 확인받은 뒤 main에 커밋한다. 워크플로를 바꿨으면 푸시 뒤 실행 결과와 경고를 확인한다.
+- 코드(`cli/`, `verifier/`, `scripts/`, `server/`) 변경은 이슈와 PR로 한다([work-issue](.claude/skills/work-issue/SKILL.md)). 문서·Skill·양식·CI 워크플로만 바꾸면 바뀌는 부분을 그대로 보여 주고 커밋 메시지와 함께 확인받은 뒤 main에 커밋한다. 워크플로를 바꿨으면 푸시 뒤 실행 결과와 경고를 확인한다.
 - 커밋 메시지와 PR 제목은 AngularJS 커밋 컨벤션(`type(scope): 한국어 요약`)을 따르고, 커밋 전에 메시지를 보여 준다. AI 공동 작성자 표기를 넣지 않는다.
 - PR은 개발자가 승인하면 스쿼시 병합한다.
 - 단계를 마치거나 도중에 세션을 끝낼 때 [docs/progress.md](docs/progress.md)를 갱신한다.

@@ -1,12 +1,12 @@
 plugins {
-    id 'application'
+    id 'java'
 }
 
 repositories { mavenCentral() }
 
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
-    implementation 'com.networknt:json-schema-validator:1.5.9'
+    implementation 'com.networknt:json-schema-validator:2.0.4'
     testImplementation platform('org.junit:junit-bom:5.14.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -17,8 +17,10 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-application { mainClass = 'io.hotdealwave.verifier.Main' }
-tasks.named('run') { workingDir = rootProject.projectDir }
+// The schemas are the format documents themselves; the jar carries them so the verifier runs from any folder.
+tasks.named('processResources') {
+    from(rootProject.file('docs/format')) { include '*.schema.json'; into 'format' }
+}
 tasks.named('test') {
     useJUnitPlatform()
     workingDir = rootProject.projectDir

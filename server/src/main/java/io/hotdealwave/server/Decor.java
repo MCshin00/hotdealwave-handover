@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 final class Decor {
     /** A recorded response file of any target; its lines open on the response page. */
-    static final Pattern RESPONSE_FILE = Pattern.compile("analysis/[^/]+/responses/(.+)");
+    static final Pattern RESPONSE_FILE = Pattern.compile("responses/(.+)");
 
     private static final Pattern LINE = Pattern.compile("<p class=\"((?:line|meta)[^\"]*)\">(.*?)</p>", Pattern.DOTALL);
     private static final Pattern EVIDENCE = Pattern.compile("\\[([^\\[\\]<>]+?:\\d+(?:, [^\\[\\]<>]+?:\\d+)*)]");

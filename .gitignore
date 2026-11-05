@@ -7,6 +7,12 @@
 # 생성 결과물. 명령 하나로 다시 만든다
 out/
 
+# 예시 작업 폴더: 결과와 검증 출력은 커밋하고, init이 받는 대상 코드와 지시 파일은 커밋하지 않는다
+!/examples/hotdealwave/out/
+/examples/*/source/
+/examples/*/AGENTS.md
+/examples/*/CLAUDE.md
+
 # 개인 작업 파일
 .local/
 

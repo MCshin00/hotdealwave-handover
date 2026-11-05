@@ -15,7 +15,7 @@ class ResponseCheckTest {
 
     private JsonNode run(Path input) throws Exception {
         Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{input.toString(), "target/HotDealWave", output.toString()});
+        Example.verify(input, output);
         return JSON.readTree(output.toFile());
     }
 
@@ -25,13 +25,13 @@ class ResponseCheckTest {
     }
 
     @Test void endpointCarriesStoredResponseStatusAndLines() throws Exception {
-        var analysis = run(Path.of("analysis/hotdealwave"));
-        String file = "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json";
+        var analysis = run(Example.WORKSPACE);
+        String file = "responses/coupon-service.CouponController.getUserCouponDetail.json";
         var recorded = check(analysis, "coupon-service.CouponController.getUserCouponDetail");
         assertEquals("응답 기록 있음", recorded.path("status").asText());
         assertEquals(200, recorded.path("statusCode").asInt());
         assertEquals(file, recorded.path("file").asText());
-        assertEquals(Files.readAllLines(Path.of(file)).get(17), recorded.path("lines").get(17).asText());
+        assertEquals(Files.readAllLines(Example.WORKSPACE.resolve(file)).get(17), recorded.path("lines").get(17).asText());
 
         var failed = check(analysis, "product-service.ReviewController.getReviewList");
         assertEquals("응답 기록 있음", failed.path("status").asText());
@@ -46,9 +46,9 @@ class ResponseCheckTest {
 
     @Test void endpointWithoutStoredResponseIsCodeOnly() throws Exception {
         Path services = Files.createDirectories(temporary.resolve("hotdealwave/services"));
-        Files.copy(Path.of("analysis/hotdealwave/services/order-service.json"), services.resolve("order-service.json"));
+        Files.copy(Path.of("examples/hotdealwave/services/order-service.json"), services.resolve("order-service.json"));
         Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), services.resolveSibling("target.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), services.resolveSibling("target.json"));
         var analysis = run(services.getParent());
         assertFalse(analysis.path("endpoints").isEmpty());
         for (var endpoint : analysis.path("endpoints")) {
@@ -64,11 +64,11 @@ class ResponseCheckTest {
     @Test void responseOutsideResponsesDirectoryIsNotRead() throws Exception {
         Path services = Files.createDirectories(temporary.resolve("hotdealwave/services"));
         Files.createDirectories(temporary.resolve("hotdealwave/responses"));
-        var service = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/services/order-service.json").toFile());
+        var service = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/services/order-service.json").toFile());
         ((ObjectNode) service.path("endpoints").get(0)).put("id", "..\\..\\outside");
         JSON.writeValue(services.resolve("order-service.json").toFile(), service);
         Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), services.resolveSibling("target.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), services.resolveSibling("target.json"));
         Files.writeString(temporary.resolve("outside.json"), "{\"statusCode\":200,\"reason\":null}");
         var analysis = run(services.getParent());
         assertEquals("코드만", check(analysis, "..\\..\\outside").path("status").asText());

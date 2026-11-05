@@ -7,8 +7,8 @@ description: Spring Boot·Spring Cloud MSA의 대상 경로, 추출 결과 디�
 
 ## 입력과 경계
 
-- 대상 저장소 경로, 추출 결과 디렉터리(`analysis/<대상>`), 서비스의 애플리케이션 이름 목록을 받는다. 서비스마다 새 실행 문맥에서 이 Skill을 처음부터 따르고 파일 하나를 쓴다. 대상은 고정 커밋을 읽기만 하고 빌드하거나 실행하지 않는다.
-- 이 Skill, [항목 형식](../../../docs/format/README.md)과 [항목 스키마](../../../docs/format/knowledge.schema.json), `out/analysis.json`의 추출 배열과 `warnings`, 지정한 추출 디렉터리의 서비스·관계 파일과 저장된 `responses/`, 대상 코드·설정만 읽는다. 형식 예시를 사실로 쓰지 않는다.
+- 대상 저장소 경로, 작업 폴더, 서비스의 애플리케이션 이름 목록을 받는다. 서비스마다 새 실행 문맥에서 이 Skill을 처음부터 따르고 파일 하나를 쓴다. 대상은 고정 커밋을 읽기만 하고 빌드하거나 실행하지 않는다.
+- 이 Skill, [항목 형식](../../../docs/format/README.md)과 [항목 스키마](../../../docs/format/knowledge.schema.json), `out/analysis.json`의 추출 배열과 `warnings`, 작업 폴더의 서비스·관계 파일과 저장된 `responses/`, 대상 코드·설정만 읽는다. 형식 예시를 사실로 쓰지 않는다.
 - `.env`, `.env.*`, `.local/`, `eval/`는 읽지 않는다. 기존 `knowledge/` 결과와 `out/analysis.json`의 `knowledge` 배열은 6절 정리와 기존 파일에 설명만 더할 때만 읽는다.
 - 코드와 JSON을 직접 읽고 항목을 직접 쓴다. 별도 모델 API, 추출 스크립트, 서버 재가동, 응답 재호출은 하지 않는다. 환경변수는 이름만 쓰고 비밀값·로컬 절대경로를 남기지 않는다.
 
@@ -51,11 +51,11 @@ description: Spring Boot·Spring Cloud MSA의 대상 경로, 추출 결과 디�
 
 ## 4. 항목 작성
 
-- `knowledge/<대상>/<spring.application.name>.json` 하나를 쓴다. `<대상>`은 입력 추출 디렉터리의 대상 이름이다. 형식은 `schemaVersion: 1`과 `items` 배열이며, 고른 항목이 없으면 빈 배열을 쓴다.
+- `knowledge/<spring.application.name>.json` 하나를 쓴다. 형식은 `schemaVersion: 1`과 `items` 배열이며, 고른 항목이 없으면 빈 배열을 쓴다.
 - 항목마다 `service`, `kind`, `title`, `description`, `evidence`, `affectedIds`, `source`, `discoveryPath`, `confirmationStatus`를 형식 문서대로 쓴다. 설명에는 코드나 저장된 응답으로 확인한 것만 쓰고, 실행·관찰·추정하지 않았다는 사실만 밝히는 문장은 쓰지 않는다. 저장소 밖의 설정값이나 실제 연결을 추정하지 않는다.
 - `source`는 `AI 해석`, `confirmationStatus`는 `미확인`으로 쓴다. 확인 상태는 개발자만 정한다. `판정` 출처를 만들지 않는다.
 - `evidence`에 대상 루트 기준 `파일:줄`을 붙이고, 여러 파일에 걸친 동작은 연결되는 줄을 함께 넣는다. 줄 번호는 실제 파일에서 확인한다.
-- 저장된 응답은 기록된 요청 조건에서 관찰한 상태 코드·본문의 근거로 쓴다. 응답을 근거로 쓰면 `analysis/<대상>/responses/<파일>.json:줄`을 붙이고 `discoveryPath`를 `실제 응답`으로, 코드 근거만 있으면 `코드`로 쓴다. 코드 해석과 응답이 어긋나면 차이를 쓰고 원인을 추정해 메우지 않는다.
+- 저장된 응답은 기록된 요청 조건에서 관찰한 상태 코드·본문의 근거로 쓴다. 응답을 근거로 쓰면 `responses/<파일>.json:줄`을 붙이고 `discoveryPath`를 `실제 응답`으로, 코드 근거만 있으면 `코드`로 쓴다. 코드 해석과 응답이 어긋나면 차이를 쓰고 원인을 추정해 메우지 않는다.
 - 설명의 `affectedIds`는 그 엔드포인트·발행·구독 ID 하나다.
 - 기존 파일에 설명만 더할 때는 엔드포인트·Kafka 발행·구독마다 설명 항목을 더하고 다른 항목은 고치지 않는다.
 - `affectedIds`에는 이 동작을 겪는 엔드포인트·Feign 호출·Kafka 발행·구독 ID만 넣는다. 추출 결과에 없는 ID를 만들지 않고, 붙일 ID가 없으면 항목으로 쓰지 않고 보고한다.
@@ -69,7 +69,7 @@ description: Spring Boot·Spring Cloud MSA의 대상 경로, 추출 결과 디�
 
 모든 서비스의 파일을 쓴 뒤 새 실행 문맥에서 한 번 한다.
 
-- 입력은 대상의 `knowledge/<대상>/*.json` 전체와 `out/analysis.json`의 `warnings`다. 근거를 고치는 데 필요한 코드·응답을 읽는다.
+- 입력은 대상의 `knowledge/*.json` 전체와 `out/analysis.json`의 `warnings`다. 근거를 고치는 데 필요한 코드·응답을 읽는다.
 - 기존 항목에 이미 쓰인 주장만 합치기·나누기·종류 고치기·문장 줄이기를 한다. 새 동작 주장은 더하지 않는다.
 - 모든 항목의 종류를 3절 기준으로 다시 본다. 합치기·나누기와 서비스 선택은 3절의 묶기 기준을 따른다.
 - `설명` 항목, `source`가 `판정`이거나 `confirmationStatus`가 `확인함`·`틀림`인 항목은 고치거나 합치지 않는다. 바꾼 AI 해석 항목은 `미확인`으로 둔다.
