@@ -1,5 +1,6 @@
 package io.hotdealwave.server;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,15 @@ class Legend {
 
     Legend(Analysis analysis) { this.analysis = analysis; }
 
-    List<String> lines(String kind) {
+    List<String> lines(String... kinds) {
         var confirmed = analysis.get("confirmed");
-        return ARRAYS.getOrDefault(kind, List.of()).stream().map(k -> confirmed.path(k).asText("")).filter(l -> !l.isEmpty()).toList();
+        return Arrays.stream(kinds).flatMap(kind -> ARRAYS.getOrDefault(kind, List.of()).stream()).distinct()
+                .map(k -> confirmed.path(k).asText("")).filter(l -> !l.isEmpty()).toList();
     }
 
-    /** Head of a tool result. */
-    String text(String kind) {
-        var lines = lines(kind);
+    /** Head of a tool result; a result over several kinds of page gets the arrays of each once. */
+    String text(String... kinds) {
+        var lines = lines(kinds);
         return lines.isEmpty() ? "" : "확인됨의 뜻\n" + String.join("\n", lines.stream().map(l -> "- " + l).toList()) + "\n\n";
     }
 

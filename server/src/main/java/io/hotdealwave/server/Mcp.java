@@ -109,6 +109,7 @@ class Mcp {
                     .append("페이지: ").append(r.page()).append(" · 점수 ").append(r.score()).append('\n')
                     .append(r.preview()).append("\n\n");
         }
-        return text.toString().strip();
+        String[] kinds = results.stream().map(r -> pages.page(r.page()).kind()).distinct().toArray(String[]::new);
+        return legend.text(kinds) + text.toString().strip();
     }
 }

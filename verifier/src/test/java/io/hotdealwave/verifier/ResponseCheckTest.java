@@ -104,7 +104,13 @@ class ResponseCheckTest {
         var analysis = run(workspace);
         field = Checks.find(analysis.path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
         assertEquals(Checks.UNKNOWN, field.path("jsonName").path("status").asText());
+        assertEquals(Checks.UNKNOWN, field.path("schema").path("status").asText());
         assertTrue(analysis.path("warnings").toString().contains(otherLine));
+
+        ((ObjectNode) used.path("jsonName")).putNull("value");
+        JSON.writeValue(services.resolve("coupon-service.json").toFile(), service);
+        field = Checks.find(run(workspace).path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
+        assertEquals(Checks.UNKNOWN, field.path("status").asText());
     }
 
     @Test void endpointWithoutStoredResponseIsCodeOnly() throws Exception {

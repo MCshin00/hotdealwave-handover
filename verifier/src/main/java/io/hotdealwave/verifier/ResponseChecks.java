@@ -45,21 +45,22 @@ final class ResponseChecks {
 
     /** A field confirmed from a stored response must have its JSON key on each response line it cites. */
     private void fields(ObjectNode analysis, JsonNode schema) throws IOException {
+        String reason = "jsonName: 응답 근거 줄에서 JSON 키를 확인하지 못함";
         for (var field : schema.path("fields")) {
-            var cited = new ArrayList<String>();
-            for (var node : List.of(field, field.path("jsonName"), field.path("schema")))
-                for (var evidence : node.path("evidence")) if (SourceText.isResponseEvidence(evidence.asText())) cited.add(evidence.asText());
             String key = field.path("jsonName").path("value").asText(null);
-            if (!cited.isEmpty() && key != null) {
-                for (String evidence : cited) {
-                    String line = line(evidence);
-                    if (line != null && line.contains("\"" + key + "\"")) continue;
-                    String reason = "jsonName: 응답 근거 줄에서 JSON 키를 확인하지 못함";
-                    verdict(field.path("jsonName"), UNKNOWN, reason);
-                    verdict(field, UNKNOWN, reason);
-                    warn(analysis, "evidence-lines", "extraction-mismatch", analysis.arrayNode().add(evidence), reason);
-                    break;
+            String failed = null;
+            for (var node : List.of(field, field.path("jsonName"), field.path("schema")))
+                for (var evidence : node.path("evidence")) {
+                    if (!SourceText.isResponseEvidence(evidence.asText())) continue;
+                    String line = line(evidence.asText());
+                    if (key != null && line != null && line.contains("\"" + key + "\"")) continue;
+                    verdict(node, UNKNOWN, reason);
+                    if (failed == null) failed = evidence.asText();
                 }
+            if (failed != null) {
+                verdict(field.path("jsonName"), UNKNOWN, reason);
+                verdict(field, UNKNOWN, reason);
+                warn(analysis, "evidence-lines", "extraction-mismatch", analysis.arrayNode().add(failed), reason);
             }
             fields(analysis, field.path("schema"));
         }
