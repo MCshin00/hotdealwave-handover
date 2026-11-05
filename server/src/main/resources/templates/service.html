@@ -29,6 +29,20 @@
 <p class="line" th:each="v : ${environmentVariables}" th:text="|${v.path('name').asText()} (${v.path('profile').asText()}, ${v.path('location').asText()}) 값: ${@view.fact(v.path('value'))}|"></p>
 <h2>외부 자원</h2>
 <p class="line" th:each="r : ${externalResources}" th:text="|${r.path('kind').asText()} 설정 근거 ${@view.texts(r.path('configurationEvidence'))} 코드 근거 ${@view.texts(r.path('codeEvidence'))}|"></p>
+<h2>페이지 직렬화</h2>
+<p th:if="${pageSerialization.isEmpty()}">추출 항목 없음</p>
+<p class="line" th:each="s : ${pageSerialization}" th:text="|@EnableSpringDataWebSupport pageSerializationMode: ${@view.fact(s.path('mode'))}|"></p>
+<h2 th:text="|오류 코드 ${#lists.size(errorCodes)}개|"></h2>
+<p class="line" th:each="c : ${errorCodes}" th:text="${@view.errorCode(c)}"></p>
+<h2>예외 처리기</h2>
+<div th:each="h : ${exceptionHandlers}">
+  <p class="line" th:text="${@view.handler(h)}"></p>
+  <p class="line" th:each="l : ${@view.fields(h.path('body'))}" th:text="|    ${l}|"></p>
+</div>
+<th:block th:unless="${gatewayRejections.isEmpty()}">
+<h2>Gateway 거부 응답</h2>
+<p class="line" th:each="r : ${gatewayRejections}" th:text="${@view.rejection(r)}"></p>
+</th:block>
 <section th:replace="~{items :: items(${items})}"></section>
 <script src="/app.js"></script>
 </body>

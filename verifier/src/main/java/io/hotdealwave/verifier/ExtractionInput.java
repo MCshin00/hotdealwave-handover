@@ -15,7 +15,8 @@ import java.util.List;
 final class ExtractionInput {
     private static final List<String> SERVICE_ARRAYS = List.of("endpoints", "feignClients", "feignCalls",
             "gatewayRoutes", "allowedPaths", "declarations", "kafkaDeclarations", "kafkaPublications",
-            "kafkaSubscriptions", "environmentVariables", "externalResources");
+            "kafkaSubscriptions", "environmentVariables", "externalResources", "errorCodes", "exceptionHandlers",
+            "gatewayRejections", "pageSerialization");
     private final ObjectMapper json = new ObjectMapper();
 
     ObjectNode read(Path directory) throws Exception {
@@ -27,6 +28,7 @@ final class ExtractionInput {
         SERVICE_ARRAYS.forEach(merged::putArray);
         merged.putArray("kafkaLinks");
         merged.putArray("calls");
+        merged.putArray("throws");
         merged.putArray("warnings");
 
         var services = new ArrayList<JsonNode>();
@@ -47,6 +49,7 @@ final class ExtractionInput {
         }
         relations.path("kafkaLinks").forEach(merged.withArray("kafkaLinks")::add);
         relations.path("calls").forEach(merged.withArray("calls")::add);
+        relations.path("throws").forEach(merged.withArray("throws")::add);
         return merged;
     }
 

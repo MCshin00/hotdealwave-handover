@@ -2675,5 +2675,775 @@
         "company/src/main/java/com/sparta/hotdeal/company/infrastructure/repository/CompanyRepositoryImpl.java:8"
       ]
     }
-  ]
+  ],
+  "errorCodes": [
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "INTERNAL_SERVER_EXCEPTION",
+      "code": {
+        "value": "CA000",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:8"
+        ]
+      },
+      "httpStatus": {
+        "value": "INTERNAL_SERVER_ERROR",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:8"
+        ]
+      },
+      "message": {
+        "value": "예기치 못한 오류가 발생했습니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:8"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:8"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "NOT_FOUND_EXCEPTION",
+      "code": {
+        "value": "CA001",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9"
+        ]
+      },
+      "httpStatus": {
+        "value": "NOT_FOUND",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9"
+        ]
+      },
+      "message": {
+        "value": "존재하지 않는 리소스입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:9"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "INVALID_VALUE_EXCEPTION",
+      "code": {
+        "value": "CA002",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:10"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:10"
+        ]
+      },
+      "message": {
+        "value": "올바르지 않은 요청 값입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:10"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:10"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "UNAUTHORIZED_EXCEPTION",
+      "code": {
+        "value": "CA003",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:11"
+        ]
+      },
+      "httpStatus": {
+        "value": "UNAUTHORIZED",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:11"
+        ]
+      },
+      "message": {
+        "value": "권한이 없는 요청입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:11"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:11"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "ALREADY_DELETE_EXCEPTION",
+      "code": {
+        "value": "CA004",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:12"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:12"
+        ]
+      },
+      "message": {
+        "value": "이미 삭제된 리소스입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:12"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:12"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "FORBIDDEN_EXCEPTION",
+      "code": {
+        "value": "CA005",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:13"
+        ]
+      },
+      "httpStatus": {
+        "value": "FORBIDDEN",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:13"
+        ]
+      },
+      "message": {
+        "value": "인가되지 않는 요청입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:13"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:13"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "ALREADY_EXIST_EXCEPTION",
+      "code": {
+        "value": "CA006",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:14"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:14"
+        ]
+      },
+      "message": {
+        "value": "이미 존재하는 리소스입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:14"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:14"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "INVALID_SORT_EXCEPTION",
+      "code": {
+        "value": "CA007",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:15"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:15"
+        ]
+      },
+      "message": {
+        "value": "올바르지 않은 정렬 값입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:15"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:15"
+      ]
+    },
+    {
+      "service": "company-service",
+      "enumType": "ErrorCode",
+      "name": "USER_NOT_FOUND_EXCEPTION",
+      "code": {
+        "value": "CA008",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:16"
+        ]
+      },
+      "httpStatus": {
+        "value": "NOT_FOUND",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:16"
+        ]
+      },
+      "message": {
+        "value": "존재하지 않는 사용자입니다.",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:16"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/ErrorCode.java:16"
+      ]
+    }
+  ],
+  "exceptionHandlers": [
+    {
+      "id": "company-service.GlobalExceptionHandler.handleAccessDeniedException",
+      "service": "company-service",
+      "exception": {
+        "value": "AccessDeniedException",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:16"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "FORBIDDEN",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:19"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "FORBIDDEN_EXCEPTION",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:20",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "message": {
+        "source": "고정",
+        "value": "Access is denied",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:20",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:16",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:19",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:20",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:24",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+      ]
+    },
+    {
+      "id": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "service": "company-service",
+      "exception": {
+        "value": "ApplicationException",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23"
+        ]
+      },
+      "httpStatus": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:26"
+        ]
+      },
+      "errorCode": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:27",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:17"
+        ]
+      },
+      "message": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:27",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:17"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:23",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:26",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:27",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:16",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:17"
+      ]
+    },
+    {
+      "id": "company-service.GlobalExceptionHandler.handleRuntimeException",
+      "service": "company-service",
+      "exception": {
+        "value": "RuntimeException",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:30"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "INTERNAL_SERVER_ERROR",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:33"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "INTERNAL_SERVER_EXCEPTION",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:21"
+        ]
+      },
+      "message": {
+        "source": "예외 메시지",
+        "value": null,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:34",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:21"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:30",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:33",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:34",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:20",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:21"
+      ]
+    },
+    {
+      "id": "company-service.GlobalExceptionHandler.methodArgumentNotValidException",
+      "service": "company-service",
+      "exception": {
+        "value": "MethodArgumentNotValidException",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:37"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:41"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "INVALID_VALUE_EXCEPTION",
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:43",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "message": {
+        "source": "검증 메시지",
+        "value": null,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:44",
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.company.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14",
+                "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:37",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:41",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:42",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:43",
+        "company/src/main/java/com/sparta/hotdeal/company/application/exception/GlobalExceptionHandler.java:44",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:24",
+        "company/src/main/java/com/sparta/hotdeal/company/application/dtos/ErrorResponseDto.java:25"
+      ]
+    }
+  ],
+  "gatewayRejections": [],
+  "pageSerialization": []
 }

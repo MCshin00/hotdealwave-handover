@@ -41,7 +41,7 @@ final class EvidenceChecks {
         var lines = source.evidenceLines(object);
         if (lines.isEmpty()) { reject(object, role + ": 근거 파일·줄을 확인하지 못함"); return; }
         // Relationship facts are decided after all local facts have been checked.
-        if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks", "calls").contains(role)) return;
+        if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks", "calls", "throws").contains(role)) return;
         if (object.has("value") && !object.path("value").isObject()) { fact(object, role, parent, lines); return; }
         if (object.has("type") && "unresolved".equals(object.path("kind").asText())) {
             if (!contains(lines, simpleType(object.path("type").asText())))
@@ -62,6 +62,10 @@ final class EvidenceChecks {
             case "environmentVariables", "fields", "parameters" -> contains(lines, object.path("name").asText(null));
             case "annotations" -> contains(lines, "@" + object.path("name").asText());
             case "externalResources" -> resource(object);
+            case "errorCodes" -> contains(lines, object.path("name").asText());
+            case "exceptionHandlers" -> lines.get(0).contains("@ExceptionHandler");
+            case "gatewayRejections" -> contains(lines, value(object.path("condition")));
+            case "pageSerialization" -> lines.get(0).contains("@EnableSpringDataWebSupport");
             default -> object.has("type") && contains(lines, simpleType(object.path("type").asText()));
         };
         if (!matches) { reject(object, role + ": 근거 줄에서 이름·선언을 확인하지 못함"); return; }
@@ -71,6 +75,9 @@ final class EvidenceChecks {
             case "gatewayRoutes" -> known(object.path("uri")) && known(object.path("targetService"))
                     && items(object.path("paths")).stream().allMatch(Checks::known);
             case "kafkaPublications", "kafkaSubscriptions" -> known(object.path("topicName")) || known(object.path("environment"));
+            case "errorCodes" -> known(object.path("code")) && known(object.path("httpStatus")) && known(object.path("message"));
+            case "exceptionHandlers" -> known(object.path("exception")) && known(object.path("httpStatus"));
+            case "gatewayRejections" -> known(object.path("httpStatus"));
             default -> true;
         };
         verdict(object, resolved ? CONFIRMED : UNKNOWN, resolved ? null : "하위 값을 확정할 수 없음");
@@ -78,6 +85,18 @@ final class EvidenceChecks {
 
     private void fact(ObjectNode fact, String role, JsonNode parent, List<String> lines) throws IOException {
         String value = value(fact);
+        if (fact.has("source")) { sourced(fact, role, value, parent, lines); return; }
+        if (value != null && value.isEmpty() && parent.has("enumType")) {
+            // An enum without that argument: the constant line itself shows what it declares.
+            if (contains(lines, parent.path("name").asText())) verdict(fact, CONFIRMED, null);
+            else reject(fact, role + ": 근거 줄에서 상수를 확인하지 못함");
+            return;
+        }
+        if (value != null && value.isEmpty() && role.equals("body") && parent.has("filter")) {
+            if (contains(lines, "setComplete()")) verdict(fact, CONFIRMED, null);
+            else reject(fact, "body: 근거 줄에서 본문 없이 끝내는 줄을 확인하지 못함");
+            return;
+        }
         boolean externalValue = switch (role) {
             case "value" -> parent.has("location") && contains(lines, "${" + parent.path("name").asText() + "}");
             case "topicName" -> known(parent.path("environment")) && !Objects.toString(value(parent.path("environment")), "").isEmpty()
@@ -100,6 +119,24 @@ final class EvidenceChecks {
         };
         if (matches) verdict(fact, CONFIRMED, null);
         else reject(fact, role + ": 근거 줄에서 값·이름을 확인하지 못함");
+    }
+
+    /** Error handler values: a fixed value is on its line; the others are read from the exception or the validation. */
+    private void sourced(ObjectNode fact, String role, String value, JsonNode handler, List<String> lines) {
+        String source = fact.path("source").asText();
+        // An empty fixed value: the body DTO has no such field, shown by its declaration.
+        String expected = "".equals(value) ? simpleType(handler.path("body").path("type").asText()) : value;
+        String reason = switch (source) {
+            case "고정" -> contains(lines, expected) ? null : "근거 줄에서 값을 확인하지 못함";
+            case "던진 오류 코드" -> value == null && contains(lines, "getErrorCode()") ? null : "근거 줄에서 오류 코드를 읽는 곳을 확인하지 못함";
+            case "예외 메시지" -> value == null && contains(lines, "getMessage()") ? null : "근거 줄에서 예외 메시지를 읽는 곳을 확인하지 못함";
+            case "검증 메시지" -> value == null && contains(lines, "getDefaultMessage()") ? null : "근거 줄에서 검증 메시지를 읽는 곳을 확인하지 못함";
+            default -> "알 수 없는 source";
+        };
+        if (reason != null) reject(fact, role + ": " + reason);
+        else if (source.equals("예외 메시지")) verdict(fact, UNKNOWN, "예외 메시지를 그대로 씀, 값은 던지는 곳에서 정해짐");
+        else if (source.equals("검증 메시지")) verdict(fact, UNKNOWN, "검증 어노테이션의 메시지를 씀, 값은 필드 어노테이션에서 정해짐");
+        else verdict(fact, CONFIRMED, null);
     }
 
     private boolean topicEnvironment(JsonNode fact, JsonNode endpoint, String name) throws IOException {

@@ -18,12 +18,19 @@
       "items": {
         "$ref": "#/$defs/Call"
       }
+    },
+    "throws": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Throw"
+      }
     }
   },
   "required": [
     "schemaVersion",
     "kafkaLinks",
-    "calls"
+    "calls",
+    "throws"
   ],
   "additionalProperties": false,
   "$defs": {
@@ -85,6 +92,50 @@
       "required": [
         "fromId",
         "toId",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Throw": {
+      "type": "object",
+      "properties": {
+        "fromId": {
+          "type": "string"
+        },
+        "exception": {
+          "type": "string"
+        },
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "handlerId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "fromId",
+        "exception",
+        "errorCode",
+        "message",
+        "handlerId",
         "evidence"
       ],
       "additionalProperties": false

@@ -575,5 +575,2005 @@
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/client/UserClient.java:20"
       ]
     }
+  ],
+  "throws": [
+    {
+      "fromId": "company-service.CompanyController.createCompany",
+      "exception": "ApplicationException",
+      "errorCode": "ALREADY_EXIST_EXCEPTION",
+      "message": "",
+      "handlerId": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:40",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:46",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:29"
+      ]
+    },
+    {
+      "fromId": "company-service.CompanyController.updateCompany",
+      "exception": "ApplicationException",
+      "errorCode": "NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:50",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:56",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:46"
+      ]
+    },
+    {
+      "fromId": "company-service.CompanyController.updateCompanyStatus",
+      "exception": "ApplicationException",
+      "errorCode": "NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:66",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:58"
+      ]
+    },
+    {
+      "fromId": "company-service.CompanyController.updateCompanyStatus",
+      "exception": "ApplicationException",
+      "errorCode": "INVALID_VALUE_EXCEPTION",
+      "message": "",
+      "handlerId": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:60",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:66",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:61"
+      ]
+    },
+    {
+      "fromId": "company-service.CompanyController.getCompanyById",
+      "exception": "ApplicationException",
+      "errorCode": "NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "company-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:70",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:75",
+        "company/src/main/java/com/sparta/hotdeal/company/application/service/CompanyService.java:70"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "REQUEST_TIMEOUT",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:41"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON_INFO",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:112"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "INVALID_COUPON_STATUS",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:32"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_OUT_OF_STOCK",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:36"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "ALREADY_ISSUED_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:41"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_ISSUED_LIMIT_REACHED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:69"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "exception": "RuntimeException",
+      "errorCode": "",
+      "message": "Redis 락 처리 중 오류 발생",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleRuntimeException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:46"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.getUserCoupons",
+      "exception": "CustomException",
+      "errorCode": "UNAUTHORIZED_ACCESS",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:47"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.getUserCouponDetail",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:56",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:58",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:130",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:137"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:56",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:137"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON_INFO",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:57",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:112"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_ALREADY_USED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:60"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_EXPIRED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:64"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "INVALID_COUPON_COMPANY",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:79"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.validateCoupon",
+      "exception": "CustomException",
+      "errorCode": "MIN_ORDER_AMOUNT_NOT_MET",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:66",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:84"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.useCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:74",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:95",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:137"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.useCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_ALREADY_USED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:74",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:98"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.recoverCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:78",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:81",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:106",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:137"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.recoverCoupon",
+      "exception": "CustomException",
+      "errorCode": "COUPON_NOT_USED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:78",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:81",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:109"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponController.deleteCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:85",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:89",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:118"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.createCoupon",
+      "exception": "CustomException",
+      "errorCode": "COMPANY_NOT_APPROVED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:41"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCoupon",
+      "exception": "CustomException",
+      "errorCode": "COMPANY_NOT_APPROVED",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:78"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCoupon",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON_INFO",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:81",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:112"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCoupon",
+      "exception": "CustomException",
+      "errorCode": "INVALID_COUPON_STATUS",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:37",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:40",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:84"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCouponStatus",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON_INFO",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:47",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:112"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.updateCouponStatus",
+      "exception": "CustomException",
+      "errorCode": "ALREADY_SET_COUPON_INFO_STATUS",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:47",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:66"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.getCouponDetail",
+      "exception": "CustomException",
+      "errorCode": "NOT_FOUND_COUPON_INFO",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:51",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:55",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:112"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.getCoupons",
+      "exception": "CustomException",
+      "errorCode": "INVALID_SORT_EXCEPTION",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:57",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:105",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:75"
+      ]
+    },
+    {
+      "fromId": "coupon-service.CouponInfoController.getCoupons",
+      "exception": "CustomException",
+      "errorCode": "INVALID_SORT_EXCEPTION",
+      "message": "",
+      "handlerId": "coupon-service.GlobalExceptionHandler.handleCustomException",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:57",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponInfoController.java:71",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:105",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponInfoRepositoryCustomImpl.java:89"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.createBasket",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:41",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:54"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.getBasketDetail",
+      "exception": "ApplicationException",
+      "errorCode": "BASKET_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:49",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:54",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:84",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:103"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.getBasketList",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:57",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:77"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.updateBasket",
+      "exception": "ApplicationException",
+      "errorCode": "BASKET_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:70",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:90",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:103"
+      ]
+    },
+    {
+      "fromId": "order-service.BasketController.deleteBasket",
+      "exception": "ApplicationException",
+      "errorCode": "BASKET_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/BasketController.java:79",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:96",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/BasketService.java:103"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "BASKET_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderBasketService.java:23"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:138",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:41",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/adapter/CouponClientAdapter.java:52"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:21",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:32"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_INVALID_QUANTITY_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:21",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:35"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_ON_SALE_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:105",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:21",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:39"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:118",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderProductService.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderProductService.java:66"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.createOrder",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_INVALID_VALUE_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:40",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:29"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.getOrderById",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:56",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:181",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:200"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.getOrderById",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:56",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:61",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:181",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:204"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.updateOrderStatus",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:65",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:69",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:252"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:258",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:302"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_ALREADY_PROCESSED_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:259",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:270"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:264",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:35",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:46"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.cancelOrder",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_CANCELLABLE_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:73",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:77",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:264",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:40"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.refundOrder",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:81",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:281",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:302"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.refundOrder",
+      "exception": "ApplicationException",
+      "errorCode": "ORDER_NOT_CANCELLABLE_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:81",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:282",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:296"
+      ]
+    },
+    {
+      "fromId": "order-service.OrderController.refundOrder",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "order-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:81",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:85",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:284",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:46",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:56"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.confirmPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:60"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.confirmPayment",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:40"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.confirmPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_CAN_NOT_APPROVE",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:30"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.getPaymentById",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:60",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:73"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.refundPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:71",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:83",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:108"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.refundPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_CAN_NOT_REFUND",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:71",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:84",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:94"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.cancelPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:74",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:78",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:99",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:108"
+      ]
+    },
+    {
+      "fromId": "payment-service.PaymentController.cancelPayment",
+      "exception": "ApplicationException",
+      "errorCode": "PAYMENT_CAN_NOT_CANCEL",
+      "message": "",
+      "handlerId": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:74",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:78",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:100",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:113"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.createProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:55",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:64",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.createProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:55",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProduct",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:91"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:100",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:79",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:100",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:94",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:107",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:53",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:107",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:63",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.updateProductStatus",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:73",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:81",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:131"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.deleteProduct",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:87",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:94",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:143"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.deleteProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:87",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:94",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:153",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:104",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.deleteProduct",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:87",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:94",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:154",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:104",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:67"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:72",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:116"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_INVENTORY_UPDATE_FAILED_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:76"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:120",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:30"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "INSUFFICIENT_PROMOTION_QUANTITY_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:120",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:37"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:101",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:116"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "INSUFFICIENT_PRODUCT_QUANTITY_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:105",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:142"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.reduceQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_INVENTORY_UPDATE_FAILED_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.restoreQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:119",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:67"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.restoreQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:119",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:72",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:116"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.restoreQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:119",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:120",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:30"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.restoreQuantity",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:112",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:119",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:101",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:116"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.getProduct",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:125",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:131",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:167"
+      ]
+    },
+    {
+      "fromId": "product-service.ProductController.getAllProducts",
+      "exception": "RuntimeException",
+      "errorCode": "",
+      "message": "Elasticsearch 검색 실패",
+      "handlerId": "product-service.GlobalExceptionHandler.handleRuntimeException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:136",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ProductController.java:147",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:77"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.createPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:167"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.createPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_TIME_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:47"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.createPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_DUPLICATE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:55"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.createPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_PRICE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:164"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.createPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_QUANTITY_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:170"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:77"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_IS_ACTIVE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:80"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_TIME_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:87"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:93",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:167"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_DUPLICATE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:99"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_PRICE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:104",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:164"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.updatePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_INVALID_QUANTITY_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:54",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:109",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:170"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.deletePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:119"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.deletePromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_IS_ACTIVE_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:67",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:123"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.getPromotion",
+      "exception": "ApplicationException",
+      "errorCode": "PROMOTION_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:79",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:133"
+      ]
+    },
+    {
+      "fromId": "product-service.PromotionController.getAllPromotions",
+      "exception": "ApplicationException",
+      "errorCode": "INVALID_SORT_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:90",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/PromotionController.java:101",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:145",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryCustomImpl.java:49",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryCustomImpl.java:70"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.createReview",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:34",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:47"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.createReview",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:34",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:56",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.updateReview",
+      "exception": "ApplicationException",
+      "errorCode": "REVIEW_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:72"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.updateReview",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:77"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.updateReview",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:79",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.updateReview",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:85",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:94",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:43"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.deleteReview",
+      "exception": "ApplicationException",
+      "errorCode": "REVIEW_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:94"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.deleteReview",
+      "exception": "ApplicationException",
+      "errorCode": "PRODUCT_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:99"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.deleteReview",
+      "exception": "ApplicationException",
+      "errorCode": "INTERNAL_SERVER_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:106",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:104",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:120"
+      ]
+    },
+    {
+      "fromId": "product-service.ReviewController.getReviewById",
+      "exception": "ApplicationException",
+      "errorCode": "REVIEW_NOT_FOUND_EXCEPTION",
+      "message": "",
+      "handlerId": "product-service.GlobalExceptionHandler.handleApplicationException",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:56",
+        "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:58",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:115"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.createAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:39",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:39"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.getAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "ADDRESS_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:57",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:49"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.getAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DELETED_ADDRESS",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:57",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:145"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.getAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:57",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:54"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.getDefaultAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:62",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:62"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.getDefaultAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_EXISTS_DEFAULT_ADDRESS",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:62",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:65"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "ADDRESS_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:84",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:91",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:79"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DELETED_ADDRESS",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:84",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:91",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:145"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:84",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:91",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:84"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateDefaultAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "ADDRESS_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:96",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:103",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:102"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateDefaultAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DELETED_ADDRESS",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:96",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:103",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:104",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:145"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.updateDefaultAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:96",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:103",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:109"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.deleteAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "ADDRESS_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:109",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:116",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:122"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.deleteAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DELETED_ADDRESS",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:109",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:116",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:124",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:145"
+      ]
+    },
+    {
+      "fromId": "user-service.AddressController.deleteAddress",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:109",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:116",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:129"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.signUp",
+      "exception": "IllegalArgumentException",
+      "errorCode": "EMAIL_NOT_VERIFIED",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:35",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:51"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.signUp",
+      "exception": "IllegalArgumentException",
+      "errorCode": "EMAIL_NOT_VERIFIED",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:35",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:163"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.signUp",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DUPLICATED_NICKNAME",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:35",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:54",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:151"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.signUp",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_ROLE",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:35",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:55",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:157"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.checkEmail",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DUPLICATED_EMAIL",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:40",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:43",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:70"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.sendVerifyEmail",
+      "exception": "IllegalArgumentException",
+      "errorCode": "DUPLICATED_EMAIL",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:48",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:76",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:70"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.sendVerifyEmail",
+      "exception": "IllegalArgumentException",
+      "errorCode": "",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:48",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:84",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:25"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.confirmEmail",
+      "exception": "IllegalArgumentException",
+      "errorCode": "EMAIL_NOT_VERIFIED",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:56",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:59",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:93"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.confirmEmail",
+      "exception": "IllegalArgumentException",
+      "errorCode": "WRONG_VERIFICATION_CODE",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:56",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:59",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:96"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.login",
+      "exception": "IllegalArgumentException",
+      "errorCode": "WRONG_EMAIL_OR_PASSWORD",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:64",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:106"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.login",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:64",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:67",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:109",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:169"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "CustomJwtExcpetion",
+      "errorCode": "INVALID_JWT_SIGNATURE",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.jwtException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:125",
+        "user/src/main/java/com/sparta/hotdeal/user/libs/util/JwtUtil.java:83"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "CustomJwtExcpetion",
+      "errorCode": "EXPIRED_JWT_TOKEN",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.jwtException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:125",
+        "user/src/main/java/com/sparta/hotdeal/user/libs/util/JwtUtil.java:86"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "CustomJwtExcpetion",
+      "errorCode": "UNSUPPORTED_JWT_TOKEN",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.jwtException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:125",
+        "user/src/main/java/com/sparta/hotdeal/user/libs/util/JwtUtil.java:89"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "CustomJwtExcpetion",
+      "errorCode": "JWT_CLAIM_IS_EMPTY",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.jwtException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:125",
+        "user/src/main/java/com/sparta/hotdeal/user/libs/util/JwtUtil.java:92"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "IllegalArgumentException",
+      "errorCode": "EXPIRED_REFRESH_TOKEN",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:131",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:188"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:134"
+      ]
+    },
+    {
+      "fromId": "user-service.AuthController.refresh",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:72",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:77",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:136",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:169"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.getUser",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:37",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:28",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:103"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.getUser",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:31",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:37",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:32"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.updateUserInfos",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:103"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.updateUserInfos",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:46",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:50"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.updateUserPassword",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:63",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:71",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:66",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:103"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.updateUserPassword",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:63",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:71",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:69"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.deleteUser",
+      "exception": "IllegalArgumentException",
+      "errorCode": "NOT_ALLOWED_CONTENT",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:88",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:103"
+      ]
+    },
+    {
+      "fromId": "user-service.UserController.deleteUser",
+      "exception": "IllegalArgumentException",
+      "errorCode": "USER_NOT_FOUND",
+      "message": "",
+      "handlerId": "user-service.GlobalExceptionHandler.illegalArgumentException",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/UserController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/UserService.java:92"
+      ]
+    }
   ]
 }

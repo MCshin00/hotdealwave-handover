@@ -6024,5 +6024,918 @@
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:28"
       ]
     }
+  ],
+  "errorCodes": [
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "INTERNAL_SERVER_EXCEPTION",
+      "code": {
+        "value": "001",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:9"
+        ]
+      },
+      "httpStatus": {
+        "value": "INTERNAL_SERVER_ERROR",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:9"
+        ]
+      },
+      "message": {
+        "value": "예기치 못한 오류가 발생했습니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:9"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:9"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "NOT_FOUND_EXCEPTION",
+      "code": {
+        "value": "002",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:10"
+        ]
+      },
+      "httpStatus": {
+        "value": "NOT_FOUND",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:10"
+        ]
+      },
+      "message": {
+        "value": "존재하지 않는 리소스입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:10"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:10"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "INVALID_VALUE_EXCEPTION",
+      "code": {
+        "value": "003",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:11"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:11"
+        ]
+      },
+      "message": {
+        "value": "올바르지 않은 요청 값입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:11"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:11"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "UNAUTHORIZED_EXCEPTION",
+      "code": {
+        "value": "004",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:12"
+        ]
+      },
+      "httpStatus": {
+        "value": "UNAUTHORIZED",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:12"
+        ]
+      },
+      "message": {
+        "value": "권한이 없는 요청입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:12"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:12"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "ALREADY_DELETE_EXCEPTION",
+      "code": {
+        "value": "005",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:13"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:13"
+        ]
+      },
+      "message": {
+        "value": "이미 삭제된 리소스입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:13"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:13"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "FORBIDDEN_EXCEPTION",
+      "code": {
+        "value": "006",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:14"
+        ]
+      },
+      "httpStatus": {
+        "value": "FORBIDDEN",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:14"
+        ]
+      },
+      "message": {
+        "value": "인가되지 않는 요청입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:14"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:14"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "ALREADY_EXIST_EXCEPTION",
+      "code": {
+        "value": "007",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:15"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:15"
+        ]
+      },
+      "message": {
+        "value": "이미 존재하는 리소스입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:15"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:15"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "INVALID_SORT_EXCEPTION",
+      "code": {
+        "value": "008",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:16"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:16"
+        ]
+      },
+      "message": {
+        "value": "올바르지 않은 정렬 값입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:16"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:16"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "USER_NOT_FOUND_EXCEPTION",
+      "code": {
+        "value": "009",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:17"
+        ]
+      },
+      "httpStatus": {
+        "value": "NOT_FOUND",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:17"
+        ]
+      },
+      "message": {
+        "value": "존재하지 않는 사용자입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:17"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:17"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "PAYMENT_NOT_FOUND_EXCEPTION",
+      "code": {
+        "value": "PA001",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20"
+        ]
+      },
+      "httpStatus": {
+        "value": "NOT_FOUND",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20"
+        ]
+      },
+      "message": {
+        "value": "존재하지 않는 결제 리소스입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "PAYMENT_INVALID_VALUE_EXCEPTION",
+      "code": {
+        "value": "PA002",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:21"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:21"
+        ]
+      },
+      "message": {
+        "value": "올바르지 않은 결제 요청 값입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:21"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:21"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "PAYMENT_CAN_NOT_CANCEL",
+      "code": {
+        "value": "PA003",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:22"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:22"
+        ]
+      },
+      "message": {
+        "value": "취소할 수 없는 결제 건입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:22"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:22"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "PAYMENT_CAN_NOT_REFUND",
+      "code": {
+        "value": "PA004",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:23"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:23"
+        ]
+      },
+      "message": {
+        "value": "환불할 수 없는 결제 건입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:23"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:23"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "enumType": "ErrorCode",
+      "name": "PAYMENT_CAN_NOT_APPROVE",
+      "code": {
+        "value": "PA005",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:24"
+        ]
+      },
+      "httpStatus": {
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:24"
+        ]
+      },
+      "message": {
+        "value": "승인할 수 없는 결제 건입니다.",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:24"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:24"
+      ]
+    }
+  ],
+  "exceptionHandlers": [
+    {
+      "id": "payment-service.GlobalExceptionHandler.handleAccessDeniedException",
+      "service": "payment-service",
+      "exception": {
+        "value": "AccessDeniedException",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:16"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "FORBIDDEN",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:19"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "FORBIDDEN_EXCEPTION",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:20",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "message": {
+        "source": "고정",
+        "value": "Access is denied",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:20",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.payment.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:19",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:20",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+      ]
+    },
+    {
+      "id": "payment-service.GlobalExceptionHandler.handleApplicationException",
+      "service": "payment-service",
+      "exception": {
+        "value": "ApplicationException",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23"
+        ]
+      },
+      "httpStatus": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:26"
+        ]
+      },
+      "errorCode": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:17"
+        ]
+      },
+      "message": {
+        "source": "던진 오류 코드",
+        "value": null,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:17"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.payment.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:17"
+      ]
+    },
+    {
+      "id": "payment-service.GlobalExceptionHandler.handleRuntimeException",
+      "service": "payment-service",
+      "exception": {
+        "value": "RuntimeException",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:30"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "INTERNAL_SERVER_ERROR",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:33"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "INTERNAL_SERVER_EXCEPTION",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:34",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:21"
+        ]
+      },
+      "message": {
+        "source": "예외 메시지",
+        "value": null,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:34",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:21"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.payment.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:34",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:20",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:21"
+      ]
+    },
+    {
+      "id": "payment-service.GlobalExceptionHandler.methodArgumentNotValidException",
+      "service": "payment-service",
+      "exception": {
+        "value": "MethodArgumentNotValidException",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:37"
+        ]
+      },
+      "httpStatus": {
+        "source": "고정",
+        "value": "BAD_REQUEST",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:41"
+        ]
+      },
+      "errorCode": {
+        "source": "고정",
+        "value": "INVALID_VALUE_EXCEPTION",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:43",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "message": {
+        "source": "검증 메시지",
+        "value": null,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:44",
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+        ]
+      },
+      "body": {
+        "type": "ErrorResponseDto",
+        "qualifiedName": "com.sparta.hotdeal.payment.application.dtos.ErrorResponseDto",
+        "kind": "object",
+        "fields": [
+          {
+            "name": "timestamp",
+            "schema": {
+              "type": "LocalDateTime",
+              "qualifiedName": "java.time.LocalDateTime",
+              "kind": "unresolved",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+              ],
+              "reason": "java.time.LocalDateTime은 대상 저장소에 정의되지 않은 외부 타입이므로 내부 구조를 전개하지 않음."
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "timestamp",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:12"
+            ]
+          },
+          {
+            "name": "code",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "code",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:13"
+            ]
+          },
+          {
+            "name": "message",
+            "schema": {
+              "type": "String",
+              "qualifiedName": "java.lang.String",
+              "kind": "scalar",
+              "fields": [],
+              "arguments": [],
+              "enumValues": [],
+              "recursive": false,
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+              ]
+            },
+            "annotations": [],
+            "jsonName": {
+              "value": "message",
+              "evidence": [
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14",
+                "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:8"
+              ]
+            },
+            "evidence": [
+              "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:14"
+            ]
+          }
+        ],
+        "arguments": [],
+        "enumValues": [],
+        "recursive": false,
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:10"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:37",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:42",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/ErrorResponseDto.java:25"
+      ]
+    }
+  ],
+  "gatewayRejections": [],
+  "pageSerialization": [
+    {
+      "service": "payment-service",
+      "mode": {
+        "value": "VIA_DTO",
+        "evidence": [
+          "payment/src/main/java/com/sparta/hotdeal/payment/PaymentApplication.java:12"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/PaymentApplication.java:12"
+      ]
+    }
   ]
 }

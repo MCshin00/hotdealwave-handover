@@ -14,6 +14,8 @@ class Queries {
     public record Step(String from, String to, String kind, String status, String reason, List<String> evidence) {}
     public record Flow(List<Step> forward, List<Step> callers) {}
     public record Topic(String name, List<JsonNode> publications, List<JsonNode> subscriptions) {}
+    /** An exception an endpoint can raise, with its error code and receiving handler when they were extracted. */
+    public record Thrown(JsonNode link, JsonNode errorCode, JsonNode handler) {}
 
     private final Analysis analysis;
 
@@ -103,6 +105,15 @@ class Queries {
             if (targets.contains(call.path("toId").asText()))
                 steps.add(step(call.path("fromId").asText(), call.path("toId").asText(), "호출", call));
         return steps;
+    }
+
+    /** Exceptions the endpoint's handler reaches, in extraction order. */
+    List<Thrown> errorsFor(String endpointId) {
+        String service = analysis.find("endpoints", endpointId).path("service").asText();
+        return analysis.list("throws").stream().filter(t -> t.path("fromId").asText().equals(endpointId)).map(t -> new Thrown(t,
+                analysis.list("errorCodes").stream().filter(c -> c.path("service").asText().equals(service)
+                        && c.path("name").asText().equals(t.path("errorCode").asText())).findFirst().orElse(com.fasterxml.jackson.databind.node.MissingNode.getInstance()),
+                analysis.find("exceptionHandlers", t.path("handlerId").asText()))).toList();
     }
 
     private boolean confirmed(Step step) { return Analysis.CONFIRMED.equals(step.status()); }
