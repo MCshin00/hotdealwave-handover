@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "kafkaLinks": [
+  "messageLinks": [
     {
       "publicationId": "order-service.publishDlq",
       "subscriptionId": "order-service.dlq",

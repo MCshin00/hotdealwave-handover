@@ -1,6 +1,6 @@
-# HotDealWave 인수인계 도구
+# Spring 마이크로서비스 인수인계 도구
 
-문서도, 인수인계해 줄 사람도 없이 마이크로서비스 프로젝트를 넘겨받는 두 상황을 다룬다. 서비스는 떠 있는데 문서가 없거나, 팀이 떠나 저장소만 남아 서비스를 되살려야 한다. 이 도구는 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)(Spring Boot, Spring Cloud, Kafka)의 고정 커밋을 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 서버가 떠 있으면 응답으로 확인한 뒤, 그 결과를 서버 하나로 제공한다. 두 상황의 차이는 [결정 기록](docs/decisions.md#문제-상황)에 있다.
+문서도, 인수인계해 줄 사람도 없이 마이크로서비스 프로젝트를 넘겨받는 두 상황을 다룬다. 서비스는 떠 있는데 문서가 없거나, 팀이 떠나 저장소만 남아 서비스를 되살려야 한다. 이 도구는 Spring Boot·Spring Cloud 마이크로서비스 저장소의 고정 커밋을 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 서버가 떠 있으면 응답으로 확인한 뒤, 그 결과를 서버 하나로 제공한다. 예시로 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)의 결과를 커밋해 두었다. 두 상황의 차이는 [결정 기록](docs/decisions.md#문제-상황)에 있다.
 
 ## 결과
 
@@ -43,7 +43,7 @@
 ## 구조
 
 ```
-hotdealwave-handover/
+spring-msa-handover/
 |
 +-- examples/hotdealwave/   # 예시 작업 폴더 (팀 원본 저장소 cc43016)
 |                           #   추출 결과, 응답, 업무 규칙·함정, 검증 출력. source/는 init이 받음
@@ -82,7 +82,7 @@ MCP와 질의응답은 같은 조회 계층을 쓰고, 답을 쓰는 모델의 �
 | 도구 | 하는 일 |
 |---|---|
 | `find_endpoint` | 경로·ID·핸들러 이름으로 엔드포인트 본문(요청·응답 필드, 호출, 검증 범위, 업무 규칙·함정)을 낸다 |
-| `trace_flow` | 엔드포인트·Kafka 발행·구독에서 Feign 호출·Kafka 발행·구독을 따라간 단계와 부르는 곳을 낸다. 이어지지 않는 곳은 상태와 이유에서 멈춘다 |
+| `trace_flow` | 엔드포인트·메시지 발행·구독에서 HTTP 호출·메시지 발행·구독을 따라간 단계와 부르는 곳을 낸다. 이어지지 않는 곳은 상태와 이유에서 멈춘다 |
 | `find_subscribers` | 토픽 이름으로 발행·구독과 그 연결을 담은 토픽 본문을 낸다 |
 | `search_docs` | 본문을 BM25로 찾아 상위 5개 절의 페이지 주소·절 제목·점수·미리보기를 낸다 |
 | `get_page` | 페이지 주소로 본문 전체를 낸다 |
@@ -96,8 +96,8 @@ MCP와 질의응답은 같은 조회 계층을 쓰고, 답을 쓰는 모델의 �
 JDK 17 이상, Git, 코딩 에이전트 하나(Claude Code 또는 Codex)가 필요하다. 명령은 bash와 PowerShell에서 같다.
 
 ```bash
-git clone https://github.com/MCshin00/hotdealwave-handover.git
-cd hotdealwave-handover
+git clone https://github.com/MCshin00/spring-msa-handover.git
+cd spring-msa-handover
 ./gradlew assemble
 ```
 
@@ -126,23 +126,25 @@ python -m unittest discover tests
 
 검증기나 예시 결과를 고치면 예시 작업 폴더에서 `java -jar ../../build/handover.jar verify`로 검증 출력을 다시 만들어 함께 커밋한다. 검증기 테스트가 커밋된 출력이 지금 검증기로 다시 만든 것과 같은지 확인한다.
 
-`verify`는 작업 폴더(생략하면 현재 폴더)의 `source/`가 `target.json`의 커밋이 아니거나 바뀐 파일이 있으면 멈춘다. 아니면 `services/*.json`, `relations.json`, `target.json`(대상 이름·고정 커밋)을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·Feign 대상·게이트웨이 경로·Kafka·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 경고마다 이유 코드가 붙고, 출력의 `warningCodes`에 코드별 제목과 할 일, `confirmed`에 배열별 "확인됨"의 뜻이 있다. `responses/`에 저장한 응답이 있으면 엔드포인트마다 추출한 응답 필드와 키를 비교해 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 붙인다. 작업 폴더에 `knowledge/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
+`verify`는 작업 폴더(생략하면 현재 폴더)의 `source/`가 `target.json`의 커밋이 아니거나 바뀐 파일이 있으면 멈춘다. 아니면 `services/*.json`, `relations.json`, `target.json`(대상 이름·고정 커밋)을 스키마로 먼저 검사해 `out/analysis.json`을 만들고 스키마·근거 줄·선언 목록·HTTP 대상·게이트웨이 경로·메시지·핸들러 호출·오류 연결 검사의 경고 수를 출력한다. 경고마다 이유 코드가 붙고, 출력의 `warningCodes`에 코드별 제목과 할 일, `confirmed`에 배열별 "확인됨"의 뜻이 있다. `responses/`에 저장한 응답이 있으면 엔드포인트마다 추출한 응답 필드와 키를 비교해 응답에만 있는 필드, 추출에만 있는 필드, 이름이 다른 필드와 비교 보류를 붙인다. 작업 폴더에 `knowledge/`가 있으면 항목 스키마·근거 줄 존재·영향 ID·서비스 사이 중복을 검사해 `knowledge` 배열과 경고를 같은 출력에 더한다. 디렉터리가 없으면 기존 출력과 같다. 개발자의 확인 상태는 바꾸지 않는다. 결과 구조는 [docs/format/README.md](docs/format/README.md)에 있다.
 
 공유 파일 검사는 Git이 추적하는 파일에 비밀값이나 로컬 절대경로가 있으면 위치를 출력하고 실패한다. 비교 실험 답 원문(`eval/results/`)과 예시의 저장소 수준 결과·검증 출력은 분석 대상이 적어 둔 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
 
 ### 다른 구성에 맞추려면 고칠 곳
 
-추출은 Spring Boot·Spring Cloud MSA의 흔한 구성을 읽는다. 다른 구성은 아래를 함께 고친다. 형식에 자리가 없는 방식은 그때까지 서비스 파일의 `unsupported`로 남고, 서비스 페이지와 흐름 결과에 "도구가 다루지 않는 방식"으로 나온다.
+추출은 Spring Boot·Spring Cloud MSA의 흔한 구성을 읽는다. 다른 구성은 아래를 함께 고친다. 읽는 규칙이 없는 방식은 그때까지 서비스 파일의 `unsupported`로 남고, 서비스 페이지와 흐름 결과에 "도구가 다루지 않는 방식"으로 나온다.
 
 | 부분 | 지금 가정 | 고칠 파일 |
 |---|---|---|
 | 서비스·설정 파일 | 빌드 파일(`build.gradle`, `build.gradle.kts`, `pom.xml`)과 `spring.application.name`이 있는 모듈, `application*.yml`·`yaml`·`properties`, Java 소스 | 추출 Skill 가정 표, `verifier/.../SourceText.java`(근거 파일 종류·모듈 찾기·설정 키) |
 | 게이트웨이 | Spring Cloud Gateway의 YAML·Java DSL 경로, `RewritePath`·`StripPrefix`, 앞부분 일치 허용 목록 또는 Security `permitAll` | 추출 Skill, `CrossChecks.java`(경로 필터·토큰 판정), `EvidenceChecks.java`(필터 근거) |
-| 내부 호출 | OpenFeign | 형식 문서와 스키마(새 배열), 추출 Skill, `CrossChecks.java`·`CallChecks.java`, 서버 흐름(`Queries.java`) |
-| 비동기 | Spring Kafka, compose의 환경변수 | 형식 문서와 스키마, 추출 Skill, `KafkaChecks.java`·`EvidenceChecks.java`(토픽 사슬), 서버 토픽 페이지 |
+| 내부 호출 | OpenFeign, RestTemplate, RestClient, WebClient, HTTP 인터페이스 | 추출 Skill의 종류별 읽는 법과 검증기의 선언 줄 규칙(`CommunicationRules.java`) |
+| 비동기 | Spring Kafka, RabbitMQ, Spring Cloud Stream | 추출 Skill의 종류별 읽는 법과 검증기의 선언 줄 규칙(`CommunicationRules.java`) |
 | 오류 응답 | 오류 코드 enum, `@RestControllerAdvice`, 게이트웨이 필터 | 형식 문서와 스키마, 추출 Skill, `EvidenceChecks.java`·`ThrowChecks.java` |
 | DTO JSON 이름 | `@JsonProperty`, record, Lombok·getter, public 필드 | 형식 문서, `EvidenceChecks.java`(`jsonName`) |
 | 응답 확인 | 게이트웨이로 부르는 JSON API와 토큰 로그인 | 응답 확인 Skill, `ResponseComparison.java` |
+
+Spring 밖 방식(예: gRPC)을 더할 때도 추출 Skill의 종류별 읽는 법과 `CommunicationRules.java`의 종류별 규칙을 고친다. 기존 역할 배열과 서버 흐름을 사용하며, 아직 규칙이 없는 방식은 `unsupported`에 남긴다.
 
 ## 서버
 

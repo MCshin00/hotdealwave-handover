@@ -25,8 +25,10 @@ public final class Verifier {
         var source = new SourceText(target);
         new EvidenceChecks(source, analysis).run();
         var lines = source.javaLines();
+        CommunicationRules.inventory(lines, analysis);
+        new HttpChecks().run(analysis);
         new CrossChecks().run(lines, analysis, source);
-        new KafkaChecks().run(lines, analysis, source.composeFile());
+        new MessageChecks().run(analysis, source);
         new CallChecks().run(source, analysis);
         new ThrowChecks().run(source, analysis);
         Checks.legend(analysis);

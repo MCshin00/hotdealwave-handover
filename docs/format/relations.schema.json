@@ -7,10 +7,10 @@
       "type": "integer",
       "const": 1
     },
-    "kafkaLinks": {
+    "messageLinks": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/KafkaLink"
+        "$ref": "#/$defs/MessageLink"
       }
     },
     "calls": {
@@ -28,13 +28,13 @@
   },
   "required": [
     "schemaVersion",
-    "kafkaLinks",
+    "messageLinks",
     "calls",
     "throws"
   ],
   "additionalProperties": false,
   "$defs": {
-    "KafkaLink": {
+    "MessageLink": {
       "type": "object",
       "properties": {
         "publicationId": {

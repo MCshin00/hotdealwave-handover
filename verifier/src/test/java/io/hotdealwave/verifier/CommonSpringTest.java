@@ -172,8 +172,8 @@ class CommonSpringTest {
 
     private ObjectNode document() {
         var root = JSON.createObjectNode().put("schemaVersion", 1);
-        for (String key : new String[]{"services", "endpoints", "feignClients", "feignCalls", "gatewayRoutes", "allowedPaths",
-                "declarations", "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions", "kafkaLinks",
+        for (String key : new String[]{"services", "endpoints", "httpClients", "httpCalls", "gatewayRoutes", "allowedPaths",
+                "declarations", "messageDeclarations", "messagePublications", "messageSubscriptions", "messageLinks",
                 "environmentVariables", "externalResources", "exceptionHandlers", "unsupported"}) root.putArray(key);
         return root;
     }
@@ -201,7 +201,7 @@ class CommonSpringTest {
     }
 
     private ObjectNode kafka(String id, String service, String kind, String key, String name, String environment, String... lines) {
-        var node = item(lines).put("id", id).put("service", service).put("kind", kind).put("profile", "base");
+        var node = item(lines).put("id", id).put("service", service).put("kind", "kafka").put("profile", "base");
         node.set("topicKey", fact(key, lines));
         node.set("topicName", fact(name, lines));
         node.set("environment", fact(environment, lines));
@@ -214,8 +214,8 @@ class CommonSpringTest {
         assertTrue(warnings.contains(ORDER + "OrderController.java:6"));
         assertTrue(warnings.contains("common/src/main/java/shop/common/HealthController.java:4"));
         assertFalse(warnings.contains("Generated.java"));
-        assertEquals(2, output.at("/checks/kafka-declarations/sendCount").asInt());
-        assertEquals(1, output.at("/checks/kafka-declarations/listenerCount").asInt());
+        assertEquals(2, output.at("/checks/message-declarations/sendCount").asInt());
+        assertEquals(1, output.at("/checks/message-declarations/listenerCount").asInt());
     }
 
     private String code(JsonNode output, String evidence) {
@@ -254,12 +254,12 @@ class CommonSpringTest {
         Path workspace = Files.createDirectories(repository.resolveSibling("workspace").resolve("services"));
         var file = JSON.createObjectNode().put("schemaVersion", 1);
         file.set("service", orderService());
-        for (String key : new String[]{"endpoints", "feignClients", "feignCalls", "gatewayRoutes", "allowedPaths", "declarations",
-                "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources",
+        for (String key : new String[]{"endpoints", "httpClients", "httpCalls", "gatewayRoutes", "allowedPaths", "declarations",
+                "messageDeclarations", "messagePublications", "messageSubscriptions", "environmentVariables", "externalResources",
                 "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization"}) file.putArray(key);
         file.putArray("unsupported").add(unsupported.put("mechanism", "RestTemplate"));
         JSON.writeValue(workspace.resolve("order-service.json").toFile(), file);
-        Files.writeString(workspace.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(workspace.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.writeString(workspace.resolveSibling("target.json"),
                 "{\"schemaVersion\":1,\"name\":\"shop\",\"repository\":\"https://github.com/acme/shop\",\"commit\":\"0123456789abcdef0123456789abcdef01234567\"}");
         var output = new Verifier().verify(workspace.getParent(), repository);
@@ -285,14 +285,14 @@ class CommonSpringTest {
         input.withArray("services").add(orderService());
         var publication = kafka("created", "order-service", "kafkaTemplate.send", "spring.kafka.topics.order", null, "ORDER_TOPIC",
                 ORDER + "OrderEvents.java:6", ORDER + "OrderEvents.java:5", PROPERTIES + ":2", COMPOSE + ":5");
-        input.withArray("kafkaPublications").add(publication);
+        input.withArray("messagePublications").add(publication);
         var output = verify(input);
-        assertEquals(Checks.CONFIRMED, output.at("/kafkaPublications/0/environment/status").asText());
-        assertEquals(Checks.ABSENT, output.at("/kafkaPublications/0/topicName/status").asText());
+        assertEquals(Checks.CONFIRMED, output.at("/messagePublications/0/environment/status").asText());
+        assertEquals(Checks.ABSENT, output.at("/messagePublications/0/topicName/status").asText());
         assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
 
         ((ObjectNode) publication.path("environment")).put("value", "OTHER_TOPIC");
-        assertEquals(Checks.UNKNOWN, verify(input).at("/kafkaPublications/0/environment/status").asText());
+        assertEquals(Checks.UNKNOWN, verify(input).at("/messagePublications/0/environment/status").asText());
     }
 
     @Test void variableWithDefaultIsNamedAndItsValueIsOutsideTheRepository() throws Exception {
@@ -309,22 +309,22 @@ class CommonSpringTest {
     @Test void publicationAndSubscriptionWithTheSameTopicNameAreLinked() throws Exception {
         var input = document();
         String send = ORDER + "OrderEvents.java:7", value = DELIVERY_YAML + ":6";
-        input.withArray("kafkaPublications").add(kafka("literal", "order-service", "kafkaTemplate.send", "", "order-created", "", send));
+        input.withArray("messagePublications").add(kafka("literal", "order-service", "kafkaTemplate.send", "", "order-created", "", send));
         var subscription = kafka("delivery", "delivery-service", "KafkaListener", "spring.kafka.topics.order", "order-created", "",
                 "services/delivery/src/main/java/shop/delivery/OrderListener.java:4", value);
         subscription.set("topicKey", fact("spring.kafka.topics.order", "services/delivery/src/main/java/shop/delivery/OrderListener.java:4"));
         subscription.set("topicName", fact("order-created", value));
         subscription.set("environment", fact("", value));
-        input.withArray("kafkaSubscriptions").add(subscription);
-        input.withArray("kafkaLinks").add(item(send, value).put("publicationId", "literal").put("subscriptionId", "delivery").put("environment", ""));
+        input.withArray("messageSubscriptions").add(subscription);
+        input.withArray("messageLinks").add(item(send, value).put("publicationId", "literal").put("subscriptionId", "delivery").put("environment", ""));
         var output = verify(input);
-        assertEquals(Checks.CONFIRMED, output.at("/kafkaSubscriptions/0/topicName/status").asText());
-        assertEquals(Checks.CONFIRMED, output.at("/kafkaLinks/0/status").asText());
-        assertEquals(0, output.at("/checks/kafka-topics/warningCount").asInt());
+        assertEquals(Checks.CONFIRMED, output.at("/messageSubscriptions/0/topicName/status").asText());
+        assertEquals(Checks.CONFIRMED, output.at("/messageLinks/0/status").asText());
+        assertEquals(0, output.at("/checks/message-destinations/warningCount").asInt());
 
         ((ObjectNode) subscription.path("topicName")).put("value", "order-shipped");
         output = verify(input);
-        assertEquals(Checks.UNKNOWN, output.at("/kafkaLinks/0/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/messageLinks/0/status").asText());
         assertTrue(output.path("warnings").toString().contains("order-created"));
     }
 

@@ -4,7 +4,7 @@
 
 업무 규칙·함정은 별도 [항목 스키마](knowledge.schema.json)를 따른다. 아래 추출 결과의 상태 판정 규칙과 달리, 항목의 확인 상태는 개발자가 정한다.
 
-UTF-8 JSON으로 작업 폴더의 `services/<spring.application.name>.json`과 `relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·Feign·Kafka), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, Feign 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, Feign 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
+UTF-8 JSON으로 작업 폴더의 `services/<spring.application.name>.json`과 `relations.json`에 쓴다. 배열 순서는 서비스·소스 경로 순서다. ID는 애플리케이션 이름으로 시작하며(엔드포인트·HTTP 호출·메시지), 앞부분으로 서비스 파일을 찾아 참조한다. 엔드포인트 ID는 `<애플리케이션 이름>.<컨트롤러 클래스>.<메서드>`, HTTP 클라이언트 ID는 `<애플리케이션 이름>.<클라이언트 인터페이스>`, HTTP 호출 ID는 `<클라이언트 ID>.<메서드>`다. 게이트웨이 경로 ID처럼 대상 코드에 적힌 값은 그대로 쓴다. 시각·로컬 절대경로는 쓰지 않는다.
 
 서비스는 빌드 파일(`build.gradle`, `build.gradle.kts`, `pom.xml`)과 `spring.application.name`이 있는 모듈이며, 하위 폴더에 있어도 된다. `service.directory`는 대상 루트 기준 모듈 경로(`services/order`)이고, `service` 값은 설정 파일(`application.yml`·`application.yaml`·`application.properties`)의 `spring.application.name`이다. `spring.application.name`이 없는 공통 모듈은 서비스가 아니며, 그 안의 DTO·상수·예외 처리기는 그것을 쓰는 서비스의 항목에 근거로 들어간다. `service` 필드가 없는 항목은 근거 경로가 `service.directory`로 시작하는 서비스에 속한다. 정할 수 없으면 멈추고 보고한다.
 
@@ -12,11 +12,11 @@ UTF-8 JSON으로 작업 폴더의 `services/<spring.application.name>.json`과 `
 
 선언에 속성이 없다는 사실을 확인한 경우(Feign `url`·`path`, 없는 `RewritePath`)는 빈 문자열을 쓴다. 소비자는 빈 문자열과 확인할 수 없는 `null`을 구별해야 한다.
 
-`httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 Feign 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
+`httpMethod`의 `*`는 메서드 제한이 없는 `RequestMapping`이다. 내부 HTTP 호출의 `target.value`는 `endpoints[].id`이며 근거는 호출·서비스 이름·컨트롤러 양쪽을 포함한다. 외부 URL 호출은 `external: true`, `target.status: 저장소에 근거 없음`이다. 외부 호출을 내부 연결 실패 경고로 세지 않는다.
 
 `service.composeService`는 그 애플리케이션을 실행하는 compose 서비스 키다. 근거는 키 선언 줄과 대응을 정한 줄(같은 블록의 이름·빌드·이미지 등)이며, compose에 없거나 대응을 정할 수 없으면 `value: null`이다.
 
-`declarations`는 매핑 선언의 원래 위치이며 Feign 클래스 선언은 `feignClients`에 둔다. `kafkaDeclarations`도 래퍼 호출 횟수와 무관한 원래 선언 위치를 기록한다.
+`declarations`는 매핑 선언의 원래 위치이며 HTTP 클라이언트 선언은 `httpClients`에 둔다. `messageDeclarations`도 래퍼 호출 횟수와 무관한 원래 선언 위치를 기록한다.
 
 ### 파라미터와 DTO
 
@@ -45,21 +45,37 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 엔드포인트의 `tokenRequired`는 기본 API 경로의 판정이다. 외부 경로 자체가 없으면 `확인 안 됨`이다. 허용 목록은 게이트웨이 인증 필터의 목록 또는 Spring Security의 `permitAll` 규칙이다. 인증 필터의 목록은 비교 코드가 앞부분 일치(`startsWith`)와 메서드 비교일 때만 판정하고, 토큰 판정의 근거에 그 비교 줄을 넣는다. Spring Security 규칙은 `allowedPaths[].name`과 `path`에 패턴을 쓴 그대로 두고, 끝이 `/**`인 패턴만 앞부분 일치로 판정한다. 토큰 판정의 근거에는 허용 규칙 줄과 나머지 요청에 인증을 요구하는 줄(`anyExchange().authenticated()`)을 넣는다. 끝이 `/**`가 아닌 패턴이 있거나 허용 규칙 앞에 다른 규칙이 있으면 `확인 안 됨`이다. 서비스 안의 역할별 권한 검사는 포함하지 않는다.
 
-### Kafka 토픽과 연결
+### HTTP 클라이언트와 호출
+
+`httpClients`·`httpCalls`의 `kind`는 `feign`, `restTemplate`, `restClient`, `webClient`, `httpExchange`다. 선언 없는 호출은 `clientId: ""`, ID는 `<서비스>.<호출 클래스>.<메서드>`다. 선언 있는 호출은 기존처럼 `<클라이언트 ID>.<메서드>`다. `httpClients.type`은 인터페이스 또는 클라이언트 타입, `name`은 대상 서비스 이름, `url`은 기본 주소, `path`는 기본 경로다. 클라이언트의 기본 주소와 호출 줄의 경로·메서드 근거를 함께 기록한다. 빈 `name`은 서비스 이름을 선언하지 않았다는 뜻이다.
+
+Feign은 `@FeignClient`와 매핑, HTTP 인터페이스는 `@HttpExchange`·`@GetExchange` 등의 매핑과 프록시에 넘긴 클라이언트 설정, RestClient·WebClient는 `baseUrl`을 정한 빈을 클라이언트로 쓴다. `httpCalls.path`는 클래스·메서드의 경로를 합친 값이다. 전체 URL을 쓴 호출은 그 URL을 그대로 쓰고 `clientId`를 비운다. `RestTemplate`도 `clientId`를 비운다. 동적 URI나 메서드 값은 추측하지 않고 `null`과 근거를 쓴다.
+
+`lb://<서비스>`·`http://<서비스>`의 호스트 또는 Feign `name`으로 서비스 이름을 정하고, HTTP 메서드·경로가 맞는 엔드포인트 하나와 대조한다. 외부 URL은 `external: true`, 대상은 `저장소에 근거 없음`이다. 환경에서 들어오는 주소는 `저장소에 근거 없음`, 코드에서 조립하여 정할 수 없는 주소는 `확인 안 됨`이다.
+
+### 메시지 목적지와 연결
+
+`messageDeclarations`·`messagePublications`·`messageSubscriptions`의 `kind`는 `kafka`, `rabbit`, `stream`이다. 원래 선언 종류는 첫 근거 줄로 구별한다. `topicKey`는 목적지 설정 키, `topicName`은 목적지 이름이다. Kafka는 토픽, RabbitMQ 발행은 `교환기/라우팅 키`(기본 교환기는 `/큐 이름`), 구독은 큐 이름, Stream은 바인딩의 `destination`이다. 나머지 필드와 ID는 그대로다. `messageLinks`는 양쪽 항목에서 종류를 얻으며 다른 종류끼리는 연결하지 않는다.
+
+RabbitMQ 기본 교환기는 라우팅 키와 큐 이름을 대조한다. 명명된 교환기는 관계 근거의 `Binding` 선언에서 큐·교환기·라우팅 키를 확인한다. `BindingBuilder`를 쓰면 큐·교환기 생성 줄도 근거에 넣는다. 바인딩을 찾지 못하거나 값을 정할 수 없으면 `확인 안 됨`이다. Stream은 `StreamBridge.send`의 바인딩 또는 `@Bean`의 `Supplier`·`Consumer`·`Function` 이름을 `spring.cloud.stream.bindings.<바인딩>.destination`과 잇는다. 바인딩 이름을 목적지라고 추정하지 않는다.
+
+`kind`는 확장을 위해 비어 있지 않은 문자열로 받는다. 규칙이 등록되지 않은 종류는 검증기가 선언을 확인하지 못했다고 경고한다. 현재 Spring 밖의 방식은 `unsupported`로 남긴다.
+
+아래는 Kafka의 목적지와 환경변수 사슬을 읽는 법이다.
 
 구독은 `@KafkaListener(topics = "${spring.kafka.topics.x}")`, 발행은 `KafkaTemplate` 필드·파라미터(이름은 무엇이든)의 `send` 첫 인자와 `DeadLetterPublishingRecoverer` 안의 `TopicPartition` 토픽을 출발점으로 삼는다. 하나의 `send`에 서로 다른 호출 경로로 토픽이 들어오면 경로별 발행 항목을 만든다.
 
-`topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 설정 파일(`application.yml`·`application.yaml`·`application.properties`) → compose `environment`까지 확인한 환경변수 이름이다. compose 파일은 루트의 `compose.yaml`·`compose.yml`·`docker-compose.yaml`·`docker-compose.yml`이고, 루트에 없으면 저장소에 하나뿐인 그 이름의 파일이다. `${ENV:기본값}`도 환경변수 `ENV`로 잇는다. 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `- ENV=${ENV}` 또는 `ENV: ${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같으면 `kafkaLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 두 항목의 토픽 이름이 확인된 값으로 같으면 `environment`를 빈 문자열로 두고 연결을 내며 양쪽 토픽 이름 줄을 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
+`topicKey`는 전체 설정 키이고, `environment`는 해당 서비스의 기본 설정 파일(`application.yml`·`application.yaml`·`application.properties`) → compose `environment`까지 확인한 환경변수 이름이다. compose 파일은 루트의 `compose.yaml`·`compose.yml`·`docker-compose.yaml`·`docker-compose.yml`이고, 루트에 없으면 저장소에 하나뿐인 그 이름의 파일이다. `${ENV:기본값}`도 환경변수 `ENV`로 잇는다. 프로필별 토픽 재정의는 연결에 합치지 않는다. 코드·인자 전달·필드·YAML·compose 사슬을 각 항목의 근거에 보존한다. compose에서 `- ENV=${ENV}` 또는 `ENV: ${ENV}`로 같은 이름을 전달한 경우에만 환경변수를 확정한다. 두 항목의 환경변수 이름이 같으면 `messageLinks`에 연결을 내며 양쪽 compose 줄도 포함한다. 두 항목의 토픽 이름이 확인된 값으로 같으면 `environment`를 빈 문자열로 두고 연결을 내며 양쪽 토픽 이름 줄을 포함한다. 다른 이름의 후보 연결은 만들지 않는다.
 
 문자열 리터럴 토픽(같은 서비스의 문자열 상수 포함)은 `topicName`에 이름·`확인됨`·근거 줄을 남기고, 해당 없는 `topicKey`·`environment`는 빈 문자열·`확인됨`으로 표시한다. 설정 키의 값이 설정 파일에 이름으로 적혀 있으면(`spring.kafka.topics.order: order-created`) `topicKey`는 그 키, `topicName`은 그 이름·설정 줄, `environment`는 빈 문자열·그 설정 줄이다. 환경변수 사슬이 확인된 토픽의 실제 `topicName`은 `null`·`저장소에 근거 없음`이며, 문자열 토픽과 환경변수 토픽은 연결하지 않고 미연결 경고에 문자열 토픽 이름을 포함한다.
 
-따라가지 못한 값은 `확인 안 됨`과 해당 줄을 남긴다. 발행·구독의 최상위 상태는 문자열 토픽 이름 또는 환경변수 사슬의 확인 상태이고, 선언 자체의 존재는 `kafkaDeclarations`에서 별도로 확인할 수 있다.
+따라가지 못한 값은 `확인 안 됨`과 해당 줄을 남긴다. 발행·구독의 최상위 상태는 문자열 토픽 이름 또는 환경변수 사슬의 확인 상태이고, 선언 자체의 존재는 `messageDeclarations`에서 별도로 확인할 수 있다.
 
 ### 핸들러의 나가는 호출
 
-`relations.json`의 `calls`는 엔드포인트 또는 Kafka 구독(`fromId`)이 같은 서비스의 Feign 호출 또는 `kafkaTemplate.send` 발행(`toId`)에 닿는 연결이다. 서비스·포트·어댑터·래퍼를 거치는 호출과 조건 분기·`catch` 안의 호출을 포함한다. 같은 출발·도착이라도 거치는 경로가 다르면 항목을 따로 둔다. `DeadLetterPublishingRecoverer` 발행은 코드에서 직접 부르지 않으므로 연결을 만들지 않는다. 다른 서비스로 넘어간 뒤의 호출과 역방향 연결은 쓰지 않는다. 소비자가 `calls`, Feign `target`, `kafkaLinks`를 이어 따라간다.
+`relations.json`의 `calls`는 엔드포인트 또는 메시지 구독(`fromId`)이 같은 서비스의 HTTP 호출 또는 직접 호출하는 메시지 발행(`toId`)에 닿는 연결이다. 서비스·포트·어댑터·래퍼를 거치는 호출과 조건 분기·`catch` 안의 호출을 포함한다. 같은 출발·도착이라도 거치는 경로가 다르면 항목을 따로 둔다. `DeadLetterPublishingRecoverer`와 Stream 함수형 발행은 프레임워크가 실행하므로 나가는 `calls`의 도착점으로 만들지 않는다. 다른 서비스로 넘어간 뒤의 호출과 역방향 연결은 쓰지 않는다. 소비자가 `calls`, HTTP `target`, `messageLinks`를 이어 따라간다.
 
-`evidence`는 출발 항목의 첫 근거(매핑·리스너 줄)로 시작하고, 거치는 호출 줄을 순서대로 넣고, 도착 지점 줄로 끝난다. 도착 지점 줄은 Feign이면 그 Feign 메서드를 부르는 줄(`.메서드(`), 발행이면 그 발행 항목의 첫 근거(`send` 선언 줄)다. 여러 발행이 같은 래퍼의 `send` 줄을 쓰면, 사슬에는 그 발행의 근거에만 있는 호출 줄(래퍼를 부르는 줄)도 들어가야 한다.
+`evidence`는 출발 항목의 첫 근거(매핑·리스너 줄)로 시작하고, 거치는 호출 줄을 순서대로 넣고, 도착 지점 줄로 끝난다. 도착 지점 줄은 Feign·HTTP 인터페이스면 그 메서드를 부르는 줄(`.메서드(`), 직접 HTTP 호출이면 그 호출 항목의 첫 근거, 발행이면 그 발행 항목의 첫 근거(`send` 선언 줄)다. 여러 발행이 같은 래퍼의 `send` 줄을 쓰면, 사슬에는 그 발행의 근거에만 있는 호출 줄(래퍼를 부르는 줄)도 들어가야 한다.
 
 ### 오류 응답
 
@@ -85,7 +101,7 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 ### 다루지 않는 방식
 
-`unsupported`는 형식에 담을 자리가 없어 항목으로 만들지 않은 방식이다(예: `RestTemplate`·`WebClient` 호출, 회로 차단기 fallback, RabbitMQ). 위치마다 한 항목이고, `mechanism`은 방식 이름, `description`은 무엇을 하는지 한 줄, 근거는 그 방식 이름이 있는 줄이다. 검증기는 근거 줄에 방식 이름이 있는지만 본다. 서버는 서비스 페이지와 그 서비스를 지나는 흐름 결과에 "도구가 다루지 않는 방식"으로 붙인다.
+`unsupported`는 형식에 담을 자리가 없어 항목으로 만들지 않은 방식이다(예: gRPC·GraphQL·WebSocket 호출, 회로 차단기 fallback). 위치마다 한 항목이고, `mechanism`은 방식 이름, `description`은 무엇을 하는지 한 줄, 근거는 그 방식 이름이 있는 줄이다. 검증기는 근거 줄에 방식 이름이 있는지만 본다. 서버는 서비스 페이지와 그 서비스를 지나는 흐름 결과에 "도구가 다루지 않는 방식"으로 붙인다.
 
 ### 환경변수·외부 자원
 
@@ -129,7 +145,7 @@ UTF-8 JSON으로 작업 폴더의 `knowledge/<spring.application.name>.json`에 
 
 코드 근거는 고정 커밋의 대상 루트 기준 경로, 응답 근거는 작업 폴더 기준 `responses/<파일>.json:줄`이다. 응답 파일을 근거에 포함하면 발견 경로는 `실제 응답`이다. AI 해석의 출처는 `AI 해석`, 확인 상태는 `미확인`으로 시작한다.
 
-검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `feignCalls`, `kafkaPublications`, `kafkaSubscriptions` 중 하나에 있는지, 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids`, `knowledge-duplicates` 경고다.
+검증기는 항목 파일을 스키마로 검사하고, 근거 파일에 해당 줄이 존재하는지와 영향 ID가 `endpoints`, `httpCalls`, `messagePublications`, `messageSubscriptions` 중 하나에 있는지, 서비스가 다른 AI 해석 항목끼리 영향 ID 목록이 같은지만 검사한다. 설명과 줄 내용을 대조하거나 확인 상태를 바꾸지 않는다. 어긋남은 각각 `schema`, `knowledge-evidence`, `knowledge-affected-ids`, `knowledge-duplicates` 경고다.
 
 검증기는 작업 폴더의 `knowledge/`를 읽는다. 모든 항목을 검사하고 경고는 기존 `warnings`·`checks`에 더한다. `confirmationStatus`가 `틀림`인 항목은 `out/analysis.json`의 `knowledge` 배열에 넣지 않는다. 나머지 항목은 파일 이름순으로 원문 그대로 합친다. 항목 디렉터리가 없으면 `knowledge` 배열과 세 항목 검사 집계를 추가하지 않아 기존 출력과 같다. 서버는 이 출력 하나만 읽는다.
 

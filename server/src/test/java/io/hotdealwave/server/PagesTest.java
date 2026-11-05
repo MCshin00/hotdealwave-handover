@@ -25,7 +25,7 @@ class PagesTest {
 
     @Test void homeSummarizesServicesAndListsUnconfirmedConnections() throws Exception {
         String home = page("/");
-        assertTrue(home.contains("엔드포인트 11 · Feign 8 · 발행 5 · 구독 3"));
+        assertTrue(home.contains("엔드포인트 11 · HTTP 8 · 발행 5 · 구독 3"));
         assertTrue(home.contains("<h2>확인 안 된 연결 13개</h2>"));
         assertTrue(home.contains("<h3>저장소 밖 값 9개</h3>"));
         assertTrue(home.contains("<h3>저장소 안에서 잇지 못함 4개</h3>"));

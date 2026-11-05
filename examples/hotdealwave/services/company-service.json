@@ -2363,8 +2363,8 @@
       ]
     }
   ],
-  "feignClients": [],
-  "feignCalls": [],
+  "httpClients": [],
+  "httpCalls": [],
   "gatewayRoutes": [],
   "allowedPaths": [],
   "declarations": [
@@ -2405,9 +2405,9 @@
       ]
     }
   ],
-  "kafkaDeclarations": [],
-  "kafkaPublications": [],
-  "kafkaSubscriptions": [],
+  "messageDeclarations": [],
+  "messagePublications": [],
+  "messageSubscriptions": [],
   "environmentVariables": [
     {
       "service": "company-service",

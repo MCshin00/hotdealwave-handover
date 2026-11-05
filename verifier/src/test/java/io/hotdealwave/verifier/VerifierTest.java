@@ -19,7 +19,7 @@ class VerifierTest {
         var service = JSON.readTree(Path.of("examples/hotdealwave/services/company-service.json").toFile());
         ((ObjectNode) service.path("endpoints").get(0)).remove("httpMethod");
         JSON.writeValue(services.resolve("company-service.json").toFile(), service);
-        Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.copy(Path.of("examples/hotdealwave/target.json"), temporary.resolve("target.json"));
         Path output = temporary.resolve("analysis.json");
 
@@ -36,9 +36,9 @@ class VerifierTest {
 
     private ObjectNode document() {
         var root = JSON.createObjectNode().put("schemaVersion", 1);
-        for (String key : new String[]{"services", "endpoints", "feignClients", "feignCalls", "gatewayRoutes",
-                "allowedPaths", "declarations", "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions",
-                "kafkaLinks", "environmentVariables", "externalResources", "warnings"}) root.putArray(key);
+        for (String key : new String[]{"services", "endpoints", "httpClients", "httpCalls", "gatewayRoutes",
+                "allowedPaths", "declarations", "messageDeclarations", "messagePublications", "messageSubscriptions",
+                "messageLinks", "environmentVariables", "externalResources", "warnings"}) root.putArray(key);
         root.putObject("checks").putObject("obsolete").put("warningCount", 123);
         root.withArray("warnings").addObject().put("reason", "입력 경고는 버린다");
         return root;
@@ -113,11 +113,11 @@ class VerifierTest {
     @Test void inventoryExcludesCommentedMapping() throws Exception {
         var output = verify(document());
         assertEquals(102, output.at("/checks/declarations/mappingCount").asInt());
-        assertEquals(9, output.at("/checks/declarations/feignClientCount").asInt());
+        assertEquals(9, output.at("/checks/http-declarations/clientCount").asInt());
         assertFalse(output.path("warnings").toString().contains("PaymentViewController.java:12"));
-        assertEquals(9, output.at("/checks/kafka-declarations/listenerCount").asInt());
-        assertEquals(7, output.at("/checks/kafka-declarations/sendCount").asInt());
-        assertEquals(3, output.at("/checks/kafka-declarations/dlqCount").asInt());
+        assertEquals(9, output.at("/checks/message-declarations/listenerCount").asInt());
+        assertEquals(7, output.at("/checks/message-declarations/sendCount").asInt());
+        assertEquals(3, output.at("/checks/message-declarations/automaticCount").asInt());
     }
 
     @Test void feignTargetIsCheckedByServiceMethodAndPath() throws Exception {
@@ -125,27 +125,27 @@ class VerifierTest {
         String clientLine = ORDER + "infrastructure/client/CouponClient.java:13";
         String callLine = ORDER + "infrastructure/client/CouponClient.java:15";
         String controller = COUPON + "presentation/controller/CouponController.java";
-        var client = item(clientLine).put("id", "client").put("type", "CouponClient");
+        var client = item(clientLine).put("id", "client").put("kind", "feign").put("type", "CouponClient");
         client.set("name", fact("coupon-service", clientLine));
         client.set("url", fact("", clientLine));
         client.set("path", fact("", clientLine));
-        input.withArray("feignClients").add(client);
+        input.withArray("httpClients").add(client);
         var endpoint = endpoint("coupon", "coupon-service", "/api/v1/coupons/{couponId}/validate", controller + ":23", controller + ":63");
         input.withArray("endpoints").add(endpoint);
-        var call = item(callLine, clientLine).put("id", "call").put("clientId", "client").put("handler", "validateCoupon").put("external", false);
+        var call = item(callLine, clientLine).put("id", "call").put("kind", "feign").put("clientId", "client").put("handler", "validateCoupon").put("external", false);
         call.set("path", fact("/api/v1/coupons/{couponId}/validate", callLine));
         call.set("httpMethod", fact("POST", callLine));
         call.set("target", fact("coupon", callLine, controller + ":63"));
-        input.withArray("feignCalls").add(call);
-        assertEquals("확인됨", verify(input).at("/feignCalls/0/target/status").asText());
+        input.withArray("httpCalls").add(call);
+        assertEquals("확인됨", verify(input).at("/httpCalls/0/target/status").asText());
         ((ObjectNode) call.path("target")).put("value", "missing");
         var rejected = verify(input);
-        assertEquals("확인 안 됨", rejected.at("/feignCalls/0/target/status").asText());
-        assertEquals(1, rejected.at("/checks/feign-targets/warningCount").asInt());
+        assertEquals("확인 안 됨", rejected.at("/httpCalls/0/target/status").asText());
+        assertEquals(1, rejected.at("/checks/http-targets/warningCount").asInt());
     }
 
     private ObjectNode kafka(String id, String service, String kind, String key, String env, String... lines) {
-        var node = item(lines).put("id", id).put("service", service).put("kind", kind).put("profile", "base");
+        var node = item(lines).put("id", id).put("service", service).put("kind", "kafka").put("profile", "base");
         node.set("topicKey", fact(key, lines));
         node.set("topicName", fact(null, lines));
         node.set("environment", fact(env, lines));
@@ -155,7 +155,7 @@ class VerifierTest {
     private ObjectNode orderRequestProduct() {
         var input = document();
         input.withArray("services").add(service("order", "order-service", "order-service", 134, 136));
-        input.withArray("kafkaPublications").add(kafka("request", "order-service", "kafkaTemplate.send",
+        input.withArray("messagePublications").add(kafka("request", "order-service", "kafkaTemplate.send",
                 "spring.kafka.topics.request-product", "KAFKA_REQUEST_PRODUCT_TOPIC", ORDER + "event/producer/OrderEventProducer.java:62",
                 ORDER + "event/producer/OrderEventProducer.java:24", "order/src/main/resources/application.yml:15", "docker-compose.yml:156"));
         return input;
@@ -171,8 +171,8 @@ class VerifierTest {
 
     @Test void orderRequestProductComposeLine156IsConfirmed() throws Exception {
         var output = verify(orderRequestProduct());
-        assertEquals("확인됨", output.at("/kafkaPublications/0/environment/status").asText());
-        assertEquals("확인됨", output.at("/kafkaPublications/0/status").asText());
+        assertEquals("확인됨", output.at("/messagePublications/0/environment/status").asText());
+        assertEquals("확인됨", output.at("/messagePublications/0/status").asText());
         assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
     }
 
@@ -210,38 +210,38 @@ class VerifierTest {
                 payment + ":52", payment + ":23", "payment/src/main/resources/application.yml:18", "docker-compose.yml:196");
         var sub = kafka("sub", "order-service", "KafkaListener", "spring.kafka.topics.update-order-status", env,
                 consumer, "order/src/main/resources/application.yml:17", "docker-compose.yml:157");
-        input.withArray("kafkaPublications").add(pub);
-        input.withArray("kafkaSubscriptions").add(sub);
-        input.withArray("kafkaLinks").add(item("docker-compose.yml:196", "docker-compose.yml:157")
+        input.withArray("messagePublications").add(pub);
+        input.withArray("messageSubscriptions").add(sub);
+        input.withArray("messageLinks").add(item("docker-compose.yml:196", "docker-compose.yml:157")
                 .put("publicationId", "pub").put("subscriptionId", "sub").put("environment", env));
         var output = verify(input);
-        assertEquals("확인됨", output.at("/kafkaLinks/0/status").asText());
-        assertEquals(0, output.at("/checks/kafka-topics/warningCount").asInt());
+        assertEquals("확인됨", output.at("/messageLinks/0/status").asText());
+        assertEquals(0, output.at("/checks/message-destinations/warningCount").asInt());
 
-        input.withArray("kafkaPublications").add(kafka("request", "order-service", "kafkaTemplate.send",
+        input.withArray("messagePublications").add(kafka("request", "order-service", "kafkaTemplate.send",
                 "spring.kafka.topics.request-product", "KAFKA_REQUEST_PRODUCT_TOPIC", ORDER + "event/producer/OrderEventProducer.java:62",
                 ORDER + "event/producer/OrderEventProducer.java:24", "order/src/main/resources/application.yml:15", "docker-compose.yml:156"));
-        input.withArray("kafkaSubscriptions").add(kafka("reduce", "product-service", "KafkaListener",
+        input.withArray("messageSubscriptions").add(kafka("reduce", "product-service", "KafkaListener",
                 "spring.kafka.topics.reduce-quantity", "KAFKA_REDUCE_QUANTITY_TOPIC",
                 "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
                 "product/src/main/resources/application.yml:14", "docker-compose.yml:90"));
         output = verify(input);
-        assertEquals(1, output.path("kafkaLinks").size());
-        assertEquals(2, output.at("/checks/kafka-topics/warningCount").asInt());
+        assertEquals(1, output.path("messageLinks").size());
+        assertEquals(2, output.at("/checks/message-destinations/warningCount").asInt());
         assertTrue(output.path("warnings").toString().contains("구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. "
                 + "토픽 실제 값은 저장소 밖 환경에서 정해짐 (order-service, spring.kafka.topics.request-product)"));
-        assertEquals("확인됨", output.at("/kafkaPublications/1/status").asText());
-        assertEquals("확인됨", output.at("/kafkaSubscriptions/1/status").asText());
+        assertEquals("확인됨", output.at("/messagePublications/1/status").asText());
+        assertEquals("확인됨", output.at("/messageSubscriptions/1/status").asText());
 
         // The same variable in payment's environment is not evidence for the order subscription.
         for (var node : new JsonNode[]{sub, sub.path("topicKey"), sub.path("topicName"), sub.path("environment")})
             ((ObjectNode) node).withArray("evidence").set(2, JSON.getNodeFactory().textNode("docker-compose.yml:196"));
-        ((ObjectNode) input.path("kafkaLinks").get(0)).withArray("evidence")
+        ((ObjectNode) input.path("messageLinks").get(0)).withArray("evidence")
                 .set(1, JSON.getNodeFactory().textNode("docker-compose.yml:196"));
         output = verify(input);
-        assertEquals(Checks.UNKNOWN, output.at("/kafkaSubscriptions/0/environment/status").asText());
-        assertEquals(Checks.UNKNOWN, output.at("/kafkaSubscriptions/0/status").asText());
-        assertEquals(Checks.UNKNOWN, output.at("/kafkaLinks/0/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/messageSubscriptions/0/environment/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/messageSubscriptions/0/status").asText());
+        assertEquals(Checks.UNKNOWN, output.at("/messageLinks/0/status").asText());
     }
 
     @Test void environmentOnlyValueIsAbsentButPlainNullIsUnknown() throws Exception {
@@ -253,12 +253,12 @@ class VerifierTest {
         var output = verify(input);
         assertEquals("저장소에 근거 없음", output.at("/environmentVariables/0/value/status").asText());
         assertTrue(output.at("/environmentVariables/0/value/value").isNull());
-        var client = item(ORDER + "infrastructure/client/CouponClient.java:13").put("id", "client");
+        var client = item(ORDER + "infrastructure/client/CouponClient.java:13").put("id", "client").put("kind", "feign");
         client.set("name", fact(null, ORDER + "infrastructure/client/CouponClient.java:13"));
-        input.withArray("feignClients").add(client);
+        input.withArray("httpClients").add(client);
         output = verify(input);
-        assertEquals("확인 안 됨", output.at("/feignClients/0/name/status").asText());
-        assertEquals("확인 안 됨", output.at("/feignClients/0/status").asText());
+        assertEquals("확인 안 됨", output.at("/httpClients/0/name/status").asText());
+        assertEquals("확인 안 됨", output.at("/httpClients/0/status").asText());
         assertEquals(0, output.at("/checks/evidence-lines/warningCount").asInt());
     }
 
