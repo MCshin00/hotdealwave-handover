@@ -1,6 +1,6 @@
-# HotDealWave 인수인계 도구
+# Spring 마이크로서비스 인수인계 도구
 
-팀이 떠난 뒤 남은 저장소만으로 서비스 구조를 파악하게 돕는 도구. 분석 대상은 마이크로서비스 팀 프로젝트 HotDealWave(Spring Boot, Spring Cloud, Kafka)다.
+팀이 떠난 뒤 남은 저장소만으로 서비스 구조를 파악하게 돕는 도구. 예시 분석 대상은 마이크로서비스 팀 프로젝트 HotDealWave(Spring Boot, Spring Cloud, Kafka)다.
 
 - 분석 대상: 예시 작업 폴더 `examples/hotdealwave`. 팀 원본 저장소의 `cc43016`에 고정하고, 대상 코드는 `init`이 `source/`에 받는다.
 - 구조와 결정: [docs/decisions.md](docs/decisions.md)

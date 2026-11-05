@@ -1,6 +1,6 @@
-# HotDealWave 인수인계 도구
+# Spring 마이크로서비스 인수인계 도구
 
-문서도, 인수인계해 줄 사람도 없이 마이크로서비스 프로젝트를 넘겨받는 두 상황을 다룬다. 서비스는 떠 있는데 문서가 없거나, 팀이 떠나 저장소만 남아 서비스를 되살려야 한다. 이 도구는 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)(Spring Boot, Spring Cloud, Kafka)의 고정 커밋을 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 서버가 떠 있으면 응답으로 확인한 뒤, 그 결과를 서버 하나로 제공한다. 두 상황의 차이는 [결정 기록](docs/decisions.md#문제-상황)에 있다.
+문서도, 인수인계해 줄 사람도 없이 마이크로서비스 프로젝트를 넘겨받는 두 상황을 다룬다. 서비스는 떠 있는데 문서가 없거나, 팀이 떠나 저장소만 남아 서비스를 되살려야 한다. 이 도구는 Spring Boot·Spring Cloud 마이크로서비스 저장소의 고정 커밋을 분석해 API, 서비스 간 호출, 이벤트 흐름, 설정을 뽑고, 서버가 떠 있으면 응답으로 확인한 뒤, 그 결과를 서버 하나로 제공한다. 예시로 팀 프로젝트 [HotDealWave](https://github.com/sparta-final-12th-9700/HotDealWave)의 결과를 커밋해 두었다. 두 상황의 차이는 [결정 기록](docs/decisions.md#문제-상황)에 있다.
 
 ## 결과
 
@@ -43,7 +43,7 @@
 ## 구조
 
 ```
-hotdealwave-handover/
+spring-msa-handover/
 |
 +-- examples/hotdealwave/   # 예시 작업 폴더 (팀 원본 저장소 cc43016)
 |                           #   추출 결과, 응답, 업무 규칙·함정, 검증 출력. source/는 init이 받음
@@ -96,8 +96,8 @@ MCP와 질의응답은 같은 조회 계층을 쓰고, 답을 쓰는 모델의 �
 JDK 17 이상, Git, 코딩 에이전트 하나(Claude Code 또는 Codex)가 필요하다. 명령은 bash와 PowerShell에서 같다.
 
 ```bash
-git clone https://github.com/MCshin00/hotdealwave-handover.git
-cd hotdealwave-handover
+git clone https://github.com/MCshin00/spring-msa-handover.git
+cd spring-msa-handover
 ./gradlew assemble
 ```
 
