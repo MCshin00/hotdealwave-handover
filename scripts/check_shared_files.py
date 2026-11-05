@@ -10,8 +10,12 @@ PATTERNS = [
     re.compile(rb"(?<![A-Za-z0-9])[A-Za-z]:[\\/]"),  # Windows 드라이브 경로
 ]
 HOME = re.compile(rb"/(?:Users|home)/[^/\s]+/")  # macOS·Linux 홈 경로
-# 비교 실험 답 원문은 분석 대상의 배포 스크립트에 적힌 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
+# 비교 실험 답 원문과 저장소 수준 추출 결과는 분석 대상의 배포 스크립트에 적힌 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
 ANSWERS = "eval/results/"
+
+
+def quotes_target(name: str) -> bool:
+    return name.startswith(ANSWERS) or (name.startswith("analysis/") and name.endswith("/repository.json"))
 
 
 def main() -> int:
@@ -27,7 +31,7 @@ def main() -> int:
             print(f"{name}:1")
             failed = True
             continue
-        patterns = PATTERNS if name.startswith(ANSWERS) else PATTERNS + [HOME]
+        patterns = PATTERNS if quotes_target(name) else PATTERNS + [HOME]
         for number, line in enumerate(path.read_bytes().splitlines(), 1):
             if any(pattern.search(line) for pattern in patterns):
                 print(f"{name}:{number}")
