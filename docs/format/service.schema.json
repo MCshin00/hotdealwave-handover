@@ -16,16 +16,16 @@
         "$ref": "#/$defs/Endpoint"
       }
     },
-    "feignClients": {
+    "httpClients": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/FeignClient"
+        "$ref": "#/$defs/HttpClient"
       }
     },
-    "feignCalls": {
+    "httpCalls": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/FeignCall"
+        "$ref": "#/$defs/HttpCall"
       }
     },
     "gatewayRoutes": {
@@ -46,22 +46,22 @@
         "$ref": "#/$defs/Declaration"
       }
     },
-    "kafkaDeclarations": {
+    "messageDeclarations": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/KafkaDeclaration"
+        "$ref": "#/$defs/MessageDeclaration"
       }
     },
-    "kafkaPublications": {
+    "messagePublications": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/KafkaPublication"
+        "$ref": "#/$defs/MessagePublication"
       }
     },
-    "kafkaSubscriptions": {
+    "messageSubscriptions": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/KafkaSubscription"
+        "$ref": "#/$defs/MessageSubscription"
       }
     },
     "environmentVariables": {
@@ -111,14 +111,14 @@
     "schemaVersion",
     "service",
     "endpoints",
-    "feignClients",
-    "feignCalls",
+    "httpClients",
+    "httpCalls",
     "gatewayRoutes",
     "allowedPaths",
     "declarations",
-    "kafkaDeclarations",
-    "kafkaPublications",
-    "kafkaSubscriptions",
+    "messageDeclarations",
+    "messagePublications",
+    "messageSubscriptions",
     "environmentVariables",
     "externalResources",
     "errorCodes",
@@ -527,7 +527,7 @@
       ],
       "additionalProperties": false
     },
-    "FeignClient": {
+    "HttpClient": {
       "type": "object",
       "properties": {
         "id": {
@@ -559,9 +559,21 @@
             "string",
             "null"
           ]
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "feign",
+            "restTemplate",
+            "restClient",
+            "webClient",
+            "httpExchange"
+          ]
         }
       },
       "required": [
+        "kind",
         "id",
         "service",
         "type",
@@ -572,7 +584,7 @@
       ],
       "additionalProperties": false
     },
-    "FeignCall": {
+    "HttpCall": {
       "type": "object",
       "properties": {
         "id": {
@@ -610,9 +622,21 @@
             "string",
             "null"
           ]
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "feign",
+            "restTemplate",
+            "restClient",
+            "webClient",
+            "httpExchange"
+          ]
         }
       },
       "required": [
+        "kind",
         "id",
         "clientId",
         "service",
@@ -734,14 +758,16 @@
       ],
       "additionalProperties": false
     },
-    "KafkaDeclaration": {
+    "MessageDeclaration": {
       "type": "object",
       "properties": {
         "kind": {
-          "enum": [
-            "KafkaListener",
-            "kafkaTemplate.send",
-            "DeadLetterPublishingRecoverer"
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "kafka",
+            "rabbit",
+            "stream"
           ]
         },
         "evidence": {
@@ -763,7 +789,7 @@
       ],
       "additionalProperties": false
     },
-    "KafkaPublication": {
+    "MessagePublication": {
       "type": "object",
       "properties": {
         "id": {
@@ -773,9 +799,12 @@
           "type": "string"
         },
         "kind": {
-          "enum": [
-            "kafkaTemplate.send",
-            "DeadLetterPublishingRecoverer"
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "kafka",
+            "rabbit",
+            "stream"
           ]
         },
         "profile": {
@@ -815,7 +844,7 @@
       ],
       "additionalProperties": false
     },
-    "KafkaSubscription": {
+    "MessageSubscription": {
       "type": "object",
       "properties": {
         "id": {
@@ -825,8 +854,12 @@
           "type": "string"
         },
         "kind": {
-          "enum": [
-            "KafkaListener"
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "kafka",
+            "rabbit",
+            "stream"
           ]
         },
         "profile": {

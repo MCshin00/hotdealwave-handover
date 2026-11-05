@@ -5566,7 +5566,7 @@
       ]
     }
   ],
-  "feignClients": [
+  "httpClients": [
     {
       "id": "order-service.CouponClient",
       "service": "order-service",
@@ -5594,7 +5594,8 @@
       },
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.ProductClient",
@@ -5623,7 +5624,8 @@
       },
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:18"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.UserClient",
@@ -5652,10 +5654,11 @@
       },
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
-  "feignCalls": [
+  "httpCalls": [
     {
       "id": "order-service.CouponClient.validateCoupon",
       "clientId": "order-service.CouponClient",
@@ -5691,7 +5694,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:15",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.CouponClient.useCoupon",
@@ -5728,7 +5732,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:18",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.CouponClient.recoverCoupon",
@@ -5765,7 +5770,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:21",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.ProductClient.getProduct",
@@ -5802,7 +5808,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:20",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:18"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.ProductClient.getProductList",
@@ -5839,7 +5846,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:23",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:18"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.ProductClient.reduceQuantity",
@@ -5876,7 +5884,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:26",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/ProductClient.java:18"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.UserClient.getAddress",
@@ -5913,7 +5922,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:15",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "order-service.UserClient.getUser",
@@ -5950,7 +5960,8 @@
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:21",
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/UserClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
   "gatewayRoutes": [],
@@ -6083,49 +6094,49 @@
       ]
     }
   ],
-  "kafkaDeclarations": [
+  "messageDeclarations": [
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:25"
       ]
     },
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16"
       ]
     },
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25"
       ]
     },
     {
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31"
       ]
     },
     {
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62"
       ]
     },
     {
-      "kind": "DeadLetterPublishingRecoverer",
+      "kind": "kafka",
       "evidence": [
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:61"
       ]
     }
   ],
-  "kafkaPublications": [
+  "messagePublications": [
     {
       "id": "order-service.publishDlq",
       "service": "order-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.dlq",
@@ -6161,7 +6172,7 @@
     {
       "id": "order-service.requestProduct",
       "service": "order-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.request-product",
@@ -6199,7 +6210,7 @@
     {
       "id": "order-service.cancelPayment",
       "service": "order-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.cancel-payment",
@@ -6237,7 +6248,7 @@
     {
       "id": "order-service.refundPayment",
       "service": "order-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.refund-payment",
@@ -6275,7 +6286,7 @@
     {
       "id": "order-service.recoverDlq",
       "service": "order-service",
-      "kind": "DeadLetterPublishingRecoverer",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.dlq",
@@ -6310,11 +6321,11 @@
       ]
     }
   ],
-  "kafkaSubscriptions": [
+  "messageSubscriptions": [
     {
       "id": "order-service.cancelOrder",
       "service": "order-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.cancel-order",
@@ -6348,7 +6359,7 @@
     {
       "id": "order-service.dlq",
       "service": "order-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.dlq",
@@ -6382,7 +6393,7 @@
     {
       "id": "order-service.updateStatus",
       "service": "order-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.update-order-status",

@@ -55,7 +55,7 @@ final class EvidenceChecks {
             return;
         }
         // Relationship facts are decided after all local facts have been checked.
-        if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks", "calls", "throws").contains(role)) return;
+        if (Set.of("target", "tokenRequired", "externalPaths", "messageLinks", "calls", "throws").contains(role)) return;
         if (object.has("value") && !object.path("value").isObject()) { fact(object, role, parent, lines); return; }
         if (object.has("type") && "unresolved".equals(object.path("kind").asText())) {
             if (!contains(lines, simpleType(object.path("type").asText())))
@@ -65,14 +65,14 @@ final class EvidenceChecks {
         }
         boolean matches = switch (role) {
             case "services" -> value(object.path("name")) == null || contains(lines, value(object.path("name")));
-            case "endpoints", "feignCalls" -> value(object.path("httpMethod")) == null
+            case "endpoints" -> value(object.path("httpMethod")) == null
                     ? Pattern.compile("@\\w*Mapping\\b").matcher(lines.get(0)).find()
                     : method(List.of(lines.get(0)), value(object.path("httpMethod")));
-            case "feignClients" -> lines.get(0).contains("@FeignClient");
+            case "httpClients", "httpCalls" -> CommunicationRules.matches(source, object, role);
             case "gatewayRoutes" -> contains(lines, object.path("id").asText());
             case "allowedPaths" -> contains(lines, object.path("name").asText());
-            case "declarations", "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions" ->
-                    declaration(lines.get(0), object.path("kind").asText(), kafkaTemplates(evidence.get(0).asText()));
+            case "declarations" -> lines.get(0).contains("@" + object.path("kind").asText());
+            case "messageDeclarations", "messagePublications", "messageSubscriptions" -> CommunicationRules.matches(source, object, role);
             case "environmentVariables", "fields", "parameters" -> contains(lines, object.path("name").asText(null));
             case "annotations" -> contains(lines, "@" + object.path("name").asText());
             case "externalResources" -> resource(object);
@@ -97,11 +97,13 @@ final class EvidenceChecks {
         };
         if (!matches) { reject(object, role + ": 근거 줄에서 이름·선언을 확인하지 못함"); return; }
         boolean resolved = switch (role) {
-            case "services", "feignClients" -> known(object.path("name"));
-            case "endpoints", "feignCalls", "allowedPaths" -> known(object.path("httpMethod")) && known(object.path("path"));
+            case "services" -> known(object.path("name"));
+            case "httpClients" -> known(object.path("name")) || known(object.path("url"));
+            case "endpoints", "httpCalls", "allowedPaths" -> known(object.path("httpMethod")) && known(object.path("path"));
             case "gatewayRoutes" -> known(object.path("uri")) && known(object.path("targetService"))
                     && items(object.path("paths")).stream().allMatch(Checks::known);
-            case "kafkaPublications", "kafkaSubscriptions" -> known(object.path("topicName")) || known(object.path("environment"));
+            case "messagePublications", "messageSubscriptions" -> known(object.path("topicName"))
+                    || known(object.path("environment")) && !Objects.toString(value(object.path("environment")), "").isEmpty();
             case "errorCodes" -> known(object.path("code")) && known(object.path("httpStatus")) && known(object.path("message"));
             case "exceptionHandlers" -> known(object.path("exception")) && known(object.path("httpStatus"));
             case "gatewayRejections" -> known(object.path("httpStatus"));
@@ -156,6 +158,7 @@ final class EvidenceChecks {
             default -> value != null && ENV.matcher(value).matches() && contains(lines, value);
         };
         if (externalValue) { verdict(fact, ABSENT, "실제 값은 저장소 밖의 환경변수에서 정해짐"); return; }
+        if (communicationFact(fact, role, parent, lines)) return;
         if (value == null) { verdict(fact, UNKNOWN, role + ": 값 없음"); return; }
         boolean matches = switch (role) {
             case "jsonName" -> value.equals(jsonName(parent, lines));
@@ -172,6 +175,76 @@ final class EvidenceChecks {
         };
         if (matches) verdict(fact, CONFIRMED, null);
         else reject(fact, role + ": 근거 줄에서 값·이름을 확인하지 못함");
+    }
+
+
+    /** Check the value in its call position, not an unrelated quoted word on the same line. */
+    private boolean communicationFact(ObjectNode fact, String role, JsonNode parent, List<String> lines) throws IOException {
+        String kind = parent.path("kind").asText(), expected = value(fact);
+        if (parent.has("clientId") && !kind.equals("feign") && Set.of("httpMethod", "path").contains(role)) {
+            String actual = role.equals("httpMethod") ? CommunicationRules.httpMethod(lines) : CommunicationRules.httpPath(parent, lines);
+            if (actual == null) verdict(fact, UNKNOWN, role + ": 호출 줄의 값을 정할 수 없음");
+            else if (actual.contains("${")) verdict(fact, ABSENT, "실제 주소는 저장소 밖 설정값에서 정해짐");
+            else if (Objects.equals(expected, actual)) verdict(fact, CONFIRMED, null);
+            else reject(fact, role + ": 호출 줄의 값과 일치하지 않음");
+            return true;
+        }
+        if (parent.has("url") && parent.has("kind") && !kind.equals("feign") && Set.of("url", "path", "name").contains(role)) {
+            String url = CommunicationRules.baseUrl(lines);
+            if (url == null) { verdict(fact, UNKNOWN, role + ": 기본 주소를 정할 수 없음"); return true; }
+            if (url.contains("${")) { verdict(fact, ABSENT, "실제 주소는 저장소 밖 설정값에서 정해짐"); return true; }
+            String prefix = CommunicationRules.attribute(lines, "HttpExchange", "url");
+            String actual = role.equals("url") ? url : role.equals("path") ? prefix != null && prefix.startsWith("/") ? prefix : ""
+                    : "".equals(expected) ? "" : HttpChecks.host(url);
+            if (Objects.equals(expected, actual)) verdict(fact, CONFIRMED, null);
+            else reject(fact, role + ": 클라이언트 기본 주소와 일치하지 않음");
+            return true;
+        }
+        if (kind.equals("rabbit") && parent.has("topicName")) {
+            var declaration = source.evidenceLines(parent);
+            boolean publication = CommunicationRules.matches(source, parent, "messagePublications");
+            String destination = publication ? CommunicationRules.rabbitDestination(declaration, CommunicationRules.file(source, parent.path("evidence").path(0).asText()))
+                    : CommunicationRules.attribute(declaration, "RabbitListener", "queues");
+            if (destination == null && value(parent.path("topicKey")) != null && value(parent.path("topicKey")).isEmpty()) {
+                verdict(fact, UNKNOWN, "교환기·라우팅 키를 정할 수 없음");
+                return true;
+            }
+            if (destination != null) {
+                String actual = role.equals("topicName") ? destination : "";
+                if (Objects.equals(expected, actual)) verdict(fact, CONFIRMED, null);
+                else reject(fact, role + ": 교환기·라우팅 키와 일치하지 않음");
+                return true;
+            }
+        }
+        if (kind.equals("stream") && parent.has("topicKey")) {
+            String key = value(parent.path("topicKey"));
+            // Children are visited in input order, so use the extracted key too.
+            if (key == null) key = parent.path("topicKey").path("value").asText();
+            String destination = null;
+            for (var ev : parent.path("topicName").path("evidence"))
+                if (source.settingKey(ev.asText()).equals(key) && key.startsWith("spring.cloud.stream.bindings.") && key.endsWith(".destination"))
+                    destination = SourceText.settingValue(source.line(ev.asText()));
+            String binding = key.startsWith("spring.cloud.stream.bindings.") && key.endsWith(".destination")
+                    ? key.substring("spring.cloud.stream.bindings.".length(), key.length()-".destination".length()) : "";
+            var declaration = source.evidenceLines(parent);
+            String bridge = CommunicationRules.argument(declaration, "\\.send", 0);
+            boolean bound = binding.equals(bridge);
+            if (!bound && !binding.isEmpty()) {
+                String function = binding.replaceFirst("-(?:in|out)-\\d+$", "");
+                bound = declaration.stream().anyMatch(l -> Pattern.compile("\\b" + Pattern.quote(function) + "\\s*\\(").matcher(l).find());
+            }
+            if (!bound || destination == null) { verdict(fact, UNKNOWN, "Stream 바인딩과 destination 설정이 이어지지 않음"); return true; }
+            if (destination.contains("${")) {
+                // Existing environment-chain validation remains responsible for key and environment.
+                if (role.equals("topicName")) { verdict(fact, ABSENT, "실제 값은 저장소 밖의 환경변수에서 정해짐"); return true; }
+                return false;
+            }
+            String actual = role.equals("topicName") ? destination : role.equals("topicKey") ? key : "";
+            if (Objects.equals(expected, actual)) verdict(fact, CONFIRMED, null);
+            else reject(fact, role + ": Stream destination 설정과 일치하지 않음");
+            return true;
+        }
+        return false;
     }
 
     /** Error handler values: a fixed value is on its line; the others are read from the exception or the validation. */
@@ -308,12 +381,6 @@ final class EvidenceChecks {
         return parts.length == 2 && lines.stream().anyMatch(l -> l.contains("rewritePath(\"" + parts[0] + "\"") && l.contains("\"" + parts[1] + "\""));
     }
 
-    /** Names of KafkaTemplate fields and parameters in the evidence file, and kafkaTemplate. */
-    private Set<String> kafkaTemplates(String evidence) throws IOException {
-        String file = file(evidence);
-        return file == null ? Set.of("kafkaTemplate") : KafkaChecks.templates(source.lines(file));
-    }
-
     private static String property(String getter) {
         String suffix = getter.substring(getter.startsWith("is") ? 2 : 3);
         var result = new StringBuilder(suffix);
@@ -325,13 +392,6 @@ final class EvidenceChecks {
         return result.toString();
     }
 
-    static boolean declaration(String line, String kind, Set<String> templates) {
-        return switch (kind) {
-            case "kafkaTemplate.send" -> templates.stream().anyMatch(t -> Pattern.compile("\\b" + Pattern.quote(t) + "\\s*\\.\\s*send\\s*\\(").matcher(line).find());
-            case "DeadLetterPublishingRecoverer" -> line.contains("new DeadLetterPublishingRecoverer(");
-            default -> line.contains("@" + kind);
-        };
-    }
     private static boolean method(List<String> lines, String method) {
         if (method == null) return false;
         String annotation = method.equals("*") ? "RequestMapping" : method.charAt(0) + method.substring(1).toLowerCase(Locale.ROOT) + "Mapping";

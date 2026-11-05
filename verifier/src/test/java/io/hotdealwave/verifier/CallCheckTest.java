@@ -45,7 +45,7 @@ class CallCheckTest {
         var reasons = warnings(analysis);
         assertTrue(reasons.stream().anyMatch(r -> r.contains("order-service.CouponClient.recoverCoupon")));
         assertTrue(reasons.stream().anyMatch(r -> r.contains("payment-service.OrderClient.updateOrderStatus")));
-        assertEquals(9, analysis.path("kafkaLinks").size());
+        assertEquals(9, analysis.path("messageLinks").size());
     }
 
     @Test void callsReachingAnotherTargetAreUnknown() throws Exception {

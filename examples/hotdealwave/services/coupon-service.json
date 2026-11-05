@@ -5511,7 +5511,7 @@
       ]
     }
   ],
-  "feignClients": [
+  "httpClients": [
     {
       "id": "coupon-service.CompanyClient",
       "service": "coupon-service",
@@ -5539,10 +5539,11 @@
       },
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/client/CompanyClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
-  "feignCalls": [
+  "httpCalls": [
     {
       "id": "coupon-service.CompanyClient.getCompanyById",
       "clientId": "coupon-service.CompanyClient",
@@ -5578,7 +5579,8 @@
       "evidence": [
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/client/CompanyClient.java:16",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/client/CompanyClient.java:13"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
   "gatewayRoutes": [],
@@ -5675,9 +5677,9 @@
       ]
     }
   ],
-  "kafkaDeclarations": [],
-  "kafkaPublications": [],
-  "kafkaSubscriptions": [],
+  "messageDeclarations": [],
+  "messagePublications": [],
+  "messageSubscriptions": [],
   "environmentVariables": [
     {
       "service": "coupon-service",

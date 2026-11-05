@@ -41,7 +41,7 @@ class ResponseCheckTest {
         assertEquals("호출 못 함", notCalled.path("status").asText());
         assertTrue(notCalled.path("statusCode").isNull());
         assertFalse(notCalled.path("reason").asText().isEmpty());
-        assertEquals(11, analysis.at("/checks/kafka-topics/warningCount").asInt());
+        assertEquals(11, analysis.at("/checks/message-destinations/warningCount").asInt());
     }
 
     @Test void exampleWarningsSplitIntoValuesOutsideTheRepositoryAndLinksMissingInside() throws Exception {
@@ -93,7 +93,7 @@ class ResponseCheckTest {
         for (var node : new ObjectNode[]{used, (ObjectNode) used.path("jsonName"), (ObjectNode) used.path("schema")})
             node.putArray("evidence").add(usedLine);
         JSON.writeValue(services.resolve("coupon-service.json").toFile(), service);
-        Files.writeString(workspace.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(workspace.resolve("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.copy(Example.WORKSPACE.resolve("target.json"), workspace.resolve("target.json"));
         var field = Checks.find(run(workspace).path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
         assertEquals(Checks.CONFIRMED, field.path("jsonName").path("status").asText());
@@ -116,7 +116,7 @@ class ResponseCheckTest {
     @Test void endpointWithoutStoredResponseIsCodeOnly() throws Exception {
         Path services = Files.createDirectories(temporary.resolve("hotdealwave/services"));
         Files.copy(Path.of("examples/hotdealwave/services/order-service.json"), services.resolve("order-service.json"));
-        Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.copy(Path.of("examples/hotdealwave/target.json"), services.resolveSibling("target.json"));
         var analysis = run(services.getParent());
         assertFalse(analysis.path("endpoints").isEmpty());
@@ -136,7 +136,7 @@ class ResponseCheckTest {
         var service = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/services/order-service.json").toFile());
         ((ObjectNode) service.path("endpoints").get(0)).put("id", "..\\..\\outside");
         JSON.writeValue(services.resolve("order-service.json").toFile(), service);
-        Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(services.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.copy(Path.of("examples/hotdealwave/target.json"), services.resolveSibling("target.json"));
         Files.writeString(temporary.resolve("outside.json"), "{\"statusCode\":200,\"reason\":null}");
         var analysis = run(services.getParent());

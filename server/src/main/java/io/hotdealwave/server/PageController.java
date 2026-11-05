@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 /** Endpoint, topic and service bodies as HTML. Search and MCP read the same bodies as text. */
 @Controller
 class PageController {
-    record ServiceCard(String name, long endpoints, long feignCalls, long publications, long subscriptions, long responded) {}
+    record ServiceCard(String name, long endpoints, long httpCalls, long publications, long subscriptions, long responded) {}
     record TopicCard(String name, int publications, int subscriptions) {}
     /** A verifier warning: a connection the repository alone cannot make, with the page to look at. */
     /** Warnings of one reason code, with what the reader does about them. */
@@ -40,7 +40,7 @@ class PageController {
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody String index() {
         var cards = pages.services().stream().map(name -> new ServiceCard(name,
-                count("endpoints", name), count("feignCalls", name), count("kafkaPublications", name), count("kafkaSubscriptions", name),
+                count("endpoints", name), count("httpCalls", name), count("messagePublications", name), count("messageSubscriptions", name),
                 analysis.list("endpoints").stream().filter(e -> e.path("service").asText().equals(name))
                         .filter(e -> "응답 기록 있음".equals(e.path("responseCheck").path("status").asText())).count())).toList();
         var topics = pages.topics().stream().map(name -> {
@@ -63,7 +63,7 @@ class PageController {
         String reason = warning.path("reason").asText(), check = warning.path("check").asText();
         var topic = TOPIC.matcher(reason);
         var caller = CALLER.matcher(reason);
-        String kind = switch (check) { case "kafka-topics" -> "Kafka 연결"; case "handler-calls" -> "Feign 호출"; default -> check; };
+        String kind = switch (check) { case "message-destinations" -> "Kafka 연결"; case "handler-calls" -> "HTTP 호출"; default -> check; };
         if (topic.find()) return new Gap(kind, reason, view.evidence(warning), "/topics/" + topic.group(1), topic.group(1));
         if (caller.find()) return new Gap(kind, reason, view.evidence(warning), "/services/" + caller.group(1), caller.group(1));
         return new Gap(kind, reason, view.evidence(warning), null, null);
@@ -72,8 +72,8 @@ class PageController {
     @GetMapping(value = "/endpoints/{id}", produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody String endpoint(@PathVariable String id) { return show("/endpoints/" + id); }
 
-    @GetMapping(value = "/topics/{name}", produces = MediaType.TEXT_HTML_VALUE)
-    @ResponseBody String topic(@PathVariable String name) { return show("/topics/" + name); }
+    @GetMapping(value = "/topics/{*name}", produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody String topic(@PathVariable String name) { return show("/topics" + name); }
 
     @GetMapping(value = "/services/{name}", produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody String service(@PathVariable String name) { return show("/services/" + name); }

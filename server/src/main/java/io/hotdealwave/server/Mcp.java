@@ -47,8 +47,8 @@ class Mcp {
                 .tools(
                         tool("find_endpoint", "경로(\"POST /api/v1/orders\"), ID, 핸들러 이름으로 엔드포인트를 찾아 본문(요청·응답 필드, 호출, 검증 범위, 업무 규칙·함정)을 낸다.",
                                 "query", "엔드포인트 ID, \"메서드 경로\", 경로 또는 핸들러 이름", this::findEndpoint),
-                        tool("trace_flow", "엔드포인트·Kafka 발행·구독 ID에서 Feign 호출과 Kafka 발행·구독을 따라간 단계와 부르는 곳을 낸다. 이어지지 않는 곳은 상태와 이유에서 멈춘다.",
-                                "id", "엔드포인트, Kafka 발행 또는 구독 ID", this::traceFlow),
+                        tool("trace_flow", "엔드포인트·메시지 발행·구독 ID에서 HTTP 호출과 메시지 발행·구독을 따라간 단계와 부르는 곳을 낸다. 이어지지 않는 곳은 상태와 이유에서 멈춘다.",
+                                "id", "엔드포인트, 메시지 발행 또는 구독 ID", this::traceFlow),
                         tool("find_subscribers", "토픽의 발행·구독과 그 연결을 담은 토픽 본문을 낸다.",
                                 "topic", "토픽 환경변수 이름 또는 코드에 적힌 토픽 이름", name -> page("/topics/" + name)),
                         tool("search_docs", "엔드포인트·토픽·서비스·배포·모니터링 본문을 키워드로 찾아 상위 5개 절(페이지 주소, 절 제목, 점수, 미리보기)을 낸다. 본문 전체는 get_page로 읽는다.",
@@ -81,7 +81,7 @@ class Mcp {
     }
 
     private String traceFlow(String id) {
-        if (Stream.of("endpoints", "kafkaPublications", "kafkaSubscriptions").allMatch(key -> analysis.find(key, id).isMissingNode())) return null;
+        if (Stream.of("endpoints", "messagePublications", "messageSubscriptions").allMatch(key -> analysis.find(key, id).isMissingNode())) return null;
         var flow = queries.traceFlow(id);
         var lines = new ArrayList<String>();
         lines.add("나가는 호출과 발행");

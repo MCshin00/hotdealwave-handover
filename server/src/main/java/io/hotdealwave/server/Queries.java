@@ -37,9 +37,9 @@ class Queries {
             var next = new ArrayList<Step>();
             for (var call : analysis.list("calls"))
                 if (call.path("fromId").asText().equals(current)) next.add(step(current, call.path("toId").asText(), "호출", call));
-            var feign = analysis.find("feignCalls", current);
-            if (!feign.isMissingNode()) next.add(step(current, value(feign.path("target")), "Feign 대상", feign.path("target")));
-            var publication = analysis.find("kafkaPublications", current);
+            var feign = analysis.find("httpCalls", current);
+            if (!feign.isMissingNode()) next.add(step(current, value(feign.path("target")), feign.path("kind").asText() + " 대상", feign.path("target")));
+            var publication = analysis.find("messagePublications", current);
             if (!publication.isMissingNode()) next.addAll(subscribers(publication));
             for (var step : next) {
                 forward.add(step);
@@ -50,8 +50,18 @@ class Queries {
     }
 
     Topic findSubscribers(String topic) {
-        return new Topic(topic, analysis.list("kafkaPublications").stream().filter(p -> topic.equals(topicName(p))).toList(),
-                analysis.list("kafkaSubscriptions").stream().filter(s -> topic.equals(topicName(s))).toList());
+        var publications = analysis.list("messagePublications");
+        var subscriptions = analysis.list("messageSubscriptions");
+        var matched = Stream.concat(publications.stream(), subscriptions.stream()).filter(n -> topic.equals(topicName(n)))
+                .map(n -> n.path("id").asText()).collect(java.util.stream.Collectors.toSet());
+        var related = new HashSet<>(matched);
+        for (var link : analysis.list("messageLinks"))
+            if (known(link) && (matched.contains(link.path("publicationId").asText()) || matched.contains(link.path("subscriptionId").asText()))) {
+                related.add(link.path("publicationId").asText());
+                related.add(link.path("subscriptionId").asText());
+            }
+        return new Topic(topic, publications.stream().filter(p -> related.contains(p.path("id").asText())).toList(),
+                subscriptions.stream().filter(p -> related.contains(p.path("id").asText())).toList());
     }
 
     /** Environment variable name, or the literal topic for the string DLQ topics. */
@@ -77,16 +87,16 @@ class Queries {
                 .filter(k -> Analysis.listOf(k.path("affectedIds")).stream().anyMatch(a -> ids.contains(a.asText())));
     }
 
-    /** kafka-topics warning reason for an unlinked publication or subscription, if any. */
+    /** message-destinations warning reason for an unlinked publication or subscription, if any. */
     String warning(JsonNode kafka) {
         return analysis.list("warnings").stream()
-                .filter(w -> w.path("check").asText().equals("kafka-topics") && w.path("evidence").equals(kafka.path("evidence")))
+                .filter(w -> w.path("check").asText().equals("message-destinations") && w.path("evidence").equals(kafka.path("evidence")))
                 .map(w -> w.path("reason").asText()).findFirst().orElse(null);
     }
 
     private List<Step> subscribers(JsonNode publication) {
         String id = publication.path("id").asText();
-        var steps = analysis.list("kafkaLinks").stream().filter(l -> l.path("publicationId").asText().equals(id))
+        var steps = analysis.list("messageLinks").stream().filter(l -> l.path("publicationId").asText().equals(id))
                 .map(l -> step(id, l.path("subscriptionId").asText(), "구독", l)).toList();
         if (steps.stream().anyMatch(this::confirmed)) return steps;
         var unlinked = new ArrayList<>(steps);
@@ -96,9 +106,9 @@ class Queries {
 
     private List<Step> callers(String id) {
         var steps = new ArrayList<Step>();
-        for (var feign : analysis.list("feignCalls"))
-            if (id.equals(value(feign.path("target")))) steps.add(step(feign.path("id").asText(), id, "Feign 대상", feign.path("target")));
-        for (var link : analysis.list("kafkaLinks"))
+        for (var feign : analysis.list("httpCalls"))
+            if (id.equals(value(feign.path("target")))) steps.add(step(feign.path("id").asText(), id, feign.path("kind").asText() + " 대상", feign.path("target")));
+        for (var link : analysis.list("messageLinks"))
             if (link.path("subscriptionId").asText().equals(id)) steps.add(step(link.path("publicationId").asText(), id, "구독", link));
         var targets = steps.stream().map(Step::from).toList();
         for (var call : analysis.list("calls"))

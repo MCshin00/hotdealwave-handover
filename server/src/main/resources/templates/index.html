@@ -19,7 +19,7 @@
 <div class="cards">
   <a class="card" th:each="c : ${cards}" th:href="|/services/${c.name()}|">
     <b th:text="${c.name()}"></b>
-    <span th:text="|엔드포인트 ${c.endpoints()} · Feign ${c.feignCalls()} · 발행 ${c.publications()} · 구독 ${c.subscriptions()}|"></span>
+    <span th:text="|엔드포인트 ${c.endpoints()} · HTTP ${c.httpCalls()} · 발행 ${c.publications()} · 구독 ${c.subscriptions()}|"></span>
     <span class="sub" th:text="${c.endpoints() == 0} ? '엔드포인트 없음' : |실제 응답 ${c.responded()}/${c.endpoints()}|"></span>
   </a>
 </div>

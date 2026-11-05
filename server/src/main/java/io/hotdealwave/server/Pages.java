@@ -49,7 +49,7 @@ class Pages {
     }
 
     List<String> topics() {
-        return Stream.concat(analysis.list("kafkaPublications").stream(), analysis.list("kafkaSubscriptions").stream())
+        return Stream.concat(analysis.list("messagePublications").stream(), analysis.list("messageSubscriptions").stream())
                 .map(Queries::topicName).filter(Objects::nonNull).distinct().sorted().toList();
     }
 
@@ -120,7 +120,7 @@ class Pages {
         if (service == null) return null;
         var model = new HashMap<String, Object>(Map.of("service", service, "name", name));
         var ids = new ArrayList<String>();
-        for (var key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources",
+        for (var key : List.of("endpoints", "httpCalls", "messagePublications", "messageSubscriptions", "environmentVariables", "externalResources",
                 "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization", "unsupported")) {
             var owned = analysis.list(key).stream().filter(n -> n.path("service").asText().equals(name)).toList();
             model.put(key, owned);
