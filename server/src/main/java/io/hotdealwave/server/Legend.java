@@ -14,6 +14,7 @@ class Legend {
             "토픽", List.of("messagePublications", "messageSubscriptions", "messageLinks", "calls"),
             "서비스", List.of("services", "endpoints", "httpCalls", "messagePublications", "messageSubscriptions", "environmentVariables", "errors", "unsupported"),
             "배포·모니터링", List.of("repository"),
+            "되살리기", List.of("environmentVariables", "repository", "unsupported"),
             "흐름", List.of("calls", "httpCalls", "messageLinks"));
 
     private final Analysis analysis;

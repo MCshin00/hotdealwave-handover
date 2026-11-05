@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>되살리기</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<nav class="top"><span><a href="/">처음</a> · <a href="/repository">배포·모니터링</a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
+<header class="summary">
+<h1>되살리기</h1>
+<p class="line">저장소만 남았을 때 서비스를 다시 띄우는 데 필요한 것을 이 분석 결과에서 모았다. 새로 뽑은 내용은 없고, 각 줄의 전체는 서비스·배포·모니터링 페이지에 있다. 저장소 밖에서 정해지는 값은 "저장소에 근거 없음"으로 남는다.</p>
+</header>
+<h2>외부 자원</h2>
+<p class="line" th:if="${resources.isEmpty()}">없음</p>
+<p class="line" th:each="r : ${resources}" th:text="|${r.path('service').asText()} · ${r.path('kind').asText()} ${@view.status(r)} · 설정 ${@view.brief(r.path('configurationEvidence'))} · 코드 ${@view.brief(r.path('codeEvidence'))}|"></p>
+<h2>채워야 할 환경변수</h2>
+<p class="line" th:if="${variables.isEmpty()}">없음</p>
+<p class="note" th:unless="${variables.isEmpty()}" th:text="|값이 저장소에서 확인되지 않은 환경변수 ${#lists.size(variables)}개다. 이름마다 읽는 서비스·프로필·설정 위치를 묶었다.|"></p>
+<p class="line" th:each="v : ${variables}" th:text="|${v.name()}: ${v.status()} · 서비스 ${v.services()} · 프로필 ${v.profiles()} · 위치 ${v.locations()} ${v.evidence()}|"></p>
+<h2>저장소 밖 비밀값</h2>
+<p class="line" th:if="${secrets.isEmpty()}">없음</p>
+<p class="line" th:each="s : ${secrets}" th:text="|${s.path('name').asText()}(${s.path('reference').asText()}) 값: ${@view.fact(s.path('secretValue'))}|"></p>
+<h2>컨테이너</h2>
+<p class="line" th:if="${containers.isEmpty()}">없음</p>
+<p class="line" th:each="i : ${containers}" th:text="|${i.path('service').asText()}: 이미지 ${@view.plain(i.path('image'))} · FROM ${@view.plains(i.path('baseImages'))} · EXPOSE ${@view.plain(i.path('exposedPort'))} · ${i.path('tool').asText()} ${@view.status(i)} ${@view.evidence(i)}|"></p>
+<h2>띄울 때 확인할 연결</h2>
+<p class="line" th:if="${warnings.isEmpty()}">없음</p>
+<th:block th:each="group : ${warnings}">
+<h3 th:text="|${group.title()} ${#lists.size(group.lines())}개|"></h3>
+<p class="note" th:text="|할 일: ${group.action()}|"></p>
+<p class="line" th:each="l : ${group.lines()}" th:text="${l}"></p>
+</th:block>
+<h2>운영 함정</h2>
+<p class="line" th:if="${traps.isEmpty()}">없음</p>
+<div class="item" th:each="k : ${traps}">
+  <h3><span class="tag" th:classappend="${@view.kindClass(k)}" th:text="${@view.itemTag(k)}"></span> <span th:text="${k.path('title').asText()}"></span></h3>
+  <p th:text="${k.path('description').asText()}"></p>
+  <p class="meta" th:text="|서비스 ${k.path('service').asText()} · 근거 ${@view.evidence(k)}|"></p>
+</div>
+<h2>도구가 다루지 않은 위치</h2>
+<p class="line" th:if="${unsupported.isEmpty()}">없음</p>
+<p class="line" th:each="u : ${unsupported}" th:text="|${u.path('service').asText()} · ${u.path('mechanism').asText()}: ${u.path('description').asText()} ${@view.evidence(u)}|"></p>
+<script src="/app.js"></script>
+</body>
+</html>

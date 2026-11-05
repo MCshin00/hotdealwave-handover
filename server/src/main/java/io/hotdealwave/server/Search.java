@@ -187,6 +187,7 @@ class Search {
             var built = new ArrayList<Doc>();
             for (var page : pages.sections().values()) {
                 for (var section : page) {
+                    if (section.page().equals(Pages.REVIVAL)) continue;
                     var tf = new HashMap<String, Integer>();
                     var tokens = tokens(section.title() + " " + section.heading() + " " + section.text());
                     tokens.forEach(t -> tf.merge(t, 1, Integer::sum));

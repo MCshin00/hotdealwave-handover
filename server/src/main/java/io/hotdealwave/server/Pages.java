@@ -17,6 +17,13 @@ class Pages {
     record Page(String path, String template, Map<String, Object> model, String kind, Set<String> services) {}
     /** One h2 section of a body as text. The part above the first h2 has an empty heading. */
     record Section(String page, String title, String heading, String text, String kind, Set<String> services) {}
+    /** An environment variable name with every place that reads it, when its value is not confirmed. */
+    record Variable(String name, String status, String services, String profiles, String locations, String evidence) {}
+    /** Warnings of one reason code as lines, with what to do about them. */
+    record WarningGroup(String title, String action, List<String> lines) {}
+
+    /** Gathers what starting the services again needs. Search leaves it out because every part repeats another page. */
+    static final String REVIVAL = "/revival";
 
     private static final Pattern H2 = Pattern.compile("<h2[^>]*>(.*?)</h2>", Pattern.DOTALL);
 
@@ -24,11 +31,13 @@ class Pages {
     private final Queries queries;
     private final SpringTemplateEngine engine;
     private final Legend legend;
+    private final View view;
     private final ThymeleafEvaluationContext evaluation;
     private Map<String, List<Section>> sections;
 
-    Pages(Analysis analysis, Queries queries, SpringTemplateEngine engine, ApplicationContext context, Legend legend) {
+    Pages(Analysis analysis, Queries queries, SpringTemplateEngine engine, ApplicationContext context, Legend legend, View view) {
         this.analysis = analysis;
+        this.view = view;
         this.legend = legend;
         this.queries = queries;
         this.engine = engine;
@@ -38,6 +47,7 @@ class Pages {
     /** The page at a path such as /endpoints/{id}, or null. */
     Page page(String path) {
         if (path.equals("/repository")) return repository();
+        if (path.equals(REVIVAL)) return revival();
         String[] parts = path.split("/", 3);
         if (parts.length != 3 || !parts[0].isEmpty()) return null;
         return switch (parts[1]) {
@@ -64,7 +74,7 @@ class Pages {
                     analysis.list("endpoints").stream().map(e -> "/endpoints/" + e.path("id").asText()),
                     topics().stream().map(t -> "/topics/" + t),
                     services().stream().map(s -> "/services/" + s),
-                    Stream.of("/repository").filter(p -> page(p) != null)).flatMap(s -> s).toList();
+                    Stream.of("/repository").filter(p -> page(p) != null), Stream.of(REVIVAL)).flatMap(s -> s).toList();
             var all = new LinkedHashMap<String, List<Section>>();
             for (var path : paths) all.put(path, render(page(path)));
             sections = all;
@@ -134,6 +144,35 @@ class Pages {
         var repository = analysis.repository();
         if (repository.isMissingNode()) return null;
         return new Page("/repository", "repository", Map.of("repository", repository), "배포·모니터링", Set.of());
+    }
+
+    private Page revival() {
+        var variables = new LinkedHashMap<String, List<JsonNode>>();
+        analysis.list("environmentVariables").stream().filter(v -> !Analysis.known(v.path("value")))
+                .forEach(v -> variables.computeIfAbsent(v.path("name").asText(), k -> new ArrayList<>()).add(v));
+        var warnings = new ArrayList<WarningGroup>();
+        analysis.get("warningCodes").properties().forEach(code -> warnings.add(new WarningGroup(code.getValue().path("title").asText(),
+                code.getValue().path("action").asText(), analysis.list("warnings").stream().filter(w -> w.path("code").asText().equals(code.getKey()))
+                .map(w -> w.path("reason").asText() + " " + view.evidence(w)).toList())));
+        var repository = analysis.repository();
+        return new Page(REVIVAL, "revival", Map.of(
+                "resources", analysis.list("externalResources"),
+                "variables", variables.entrySet().stream().map(e -> variable(e.getKey(), e.getValue())).toList(),
+                "secrets", Analysis.listOf(repository.path("pipelines")).stream().flatMap(p -> Analysis.listOf(p.path("secrets")).stream()).toList(),
+                "containers", Analysis.listOf(repository.path("containers")),
+                "warnings", warnings,
+                "traps", analysis.list("knowledge").stream().filter(k -> k.path("kind").asText().equals("함정")).toList(),
+                "unsupported", analysis.list("unsupported")), "되살리기", Set.of());
+    }
+
+    private Variable variable(String name, List<JsonNode> uses) {
+        return new Variable(name, distinct(uses, v -> view.status(v.path("value"))), distinct(uses, v -> v.path("service").asText()),
+                distinct(uses, v -> v.path("profile").asText()), distinct(uses, v -> v.path("location").asText()),
+                "[" + distinct(uses.stream().flatMap(v -> Analysis.listOf(v.path("value").path("evidence")).stream()).toList(), JsonNode::asText) + "]");
+    }
+
+    private static String distinct(List<JsonNode> nodes, java.util.function.Function<JsonNode, String> part) {
+        return String.join(", ", nodes.stream().map(part).distinct().toList());
     }
 
     private String process(String template, Map<String, Object> model) {

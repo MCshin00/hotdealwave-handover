@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>[[${target.name()}]] 인수인계 문서</title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<nav class="top"><span><a href="/search">검색·질문</a> · <a href="/repository">배포·모니터링</a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
+<nav class="top"><span><a href="/search">검색·질문</a> · <a href="/repository">배포·모니터링</a> · <a href="/revival">되살리기</a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
 <header class="summary home">
   <h1>[[${target.name()}]]</h1>
   <p class="lede">팀이 남긴 저장소(고정 커밋 [[${target.shortCommit()}]])에서 뽑은 서비스·API·Kafka 흐름 문서다. 값마다 확인 상태와 근거 줄이 붙고, 저장소만으로 이을 수 없는 곳은 "확인 안 됨"으로 남는다.</p>
