@@ -41,7 +41,8 @@ final class SourceText {
         var candidate = root.resolve(relative).normalize();
         if (!candidate.startsWith(root) || isExcluded(root.relativize(candidate))) return null;
         String name = candidate.getFileName().toString();
-        if (!(name.endsWith(".java") || name.endsWith(".yml") || name.equals("build.gradle"))) return null;
+        if (!(name.endsWith(".java") || name.endsWith(".yml") || name.equals("build.gradle")
+                || name.equals("Dockerfile") || name.endsWith(".xml") || name.endsWith(".md"))) return null;
         if (!Files.isRegularFile(candidate)) return null;
         Path real = candidate.toRealPath();
         if (!real.startsWith(root) || isExcluded(root.relativize(real))) return null;

@@ -31,6 +31,9 @@ class Analysis {
 
     JsonNode checks() { return root.path("checks"); }
 
+    /** Repository-level facts (deployment, monitoring); missing when the extraction has none. */
+    JsonNode repository() { return root.path("repository"); }
+
     static boolean known(JsonNode node) { return CONFIRMED.equals(node.path("status").asText()); }
 
     static String value(JsonNode fact) { return fact.path("value").isValueNode() ? fact.path("value").asText() : null; }

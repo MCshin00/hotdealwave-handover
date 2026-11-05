@@ -50,6 +50,12 @@ final class ExtractionInput {
         relations.path("kafkaLinks").forEach(merged.withArray("kafkaLinks")::add);
         relations.path("calls").forEach(merged.withArray("calls")::add);
         relations.path("throws").forEach(merged.withArray("throws")::add);
+        var repository = directory.resolve("repository.json");
+        if (Files.exists(repository)) {
+            var document = json.readTree(repository.toFile());
+            validate(factory.getSchema(Path.of("docs/format/repository.schema.json").toUri()), document, "repository.json", merged);
+            merged.set("repository", document);
+        }
         return merged;
     }
 

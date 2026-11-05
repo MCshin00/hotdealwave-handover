@@ -1,0 +1,1309 @@
+{
+  "schemaVersion": 1,
+  "workflows": [
+    {
+      "file": ".github/workflows/actions.yml",
+      "name": {
+        "value": "Build & Deploy to ECR",
+        "evidence": [
+          ".github/workflows/actions.yml:1"
+        ]
+      },
+      "triggers": [
+        {
+          "event": "push",
+          "branches": [
+            {
+              "value": "main",
+              "evidence": [
+                ".github/workflows/actions.yml:6"
+              ]
+            }
+          ],
+          "evidence": [
+            ".github/workflows/actions.yml:4",
+            ".github/workflows/actions.yml:6"
+          ]
+        }
+      ],
+      "env": [
+        {
+          "name": "AWS_REGION",
+          "value": {
+            "value": "ap-northeast-2",
+            "evidence": [
+              ".github/workflows/actions.yml:9"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:9"
+          ]
+        },
+        {
+          "name": "ECR_REPOSITORY_PREFIX",
+          "value": {
+            "value": "hotdealwave",
+            "evidence": [
+              ".github/workflows/actions.yml:10"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:10"
+          ]
+        }
+      ],
+      "secrets": [
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "secretValue": {
+            "value": null,
+            "evidence": [
+              ".github/workflows/actions.yml:22",
+              ".github/workflows/actions.yml:79"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:22",
+            ".github/workflows/actions.yml:79"
+          ]
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "secretValue": {
+            "value": null,
+            "evidence": [
+              ".github/workflows/actions.yml:23",
+              ".github/workflows/actions.yml:80"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:23",
+            ".github/workflows/actions.yml:80"
+          ]
+        },
+        {
+          "name": "EC2_HOST",
+          "secretValue": {
+            "value": null,
+            "evidence": [
+              ".github/workflows/actions.yml:74"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:74"
+          ]
+        },
+        {
+          "name": "EC2_USER",
+          "secretValue": {
+            "value": null,
+            "evidence": [
+              ".github/workflows/actions.yml:75"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:75"
+          ]
+        },
+        {
+          "name": "EC2_PRIVATE_KEY",
+          "secretValue": {
+            "value": null,
+            "evidence": [
+              ".github/workflows/actions.yml:76"
+            ]
+          },
+          "evidence": [
+            ".github/workflows/actions.yml:76"
+          ]
+        }
+      ],
+      "jobs": [
+        {
+          "id": "build-and-push",
+          "needs": [],
+          "steps": [
+            {
+              "name": "Checkout code",
+              "uses": {
+                "value": "actions/checkout@v4",
+                "evidence": [
+                  ".github/workflows/actions.yml:17"
+                ]
+              },
+              "env": [],
+              "commands": [],
+              "evidence": [
+                ".github/workflows/actions.yml:16",
+                ".github/workflows/actions.yml:17"
+              ]
+            },
+            {
+              "name": "Configure AWS credentials",
+              "uses": {
+                "value": "aws-actions/configure-aws-credentials@v4",
+                "evidence": [
+                  ".github/workflows/actions.yml:20"
+                ]
+              },
+              "env": [],
+              "commands": [],
+              "evidence": [
+                ".github/workflows/actions.yml:19",
+                ".github/workflows/actions.yml:20",
+                ".github/workflows/actions.yml:22",
+                ".github/workflows/actions.yml:23",
+                ".github/workflows/actions.yml:24"
+              ]
+            },
+            {
+              "name": "Login to Amazon ECR",
+              "uses": {
+                "value": "aws-actions/amazon-ecr-login@v2",
+                "evidence": [
+                  ".github/workflows/actions.yml:28"
+                ]
+              },
+              "env": [],
+              "commands": [],
+              "evidence": [
+                ".github/workflows/actions.yml:26",
+                ".github/workflows/actions.yml:27",
+                ".github/workflows/actions.yml:28"
+              ]
+            },
+            {
+              "name": "Build and Push Docker images",
+              "env": [
+                {
+                  "name": "ECR_REGISTRY",
+                  "value": {
+                    "value": "${{ steps.login-ecr.outputs.registry }}",
+                    "evidence": [
+                      ".github/workflows/actions.yml:33"
+                    ]
+                  },
+                  "evidence": [
+                    ".github/workflows/actions.yml:33"
+                  ]
+                }
+              ],
+              "commands": [
+                {
+                  "value": "declare -A services",
+                  "evidence": [
+                    ".github/workflows/actions.yml:36"
+                  ]
+                },
+                {
+                  "value": "services=(",
+                  "evidence": [
+                    ".github/workflows/actions.yml:37"
+                  ]
+                },
+                {
+                  "value": "[\"server\"]=\"server\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:38"
+                  ]
+                },
+                {
+                  "value": "[\"gateway\"]=\"gateway\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:39"
+                  ]
+                },
+                {
+                  "value": "[\"user\"]=\"user\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:40"
+                  ]
+                },
+                {
+                  "value": "[\"company\"]=\"company\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:41"
+                  ]
+                },
+                {
+                  "value": "[\"product\"]=\"product\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:42"
+                  ]
+                },
+                {
+                  "value": "[\"coupon\"]=\"coupon\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:43"
+                  ]
+                },
+                {
+                  "value": "[\"order\"]=\"order\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:44"
+                  ]
+                },
+                {
+                  "value": "[\"payment\"]=\"payment\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:45"
+                  ]
+                },
+                {
+                  "value": ")",
+                  "evidence": [
+                    ".github/workflows/actions.yml:46"
+                  ]
+                },
+                {
+                  "value": "ls -R",
+                  "evidence": [
+                    ".github/workflows/actions.yml:49"
+                  ]
+                },
+                {
+                  "value": "for service_name in \"${!services[@]}\"; do",
+                  "evidence": [
+                    ".github/workflows/actions.yml:51"
+                  ]
+                },
+                {
+                  "value": "TAG=\"${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:${service_name}-latest\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:54"
+                  ]
+                },
+                {
+                  "value": "docker build -t ${TAG} -f \"./${services[$service_name]}/Dockerfile\" \"./${services[$service_name]}\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:57"
+                  ]
+                },
+                {
+                  "value": "docker push ${TAG}",
+                  "evidence": [
+                    ".github/workflows/actions.yml:60"
+                  ]
+                },
+                {
+                  "value": "echo \"Built and pushed ${TAG}\"",
+                  "evidence": [
+                    ".github/workflows/actions.yml:62"
+                  ]
+                },
+                {
+                  "value": "done",
+                  "evidence": [
+                    ".github/workflows/actions.yml:63"
+                  ]
+                }
+              ],
+              "evidence": [
+                ".github/workflows/actions.yml:31",
+                ".github/workflows/actions.yml:33",
+                ".github/workflows/actions.yml:34"
+              ]
+            }
+          ],
+          "evidence": [
+            ".github/workflows/actions.yml:13"
+          ]
+        },
+        {
+          "id": "deploy",
+          "needs": [
+            "build-and-push"
+          ],
+          "steps": [
+            {
+              "name": "Deploy to EC2",
+              "uses": {
+                "value": "appleboy/ssh-action@v1.0.3",
+                "evidence": [
+                  ".github/workflows/actions.yml:70"
+                ]
+              },
+              "env": [
+                {
+                  "name": "ECR_REGISTRY",
+                  "value": {
+                    "value": "${{ steps.login-ecr.outputs.registry }}",
+                    "evidence": [
+                      ".github/workflows/actions.yml:72"
+                    ]
+                  },
+                  "evidence": [
+                    ".github/workflows/actions.yml:72"
+                  ]
+                }
+              ],
+              "commands": [
+                {
+                  "value": "aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}",
+                  "evidence": [
+                    ".github/workflows/actions.yml:79"
+                  ]
+                },
+                {
+                  "value": "aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}",
+                  "evidence": [
+                    ".github/workflows/actions.yml:80"
+                  ]
+                },
+                {
+                  "value": "aws configure set region ${{ env.AWS_REGION }}",
+                  "evidence": [
+                    ".github/workflows/actions.yml:81"
+                  ]
+                },
+                {
+                  "value": "aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}",
+                  "evidence": [
+                    ".github/workflows/actions.yml:84"
+                  ]
+                },
+                {
+                  "value": "cd /home/ubuntu/HotDealWave",
+                  "evidence": [
+                    ".github/workflows/actions.yml:87"
+                  ]
+                },
+                {
+                  "value": "git pull origin main",
+                  "evidence": [
+                    ".github/workflows/actions.yml:88"
+                  ]
+                },
+                {
+                  "value": "docker-compose down",
+                  "evidence": [
+                    ".github/workflows/actions.yml:91"
+                  ]
+                },
+                {
+                  "value": "docker-compose pull",
+                  "evidence": [
+                    ".github/workflows/actions.yml:94"
+                  ]
+                },
+                {
+                  "value": "docker-compose up -d",
+                  "evidence": [
+                    ".github/workflows/actions.yml:95"
+                  ]
+                }
+              ],
+              "evidence": [
+                ".github/workflows/actions.yml:69",
+                ".github/workflows/actions.yml:70",
+                ".github/workflows/actions.yml:72",
+                ".github/workflows/actions.yml:74",
+                ".github/workflows/actions.yml:75",
+                ".github/workflows/actions.yml:76",
+                ".github/workflows/actions.yml:77"
+              ]
+            }
+          ],
+          "evidence": [
+            ".github/workflows/actions.yml:65",
+            ".github/workflows/actions.yml:66"
+          ]
+        }
+      ],
+      "evidence": [
+        ".github/workflows/actions.yml:1"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "composeService": "company-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:company-latest",
+        "evidence": [
+          "docker-compose.yml:54"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "company/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "company/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "company/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19097",
+        "evidence": [
+          "company/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:53",
+        "docker-compose.yml:54",
+        ".github/workflows/actions.yml:41",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "company/Dockerfile:2",
+        "company/Dockerfile:8",
+        "company/Dockerfile:11",
+        "company/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "coupon-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:coupon-latest",
+        "evidence": [
+          "docker-compose.yml:109"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "coupon/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "coupon/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "coupon/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19096",
+        "evidence": [
+          "coupon/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:108",
+        "docker-compose.yml:109",
+        ".github/workflows/actions.yml:43",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "coupon/Dockerfile:2",
+        "coupon/Dockerfile:8",
+        "coupon/Dockerfile:11",
+        "coupon/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "eureka-server",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:server-latest",
+        "evidence": [
+          "docker-compose.yml:5"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "server/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "server/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "server/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19090",
+        "evidence": [
+          "server/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:4",
+        "docker-compose.yml:5",
+        ".github/workflows/actions.yml:38",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "server/Dockerfile:2",
+        "server/Dockerfile:8",
+        "server/Dockerfile:11",
+        "server/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "gateway-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:gateway-latest",
+        "evidence": [
+          "docker-compose.yml:13"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "gateway/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "gateway/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "gateway/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19091",
+        "evidence": [
+          "gateway/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:12",
+        "docker-compose.yml:13",
+        ".github/workflows/actions.yml:39",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "gateway/Dockerfile:2",
+        "gateway/Dockerfile:8",
+        "gateway/Dockerfile:11",
+        "gateway/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "order-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:order-latest",
+        "evidence": [
+          "docker-compose.yml:135"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "order/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "order/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "order/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19094",
+        "evidence": [
+          "order/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:134",
+        "docker-compose.yml:135",
+        ".github/workflows/actions.yml:44",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "order/Dockerfile:2",
+        "order/Dockerfile:8",
+        "order/Dockerfile:11",
+        "order/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "payment-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:payment-latest",
+        "evidence": [
+          "docker-compose.yml:170"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "payment/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "payment/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "payment/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19095",
+        "evidence": [
+          "payment/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:169",
+        "docker-compose.yml:170",
+        ".github/workflows/actions.yml:45",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "payment/Dockerfile:2",
+        "payment/Dockerfile:8",
+        "payment/Dockerfile:11",
+        "payment/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "product-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:product-latest",
+        "evidence": [
+          "docker-compose.yml:71"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "product/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "product/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "product/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19093",
+        "evidence": [
+          "product/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:70",
+        "docker-compose.yml:71",
+        ".github/workflows/actions.yml:42",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "product/Dockerfile:2",
+        "product/Dockerfile:8",
+        "product/Dockerfile:11",
+        "product/Dockerfile:21"
+      ]
+    },
+    {
+      "composeService": "user-service",
+      "image": {
+        "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:user-latest",
+        "evidence": [
+          "docker-compose.yml:27"
+        ]
+      },
+      "baseImages": [
+        {
+          "value": "gradle:8.11.1-jdk17",
+          "evidence": [
+            "user/Dockerfile:2"
+          ]
+        },
+        {
+          "value": "openjdk:17-jdk-slim",
+          "evidence": [
+            "user/Dockerfile:11"
+          ]
+        }
+      ],
+      "buildCommand": {
+        "value": "gradle clean build --no-daemon -x test --stacktrace",
+        "evidence": [
+          "user/Dockerfile:8"
+        ]
+      },
+      "exposedPort": {
+        "value": "19092",
+        "evidence": [
+          "user/Dockerfile:21"
+        ]
+      },
+      "evidence": [
+        "docker-compose.yml:26",
+        "docker-compose.yml:27",
+        ".github/workflows/actions.yml:40",
+        ".github/workflows/actions.yml:54",
+        ".github/workflows/actions.yml:57",
+        "user/Dockerfile:2",
+        "user/Dockerfile:8",
+        "user/Dockerfile:11",
+        "user/Dockerfile:21"
+      ]
+    }
+  ],
+  "scrapeTargets": [
+    {
+      "job": "company-service",
+      "address": {
+        "value": "company-service:19097",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:38"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:36"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:35",
+        "monitoring/prometheus/prometheus.yml:36",
+        "monitoring/prometheus/prometheus.yml:38",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "coupon-service",
+      "address": {
+        "value": "coupon-service:19096",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:33"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:31"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:30",
+        "monitoring/prometheus/prometheus.yml:31",
+        "monitoring/prometheus/prometheus.yml:33",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "gateway-service",
+      "address": {
+        "value": "gateway-service:19091",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:8"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:6"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:5",
+        "monitoring/prometheus/prometheus.yml:6",
+        "monitoring/prometheus/prometheus.yml:8",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "order-service",
+      "address": {
+        "value": "order-service:19094",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:23"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:21"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:20",
+        "monitoring/prometheus/prometheus.yml:21",
+        "monitoring/prometheus/prometheus.yml:23",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "payment-service",
+      "address": {
+        "value": "payment-service:19095",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:28"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:26"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:25",
+        "monitoring/prometheus/prometheus.yml:26",
+        "monitoring/prometheus/prometheus.yml:28",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "product-service",
+      "address": {
+        "value": "product-service:19093",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:18"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:16"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:15",
+        "monitoring/prometheus/prometheus.yml:16",
+        "monitoring/prometheus/prometheus.yml:18",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    },
+    {
+      "job": "user-service",
+      "address": {
+        "value": "user-service:19092",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:13"
+        ]
+      },
+      "metricsPath": {
+        "value": "/actuator/prometheus",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:11"
+        ]
+      },
+      "interval": {
+        "value": "15s",
+        "evidence": [
+          "monitoring/prometheus/prometheus.yml:2"
+        ]
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:10",
+        "monitoring/prometheus/prometheus.yml:11",
+        "monitoring/prometheus/prometheus.yml:13",
+        "monitoring/prometheus/prometheus.yml:2"
+      ]
+    }
+  ],
+  "logShipping": [
+    {
+      "service": "company-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "company/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "company/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "company/src/main/resources/logback.xml:4",
+          "docker-compose.yml:64"
+        ]
+      },
+      "labels": {
+        "value": "app=company-service,host=${HOSTNAME}",
+        "evidence": [
+          "company/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "company/src/main/resources/logback.xml:2",
+        "company/src/main/resources/logback.xml:4",
+        "company/src/main/resources/logback.xml:8",
+        "company/src/main/resources/logback.xml:15",
+        "company/src/main/resources/application.yml:3",
+        "docker-compose.yml:64"
+      ]
+    },
+    {
+      "service": "coupon-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "coupon/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "coupon/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "coupon/src/main/resources/logback.xml:4",
+          "docker-compose.yml:128"
+        ]
+      },
+      "labels": {
+        "value": "app=coupon-service,host=${HOSTNAME}",
+        "evidence": [
+          "coupon/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "coupon/src/main/resources/logback.xml:2",
+        "coupon/src/main/resources/logback.xml:4",
+        "coupon/src/main/resources/logback.xml:8",
+        "coupon/src/main/resources/logback.xml:15",
+        "coupon/src/main/resources/application.yml:3",
+        "docker-compose.yml:128"
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "gateway/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "gateway/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "gateway/src/main/resources/logback.xml:4",
+          "docker-compose.yml:20"
+        ]
+      },
+      "labels": {
+        "value": "app=gateway-service,host=${HOSTNAME}",
+        "evidence": [
+          "gateway/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "gateway/src/main/resources/logback.xml:2",
+        "gateway/src/main/resources/logback.xml:4",
+        "gateway/src/main/resources/logback.xml:8",
+        "gateway/src/main/resources/logback.xml:15",
+        "gateway/src/main/resources/application.yml:10",
+        "docker-compose.yml:20"
+      ]
+    },
+    {
+      "service": "order-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "order/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "order/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "order/src/main/resources/logback.xml:4",
+          "docker-compose.yml:149"
+        ]
+      },
+      "labels": {
+        "value": "app=order-service,host=${HOSTNAME}",
+        "evidence": [
+          "order/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "order/src/main/resources/logback.xml:2",
+        "order/src/main/resources/logback.xml:4",
+        "order/src/main/resources/logback.xml:8",
+        "order/src/main/resources/logback.xml:15",
+        "order/src/main/resources/application.yml:3",
+        "docker-compose.yml:149"
+      ]
+    },
+    {
+      "service": "payment-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "payment/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "payment/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "payment/src/main/resources/logback.xml:4",
+          "docker-compose.yml:188"
+        ]
+      },
+      "labels": {
+        "value": "app=payment-service,host=${HOSTNAME}",
+        "evidence": [
+          "payment/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "payment/src/main/resources/logback.xml:2",
+        "payment/src/main/resources/logback.xml:4",
+        "payment/src/main/resources/logback.xml:8",
+        "payment/src/main/resources/logback.xml:15",
+        "payment/src/main/resources/application.yml:3",
+        "docker-compose.yml:188"
+      ]
+    },
+    {
+      "service": "product-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "product/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "product/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "product/src/main/resources/logback.xml:4",
+          "docker-compose.yml:85"
+        ]
+      },
+      "labels": {
+        "value": "app=product-service,host=${HOSTNAME}",
+        "evidence": [
+          "product/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "product/src/main/resources/logback.xml:2",
+        "product/src/main/resources/logback.xml:4",
+        "product/src/main/resources/logback.xml:8",
+        "product/src/main/resources/logback.xml:15",
+        "product/src/main/resources/application.yml:3",
+        "docker-compose.yml:85"
+      ]
+    },
+    {
+      "service": "user-service",
+      "appender": {
+        "value": "LOKI",
+        "evidence": [
+          "user/src/main/resources/logback.xml:2"
+        ]
+      },
+      "url": {
+        "value": "http://${HOST}:3100/loki/api/v1/push",
+        "evidence": [
+          "user/src/main/resources/logback.xml:4"
+        ]
+      },
+      "hostVariable": "HOST",
+      "hostValue": {
+        "value": null,
+        "evidence": [
+          "user/src/main/resources/logback.xml:4",
+          "docker-compose.yml:47"
+        ]
+      },
+      "labels": {
+        "value": "app=user-service,host=${HOSTNAME}",
+        "evidence": [
+          "user/src/main/resources/logback.xml:8"
+        ]
+      },
+      "evidence": [
+        "user/src/main/resources/logback.xml:2",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8",
+        "user/src/main/resources/logback.xml:15",
+        "user/src/main/resources/application.yml:3",
+        "docker-compose.yml:47"
+      ]
+    }
+  ],
+  "lokiConfig": [
+    {
+      "file": "monitoring/loki/loki-config.yml",
+      "httpPort": {
+        "value": "3100",
+        "evidence": [
+          "monitoring/loki/loki-config.yml:4"
+        ]
+      },
+      "storage": {
+        "value": "filesystem",
+        "evidence": [
+          "monitoring/loki/loki-config.yml:11",
+          "monitoring/loki/loki-config.yml:30"
+        ]
+      },
+      "evidence": [
+        "monitoring/loki/loki-config.yml:4",
+        "monitoring/loki/loki-config.yml:11",
+        "monitoring/loki/loki-config.yml:30"
+      ]
+    }
+  ],
+  "monitoringTools": [
+    {
+      "name": "Prometheus",
+      "runDefinition": {
+        "value": null,
+        "evidence": []
+      },
+      "evidence": [
+        "README.md:57",
+        "monitoring/prometheus/prometheus.yml:2",
+        "monitoring/prometheus/prometheus.yml:4"
+      ]
+    },
+    {
+      "name": "Grafana",
+      "runDefinition": {
+        "value": null,
+        "evidence": []
+      },
+      "evidence": [
+        "README.md:58"
+      ]
+    },
+    {
+      "name": "Loki",
+      "runDefinition": {
+        "value": null,
+        "evidence": []
+      },
+      "evidence": [
+        "README.md:59",
+        "monitoring/loki/loki-config.yml:4",
+        "monitoring/loki/loki-config.yml:11"
+      ]
+    },
+    {
+      "name": "Alertmanager",
+      "runDefinition": {
+        "value": null,
+        "evidence": []
+      },
+      "evidence": [
+        "monitoring/loki/loki-config.yml:37"
+      ]
+    }
+  ]
+}

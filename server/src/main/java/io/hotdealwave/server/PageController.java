@@ -73,6 +73,9 @@ class PageController {
     @GetMapping(value = "/services/{name}", produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody String service(@PathVariable String name) { return show("/services/" + name); }
 
+    @GetMapping(value = "/repository", produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody String repository() { return show("/repository"); }
+
     /** A recorded response file with numbered lines, which response evidence links to. */
     @GetMapping("/responses/{file:.+}")
     String response(@PathVariable String file, Model model) {

@@ -35,6 +35,7 @@ class Pages {
 
     /** The page at a path such as /endpoints/{id}, or null. */
     Page page(String path) {
+        if (path.equals("/repository")) return repository();
         String[] parts = path.split("/", 3);
         if (parts.length != 3 || !parts[0].isEmpty()) return null;
         return switch (parts[1]) {
@@ -60,7 +61,8 @@ class Pages {
             var paths = Stream.of(
                     analysis.list("endpoints").stream().map(e -> "/endpoints/" + e.path("id").asText()),
                     topics().stream().map(t -> "/topics/" + t),
-                    services().stream().map(s -> "/services/" + s)).flatMap(s -> s).toList();
+                    services().stream().map(s -> "/services/" + s),
+                    Stream.of("/repository").filter(p -> page(p) != null)).flatMap(s -> s).toList();
             var all = new LinkedHashMap<String, List<Section>>();
             for (var path : paths) all.put(path, render(page(path)));
             sections = all;
@@ -121,6 +123,12 @@ class Pages {
         }
         model.put("items", queries.knowledgeFor(ids));
         return new Page("/services/" + name, "service", model, "서비스", Set.of(name));
+    }
+
+    private Page repository() {
+        var repository = analysis.repository();
+        if (repository.isMissingNode()) return null;
+        return new Page("/repository", "repository", Map.of("repository", repository), "배포·모니터링", Set.of());
     }
 
     private String process(String template, Map<String, Object> model) {
