@@ -48,7 +48,7 @@ class GeneralCommunicationTest {
         json.writeValue(file.toFile(), root);
         analysis = new Analysis(file.toString());
         queries = new Queries(analysis);
-        pages = new Pages(analysis, queries, engine, context, new Legend(analysis));
+        pages = new Pages(analysis, queries, engine, context, new Legend(analysis), new View());
     }
     @Test void queriesUseKindsAndFollowLinksBetweenDifferentDestinationNames() {
         assertEquals("restClient 대상", queries.traceFlow("shop.Controller.get").forward().get(1).kind());
