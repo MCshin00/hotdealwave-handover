@@ -126,8 +126,8 @@
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:153",
         "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:157",
-        "analysis/hotdealwave/responses/product-service.ProductController.createProduct.json:24",
-        "analysis/hotdealwave/responses/product-service.ProductController.createProduct.json:27"
+        "responses/product-service.ProductController.createProduct.json:24",
+        "responses/product-service.ProductController.createProduct.json:27"
       ],
       "affectedIds": [
         "product-service.ProductController.createProduct",
@@ -353,10 +353,10 @@
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:51",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:67",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70",
-        "analysis/hotdealwave/responses/product-service.ProductController.reduceQuantity.json:6",
-        "analysis/hotdealwave/responses/product-service.ProductController.reduceQuantity.json:15",
-        "analysis/hotdealwave/responses/product-service.ProductController.restoreQuantity.json:6",
-        "analysis/hotdealwave/responses/product-service.ProductController.restoreQuantity.json:15"
+        "responses/product-service.ProductController.reduceQuantity.json:6",
+        "responses/product-service.ProductController.reduceQuantity.json:15",
+        "responses/product-service.ProductController.restoreQuantity.json:6",
+        "responses/product-service.ProductController.restoreQuantity.json:15"
       ],
       "affectedIds": [
         "product-service.ProductController.reduceQuantity",
@@ -506,9 +506,9 @@
         "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:99",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16",
         "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:20",
-        "analysis/hotdealwave/responses/product-service.PromotionController.createPromotion.json:7",
-        "analysis/hotdealwave/responses/product-service.PromotionController.updatePromotion.json:7",
-        "analysis/hotdealwave/responses/product-service.PromotionController.updatePromotion.json:13"
+        "responses/product-service.PromotionController.createPromotion.json:7",
+        "responses/product-service.PromotionController.updatePromotion.json:7",
+        "responses/product-service.PromotionController.updatePromotion.json:13"
       ],
       "affectedIds": [
         "product-service.PromotionController.updatePromotion"
@@ -554,8 +554,8 @@
         "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:56",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21",
         "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:24",
-        "analysis/hotdealwave/responses/product-service.PromotionController.createPromotion.json:7",
-        "analysis/hotdealwave/responses/product-service.PromotionController.createPromotion.json:13"
+        "responses/product-service.PromotionController.createPromotion.json:7",
+        "responses/product-service.PromotionController.createPromotion.json:13"
       ],
       "affectedIds": [
         "product-service.PromotionController.createPromotion",
@@ -853,9 +853,9 @@
         "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:25",
         "product/src/main/java/com/sparta/hotdeal/product/application/exception/ErrorCode.java:26",
         "product/src/main/java/com/sparta/hotdeal/product/application/exception/handler/GlobalExceptionHandler.java:28",
-        "analysis/hotdealwave/responses/product-service.ReviewController.createReview.json:18",
-        "analysis/hotdealwave/responses/product-service.ReviewController.createReview.json:21",
-        "analysis/hotdealwave/responses/product-service.ReviewController.createReview.json:24"
+        "responses/product-service.ReviewController.createReview.json:18",
+        "responses/product-service.ReviewController.createReview.json:21",
+        "responses/product-service.ReviewController.createReview.json:24"
       ],
       "affectedIds": [
         "product-service.OrderClient.getOrderById",

@@ -3,8 +3,6 @@ package io.hotdealwave.verifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,13 +13,11 @@ import static io.hotdealwave.verifier.Checks.*;
 final class KnowledgeChecks {
     void run(Path input, Path target, ObjectNode analysis) throws Exception {
         Path extraction = input.toAbsolutePath().normalize();
-        String name = extraction.getFileName().toString();
-        Path directory = extraction.getParent().resolveSibling("knowledge").resolve(name);
+        Path directory = extraction.resolve("knowledge");
         if (!Files.isDirectory(directory)) return;
 
         var json = new ObjectMapper();
-        var schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012)
-                .getSchema(Path.of("docs/format/knowledge.schema.json").toUri());
+        var schema = ExtractionInput.registry().getSchema(ExtractionInput.schema("knowledge"));
         var ids = new HashSet<String>();
         for (String key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions"))
             for (var item : analysis.path(key)) ids.add(item.path("id").asText());
@@ -30,16 +26,16 @@ final class KnowledgeChecks {
         try (var files = Files.list(directory)) {
             for (var file : files.filter(p -> p.getFileName().toString().endsWith(".json")).sorted().toList()) {
                 var document = json.readTree(file.toFile());
-                String location = "knowledge/" + name + "/" + file.getFileName();
+                String location = "knowledge/" + file.getFileName();
                 schema.validate(document).stream().sorted(Comparator.comparing(message -> message.toString()))
                         .forEach(message -> warn(analysis, "schema", json.createArrayNode(), location + ": " + message));
                 for (var item : document.path("items")) {
                     String label = location + ": " + item.path("title").asText();
                     for (var evidence : item.path("evidence")) {
                         String reference = evidence.asText();
-                        String prefix = "analysis/" + name + "/responses/";
-                        boolean exists = reference.startsWith("analysis/")
-                                ? reference.startsWith(prefix) && SourceText.isResponseEvidence(reference)
+                        String prefix = "responses/";
+                        boolean exists = reference.startsWith(prefix)
+                                ? SourceText.isResponseEvidence(reference)
                                     && lineExists(extraction.resolve("responses"), reference.substring(prefix.length()))
                                 : lineExists(target, reference);
                         if (!exists) warn(analysis, "knowledge-evidence", json.createArrayNode().add(reference),

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /** Text only; evidence cannot select environment files or leave the target. */
 final class SourceText {
     private static final Pattern RESPONSE_EVIDENCE = Pattern.compile(
-            "analysis/[^/:]+/responses/(?:[^/:]+/)*[^/:]+\\.json(?::[1-9][0-9]*)?");
+            "responses/(?:[^/:]+/)*[^/:]+\\.json(?::[1-9][0-9]*)?");
     private final Path root;
     private final Map<Path, List<String>> cache = new HashMap<>();
     SourceText(Path root) throws IOException { this.root = root.toRealPath(); }

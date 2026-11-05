@@ -77,7 +77,7 @@ HotDealWave 저장소는 이 디렉터리에 없다. `hotdealwave` MCP 도구로
 
     def test_checkout_inside_this_repository_is_refused(self):
         with self.assertRaises(SystemExit):
-            run_eval.check_checkout(ROOT / "target/HotDealWave")
+            run_eval.check_checkout(ROOT / "examples/hotdealwave/source")
 
 
 if __name__ == "__main__":

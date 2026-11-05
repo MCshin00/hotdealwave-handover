@@ -11,7 +11,10 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "target/HotDealWave"
+EXAMPLE = ROOT / "examples/hotdealwave"
+TARGET = EXAMPLE / "source"
+# 예시를 examples/로 옮기기 전 결과의 응답 근거는 이 앞부분을 달고 있다
+OLD_PREFIX = "analysis/hotdealwave/"
 COMMIT = "cc43016b907331a3ce8471475cbf44412e8a6954"
 
 # 저장소 루트 기준 경로:줄, 또는 앞 인용과 같은 파일인 `:줄`. 범위는 `:16`–`:17`, `:16-18`처럼 쓴다.
@@ -24,8 +27,10 @@ WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 @cache
 def read(path):
     """인용한 파일의 줄 목록. 없는 파일은 None."""
-    if path.startswith("analysis/"):
-        file = ROOT / path
+    if path.startswith(OLD_PREFIX):
+        path = path[len(OLD_PREFIX):]
+    if path.startswith("responses/"):
+        file = EXAMPLE / path
         return file.read_text(encoding="utf-8").splitlines() if file.is_file() else None
     shown = subprocess.run(["git", "-C", str(TARGET), "show", f"{COMMIT}:{path}"], capture_output=True)
     return shown.stdout.decode("utf-8").splitlines() if shown.returncode == 0 else None

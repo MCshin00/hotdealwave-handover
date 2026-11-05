@@ -16,7 +16,7 @@ class Analysis {
     static final String CONFIRMED = "확인됨";
     private final JsonNode root;
 
-    Analysis(@Value("${analysis.path:out/analysis.json}") String path) throws IOException {
+    Analysis(@Value("${analysis.path}") String path) throws IOException {
         root = new ObjectMapper().readTree(Path.of(path).toFile());
     }
 

@@ -16,14 +16,14 @@ class VerifierTest {
 
     @Test void missingEndpointHttpMethodProducesSchemaWarning(@TempDir Path temporary) throws Exception {
         Path services = Files.createDirectories(temporary.resolve("services"));
-        var service = JSON.readTree(Path.of("analysis/hotdealwave/services/company-service.json").toFile());
+        var service = JSON.readTree(Path.of("examples/hotdealwave/services/company-service.json").toFile());
         ((ObjectNode) service.path("endpoints").get(0)).remove("httpMethod");
         JSON.writeValue(services.resolve("company-service.json").toFile(), service);
         Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), temporary.resolve("target.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), temporary.resolve("target.json"));
         Path output = temporary.resolve("analysis.json");
 
-        Main.main(new String[]{temporary.toString(), "target/HotDealWave", output.toString()});
+        Example.verify(temporary, output);
 
         var analysis = JSON.readTree(output.toFile());
         assertEquals(1, analysis.at("/checks/schema/warningCount").asInt());
@@ -64,7 +64,7 @@ class VerifierTest {
     }
 
     private JsonNode verify(ObjectNode input) throws Exception {
-        return new Verifier().verify(input, Path.of("target/HotDealWave"));
+        return new Verifier().verify(input, Example.SOURCE);
     }
 
     @Test void orderMappingEvidenceIsCheckedAndInputVerdictsAreDiscarded() throws Exception {
@@ -188,7 +188,7 @@ class VerifierTest {
 
     @Test void extractedS3ResourceHasValidEvidence() throws Exception {
         var input = document();
-        var extracted = JSON.readTree(Path.of("analysis/hotdealwave/services/product-service.json").toFile());
+        var extracted = JSON.readTree(Path.of("examples/hotdealwave/services/product-service.json").toFile());
         for (var resource : extracted.path("externalResources")) {
             if (resource.path("kind").asText().equals("S3")) input.withArray("externalResources").add(resource);
         }
@@ -277,14 +277,14 @@ class VerifierTest {
     }
 
     @Test void responseFileEvidenceSkipsLineChecksForCorrectedCouponField() throws Exception {
-        var input = new ExtractionInput().read(Path.of("analysis/hotdealwave"));
+        var input = new ExtractionInput().read(Example.WORKSPACE);
         var endpoint = Checks.items(input.path("endpoints")).stream()
                 .filter(e -> e.path("evidence").toString().contains("CouponController.java:39"))
                 .findFirst().orElseThrow();
         var field = Checks.items(endpoint.at("/response/fields/1/schema/arguments/0/fields")).stream()
                 .filter(f -> f.path("name").asText().equals("isUsed"))
                 .map(f -> (ObjectNode) f).findFirst().orElseThrow();
-        String evidence = "analysis/hotdealwave/responses/" + endpoint.path("id").asText() + ".json:1";
+        String evidence = "responses/" + endpoint.path("id").asText() + ".json:1";
         field.putArray("evidence").add(evidence);
         field.set("jsonName", fact("isUsed", evidence));
         ((ObjectNode) field.path("schema")).putArray("evidence").add(evidence);

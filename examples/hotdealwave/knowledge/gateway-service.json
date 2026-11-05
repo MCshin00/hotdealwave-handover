@@ -41,10 +41,10 @@
         "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:25",
         "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:56",
         "product/src/main/java/com/sparta/hotdeal/product/presentation/controller/ReviewController.java:62",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:3",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:4",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:7",
-        "analysis/hotdealwave/responses/product-service.ReviewController.getReviewList.json:11"
+        "responses/product-service.ReviewController.getReviewList.json:3",
+        "responses/product-service.ReviewController.getReviewList.json:4",
+        "responses/product-service.ReviewController.getReviewList.json:7",
+        "responses/product-service.ReviewController.getReviewList.json:11"
       ],
       "affectedIds": [
         "product-service.ReviewController.getReviewById",

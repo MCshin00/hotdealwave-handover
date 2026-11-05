@@ -19,7 +19,7 @@ description: PR 하나를 이슈의 확인 조건과 이 Skill의 검토 항목�
 - 이슈의 확인 조건과 댓글에 기록된 개발자 결정: `gh pr view N`에서 이슈 번호를 찾고 `gh issue view <이슈 번호> --comments`로 읽는다.
 - PR 변경분: `gh pr diff N`. 대상 커밋 SHA는 `gh pr view N --json headRefOid`로 확인한다. 바뀐 파일은 필요하면 전체를 읽는다.
 - 루트 [AGENTS.md](../../../AGENTS.md)와 [docs/decisions.md](../../../docs/decisions.md)의 관련 결정.
-- 결과에 적힌 근거 `파일:줄`은 분석 대상 고정 커밋(`target/HotDealWave`)에서 직접 연다.
+- 결과에 적힌 근거 `파일:줄`은 분석 대상 고정 커밋(`examples/hotdealwave/source`)에서 직접 연다.
 - 재검토에서는 이전 검토와 지적 처리 댓글도 읽고, 마지막 검토 커밋 이후의 변경분과 영향받는 코드·테스트로 판단한다.
 
 PR 본문의 구현 설명과 구현한 쪽의 요약은 근거로 쓰지 않는다. 테스트 위치와 근거 링크는 원문을 찾는 데만 쓴다.

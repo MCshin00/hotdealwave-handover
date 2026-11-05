@@ -101,9 +101,9 @@
         "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:28",
         "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:34",
         "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentConsumerService.java:39",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:7",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:25",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:26"
+        "responses/order-service.OrderController.getOrderById.json:7",
+        "responses/order-service.OrderController.getOrderById.json:25",
+        "responses/order-service.OrderController.getOrderById.json:26"
       ],
       "affectedIds": [
         "payment-service.ready",
@@ -203,8 +203,8 @@
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23",
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:26",
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27",
-        "analysis/hotdealwave/responses/payment-service.PaymentController.getPayments.json:7",
-        "analysis/hotdealwave/responses/payment-service.PaymentController.getPayments.json:11"
+        "responses/payment-service.PaymentController.getPayments.json:7",
+        "responses/payment-service.PaymentController.getPayments.json:11"
       ],
       "affectedIds": [
         "payment-service.PaymentController.getPayments",
@@ -286,9 +286,9 @@
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23",
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:26",
         "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27",
-        "analysis/hotdealwave/responses/payment-service.PaymentController.cancelPayment.json:4",
-        "analysis/hotdealwave/responses/payment-service.PaymentController.cancelPayment.json:7",
-        "analysis/hotdealwave/responses/payment-service.PaymentController.cancelPayment.json:10"
+        "responses/payment-service.PaymentController.cancelPayment.json:4",
+        "responses/payment-service.PaymentController.cancelPayment.json:7",
+        "responses/payment-service.PaymentController.cancelPayment.json:10"
       ],
       "affectedIds": [
         "payment-service.PaymentController.cancelPayment",

@@ -3,9 +3,10 @@ package io.hotdealwave.verifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaLocation;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ final class ExtractionInput {
     private final ObjectMapper json = new ObjectMapper();
 
     ObjectNode read(Path directory) throws Exception {
-        var factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012);
-        var serviceSchema = factory.getSchema(Path.of("docs/format/service.schema.json").toUri());
-        var relationsSchema = factory.getSchema(Path.of("docs/format/relations.schema.json").toUri());
+        var factory = registry();
+        var serviceSchema = factory.getSchema(schema("service"));
+        var relationsSchema = factory.getSchema(schema("relations"));
         var merged = json.createObjectNode().put("schemaVersion", 1);
         merged.putArray("services");
         SERVICE_ARRAYS.forEach(merged::putArray);
@@ -42,7 +43,7 @@ final class ExtractionInput {
         var relations = json.readTree(directory.resolve("relations.json").toFile());
         validate(relationsSchema, relations, "relations.json", merged);
         var target = json.readTree(directory.resolve("target.json").toFile());
-        validate(factory.getSchema(Path.of("docs/format/target.schema.json").toUri()), target, "target.json", merged);
+        validate(factory.getSchema(schema("target")), target, "target.json", merged);
         merged.set("target", target);
 
         services.sort(Comparator.comparing(node -> node.path("service").path("directory").asText()));
@@ -56,13 +57,22 @@ final class ExtractionInput {
         var repository = directory.resolve("repository.json");
         if (Files.exists(repository)) {
             var document = json.readTree(repository.toFile());
-            validate(factory.getSchema(Path.of("docs/format/repository.schema.json").toUri()), document, "repository.json", merged);
+            validate(factory.getSchema(schema("repository")), document, "repository.json", merged);
             merged.set("repository", document);
         }
         return merged;
     }
 
-    private void validate(JsonSchema schema, JsonNode document, String file, ObjectNode merged) {
+    /** Schemas ship inside the jar, so the verifier runs from any folder. */
+    static SchemaLocation schema(String name) {
+        return SchemaLocation.of("classpath:format/" + name + ".schema.json");
+    }
+
+    static SchemaRegistry registry() {
+        return SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12);
+    }
+
+    private void validate(Schema schema, JsonNode document, String file, ObjectNode merged) {
         schema.validate(document).stream().sorted(Comparator.comparing(message -> message.toString()))
                 .forEach(message -> Checks.warn(merged, "schema", json.createArrayNode(), file + ": " + message));
     }

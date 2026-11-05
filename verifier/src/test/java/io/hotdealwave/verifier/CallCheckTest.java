@@ -16,7 +16,7 @@ class CallCheckTest {
 
     private JsonNode run(Path input) throws Exception {
         Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{input.toString(), "target/HotDealWave", output.toString()});
+        Example.verify(input, output);
         return JSON.readTree(output.toFile());
     }
 
@@ -33,7 +33,7 @@ class CallCheckTest {
     }
 
     @Test void handlerCallsReachFeignCallsAndPublications() throws Exception {
-        var analysis = run(Path.of("analysis/hotdealwave"));
+        var analysis = run(Example.WORKSPACE);
         assertTrue(confirmedTargets(analysis, "order-service.OrderController.createOrder").containsAll(List.of(
                 "order-service.UserClient.getAddress", "order-service.ProductClient.getProductList",
                 "order-service.CouponClient.validateCoupon", "order-service.CouponClient.useCoupon",
@@ -51,10 +51,10 @@ class CallCheckTest {
     @Test void callsReachingAnotherTargetAreUnknown() throws Exception {
         Path input = Files.createDirectories(temporary.resolve("hotdealwave"));
         Path services = Files.createDirectories(input.resolve("services"));
-        try (var files = Files.list(Path.of("analysis/hotdealwave/services"))) {
+        try (var files = Files.list(Path.of("examples/hotdealwave/services"))) {
             for (var file : files.toList()) Files.copy(file, services.resolve(file.getFileName()));
         }
-        var relations = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/relations.json").toFile());
+        var relations = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/relations.json").toFile());
         var call = (ObjectNode) Checks.items(relations.path("calls")).stream()
                 .filter(c -> c.path("fromId").asText().equals("order-service.OrderController.createOrder")
                         && c.path("toId").asText().equals("order-service.CouponClient.useCoupon"))
@@ -77,7 +77,7 @@ class CallCheckTest {
                             "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:26"));
                 });
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), input.resolve("target.json"));
 
         var analysis = run(input);
         var checked = Checks.items(analysis.path("calls")).stream()

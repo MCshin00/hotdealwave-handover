@@ -21,10 +21,10 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-// The server reads only the verifier output, so refresh it first.
-tasks.named('bootRun') { dependsOn ':verifier:run'; workingDir = rootProject.projectDir }
+// The cli module packs the server into handover.jar; serve passes the verifier output path.
+tasks.named('bootJar') { enabled = false }
+tasks.named('bootRun') { enabled = false }
 tasks.named('test') {
-    dependsOn ':verifier:run'
     useJUnitPlatform()
     workingDir = rootProject.projectDir
 }

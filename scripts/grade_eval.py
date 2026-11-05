@@ -18,7 +18,7 @@ import time
 from scripts.run_eval import check_checkout, summarize
 
 ROOT = Path(__file__).resolve().parents[1]
-RESPONSES = ROOT / "analysis/hotdealwave/responses"
+RESPONSES = ROOT / "examples/hotdealwave/responses"
 CONDITIONS = ("base", "mcp", "ask")
 LABELS = ("A", "B", "C")
 CODEX_MODEL = "gpt-6-astra"

@@ -10,21 +10,21 @@ PATTERNS = [
     re.compile(rb"(?<![A-Za-z0-9])[A-Za-z]:[\\/]"),  # Windows 드라이브 경로
 ]
 HOME = re.compile(rb"/(?:Users|home)/[^/\s]+/")  # macOS·Linux 홈 경로
-# 비교 실험 답 원문과 저장소 수준 추출 결과는 분석 대상의 배포 스크립트에 적힌 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
+# 비교 실험 답 원문, 예시의 저장소 수준 추출 결과와 그것을 합친 검증 출력은 분석 대상의 배포 스크립트에 적힌
+# 서버 경로를 인용할 수 있어 홈 경로만 보지 않는다.
 ANSWERS = "eval/results/"
 
 
 def quotes_target(name: str) -> bool:
-    return name.startswith(ANSWERS) or (name.startswith("analysis/") and name.endswith("/repository.json"))
+    return name.startswith(ANSWERS) or (name.startswith("examples/")
+                                        and name.endswith(("/repository.json", "/out/analysis.json")))
 
 
 def main() -> int:
     entries = subprocess.check_output(["git", "ls-files", "-s", "-z"])
     failed = False
     for entry in filter(None, entries.split(b"\0")):
-        meta, raw_path = entry.split(b"\t", 1)
-        if meta.startswith(b"160000"):  # 서브모듈(분석 대상)은 검사하지 않는다
-            continue
+        _, raw_path = entry.split(b"\t", 1)
         name = os.fsdecode(raw_path)
         path = Path(name)
         if path.name == ".env" or path.name.startswith(".env."):

@@ -9,7 +9,7 @@ class QueriesTest {
     private static Queries queries;
 
     @BeforeAll static void load() throws Exception {
-        queries = new Queries(new Analysis("out/analysis.json"));
+        queries = new Queries(new Analysis("examples/hotdealwave/out/analysis.json"));
     }
 
     private static boolean has(List<Queries.Step> steps, String from, String to, String status) {

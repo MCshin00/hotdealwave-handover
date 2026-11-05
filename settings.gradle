@@ -1,3 +1,4 @@
 rootProject.name = 'hotdealwave-handover'
 include 'verifier'
 include 'server'
+include 'cli'

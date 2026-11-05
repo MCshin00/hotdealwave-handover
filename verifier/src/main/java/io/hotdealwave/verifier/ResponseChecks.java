@@ -9,7 +9,7 @@ import java.nio.file.Path;
 final class ResponseChecks {
     void run(Path input, ObjectNode analysis) throws Exception {
         Path extraction = input.toAbsolutePath().normalize();
-        String prefix = "analysis/" + extraction.getFileName() + "/responses/";
+        String prefix = "responses/";
         var json = new ObjectMapper();
         for (var endpoint : analysis.path("endpoints")) {
             var check = ((ObjectNode) endpoint).putObject("responseCheck");

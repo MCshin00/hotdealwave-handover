@@ -16,7 +16,7 @@ class ErrorResponseCheckTest {
 
     private JsonNode run(Path input) throws Exception {
         Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{input.toString(), "target/HotDealWave", output.toString()});
+        Example.verify(input, output);
         return JSON.readTree(output.toFile());
     }
 
@@ -27,7 +27,7 @@ class ErrorResponseCheckTest {
     }
 
     @Test void errorCodesHandlersRejectionsAndPageSettingsAreChecked() throws Exception {
-        var analysis = run(Path.of("analysis/hotdealwave"));
+        var analysis = run(Example.WORKSPACE);
 
         var code = only(analysis.path("errorCodes"), c -> c.path("service").asText().equals("coupon-service")
                 && c.path("name").asText().equals("NOT_FOUND_COUPON_INFO"));
@@ -67,7 +67,7 @@ class ErrorResponseCheckTest {
     }
 
     @Test void throwsReachExceptionLinesAndHandlers() throws Exception {
-        var analysis = run(Path.of("analysis/hotdealwave"));
+        var analysis = run(Example.WORKSPACE);
         var expired = only(analysis.path("throws"), t -> t.path("fromId").asText().equals("coupon-service.CouponController.validateCoupon")
                 && t.path("errorCode").asText().equals("COUPON_EXPIRED"));
         assertEquals(Checks.CONFIRMED, expired.path("status").asText());
@@ -93,10 +93,10 @@ class ErrorResponseCheckTest {
     @Test void throwsEndingElsewhereOrWithUnknownHandlerAreUnknown() throws Exception {
         Path input = Files.createDirectories(temporary.resolve("hotdealwave"));
         Path services = Files.createDirectories(input.resolve("services"));
-        try (var files = Files.list(Path.of("analysis/hotdealwave/services"))) {
+        try (var files = Files.list(Path.of("examples/hotdealwave/services"))) {
             for (var file : files.toList()) Files.copy(file, services.resolve(file.getFileName()));
         }
-        var relations = (ObjectNode) JSON.readTree(Path.of("analysis/hotdealwave/relations.json").toFile());
+        var relations = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/relations.json").toFile());
         var expired = (ObjectNode) only(relations.path("throws"), t -> t.path("fromId").asText().equals("coupon-service.CouponController.validateCoupon")
                 && t.path("errorCode").asText().equals("COUPON_EXPIRED"));
         var evidence = expired.withArray("evidence");
@@ -107,7 +107,7 @@ class ErrorResponseCheckTest {
                 && t.path("errorCode").asText().equals("NOT_ALLOWED_CONTENT"));
         owner.put("handlerId", "user-service.GlobalExceptionHandler.missing");
         JSON.writeValue(input.resolve("relations.json").toFile(), relations);
-        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.resolve("target.json"));
+        Files.copy(Path.of("examples/hotdealwave/target.json"), input.resolve("target.json"));
 
         var analysis = run(input);
         var reasons = Checks.items(analysis.path("warnings")).stream()

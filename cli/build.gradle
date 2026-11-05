@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation project(':verifier')
+    implementation project(':server')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+
+// One jar for every command: java -jar build/handover.jar <init|verify|serve>
+tasks.named('bootJar') {
+    mainClass = 'io.hotdealwave.cli.Handover'
+    archiveFileName = 'handover.jar'
+    destinationDirectory = rootProject.layout.buildDirectory
+}
+tasks.named('jar') { enabled = false }
+tasks.named('test') {
+    useJUnitPlatform()
+    workingDir = rootProject.projectDir
+}

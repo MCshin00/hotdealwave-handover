@@ -182,11 +182,11 @@
         "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:141",
         "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:114",
         "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/res/ResPostCouponValidateDto.java:8",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.validateCoupon.json:20",
-        "analysis/hotdealwave/responses/order-service.OrderController.createOrder.json:10",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:26",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:11",
-        "analysis/hotdealwave/responses/coupon-service.CouponController.getUserCouponDetail.json:18"
+        "responses/coupon-service.CouponController.validateCoupon.json:20",
+        "responses/order-service.OrderController.createOrder.json:10",
+        "responses/order-service.OrderController.getOrderById.json:26",
+        "responses/coupon-service.CouponController.getUserCouponDetail.json:11",
+        "responses/coupon-service.CouponController.getUserCouponDetail.json:18"
       ],
       "affectedIds": [
         "order-service.OrderController.createOrder",
@@ -362,10 +362,10 @@
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/order/res/ResGetOrderByIdDto.java:33",
         "payment/src/main/java/com/sparta/hotdeal/payment/event/message/product/ReqProductRecoverQuantityDto.java:27",
         "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:11",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrderById.json:17",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrders.json:13",
-        "analysis/hotdealwave/responses/order-service.OrderController.getOrders.json:20"
+        "responses/order-service.OrderController.getOrderById.json:11",
+        "responses/order-service.OrderController.getOrderById.json:17",
+        "responses/order-service.OrderController.getOrders.json:13",
+        "responses/order-service.OrderController.getOrders.json:20"
       ],
       "affectedIds": [
         "order-service.OrderController.getOrderById",
@@ -460,8 +460,8 @@
         "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/OrderRepositoryImpl.java:25",
         "order/src/main/java/com/sparta/hotdeal/order/common/exception/ErrorCode.java:27",
         "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24",
-        "analysis/hotdealwave/responses/order-service.OrderController.refundOrder.json:7",
-        "analysis/hotdealwave/responses/order-service.OrderController.refundOrder.json:10"
+        "responses/order-service.OrderController.refundOrder.json:7",
+        "responses/order-service.OrderController.refundOrder.json:10"
       ],
       "affectedIds": [
         "order-service.OrderController.refundOrder",
