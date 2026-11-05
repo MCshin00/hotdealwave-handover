@@ -30,6 +30,10 @@ final class EvidenceChecks {
         for (var entry : new ArrayList<>(object.properties())) visit(entry.getValue(), entry.getKey(), object);
         if (!object.has("evidence")) return;
         var evidence = items(object.path("evidence"));
+        if (role.equals("runDefinition") && evidence.isEmpty() && object.path("value").isNull()) {
+            verdict(object, ABSENT, "저장소에서 실행 정의를 찾지 못함");
+            return;
+        }
         if (!evidence.isEmpty() && evidence.stream().allMatch(e -> SourceText.isResponseEvidence(e.asText()))) {
             verdict(object, CONFIRMED, null);
             return;
@@ -66,6 +70,17 @@ final class EvidenceChecks {
             case "exceptionHandlers" -> lines.get(0).contains("@ExceptionHandler");
             case "gatewayRejections" -> contains(lines, value(object.path("condition")));
             case "pageSerialization" -> lines.get(0).contains("@EnableSpringDataWebSupport");
+            case "workflows" -> lines.get(0).contains("name:");
+            case "triggers" -> contains(lines, object.path("event").asText());
+            case "env" -> contains(lines, object.path("name").asText());
+            case "secrets" -> contains(lines, "secrets." + object.path("name").asText());
+            case "jobs" -> contains(lines, object.path("id").asText() + ":");
+            case "steps" -> contains(lines, object.path("name").asText());
+            case "images" -> contains(lines, object.path("composeService").asText() + ":");
+            case "scrapeTargets" -> contains(lines, object.path("job").asText());
+            case "logShipping" -> lines.get(0).contains("<appender");
+            case "lokiConfig" -> contains(lines, "http_listen_port");
+            case "monitoringTools" -> lines.stream().anyMatch(l -> l.toLowerCase(Locale.ROOT).contains(object.path("name").asText().toLowerCase(Locale.ROOT)));
             default -> object.has("type") && contains(lines, simpleType(object.path("type").asText()));
         };
         if (!matches) { reject(object, role + ": 근거 줄에서 이름·선언을 확인하지 못함"); return; }
@@ -86,6 +101,14 @@ final class EvidenceChecks {
     private void fact(ObjectNode fact, String role, JsonNode parent, List<String> lines) throws IOException {
         String value = value(fact);
         if (fact.has("source")) { sourced(fact, role, value, parent, lines); return; }
+        if (role.equals("secretValue") || role.equals("hostValue")) {
+            // Values that only the deployment environment holds: the line must use that name.
+            String used = role.equals("secretValue") ? "secrets." + parent.path("name").asText() : "${" + parent.path("hostVariable").asText() + "}";
+            if (contains(lines, used)) verdict(fact, ABSENT, role.equals("secretValue")
+                    ? "실제 값은 저장소 밖의 GitHub Secrets에서 정해짐" : "실제 값은 저장소 밖의 환경변수에서 정해짐");
+            else reject(fact, role + ": 근거 줄에서 이름을 쓰는 곳을 확인하지 못함");
+            return;
+        }
         if (value != null && value.isEmpty() && parent.has("enumType")) {
             // An enum without that argument: the constant line itself shows what it declares.
             if (contains(lines, parent.path("name").asText())) verdict(fact, CONFIRMED, null);

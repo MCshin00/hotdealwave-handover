@@ -85,6 +85,18 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 외부 자원은 서비스·종류별로 묶는다. 설정 키의 `spring.datasource`·`spring.jpa`는 DB, `spring.data.redis`는 Redis, `spring.kafka`는 Kafka, `spring.elasticsearch`는 Elasticsearch, `s3`는 S3, `pay`는 KakaoPay다. 코드에서는 JPA·Redis·Kafka·Elasticsearch·S3의 클래스·어노테이션 사용과 KakaoPay 클라이언트·Feign URL을 근거로 삼는다. 설정이나 코드 근거가 하나라도 있어야 항목을 내며, 없는 쪽의 근거 배열은 비워 둔다. `details.connectionValues`와 S3의 `details.bucketName`은 `저장소에 근거 없음`이다. 외부 자원의 설정·코드 근거 수는 각각의 배열에서 중복 위치를 제거한 수다.
 
+## 저장소 수준 사실(배포·모니터링)
+
+서비스 하나에 속하지 않는 배포·모니터링 설정은 [저장소 스키마](repository.schema.json)를 따라 `analysis/<대상>/repository.json` 하나에 쓴다. 파일이 없으면 검증기는 이 부분 없이 진행한다. 검증기는 합친 결과의 `repository`에 그대로 넣고 상태를 정한다.
+
+- `workflows`: `.github/workflows/`의 파일마다 한 항목이다. `triggers`는 이벤트와 브랜치, `env`는 워크플로 수준 변수, `secrets`는 `${{ secrets.X }}`로 쓰는 이름이다. `jobs[].steps[]`는 단계 이름, 쓰는 액션(`uses`, 없으면 키를 두지 않음), 단계 변수, 실행 명령이다. `env`의 값은 워크플로에 쓴 그대로(`${{ ... }}` 식 포함) 둔다. `commands`는 `run`(SSH 액션의 `script` 포함)의 명령 줄을 하나씩 앞뒤 공백만 빼고 쓴 그대로 두며 주석과 빈 줄은 뺀다.
+- `secrets[].secretValue`는 `null`이며 검증기가 `저장소에 근거 없음`으로 둔다. 근거는 그 이름을 쓰는 줄이다.
+- `images`: compose 서비스마다 이미지 이름(compose `image` 줄), 그 서비스의 `Dockerfile`의 `FROM` 이미지, 빌드 명령(`RUN`), `EXPOSE` 포트다. 첫 근거는 compose 서비스 키 줄이다.
+- `scrapeTargets`: Prometheus `scrape_configs`의 작업마다 대상 주소(`address`), 수집 경로, 수집 주기(작업에 없으면 `global`)다. 첫 근거는 `job_name` 줄이다.
+- `logShipping`: 서비스의 logback 설정에서 로그를 외부로 보내는 appender다. `url`·`labels`는 쓴 그대로 두고, 주소에 쓰인 변수 이름을 `hostVariable`, 그 값을 `hostValue`(`null`, `저장소에 근거 없음`)로 둔다.
+- `lokiConfig`: Loki 설정 파일의 HTTP 포트와 저장소 종류다.
+- `monitoringTools`: 저장소에 설정이나 언급이 있는 모니터링 도구마다 한 항목이다. 첫 근거는 설정 파일이나 언급 줄이다. `runDefinition`은 그 도구를 띄우는 정의(compose 서비스 등)이며, 저장소에서 찾지 못하면 `value: null`, 근거 없음(빈 배열)으로 두고 검증기가 `저장소에 근거 없음`으로 둔다.
+
 ## 업무 규칙·함정
 
 UTF-8 JSON으로 `knowledge/<대상>/<spring.application.name>.json`에 서비스마다 한 파일을 쓴다. 파일은 `schemaVersion: 1`과 `items` 배열을 담는다. 항목이 없으면 `items: []`로 쓴다.

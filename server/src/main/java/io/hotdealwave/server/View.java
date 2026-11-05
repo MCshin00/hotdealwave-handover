@@ -132,6 +132,16 @@ public class View {
         };
     }
 
+    /** Plain strings of a list, comma separated. */
+    public String joined(JsonNode list) {
+        return String.join(", ", Analysis.listOf(list).stream().map(JsonNode::asText).toList());
+    }
+
+    /** Values of a fact list, each its value or status. */
+    public String plains(JsonNode facts) {
+        return String.join(", ", Analysis.listOf(facts).stream().map(this::plain).toList());
+    }
+
     /** Kind and source; the confirmation status only once the developer has set it. */
     public String item(JsonNode item) {
         return itemTag(item) + " " + item.path("title").asText();

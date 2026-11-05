@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "저장소 수준 추출 결과(배포·모니터링)",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "workflows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Workflow"
+      }
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Image"
+      }
+    },
+    "scrapeTargets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScrapeTarget"
+      }
+    },
+    "logShipping": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/LogShipping"
+      }
+    },
+    "lokiConfig": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/LokiConfig"
+      }
+    },
+    "monitoringTools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MonitoringTool"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "workflows",
+    "images",
+    "scrapeTargets",
+    "logShipping",
+    "lokiConfig",
+    "monitoringTools"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Workflow": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Trigger"
+          }
+        },
+        "env": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Variable"
+          }
+        },
+        "secrets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Secret"
+          }
+        },
+        "jobs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Job"
+          }
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "file",
+        "name",
+        "triggers",
+        "env",
+        "secrets",
+        "jobs",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Trigger": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "service.schema.json#/$defs/StringFact"
+          }
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "event",
+        "branches",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Variable": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Secret": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "secretValue": {
+          "$ref": "service.schema.json#/$defs/Fact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "secretValue",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Job": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "needs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Step"
+          }
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "needs",
+        "steps",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Step": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "uses": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "env": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Variable"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "service.schema.json#/$defs/StringFact"
+          }
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "env",
+        "commands",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "Image": {
+      "type": "object",
+      "properties": {
+        "composeService": {
+          "type": "string"
+        },
+        "image": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "baseImages": {
+          "type": "array",
+          "items": {
+            "$ref": "service.schema.json#/$defs/StringFact"
+          }
+        },
+        "buildCommand": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "exposedPort": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "composeService",
+        "image",
+        "baseImages",
+        "buildCommand",
+        "exposedPort",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ScrapeTarget": {
+      "type": "object",
+      "properties": {
+        "job": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "metricsPath": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "interval": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "job",
+        "address",
+        "metricsPath",
+        "interval",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "LogShipping": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "appender": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "url": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "hostVariable": {
+          "type": "string"
+        },
+        "hostValue": {
+          "$ref": "service.schema.json#/$defs/Fact"
+        },
+        "labels": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "appender",
+        "url",
+        "hostVariable",
+        "hostValue",
+        "labels",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "LokiConfig": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "httpPort": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "storage": {
+          "$ref": "service.schema.json#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "file",
+        "httpPort",
+        "storage",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "MonitoringTool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "runDefinition": {
+          "$ref": "service.schema.json#/$defs/Fact"
+        },
+        "evidence": {
+          "$ref": "service.schema.json#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "service.schema.json#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "runDefinition",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

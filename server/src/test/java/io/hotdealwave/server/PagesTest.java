@@ -144,4 +144,14 @@ class PagesTest {
         assertTrue(pages.text("/services/coupon-service").contains("NOT_FOUND_COUPON_INFO (ErrorCode) 코드 CO001 · 상태 NOT_FOUND · 메시지 해당 쿠폰 정보 ID가 존재하지 않습니다. 확인됨"));
         assertTrue(search.search("VIA_DTO").stream().anyMatch(r -> r.page().equals("/services/coupon-service")));
     }
+
+    @Test void deployAndMonitoringPageShowsValuesAndAbsentOnes() {
+        String page = pages.text("/repository");
+        assertNotNull(page);
+        assertTrue(page.contains("docker-compose up -d 확인됨"), page);
+        assertTrue(page.contains("EC2_PRIVATE_KEY 값: 저장소에 근거 없음"), page);
+        assertTrue(page.contains("gateway-service: gateway-service:19091 /actuator/prometheus 주기 15s 확인됨"), page);
+        assertTrue(page.contains("Grafana 실행 정의: 저장소에 근거 없음"), page);
+        assertTrue(search.search("ECR").stream().anyMatch(r -> r.page().equals("/repository")));
+    }
 }
