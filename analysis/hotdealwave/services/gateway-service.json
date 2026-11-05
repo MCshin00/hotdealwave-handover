@@ -606,5 +606,37 @@
       ]
     }
   ],
-  "externalResources": []
+  "externalResources": [],
+  "errorCodes": [],
+  "exceptionHandlers": [],
+  "gatewayRejections": [
+    {
+      "service": "gateway-service",
+      "filter": "AuthenticationFilter",
+      "condition": {
+        "value": "token == null || !jwtUtil.validateToken(token)",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30"
+        ]
+      },
+      "httpStatus": {
+        "value": "UNAUTHORIZED",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:31"
+        ]
+      },
+      "body": {
+        "value": "",
+        "evidence": [
+          "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32"
+        ]
+      },
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:31",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32"
+      ]
+    }
+  ],
+  "pageSerialization": []
 }

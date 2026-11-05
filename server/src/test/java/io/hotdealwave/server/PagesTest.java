@@ -21,6 +21,7 @@ class PagesTest {
     }
 
     @Autowired Pages pages;
+    @Autowired Search search;
 
     @Test void homeSummarizesServicesAndListsUnconfirmedConnections() throws Exception {
         String home = page("/");
@@ -129,5 +130,18 @@ class PagesTest {
         String unlinked = page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC");
         assertTrue(unlinked.contains("확인 안 됨"));
         assertTrue(unlinked.contains("구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (order-service, spring.kafka.topics.request-product)"));
+    }
+
+    @Test void errorResponsesGatewayRejectionAndPageSettingAreInBodies() {
+        String validate = pages.text("/endpoints/coupon-service.CouponController.validateCoupon");
+        assertTrue(validate.contains("CustomException COUPON_EXPIRED · 오류 코드 CO008, 상태 BAD_REQUEST, 메시지 쿠폰이 만료되었습니다."
+                + " · 처리기 coupon-service.GlobalExceptionHandler.handleCustomException: 상태 던진 오류 코드의 값"), validate);
+        String address = pages.text("/endpoints/user-service.AddressController.updateAddress");
+        assertTrue(address.contains("IllegalArgumentException NOT_ALLOWED_CONTENT · 오류 코드 없음, 상태 없음, 메시지 접근 권한이 없습니다."), address);
+        assertTrue(address.contains("메시지 확인 안 됨 — 예외 메시지를 그대로 씀, 값은 던지는 곳에서 정해짐"), address);
+        assertTrue(address.contains("토큰이 필요한 경로의 Gateway 거부: AuthenticationFilter: 조건 token == null || !jwtUtil.validateToken(token) → 상태 UNAUTHORIZED · 본문 없음"), address);
+        assertTrue(pages.text("/services/coupon-service").contains("@EnableSpringDataWebSupport pageSerializationMode: VIA_DTO"));
+        assertTrue(pages.text("/services/coupon-service").contains("NOT_FOUND_COUPON_INFO (ErrorCode) 코드 CO001 · 상태 NOT_FOUND · 메시지 해당 쿠폰 정보 ID가 존재하지 않습니다. 확인됨"));
+        assertTrue(search.search("VIA_DTO").stream().anyMatch(r -> r.page().equals("/services/coupon-service")));
     }
 }

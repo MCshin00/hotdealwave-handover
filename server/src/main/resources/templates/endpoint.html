@@ -16,6 +16,7 @@
 <p class="line" th:each="x : ${endpoint.path('externalPaths')}"
    th:text="|${x.path('path').asText()} (경로 규칙 ${x.path('routeId').asText()}) ${@view.status(x)} ${@view.evidence(x)} · 토큰 필요: ${@view.fact(x.path('tokenRequired'))}|"></p>
 <p class="line" th:text="|토큰 필요(기본 경로): ${@view.fact(endpoint.path('tokenRequired'))}|"></p>
+<p class="line" th:each="r : ${rejections}" th:if="${@view.plain(endpoint.path('tokenRequired')) == 'true'}" th:text="|토큰이 필요한 경로의 Gateway 거부: ${@view.rejection(r)}|"></p>
 <h2>요청</h2>
 <div th:each="p : ${endpoint.path('parameters')}">
   <p class="line" th:text="|${p.path('name').asText()} (${p.path('kind').asText()}) ${p.path('schema').path('type').asText()} ${@view.status(p.path('schema'))}|"></p>
@@ -24,6 +25,9 @@
 <h2>응답</h2>
 <p class="line" th:text="|${endpoint.path('response').path('type').asText()} ${@view.status(endpoint.path('response'))}|"></p>
 <p class="line" th:each="l : ${@view.fields(endpoint.path('response'))}" th:text="|    ${l}|"></p>
+<h2>오류 응답</h2>
+<p th:if="${errors.isEmpty()}">추출한 예외 없음</p>
+<p class="line" th:each="t : ${errors}" th:text="${@view.thrown(t)}"></p>
 <h2>나가는 호출과 발행</h2>
 <p th:if="${flow.forward().isEmpty()}">확인된 호출 없음</p>
 <p class="line step" th:each="s : ${flow.forward()}" th:classappend="${s.from() != endpoint.path('id').asText()} ? 'next'"><span class="node" th:text="${s.from()}"></span> <span class="arrow" th:text="|→ (${s.kind()})|"></span> <span class="node" th:classappend="${s.to() == null} ? 'unknown'" th:text="${@view.target(s)}"></span> <span th:text="${@view.stepEvidence(s)}"></span></p>

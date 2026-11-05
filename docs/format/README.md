@@ -57,6 +57,28 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 `evidence`는 출발 항목의 첫 근거(매핑·리스너 줄)로 시작하고, 거치는 호출 줄을 순서대로 넣고, 도착 지점 줄로 끝난다. 도착 지점 줄은 Feign이면 그 Feign 메서드를 부르는 줄(`.메서드(`), 발행이면 그 발행 항목의 첫 근거(`send` 선언 줄)다. 여러 발행이 같은 래퍼의 `send` 줄을 쓰면, 사슬에는 그 발행의 근거에만 있는 호출 줄(래퍼를 부르는 줄)도 들어가야 한다.
 
+### 오류 응답
+
+`errorCodes`는 서비스의 오류 코드 enum 상수 하나마다 한 항목이다. `enumType`은 enum 이름, `name`은 상수 이름이고, `code`·`httpStatus`·`message`는 상수 선언 줄의 인자를 쓴 그대로 둔다(`HttpStatus.NOT_FOUND`면 `NOT_FOUND`). enum에 그 인자가 없으면 빈 문자열과 상수 선언 줄이다. 첫 근거는 상수 선언 줄이다.
+
+`exceptionHandlers`는 `@RestControllerAdvice`의 `@ExceptionHandler` 메서드 하나마다 한 항목이고, ID는 `<애플리케이션 이름>.<클래스>.<메서드>`다. `exception`은 처리하는 예외 클래스 이름이며 첫 근거는 `@ExceptionHandler` 줄이다. `httpStatus`·`errorCode`·`message`는 응답 상태, 본문의 오류 코드 상수, 본문 메시지가 어디서 정해지는지를 `source`로 적는다. 오류 응답 DTO 생성자가 값을 채우면 그 생성자 줄까지 따라간다.
+
+| `source` | 뜻 | `value` | 근거 |
+|---|---|---|---|
+| `고정` | 처리기나 DTO 생성자에 적힌 값. 본문 DTO에 그 칸이 없으면 빈 문자열 | 쓴 그대로의 값 | 값이 적힌 줄, 빈 문자열이면 본문 DTO 선언 줄 |
+| `던진 오류 코드` | 예외에 담긴 오류 코드 상수의 값 | `null` | `getErrorCode()` 등을 읽는 줄 |
+| `예외 메시지` | 예외 메시지를 그대로 씀 | `null` | `getMessage()`를 읽는 줄 |
+| `검증 메시지` | 검증 어노테이션의 메시지를 씀 | `null` | `getDefaultMessage()`를 읽는 줄 |
+| `분기` | 처리기 안에서 조건에 따라 값이 갈림 | `null` | 조건 줄과 갈래마다 값을 정하는 줄 |
+
+검증기는 `예외 메시지`·`검증 메시지`·`분기`를 `확인 안 됨`으로 두고 이유를 붙인다. 값은 던지는 곳이나 어노테이션, 처리기 안의 조건에서 정해진다. `body`는 응답 본문 DTO이며 필드는 파라미터·응답 DTO와 같은 형식이다.
+
+`relations.json`의 `throws`는 엔드포인트(`fromId`)의 핸들러에서 같은 서비스의 예외 생성 줄(`new <예외>(`)에 닿는 연결이다. `calls`처럼 서비스·헬퍼·엔티티 메서드를 따라가고, `evidence`는 엔드포인트의 첫 근거로 시작해 거치는 호출 줄을 넣고 예외 생성 줄(`new <예외>(`가 있는 줄)로 끝난다. 생성자 인자가 다음 줄에 있으면 검증기는 문장 끝(`;`)까지 이어 읽는다. `exception`은 생성하는 예외 클래스, `errorCode`는 예외에 넘기는 같은 서비스의 `errorCodes` 상수 이름, `message`는 생성자에 넘기는 문자열 리터럴이다. 해당 없는 쪽은 빈 문자열이다. `handlerId`는 그 예외를 받는 `exceptionHandlers` ID이며 상속을 따라 정한다. 받는 처리기가 없으면 `null`이다. 처리기까지 전파되는 예외만 쓴다. 거치는 길의 `catch`가 잡으면 쓰지 않는다(잡은 곳에서 새 예외를 만들면 그 생성 줄이 따로 연결된다). `CompletableFuture`의 `join()`처럼 예외가 감싸여 나가면 감싼 예외를 받는 처리기를 `handlerId`로 한다. Feign 호출이 실패해 클라이언트 설정의 `ErrorDecoder`가 만든 예외가 나가면, 사슬은 Feign 메서드를 부르는 줄, 디코더를 등록하는 줄, 디코더의 생성 줄로 이어진다. Kafka 구독과 필터에서 던지는 예외는 쓰지 않는다.
+
+`gatewayRejections`는 Gateway 필터가 요청을 서비스로 넘기지 않고 응답을 끝내는 곳이다. `filter`는 필터 클래스 이름이고, `condition`은 거부 조건 식을 쓴 그대로, `httpStatus`는 정하는 상태, `body`는 응답 본문이다. 본문 없이 끝내면 `body`는 빈 문자열이고 근거는 `setComplete()` 줄이다. 첫 근거는 조건 줄이다.
+
+`pageSerialization`은 `@EnableSpringDataWebSupport`의 `pageSerializationMode` 값이다. 어노테이션이 없는 서비스에는 항목을 만들지 않는다.
+
 ### 환경변수·외부 자원
 
 환경변수는 사용 위치별로 기록한다. `profile`은 기본 YAML의 `base`, 파일 이름의 `local`·`prod` 등, compose의 `compose`다. 프로필을 병합하거나 실행할 프로필을 추정하지 않는다. Java `@Value`가 설정 키를 참조하면 해당 프로필의 YAML 환경변수와 코드 근거를 함께 남긴다. 같은 이름이 여러 항목에 나올 수 있으므로 환경변수 이름 수는 `name`의 중복을 제거해서 센다. 값은 모두 `null`·`저장소에 근거 없음`이다.

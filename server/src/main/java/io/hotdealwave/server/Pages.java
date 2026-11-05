@@ -90,7 +90,8 @@ class Pages {
         var endpoint = analysis.find("endpoints", id);
         if (endpoint.isMissingNode()) return null;
         return new Page("/endpoints/" + id, "endpoint", Map.of("endpoint", endpoint, "flow", queries.traceFlow(id),
-                "items", queries.knowledgeFor(List.of(id)), "descriptions", queries.descriptionsFor(List.of(id))), "엔드포인트", Set.of(endpoint.path("service").asText()));
+                "items", queries.knowledgeFor(List.of(id)), "descriptions", queries.descriptionsFor(List.of(id)),
+                "errors", queries.errorsFor(id), "rejections", analysis.list("gatewayRejections")), "엔드포인트", Set.of(endpoint.path("service").asText()));
     }
 
     private Page topic(String name) {
@@ -112,7 +113,8 @@ class Pages {
         if (service == null) return null;
         var model = new HashMap<String, Object>(Map.of("service", service, "name", name));
         var ids = new ArrayList<String>();
-        for (var key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources")) {
+        for (var key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources",
+                "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization")) {
             var owned = analysis.list(key).stream().filter(n -> n.path("service").asText().equals(name)).toList();
             model.put(key, owned);
             owned.forEach(n -> { if (n.has("id")) ids.add(n.path("id").asText()); });

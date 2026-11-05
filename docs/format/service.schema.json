@@ -75,6 +75,30 @@
       "items": {
         "$ref": "#/$defs/ExternalResource"
       }
+    },
+    "errorCodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ErrorCode"
+      }
+    },
+    "exceptionHandlers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExceptionHandler"
+      }
+    },
+    "gatewayRejections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GatewayRejection"
+      }
+    },
+    "pageSerialization": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PageSerialization"
+      }
     }
   },
   "required": [
@@ -90,7 +114,11 @@
     "kafkaPublications",
     "kafkaSubscriptions",
     "environmentVariables",
-    "externalResources"
+    "externalResources",
+    "errorCodes",
+    "exceptionHandlers",
+    "gatewayRejections",
+    "pageSerialization"
   ],
   "additionalProperties": false,
   "$defs": {
@@ -920,6 +948,208 @@
         "configurationEvidence",
         "codeEvidence",
         "details",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "SourcedFact": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "enum": [
+            "고정",
+            "던진 오류 코드",
+            "예외 메시지",
+            "검증 메시지",
+            "분기"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "source",
+        "value",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorCode": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "enumType": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "httpStatus": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "message": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "enumType",
+        "name",
+        "code",
+        "httpStatus",
+        "message",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ExceptionHandler": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "exception": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "httpStatus": {
+          "$ref": "#/$defs/SourcedFact"
+        },
+        "errorCode": {
+          "$ref": "#/$defs/SourcedFact"
+        },
+        "message": {
+          "$ref": "#/$defs/SourcedFact"
+        },
+        "body": {
+          "$ref": "#/$defs/Type"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "service",
+        "exception",
+        "httpStatus",
+        "errorCode",
+        "message",
+        "body",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "GatewayRejection": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "condition": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "httpStatus": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "body": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "filter",
+        "condition",
+        "httpStatus",
+        "body",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "PageSerialization": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/StringFact"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "service",
+        "mode",
         "evidence"
       ],
       "additionalProperties": false

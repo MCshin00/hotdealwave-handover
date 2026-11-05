@@ -83,6 +83,55 @@ public class View {
         return status;
     }
 
+    /** An error code constant: code, HTTP status and message as declared. */
+    public String errorCode(JsonNode code) {
+        return code.path("name").asText() + " (" + code.path("enumType").asText() + ") 코드 " + shown(code.path("code"))
+                + " · 상태 " + shown(code.path("httpStatus")) + " · 메시지 " + shown(code.path("message")) + " " + status(code) + " " + evidence(code);
+    }
+
+    /** An exception handler: what it catches and where status, error code and message come from. */
+    public String handler(JsonNode handler) {
+        return handler.path("id").asText() + ": " + plain(handler.path("exception")) + " → 상태 " + sourced(handler.path("httpStatus"))
+                + " · 본문 " + handler.path("body").path("type").asText() + " 오류 코드 " + sourced(handler.path("errorCode"))
+                + " · 메시지 " + sourced(handler.path("message")) + " " + status(handler) + " " + evidence(handler);
+    }
+
+    /** An exception an endpoint can raise, then the error code it carries and the handler that answers it. */
+    public String thrown(Queries.Thrown thrown) {
+        var link = thrown.link();
+        String head = link.path("exception").asText() + (link.path("errorCode").asText().isEmpty() ? "" : " " + link.path("errorCode").asText())
+                + (link.path("message").asText().isEmpty() ? "" : " \"" + link.path("message").asText() + "\"");
+        String code = thrown.errorCode().isMissingNode() ? "" : " · 오류 코드 " + shown(thrown.errorCode().path("code"))
+                + ", 상태 " + shown(thrown.errorCode().path("httpStatus")) + ", 메시지 " + shown(thrown.errorCode().path("message"));
+        var h = thrown.handler();
+        String handler = h.isMissingNode() ? "" : " · 처리기 " + h.path("id").asText() + ": 상태 " + sourced(h.path("httpStatus"))
+                + ", 본문 오류 코드 " + sourced(h.path("errorCode")) + ", 메시지 " + sourced(h.path("message"));
+        return head + code + handler + " · " + status(link) + " " + evidence(link);
+    }
+
+    /** A gateway rejection: condition, status and body. */
+    public String rejection(JsonNode rejection) {
+        return rejection.path("filter").asText() + ": 조건 " + shown(rejection.path("condition")) + " → 상태 " + shown(rejection.path("httpStatus"))
+                + " · 본문 " + (known(rejection.path("body")) && value(rejection.path("body")).isEmpty() ? "없음" : shown(rejection.path("body")))
+                + " " + status(rejection) + " " + evidence(rejection);
+    }
+
+    /** A value without its evidence: empty when the declaration has none, the status and reason when not confirmed. */
+    private String shown(JsonNode fact) {
+        if (!known(fact)) return status(fact);
+        String value = value(fact);
+        return value == null || value.isEmpty() ? "없음" : value;
+    }
+
+    /** A handler value by where it comes from. */
+    private String sourced(JsonNode fact) {
+        return switch (fact.path("source").asText()) {
+            case "고정" -> shown(fact);
+            case "던진 오류 코드" -> known(fact) ? "던진 오류 코드의 값" : status(fact);
+            default -> status(fact);
+        };
+    }
+
     /** Kind and source; the confirmation status only once the developer has set it. */
     public String item(JsonNode item) {
         return itemTag(item) + " " + item.path("title").asText();
