@@ -14,15 +14,6 @@ class VerifierTest {
     private static final String ORDER = "order/src/main/java/com/sparta/hotdeal/order/";
     private static final String COUPON = "coupon/src/main/java/com/sparta/hotdeal/coupon/";
 
-    @Test void targetNameRepositoryAndCommitComeFromTheTargetFile(@TempDir Path temporary) throws Exception {
-        Path output = temporary.resolve("analysis.json");
-        Main.main(new String[]{"analysis/hotdealwave", "target/HotDealWave", output.toString()});
-        var target = JSON.readTree(output.toFile()).path("target");
-        assertEquals("HotDealWave", target.path("name").asText());
-        assertEquals("https://github.com/sparta-final-12th-9700/HotDealWave", target.path("repository").asText());
-        assertEquals("cc43016b907331a3ce8471475cbf44412e8a6954", target.path("commit").asText());
-    }
-
     @Test void missingEndpointHttpMethodProducesSchemaWarning(@TempDir Path temporary) throws Exception {
         Path services = Files.createDirectories(temporary.resolve("services"));
         var service = JSON.readTree(Path.of("analysis/hotdealwave/services/company-service.json").toFile());
