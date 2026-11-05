@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
-/** Fixed RAG: search, one model call, then the citation check decides between an answer and abstaining. */
+/** Fixed RAG: hybrid search, one model call, then the citation check decides between an answer and abstaining. */
 @Component
 class Ask {
     record Cited(String id, String page, String title, String section) {}
@@ -37,7 +37,12 @@ class Ask {
     }
 
     Answer ask(String question) {
-        var results = search.search(question);
+        List<Search.Result> results;
+        try {
+            results = search.hybrid(question);
+        } catch (RuntimeException e) {
+            return new Answer("오류", null, List.of(), "임베딩 호출 실패: " + e.getMessage(), 0, 0);
+        }
         if (results.isEmpty()) return new Answer("보류", null, List.of(), "검색 결과 없음", 0, 0);
         var chunks = new LinkedHashMap<String, Chunk>();
         var input = new StringBuilder("조각:\n");
