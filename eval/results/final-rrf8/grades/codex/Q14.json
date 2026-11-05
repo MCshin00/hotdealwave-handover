@@ -1,0 +1,60 @@
+{
+  "id": "Q14",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 76.7,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "정각 스케줄러의 시각 일치 조건, 기간 중복 검사, 할인 후 판매가와 할인율의 의미가 코드와 일치한다. 실제 시간대·통화·세금 여부의 불확실성과 중복 검사로 판매 경계를 보장할 수 없다는 점도 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18-21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27-59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16-24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44-65",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:84-105",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154-181",
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19-29"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "LocalDateTime 저장과 Timestamp 변환, 시작·종료 처리 및 가격 계산 설명이 코드와 일치하며, 할인 판매 단가라는 설명도 주문의 수량 곱셈으로 확인된다. JVM 기본 시간대 의존성과 실제 배포·직렬화 설정의 불확실성을 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/promotion/Promotion.java:40-49",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:44-65",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154-181",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27-59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:16-24",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45-53",
+        "product/Dockerfile:19"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "시간대를 확정하지 않은 점은 타당하지만, 코드로 확인되는 시작·종료 조건과 할인 판매가의 의미까지 확인 불가로 처리하여 질문의 핵심에 답하지 못했다. 할인율 계산은 실제 구현이며, 응답 DTO에도 discountRate가 명시되어 있다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/promotion/ResGetPromotionDto.java:18-21",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:27-59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/promotion/PromotionRepositoryJpa.java:21-24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:154-159",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/promotion/PromotionService.java:178-181",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:45-53"
+      ]
+    }
+  },
+  "usage": {
+    "input": 122529,
+    "cachedInput": 90880,
+    "output": 2157
+  },
+  "seed": 45
+}

@@ -1,0 +1,27 @@
+{
+  "id": "Q18",
+  "condition": "ask",
+  "question": "쿠폰 소진이나 중복 발급, 발급 기간 종료로 발급이 실패하면 각각 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "answer": "- **쿠폰 소진**: HTTP 400 BAD_REQUEST, 오류 코드 `CO005`, 메시지 `쿠폰이 품절되었습니다.`\n- **중복 발급**: HTTP 400 BAD_REQUEST, 오류 코드 `CO006`, 메시지 `사용자가 이미 해당 쿠폰을 발급받았습니다.`\n- **발급 기간 종료**: 조각에는 발급 API가 만료일을 검사해 거절하는 오류 응답이 확인되지 않습니다. 만료일이 오늘보다 이전인 쿠폰도 삭제되지 않았다면 발급 조건에 진입할 수 있다는 설명은 **AI 해석**입니다. 따라서 발급 기간 종료 시 어떤 상태 코드와 오류 본문이 내려오는지는 확인할 수 없습니다.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "title": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "section": ""
+    },
+    {
+      "id": "C2",
+      "page": "/services/coupon-service",
+      "title": "coupon-service",
+      "section": "오류 코드 21개"
+    }
+  ],
+  "tokens": {
+    "input": 37687,
+    "output": 186
+  },
+  "seconds": 3.8
+}

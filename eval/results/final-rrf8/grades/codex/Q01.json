@@ -1,0 +1,58 @@
+{
+  "id": "Q01",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 62.9,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "주문 저장·Kafka 발행·재고 차감 흐름은 맞지만, 상품 조회 후 배송지를 순차 조회한다는 설명은 틀립니다. 실제로는 두 조회를 비동기로 시작하고 결과를 기다리며, 토픽 연결 여부와 전송 완료의 확인 한계는 명확히 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:98",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "답이 없어 주문 처리 순서에 답하지 않았고, 확인 범위도 밝히지 않았습니다.",
+      "evidence": []
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "상품·배송지 병렬 조회, 쿠폰 처리, 주문·주문상품 저장, Kafka 발행 및 상품 서비스의 재고 차감 순서를 코드와 일치하게 설명했습니다. 저장 호출과 DB 커밋의 차이, 비동기 전송 및 외부 토픽 설정에 따른 연결 확인 한계도 명확히 구분했습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:102",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:118",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:105",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14"
+      ]
+    }
+  },
+  "usage": {
+    "input": 138842,
+    "cachedInput": 93696,
+    "output": 1840
+  },
+  "seed": 45
+}

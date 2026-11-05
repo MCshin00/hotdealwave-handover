@@ -1,0 +1,93 @@
+{
+  "id": "Q08",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 34.9,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A의 주장은 코드와 일치합니다. 복귀 경로는 /payment/success이고 이 경로는 안내 템플릿만 반환합니다. 승인은 별도 confirm API에서 COMPLETE 변경과 Kafka 발행을 거치며, 전송 결과를 기다리지 않는 비동기 send라는 점도 코드와 같습니다. 도메인과 포트, 운영 화면으로의 이동은 저장소에서 확인되지 않는다고 구분해 밝혔습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-21",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44-48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:14-16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "B는 복귀 주소를 domain+/payment/success로 설명하고, 도메인이 PAY_HOST_DOMAIN 환경변수에서 온다고 짚었습니다. 게이트웨이의 /payment/** 라우팅, 문구만 있는 성공 템플릿, 승인 API의 카카오 approve 호출과 COMPLETE 처리도 모두 코드와 맞습니다. 게이트웨이 인용 줄(49)은 실제 Path 줄(52)이 아니라 라우트 블록의 시작 줄입니다. 운영 도메인 값과 이후 화면 이동은 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/resources/application.yml:29",
+        "docker-compose.yml:187",
+        "gateway/src/main/resources/application.yml:49-52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:8-21",
+        "payment/src/main/resources/templates/payment-success.html:1-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14-26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "C의 핵심 주장은 코드와 맞고, 운영 화면으로의 이동은 확인되지 않는다고 밝혔습니다. 핵심 주장은 /payment/success가 안내 화면만 반환하고, 승인은 별도 confirm API에서 COMPLETE 변경과 주문 이벤트 발행으로 처리된다는 것입니다. 다만 근거 파일:줄이 없습니다. 또 복귀 주소의 앞부분이 저장소 밖 환경변수(PAY_HOST_DOMAIN)로 정해진다는 점은 구분하지 않았습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/resources/application.yml:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-21",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 22251,
+    "cache_read_input_tokens": 78163,
+    "output_tokens": 3920,
+    "output_tokens_details": {
+      "thinking_tokens": 684
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22251,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2154,
+        "cache_read_input_tokens": 23795,
+        "cache_creation_input_tokens": 3627,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3627
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2720806
+  },
+  "seed": 45
+}

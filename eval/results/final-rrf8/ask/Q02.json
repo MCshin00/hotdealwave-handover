@@ -1,0 +1,39 @@
+{
+  "id": "Q02",
+  "condition": "ask",
+  "question": "재고를 차감한 뒤 주문 생성에 실패하면 재고를 어떻게 복구하고, 복구까지 실패하면 어떻게 처리하나요?",
+  "status": "완료",
+  "answer": "코드 설명상 재고 차감 실패 시 `rollbackOrder` 요청을 발행하고, 재고 복구 메시지 처리가 성공하면 `requestOrder`를 발행해 주문 취소를 요청합니다. 다만 이 두 후속 토픽의 구독자는 확인 안 됐고, 토픽 실제 값도 저장소에 근거가 없습니다. 따라서 주문 생성 실패 후 재고 복구·주문 롤백이 실제로 완료된다고 확인할 수는 없습니다. [AI 해석] 복구 처리 자체가 실패하면 리스너는 예외를 다시 던지지 않고 로그와 acknowledge만 수행하며, 공통 오류 처리기로 전달되지 않는 분기가 있습니다. JSON 역직렬화 등 try 밖으로 전파되는 실패에는 재시도 0회와 `product-dlq` recoverer가 설정되어 있지만, 내부 트랜잭션 종료 시 추가 예외가 나는 경우까지 항상 DLQ에 간다고 단정할 수는 없습니다. 또 `ProductKafkaProducer`는 전송 완료를 비동기로 확인하지 않아 후속 메시지 전달 성공도 보장되지 않습니다.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C2",
+      "page": "/topics/KAFKA_RESTORE_QUANTITY_TOPIC",
+      "title": "토픽 KAFKA_RESTORE_QUANTITY_TOPIC",
+      "section": ""
+    },
+    {
+      "id": "C4",
+      "page": "/topics/KAFKA_REQUEST_ORDER_TOPIC",
+      "title": "토픽 KAFKA_REQUEST_ORDER_TOPIC",
+      "section": ""
+    },
+    {
+      "id": "C5",
+      "page": "/topics/KAFKA_REDUCE_QUANTITY_TOPIC",
+      "title": "토픽 KAFKA_REDUCE_QUANTITY_TOPIC",
+      "section": ""
+    },
+    {
+      "id": "C8",
+      "page": "/topics/KAFKA_REQUEST_PAYMENT_TOPIC",
+      "title": "토픽 KAFKA_REQUEST_PAYMENT_TOPIC",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 57460,
+    "output": 274
+  },
+  "seconds": 6.0
+}

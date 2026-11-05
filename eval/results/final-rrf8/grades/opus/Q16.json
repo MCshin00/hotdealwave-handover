@@ -1,0 +1,91 @@
+{
+  "id": "Q16",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 48.4,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "생성·수정·상태 변경 때 색인 예외를 로그만 남기고 삼키는 점, 재고·할인 변경 경로에 색인 호출이 없는 점, DLQ가 재시도 0회로 설정돼 있고 색인과는 무관한 점, 목록 조회는 ES만 쓴다는 점이 모두 코드와 맞습니다. 버전·재색인 장치가 없다는 결론도 맞고, 운영 쪽 복구 시스템은 확인할 수 없다고 구분해 밝혔습니다. 삭제 경로는 다루지 않았지만 핵심이 빠진 것은 아닙니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:136",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179-185",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:246-251",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99-107",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/application/scheduler/PromotionScheduler.java:59",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58-64"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "색인 예외를 삼키는 점, 삭제 때는 deleteById 예외가 그대로 전파된다는 점, 재고·할인 변경 경로에 색인이 없다는 점이 코드와 맞습니다. ProductDocument에 버전 필드가 없어 순서 역전을 막지 못한다는 점, DLQ(0회 재시도)는 ES 재시도 장치가 아니라는 점도 맞습니다. ES 클라이언트 설정에 재시도 정책이 없다는 점은 확인했다고 적고, 운영·클라이언트 내부 동작은 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:141-161",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18-34",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99-107",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29-55",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58-64",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ElasticsearchConfig.java:25-36"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "재시도·정합성 보정 절차가 없다는 점, 색인 예외를 삼켜 성공 응답이 갈 수 있다는 점, 재고 증감이 색인을 갱신하지 않는다는 점은 코드와 맞습니다. 다만 근거 파일:줄을 하나도 대지 않았습니다. 또 '부재'를 저장소 전체에서 확인된 사실이 아니라 '조각' 자료의 한계로만 표현해서, 코드로 확인된 부재와 저장소 밖 운영 요소를 따로 구분하지 않았습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24-26",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99-107"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 22753,
+    "cache_read_input_tokens": 62371,
+    "output_tokens": 4196,
+    "output_tokens_details": {
+      "thinking_tokens": 1609
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 22753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3214,
+        "cache_read_input_tokens": 26361,
+        "cache_creation_input_tokens": 1563,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1563
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2784502
+  },
+  "seed": 45
+}

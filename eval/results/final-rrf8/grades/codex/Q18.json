@@ -1,0 +1,64 @@
+{
+  "id": "Q18",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 63.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "소진 시 검사 순서와 중복 발급, 발급 경로의 만료일 검사 부재는 정확하며 확인 범위도 명시했습니다. 다만 오류 본문의 필드와 메시지는 DTO·예외 처리기·ErrorCode로 확인되므로 확인 불가라는 주장은 잘못됐습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:12"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "CO005·CO006의 상태와 메시지, 발급 시 만료일 검사 부재는 맞습니다. 그러나 소진을 CO005로 단정해 정상 소진 후 CO004가 반환되는 경로를 놓쳤고, 오류 본문 구조와 만료 삭제 후 CO001 경로도 빠졌습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:13",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:111"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소진 상태와 검사 순서에 따른 CO004·CO005, 중복의 CO006, 만료 삭제 후 CO001 및 공통 오류 본문이 코드와 일치합니다. 발급과 검증의 만료 처리를 구별하고 실제 스케줄러 실행 여부는 저장소만으로 확인할 수 없다고 명시했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:12",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:111",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/scheduler/CouponExpirationScheduler.java:17"
+      ]
+    }
+  },
+  "usage": {
+    "input": 77489,
+    "cachedInput": 48640,
+    "output": 1570
+  },
+  "seed": 45
+}

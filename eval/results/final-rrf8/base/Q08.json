@@ -1,0 +1,21 @@
+{
+  "id": "Q08",
+  "condition": "base",
+  "question": "카카오페이 결제를 마친 뒤 어떤 주소로 돌아와서 어떤 처리를 거쳐 운영 화면으로 이동하나요?",
+  "status": "완료",
+  "seconds": 60.5,
+  "tokens": {
+    "input": 127769,
+    "cachedInput": 109184,
+    "output": 1691
+  },
+  "mcpTools": [],
+  "commands": 7,
+  "answer": "저장소에서 확인되는 흐름은 **성공 주소로 복귀해 ‘결제 완료 페이지’를 표시하는 것까지**입니다. 이 페이지에서 결제를 자동 승인하거나 운영 화면으로 이동하는 처리는 없습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n1. **돌아오는 주소는 `${PAY_HOST_DOMAIN}/payment/success`입니다.** 카카오페이 결제 준비 요청의 `approvalUrl`을 `domain + \"/payment/success\"`로 설정하며, 도메인은 환경변수 `PAY_HOST_DOMAIN`에서 가져옵니다. 실제 운영 도메인 값은 저장소에서 확인할 수 없습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41`, `payment/src/main/resources/application.yml:29`, `docker-compose.yml:187`)\n\n2. **복귀 요청은 성공 화면을 렌더링합니다.** 게이트웨이는 `/payment/**`를 결제 서비스로 전달하고, `GET /payment/success`는 `payment-success` 템플릿을 반환합니다. 템플릿에는 “결제 완료 페이지” 문구만 있고, 토큰 추출·승인 API 호출·화면 이동 스크립트가 없습니다. (`gateway/src/main/resources/application.yml:49`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:8`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18`, `payment/src/main/resources/templates/payment-success.html:1`)\n\n3. **실제 결제 승인은 별도의 API입니다.** `POST /api/v1/payments/confirm`에 `tid`, `pgToken`을 보내면 인증 사용자의 ID로 승인 서비스를 호출합니다. 서비스는 `tid`로 결제를 조회하고 카카오페이 `/online/v1/payment/approve`를 호출한 뒤, 결제 상태를 `COMPLETE`로 바꾸고 주문 상태도 `COMPLETE`로 변경하도록 메시지를 보냅니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:13`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22`)\n\n4. **승인 이후 운영 화면으로 이동하는 주소와 연결 로직은 확인할 수 없습니다.** 승인 API는 결과를 `ResponseDto`로 반환하고, 성공 페이지에도 이동 코드가 없습니다. 따라서 “복귀 → 자동 승인 → 운영 화면 이동”이 구현되어 있다고 설명할 근거는 없습니다. (`payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48`, `payment/src/main/resources/templates/payment-success.html:1`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

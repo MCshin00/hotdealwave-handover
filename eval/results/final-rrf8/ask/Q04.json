@@ -1,0 +1,27 @@
+{
+  "id": "Q04",
+  "condition": "ask",
+  "question": "운영 RDS와 Redis의 실제 접속 대상과 인증 정보는 어디서 확인하고, 배포된 서비스가 그 대상으로 접속하는지는 어떻게 확인하나요?",
+  "status": "완료",
+  "answer": "운영 RDS·Redis의 실제 접속 대상과 인증 정보는 저장소에 값이 없고, 저장소 밖의 환경변수에서 정해집니다. 따라서 배포 환경의 환경변수·시크릿 설정에서 확인해야 합니다. 예를 들어 coupon-service의 운영 DB는 `PROD_DB_ENDPOINT`, `PROD_DB_USERNAME`, `PROD_DB_PASSWORD`, Redis는 `REDIS_PROD_HOST`, `REDIS_PROD_PORT`, `REDIS_PROD_USERNAME`, `REDIS_PROD_PASSWORD`로 연결됩니다. order-service도 같은 운영 DB·Redis 변수와 함께 `ACTIVE_PROFILE`을 사용합니다. (C2: [coupon/src/main/resources/application-prod.yml:3], [coupon/src/main/resources/application-prod.yml:4], [coupon/src/main/resources/application-prod.yml:5], [coupon/src/main/resources/application-prod.yml:16], [coupon/src/main/resources/application-prod.yml:17], [coupon/src/main/resources/application-prod.yml:18], [coupon/src/main/resources/application-prod.yml:19]; C3: [order/src/main/resources/application-prod.yml:3], [order/src/main/resources/application-prod.yml:4], [order/src/main/resources/application-prod.yml:5], [order/src/main/resources/application-prod.yml:22], [order/src/main/resources/application-prod.yml:23], [order/src/main/resources/application-prod.yml:24], [order/src/main/resources/application-prod.yml:25], [order/src/main/resources/application.yml:5])\n\n실제 배포된 서비스가 그 대상으로 접속 중인지는 이 조각만으로 확인할 수 없습니다. 배포 환경에서 활성 프로파일과 실제 주입된 변수·시크릿을 확인한 뒤, 서비스 런타임의 DB·Redis 연결 상태나 접속 로그를 대조해야 합니다. 제공된 조각은 환경변수 값이 저장소 밖에 있다고만 밝히며, 배포된 인스턴스의 현재 설정이나 연결 성공 여부는 제시하지 않습니다.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C2",
+      "page": "/services/coupon-service",
+      "title": "coupon-service",
+      "section": "환경변수"
+    },
+    {
+      "id": "C3",
+      "page": "/services/order-service",
+      "title": "order-service",
+      "section": "환경변수"
+    }
+  ],
+  "tokens": {
+    "input": 17831,
+    "output": 445
+  },
+  "seconds": 5.3
+}

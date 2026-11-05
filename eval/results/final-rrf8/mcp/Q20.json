@@ -1,0 +1,51 @@
+{
+  "id": "Q20",
+  "condition": "mcp",
+  "question": "Gateway 자체에서 요청을 거부한 경우와 대상 서비스에서 실패한 경우를 어떻게 구분하고, 각 오류 응답은 어떤 처리를 거쳐 클라이언트에 반환되나요?",
+  "status": "완료",
+  "seconds": 62.7,
+  "tokens": {
+    "input": 239344,
+    "cachedInput": 210560,
+    "output": 2060
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page"
+  ],
+  "mcpFailed": [
+    "search_docs"
+  ],
+  "commands": 0,
+  "answer": "**오류가 발생한 위치와 응답을 만든 처리기를 기준으로 구분해야 합니다.** 다만 MCP 문서로는 서비스 내부의 오류 처리 사례까지 확인되며, **Gateway 자체 거부 응답의 생성 과정과 서비스 응답의 최종 전달·변환 과정은 확인되지 않습니다.**\n\n1. **Gateway에서 판단하는 것은 우선 인증 통과 여부입니다.**  \n   인증 제외 경로는 JWT 추출·검증과 사용자 헤더 설정 전에 그대로 전달합니다. 인증을 통과하는 경로에서는 `X-User-UserId`, `X-User-Email`, `X-User-Role`을 설정합니다. 따라서 Gateway의 인증 단계와 서비스 내부의 인증·업무 처리 단계는 구분해야 합니다.  \n   근거: `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:40`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:41`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:42`\n\n   **그러나 토큰 누락·검증 실패 시 Gateway가 어떤 예외 처리기를 거쳐 어떤 HTTP 상태·JSON 본문을 쓰는지는 제공된 문서에서 확인할 수 없습니다.** 이를 “항상 401을 직접 반환한다”거나 특정 공통 오류 형식을 쓴다고 단정할 근거는 없습니다.\n\n2. **대상 서비스의 업무 오류는 해당 서비스의 예외 처리기가 응답으로 바꾸는 사례가 확인됩니다.**  \n   예를 들어 결제 상세 조회는 요청자 소유의 미삭제 결제가 없으면 `404 / PA001`로 처리됩니다. 확인되는 흐름은 **서비스 조회 실패 → 서비스의 오류 코드·`GlobalExceptionHandler` → HTTP 오류 응답**입니다. 이 엔드포인트는 코드 확인만 되었고 실제 오류 응답을 호출해 검증한 기록은 없습니다.  \n   근거: `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:72`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:73`, `payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20`, `payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23`, `payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:26`, `payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:27`\n\n   사용자 서비스에서는 이메일 인증 조건을 충족하지 못한 가입 요청의 `IllegalArgumentException`을 **HTTP 400의 `errorMessage` 응답**으로 바꿉니다. 오류 응답은 서비스별 처리 근거를 확인해야 합니다.  \n   근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:161`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:162`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:163`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:19`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25`\n\n3. **인증 관련 실패라도 대상 서비스에서 발생할 수 있습니다.**  \n   리뷰 GET은 Gateway의 인증 제외 경로이지만, product 서비스 필터는 리뷰 GET을 제외하지 않습니다. 사용자 헤더가 누락되면 서비스 필터에서 `javax.security.sasl.AuthenticationException`을 던져 컨트롤러 전에 막힙니다. 이는 Gateway 자체 거부와 다른 경로입니다.  \n   근거: `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12`, `gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:28`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:40`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50`\n\n   실제 리뷰 목록 응답에는 **500 / Internal Server Error**가 기록되어 있습니다. 다만 요청 헤더가 기록되지 않아, 그 500의 원인을 위 헤더 누락 분기로 확정할 수는 없습니다.  \n   근거: `responses/product-service.ReviewController.getReviewList.json:3`, `responses/product-service.ReviewController.getReviewList.json:4`, `responses/product-service.ReviewController.getReviewList.json:7`, `responses/product-service.ReviewController.getReviewList.json:11`\n\n**클라이언트에 반환되는 마지막 단계는 근거가 부족합니다.** 서비스 오류 응답을 Gateway가 그대로 전달하는지, 본문·헤더를 재작성하는지, Gateway 자체 예외와 공통 형식으로 통합하는지는 이번 MCP 문서에서 확인할 수 없습니다. 따라서 위 서비스별 응답 생성 과정과 실제 저장된 응답을 넘어, 전체 반환 경로를 확정해서 설명할 수는 없습니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "Q18",
+  "condition": "base",
+  "question": "쿠폰 소진이나 중복 발급, 발급 기간 종료로 발급이 실패하면 각각 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "seconds": 71.0,
+  "tokens": {
+    "input": 256205,
+    "cachedInput": 218880,
+    "output": 2148
+  },
+  "mcpTools": [],
+  "commands": 8,
+  "answer": "**쿠폰 소진은 상태에 따라 `400 / CO004` 또는 `400 / CO005`, 중복 발급은 `400 / CO006`입니다. 발급 기간 종료만을 검사하는 로직은 없으며, 만료 후 삭제 처리된 쿠폰이면 `404 / CO001`입니다.** 아래는 발급 API의 코드 흐름에 따른 구분입니다.\n\n| 실패 상황 | HTTP 상태 | 오류 `code` / `message` | 근거 |\n|---|---|---|---|\n| 정상 발급으로 수량이 소진되어 `OUT_OF_STOCK` 상태인 경우 | **400 Bad Request** | `CO004` / `쿠폰 상태가 유효하지 않습니다.` | 마지막 발급에서 상태를 변경하고, 다음 요청은 수량보다 상태를 먼저 검사합니다. `coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:12` |\n| 상태는 `ISSUED`지만 발급 수량이 전체 수량 이상인 경우 | **400 Bad Request** | `CO005` / `쿠폰이 품절되었습니다.` | `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:13` |\n| 상태·수량 검사를 통과했지만 사용자가 이미 발급받은 경우 | **400 Bad Request** | `CO006` / `사용자가 이미 해당 쿠폰을 발급받았습니다.` | `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14` |\n| 만료일이 지나 스케줄러가 쿠폰 정보를 소프트 삭제한 경우 | **404 Not Found** | `CO001` / `해당 쿠폰 정보 ID가 존재하지 않습니다.` | 만료 정보를 삭제하며, 발급 시에는 삭제되지 않은 정보만 조회합니다. `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9` |\n\n오류 본문은 공통으로 아래 형태입니다. `timestamp`는 응답 생성 시각이며, `code`와 `message`에는 위 표의 값이 들어갑니다. 예외 처리기가 해당 HTTP 상태와 오류 DTO를 직접 반환합니다.  \n근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:19`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19`\n\n```json\n{\n  \"timestamp\": \"<응답 생성 시각>\",\n  \"code\": \"CO006\",\n  \"message\": \"사용자가 이미 해당 쿠폰을 발급받았습니다.\"\n}\n```\n\n**기간 종료 응답을 항상 특정 코드로 단정할 수는 없습니다.** 발급 처리에는 만료일 검사가 없어 삭제 전에는 다른 조건을 충족하면 발급될 수 있습니다. `400 / CO008 / 쿠폰이 만료되었습니다.`는 발급이 아닌 `validateCoupon`의 만료 검사에서 발생합니다. 실제 운영에서 스케줄러가 실행되어 삭제가 완료됐는지는 저장소만으로 확인할 수 없습니다.  \n근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:27`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:55`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:16`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/scheduler/CouponExpirationScheduler.java:17`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

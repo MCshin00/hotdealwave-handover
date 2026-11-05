@@ -1,0 +1,99 @@
+{
+  "id": "Q11",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 54.3,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "/payment/success는 승인·주문 확인 없이 고정 템플릿만 반환한다는 점과, confirm API→카카오 승인→Payment COMPLETE→Kafka send→Order consumer→OrderStatus.valueOf로 이어지는 경로가 모두 코드와 일치한다. 성공 화면에서 승인으로 이어지는 연결과 주문 반영 시점은 확인되지 않는다고 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/resources/application.yml:18",
+        "order/src/main/resources/application.yml:17",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "답이 없어 질문에 답하지 못했다.",
+      "evidence": []
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "화면 표시 기준, 승인→Kafka→Order 경로, send 결과 미확인, MANUAL ACK인데 ack 호출이 없다는 점은 코드와 맞다. 다만 메서드명을 PaymentEventProducer.updateOrderStatus(실제 sendUpdateOrderStatusMessage), OrderStatusUpdateEventConsumer.updateStatus(실제 consumeUpdateOrderStatus)로 잘못 적었다. 토픽 실제 값이 외부 환경변수로 정해진다는 점과 카카오 서버 동작은 저장소 밖이라는 점은 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "docker-compose.yml:157",
+        "docker-compose.yml:196",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 32117,
+    "cache_read_input_tokens": 160724,
+    "output_tokens": 5948,
+    "output_tokens_details": {
+      "thinking_tokens": 1882
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 32117,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2943,
+        "cache_read_input_tokens": 36856,
+        "cache_creation_input_tokens": 432,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 432
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.40809680000000004
+  },
+  "seed": 45
+}

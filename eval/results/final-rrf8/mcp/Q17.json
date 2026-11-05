@@ -1,0 +1,33 @@
+{
+  "id": "Q17",
+  "condition": "mcp",
+  "question": "외부 메일 발송 계정의 인증 상태와 발송 제한, 수신 거부나 발송 실패 기록은 어디서 확인할 수 있나요?",
+  "status": "완료",
+  "seconds": 45.5,
+  "tokens": {
+    "input": 149085,
+    "cachedInput": 130304,
+    "output": 1117
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "**외부 메일 계정의 실제 인증 상태·발송 한도·수신 거부 이력은 제공된 MCP 문서와 저장소 근거만으로 확인할 수 없습니다.** 확인 가능한 설정과 추가 확인 위치는 다음과 같습니다.\n\n- **계정 인증 상태:** 저장소에서는 `EMAIL_SERVICE_USERNAME`, `EMAIL_SERVICE_PASSWORD`를 외부 환경변수로 주입하는 구조만 확인됩니다. 현재 자격 증명의 유효성이나 계정 차단 여부는 배포 환경과 메일 제공자의 계정·보안 화면에서 별도로 확인해야 합니다. 근거: `docker-compose.yml:34`, `docker-compose.yml:35`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:19`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:22`.\n\n- **발송 제한:** 제공자 측 일일 한도·속도 제한·남은 할당량은 확인할 수 없습니다. 메일 제공자의 한도·사용량 화면에서 확인할 항목입니다. 코드에 있는 `1800000ms`는 **인증 코드 유효기간**이며 발송 한도가 아닙니다. 근거: `user/src/main/resources/application.yml:22`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/redis/RedisUtilImpl.java:17`.\n\n- **수신 거부 기록:** 제공된 문서에서 수신 거부 기록의 저장·조회 위치는 확인되지 않았습니다. 확인된 이메일 상태는 가입용 인증 코드 일치 시 설정하는 `verified`입니다. 이를 수신 동의나 거부 기록으로 해석할 수 없습니다. 메일 제공자의 수신 거부·차단 목록 제공 여부를 별도로 확인해야 합니다. 근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:95`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:99`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:100`.\n\n- **발송 실패 기록:** 확인된 구현은 `@Async void` 발송 중 발생한 예외를 `IllegalArgumentException`으로 바꾸는 처리입니다. **요청의 HTTP 200만으로 발송 성공을 판단할 수 없습니다.** 운영 `user-service`의 비동기 예외 로그와 메일 제공자의 전송·반송 이력을 확인할 것을 권합니다. 다만 실제 로그 보관 위치나 실패 이력 조회 화면은 저장소 근거로 확인할 수 없습니다. 근거: `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:18`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:21`, `user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:25`, `user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:53`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

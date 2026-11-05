@@ -1,0 +1,64 @@
+{
+  "id": "Q09",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 58.3,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "운영 콘솔·등록값·실제 환경변수 값은 저장소만으로 확인할 수 없다는 판단이 맞다. 환경변수 연결과 취소·실패 복귀 주소가 화면 의미와 뒤바뀐다는 설명도 코드와 일치한다.",
+      "evidence": [
+        "README.md:125",
+        "docker-compose.yml:175",
+        "docker-compose.yml:185-187",
+        "payment/src/main/resources/application.yml:26-29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35-36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:23-30",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "콘솔 위치와 콘솔에 등록된 도메인·복귀 주소, 운영 설정과의 일치 여부를 확인할 근거가 없다는 핵심 답변은 맞다. 코드상 복귀 경로 설명은 생략했지만, 실제 등록값이나 운영 일치 여부를 확인했다고 주장하지 않았다.",
+      "evidence": [
+        "README.md:125",
+        "docker-compose.yml:185-187",
+        "payment/src/main/resources/application.yml:26-29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "외부에서 정해지는 운영값과 코드에서 확인되는 복귀 경로를 정확히 구분했다. 취소·실패 주소의 역전과 성공 화면 반환이 별도 승인 처리와 구분된다는 추가 설명도 코드와 일치한다.",
+      "evidence": [
+        "docker-compose.yml:185-187",
+        "payment/src/main/resources/application.yml:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35-36",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-30",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44-48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61-65"
+      ]
+    }
+  },
+  "usage": {
+    "input": 72441,
+    "cachedInput": 52864,
+    "output": 1828
+  },
+  "seed": 45
+}

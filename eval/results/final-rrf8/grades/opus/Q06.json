@@ -1,0 +1,88 @@
+{
+  "id": "Q06",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 34.1,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "락 획득 → @Transactional 헬퍼에서 검증·증가·save → 커밋 → finally에서 락 해제 → 201 응답이라는 동기 흐름이 코드와 일치하고, 틀린 주장이 없습니다. 실제 운영 시점의 커밋 여부와 처리 시간은 코드로 확인할 수 없다는 점, 그리고 컨트롤러 테스트가 서비스를 mock으로 대체한다는 점을 구분해 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35-52",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:67-77",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponRepositoryImpl.java:9",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:14",
+        "coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:42-85"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "10초 락 대기, 실패 시 408/CO020, 검증 항목, OUT_OF_STOCK 전환, 같은 트랜잭션에서 저장, 락 해제 후 201·data null 응답이라는 주장이 모두 코드와 맞습니다. 다만 근거 파일:줄을 하나도 제시하지 않았습니다. 또 코드로 확인되는 처리 순서와 트랜잭션 설명까지 통째로 'AI 해석'이라고 표시해, 확인된 것과 확인되지 않는 것을 제대로 가르지 못했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:39-44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:28",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30-35"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "삭제되지 않은 쿠폰 정보 조회부터 검증, 수량 증가, 저장, 락 해제, 201 응답까지의 흐름이 줄 단위 근거와 정확히 일치합니다. coupon 모듈에는 Kafka 사용이 없어 응답 후 비동기로 저장하는 경로가 없다는 주장도 맞습니다. 응답 기록 파일의 201·data null을 인용하면서도, 그 기록만으로는 커밋과 응답 사이의 시간 차이를 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35-50",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6-12"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 19806,
+    "cache_read_input_tokens": 57124,
+    "output_tokens": 3644,
+    "output_tokens_details": {
+      "thinking_tokens": 931
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19806,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2205,
+        "cache_read_input_tokens": 22454,
+        "cache_creation_input_tokens": 2523,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2523
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2427848
+  },
+  "seed": 45
+}

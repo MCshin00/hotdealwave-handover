@@ -1,0 +1,62 @@
+{
+  "id": "Q08",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 73.9,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "성공 경로의 안내 화면과 별도 승인 API, 결제·주문 상태 처리에 대한 설명이 코드와 일치한다. 운영 도메인과 화면 이동 연결의 미확인 여부, 비동기 주문 갱신의 한계도 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-20",
+        "payment/src/main/resources/templates/payment-success.html:1-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51-52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25-29",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26-30"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "환경변수를 포함한 복귀 주소 구성, 게이트웨이 경로, 안내 화면과 별도 승인 처리를 정확히 설명했다. 실제 운영 도메인 값과 운영 화면으로의 이동 로직이 확인되지 않는다는 점도 명확하다.",
+      "evidence": [
+        "payment/src/main/resources/application.yml:25-29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35-47",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "gateway/src/main/resources/application.yml:49-54",
+        "payment/src/main/resources/templates/payment-success.html:1-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44-48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14-25"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "복귀 경로, 안내 화면, 별도 승인 API와 COMPLETE 상태·이벤트 처리는 코드와 일치한다. 운영 화면 이동의 미확인은 밝혔지만, 복귀 주소에 환경변수로 정해지는 도메인이 붙는다는 점과 그 실제 값의 미확인은 구분하지 않았다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/resources/application.yml:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-20",
+        "payment/src/main/resources/templates/payment-success.html:1-12",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33-48",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/dtos/payment/req/ReqPostPaymentConfirmDto.java:13-16",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58-67"
+      ]
+    }
+  },
+  "usage": {
+    "input": 109889,
+    "cachedInput": 75392,
+    "output": 2096
+  },
+  "seed": 45
+}

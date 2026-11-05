@@ -1,0 +1,68 @@
+{
+  "id": "Q06",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 57.8,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "락 획득, 조건 검사, 발급 수 갱신과 사용자 쿠폰 저장, 트랜잭션 완료 후 성공 응답이라는 설명이 코드와 일치합니다. save 호출과 커밋을 구분하고, 실제 운영 결과와 mock 테스트의 확인 한계도 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:48",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:72",
+        "coupon/src/test/java/com/sparta/hotdeal/coupon/controller/CouponControllerTest.java:42"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "성공 응답 전 트랜잭션에서 검증·수량 갱신·저장이 이루어진다는 핵심과 408/CO020, 응답 data=null 설명이 모두 코드와 일치합니다. 설명을 코드에서 확인되는 흐름에 한정했으며, 실제 실행이나 저장소 밖의 연결을 단정하지 않았습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:28",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:35"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "응답 전에 동기 호출로 검증·갱신·저장을 완료한다는 설명이 코드와 일치하며, 이 경로에 Kafka 발행은 없습니다. 제공된 파일의 201 응답 기록과 실제 DB 커밋 시점의 확인 한계를 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:48",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:111",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:49",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12"
+      ]
+    }
+  },
+  "usage": {
+    "input": 63631,
+    "cachedInput": 38912,
+    "output": 1762
+  },
+  "seed": 45
+}

@@ -1,0 +1,42 @@
+{
+  "id": "Q21",
+  "condition": "mcp",
+  "question": "Grafana에 실제 연결된 데이터 소스와 대시보드 조회 조건은 어디서 관리하고, 누락된 서비스의 지표와 로그가 저장된 대상을 보고 있나요?",
+  "status": "완료",
+  "seconds": 36.7,
+  "tokens": {
+    "input": 154781,
+    "cachedInput": 139008,
+    "output": 874
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs"
+  ],
+  "mcpFailed": [
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs"
+  ],
+  "commands": 0,
+  "answer": "**제공된 MCP 문서만으로는 Grafana의 실제 데이터 소스·대시보드 조회 조건의 관리 위치를 확인할 수 없으며, 누락된 서비스의 지표·로그 저장 대상을 조회하고 있는지도 판정할 수 없습니다.**\n\n| 질문 | 확인 결과 |\n|---|---|\n| 실제 연결된 데이터 소스는 어디서 관리하나요? | Grafana 연결 URL·데이터 소스 UID·프로비저닝 설정의 근거가 반환되지 않아 **확인 불가**입니다. |\n| 대시보드 조회 조건은 어디서 관리하나요? | 대시보드 정의·패널 쿼리·변수·라벨 필터의 근거가 반환되지 않아 **확인 불가**입니다. |\n| 누락된 서비스의 지표·로그가 저장된 대상을 보고 있나요? | 서비스별 수집 대상 → 저장소 → Grafana 데이터 소스 → 패널 쿼리 연결을 입증하는 근거가 없어 **확인 불가**입니다. |\n\n도구에서 확인되는 애플리케이션 DB·Redis 설정을 Grafana 데이터 소스로 해석해서는 안 됩니다. 예를 들어 `user-service` 문서는 `spring.datasource.url`과 `spring.data.redis.host`를 각각 외부 환경변수로 설정하며, 실제 값은 저장소에 근거가 없다고 명시합니다. 이 설정은 Grafana 연결을 입증하지 않습니다. (`user/src/main/resources/application-prod.yml:3`, `user/src/main/resources/application-prod.yml:15`)\n\n`Grafana`, `prometheus`, `loki`, `dashboard`, `logback`, `actuator`, `지표`, `수집` 검색에서는 관련 문서가 반환되지 않았습니다. 이는 **설정이 저장소에 없다는 증명은 아닙니다**. 위 확인 불가 항목에는 도구가 제시한 `파일:줄` 근거가 없어 임의로 붙이지 않았습니다.\n\n판정하려면 운영 Grafana의 데이터 소스 설정과 대시보드 JSON, 해당 서비스의 지표·로그 수집 및 저장 대상 설정을 대조해야 합니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

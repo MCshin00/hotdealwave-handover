@@ -1,0 +1,96 @@
+{
+  "id": "Q04",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 33.2,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "coupon·order prod yml의 DB·Redis 환경변수 매핑과 order의 ACTIVE_PROFILE 인용은 코드와 맞고, 실제 값이 저장소 밖에 있다는 점도 밝혔다. 다만 docker-compose 환경변수 전달이나 EC2 배포 워크플로처럼 저장소에서 확인되는 주입 경로를 짚지 않았다. '배포 환경의 시크릿 설정', '런타임 연결 상태 확인'처럼 일반론에 그쳐 질문의 확인 방법 부분이 빈약하다.",
+      "evidence": [
+        "coupon/src/main/resources/application-prod.yml:3-5",
+        "coupon/src/main/resources/application-prod.yml:16-19",
+        "order/src/main/resources/application-prod.yml:3-5",
+        "order/src/main/resources/application-prod.yml:22-25",
+        "order/src/main/resources/application.yml:5",
+        "docker-compose.yml:37-44"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "user prod yml의 변수 매핑, user-service와 order-service의 Compose 전달 선언(37-44, 142-144, 159-162), application.yml의 ACTIVE_PROFILE 연결이 모두 코드와 일치한다. 공급원은 저장소로 특정할 수 없다는 점과, 검증 절차는 권장 사항일 뿐 실행 결과가 아니라는 점을 구분해 밝혔다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/application-prod.yml:15-18",
+        "user/src/main/resources/application.yml:5",
+        "docker-compose.yml:32",
+        "docker-compose.yml:37-44",
+        "docker-compose.yml:142-144",
+        "docker-compose.yml:159-162"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "주장이 모두 코드와 일치한다. EC2 배포 경로(secrets.EC2_*, /home/ubuntu/HotDealWave, docker-compose pull/up), Git에서 제외되는 .env, 배포 스크립트에 DB·Redis 변수 생성 단계가 없다는 점이 맞다. user RedisTemplate·order RedisCacheManager·coupon RedissonClient의 연결·인증 조건, health show-details 설정, coupon 익명 허용 목록에 /actuator/prometheus만 있다는 점도 맞다. .env 등은 후보일 뿐이며 GitHub Secrets나 Secrets Manager에 있다고 단정할 근거가 없다는 점을 명확히 구분했다.",
+      "evidence": [
+        ".github/workflows/actions.yml:74-77",
+        ".github/workflows/actions.yml:87-95",
+        ".gitignore:2",
+        "docker-compose.yml:28-44",
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/application-prod.yml:15-18",
+        "user/src/main/resources/application.yml:5",
+        "user/src/main/resources/application.yml:30-37",
+        "coupon/src/main/resources/application.yml:15-22",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:25-33",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:27-34",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/RedisConfig.java:13",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CacheConfig.java:19"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 23297,
+    "cache_read_input_tokens": 63100,
+    "output_tokens": 3377,
+    "output_tokens_details": {
+      "thinking_tokens": 853
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23297,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1963,
+        "cache_read_input_tokens": 25275,
+        "cache_creation_input_tokens": 3193,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3193
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.26656799999999997
+  },
+  "seed": 45
+}

@@ -1,0 +1,21 @@
+{
+  "id": "Q02",
+  "condition": "base",
+  "question": "재고를 차감한 뒤 주문 생성에 실패하면 재고를 어떻게 복구하고, 복구까지 실패하면 어떻게 처리하나요?",
+  "status": "완료",
+  "seconds": 88.9,
+  "tokens": {
+    "input": 307774,
+    "cachedInput": 251776,
+    "output": 2399
+  },
+  "mcpTools": [],
+  "commands": 11,
+  "answer": "**현재 코드에서는 “재고 차감 후 주문 생성 실패 시 반드시 복구된다”고 보장할 수 없습니다.** 주문 저장 호출이 먼저이고, 이후 Kafka로 재고 차감을 요청하며, `createOrder()`에는 실패 시 재고를 복구하는 처리가 없습니다.  \n근거: `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108`, `order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122`\n\n1. **구현된 보상 경로는 재고 차감 이후의 결제 준비 실패입니다.** 결제 서비스가 주문 조회 또는 결제 준비에 실패하면 주문을 다시 조회하고, 재고 복구 메시지를 발행합니다. 따라서 주문 자체가 없어 조회가 계속 실패하면 복구 메시지 발행까지 도달하지 못합니다.  \n   근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:29`, `payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55`\n\n2. **재고 복구는 요청 수량을 다시 더하는 방식입니다.** 상품 서비스가 복구 메시지를 받아 `restoreQuantity()`를 호출하고 상품 수량을 증가시킵니다. 할인 상품은 프로모션 잔여 수량도 증가시킵니다. 복구 호출이 정상 반환하면 ACK 후 주문 취소 메시지를 보냅니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:47`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:100`, `product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:40`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:64`\n\n3. **복구 요청 단계가 실패하면 오류 로그만 남깁니다.** 주문 재조회나 복구 메시지 생성·발행 호출에서 잡힌 예외에 대해 재시도나 DLQ 전송을 하지 않습니다. 또한 Kafka 발행 결과를 기다리거나 실패 콜백을 등록하지 않아 비동기 전송 실패까지 이 처리에서 포착한다고 볼 수 없습니다.  \n   근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51`\n\n4. **상품 서비스의 복구 처리 중 잡힌 예외도 로그를 남기고 ACK합니다.** 해당 catch 블록에는 재시도·DLQ 전송·주문 취소 메시지 발행이 없습니다. 별도로 리스너 밖으로 전파되는 예외에는 재시도 0회 후 `product-dlq`로 보내는 설정이 있지만, 잡아서 처리한 복구 예외가 모두 이 경로로 전달되는 것은 아닙니다.  \n   근거: `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58`\n\n**실패한 복구를 운영자가 반드시 재처리하는지, 최종적으로 재고가 복구됐는지는 저장소만으로 확인할 수 없습니다.** 위 실패 처리 코드에서 확인되는 후속 조치는 로그와 ACK까지입니다.  \n근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

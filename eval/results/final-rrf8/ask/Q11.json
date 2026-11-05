@@ -1,0 +1,14 @@
+{
+  "id": "Q11",
+  "condition": "ask",
+  "question": "결제 완료 안내는 어떤 처리 결과를 기준으로 표시되고, Payment의 결제 결과가 Order에 전달돼 주문 상태가 바뀌기까지 어떤 경로를 거치나요?",
+  "status": "보류",
+  "answer": null,
+  "reason": "인용 검사: 인용한 조각에 없는 order/src/main/java/com/sparta/hotdeal/order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/OrderStatus.java:9",
+  "citations": [],
+  "tokens": {
+    "input": 53671,
+    "output": 718
+  },
+  "seconds": 7.5
+}

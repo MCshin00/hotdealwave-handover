@@ -1,0 +1,62 @@
+{
+  "id": "Q04",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 49.6,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "DB·Redis 변수명과 활성 프로파일 설명이 코드와 일치합니다. 실제 값은 배포 환경에서 확인하고, 현재 접속 여부는 런타임 설정·연결 상태와 대조해야 한다며 저장소의 확인 한계를 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/resources/application-prod.yml:3-5",
+        "coupon/src/main/resources/application-prod.yml:16-19",
+        "order/src/main/resources/application-prod.yml:3-5",
+        "order/src/main/resources/application-prod.yml:22-25",
+        "order/src/main/resources/application.yml:5"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "환경변수에서 Compose와 Spring 설정으로 이어지는 전달 경로가 코드와 일치합니다. 비밀값 공급원의 후보와 실제 사용 여부를 구분하고, 서비스 자체의 연결을 검증하는 절차도 미실행 제안임을 명시했습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/application-prod.yml:15-18",
+        "user/src/main/resources/application.yml:5",
+        "docker-compose.yml:32",
+        "docker-compose.yml:37-44",
+        "docker-compose.yml:142-144",
+        "docker-compose.yml:159-162"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "워크플로의 EC2 작업 경로, Redis 클라이언트 구성, Health 상세 설정과 coupon의 인증 제한까지 코드와 일치합니다. 운영 .env의 존재·실제 비밀값·현재 연결은 미확인으로 구분하고, Health 성공만으로 접속 대상의 신원을 증명할 수 없다는 한계도 밝혔습니다.",
+      "evidence": [
+        "user/src/main/resources/application-prod.yml:3-18",
+        ".github/workflows/actions.yml:74-95",
+        ".gitignore:2",
+        "docker-compose.yml:32-44",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/RedisConfig.java:13-15",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CacheConfig.java:19-34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:27-34",
+        "user/src/main/resources/application.yml:30-37",
+        "coupon/src/main/resources/application.yml:15-22",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:25-33"
+      ]
+    }
+  },
+  "usage": {
+    "input": 66250,
+    "cachedInput": 35840,
+    "output": 1393
+  },
+  "seed": 45
+}

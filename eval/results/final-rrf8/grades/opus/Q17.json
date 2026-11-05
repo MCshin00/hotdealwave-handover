@@ -1,0 +1,95 @@
+{
+  "id": "Q17",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 56.0,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "제공자 측 인증 상태·발송 한도·수신 거부 기록을 확인할 수 없다는 핵심, 그리고 비동기 발송이라 SMTP 실패가 응답에 반영되지 않는다는 지적은 맞습니다. 그러나 저장소로 확인되는 Gmail SMTP 설정, 환경변수 주입, Loki 로그 전송을 전혀 짚지 않았고 근거 파일:줄도 없습니다. 확인되는 것과 확인되지 않는 것을 나누지 않고 전부 확인 불가로 처리했습니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:7-15",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17-26",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "환경변수 주입, 1800000ms가 인증코드 TTL이라는 점, verified가 수신 동의 정보가 아니라는 점, @Async void에서 예외를 IllegalArgumentException으로 바꿔 던지는 처리, 컨트롤러가 성공 응답을 돌려준다는 점은 인용 줄과 모두 맞습니다. 다만 logback.xml에 Loki(app=user-service)로 로그를 보내는 설정이 있는데도 로그 보관 위치를 저장소로 확인할 수 없다고 해, 실패 기록 위치라는 핵심 하나가 코드와 어긋납니다.",
+      "evidence": [
+        "docker-compose.yml:34-35",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:19",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/MailConfig.java:22",
+        "user/src/main/resources/application.yml:22",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/redis/RedisUtilImpl.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:95-100",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:17-25",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AuthController.java:48-53",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Gmail SMTP 587, auth:true, 환경변수 주입, 5000이 타임아웃이고 1800000이 TTL이라는 점, sendVerifyEmail에 발송 횟수 제한이 없다는 점, p_email.is_verified의 의미, Loki app=user-service 로그 전송, 직접 남기는 실패 로그가 DEBUG인데 루트 레벨이 INFO라 기록되지 않는다는 점, 원본 예외를 버린다는 점이 모두 코드와 맞습니다. 실제 계정 상태·한도·로그 존재 여부는 저장소 밖에서 정해진다고 구분했습니다.",
+      "evidence": [
+        "user/src/main/resources/application.yml:7-9",
+        "user/src/main/resources/application.yml:15",
+        "user/src/main/resources/application.yml:19-22",
+        "docker-compose.yml:34",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:75-86",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:17",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Email.java:22",
+        "user/src/main/resources/logback.xml:4",
+        "user/src/main/resources/logback.xml:8",
+        "user/src/main/resources/logback.xml:14",
+        "user/src/main/java/com/sparta/hotdeal/user/infrastructure/service/MailServiceImpl.java:22-25"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 19687,
+    "cache_read_input_tokens": 72653,
+    "output_tokens": 4496,
+    "output_tokens_details": {
+      "thinking_tokens": 1583
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19687,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2649,
+        "cache_read_input_tokens": 21772,
+        "cache_creation_input_tokens": 3086,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3086
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.26198659999999996
+  },
+  "seed": 45
+}

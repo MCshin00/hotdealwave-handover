@@ -1,0 +1,95 @@
+{
+  "id": "Q19",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 61.5,
+  "order": {
+    "A": "ask",
+    "B": "base",
+    "C": "mcp"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "저장소의 라우트 설정, RewritePath, GlobalFilter의 JWT 검증, X-User-* 헤더 추가 코드로 질문에 답할 수 있는데도 정보가 없다고 했다. 코드로 확인되는 것과 확인되지 않는 것을 나누지 않고 전부 확인할 수 없다고 했다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:13-54",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:15-46",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:5-30"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "라우트별 Path와 RewritePath, /payment/**를 재작성하지 않는 점, startsWith 인증 예외 판정, Bearer 토큰 추출과 검증 실패 시 401, X-User-* 헤더 세 개 덮어쓰기, Authorization 헤더 유지, product의 reviews GET 불일치가 모두 코드와 맞는다. 줄 번호는 build.gradle:46, secret-key 설정은 yml:80이 맞아 조금 어긋난다. 필터 실행 순서, 실제 인스턴스, X-Forwarded 계열 헤더는 확인되지 않는다고 따로 밝혔다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:14-54",
+        "gateway/src/main/resources/application.yml:80",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:13-46",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6-12",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:31-36",
+        "gateway/build.gradle:46",
+        "gateway/src/main/resources/application-local.yml:4",
+        "gateway/src/main/resources/application-prod.yml:4",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:31-50",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/filter/AuthenticationFilter.java:43-60",
+        "gateway/src/test/java/com/sparta/hotdeal/gateway/GatewayApplicationTests.java"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "라우팅 대상, 인증 예외 분기, X-User-* 헤더 덮어쓰기, reviews GET 불일치, company의 @Secured 검사는 코드와 맞다. 하지만 RewritePath 식(yml:47에 있음), 401 실패 처리(AuthenticationFilter.java:30-32에 있음), 전체 인증 예외 목록(AllowedPath에 있음)을 확인할 수 없다고 했다. 그래서 질문의 핵심인 경로 변경을 설명하지 못했고, 코드로 확인되는 내용을 확인되지 않는 것으로 잘못 나눴다. 환경변수로 정해지는 값은 저장소 밖 값으로 맞게 구분했다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:47",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24-42",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6-12",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:31-34",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/filter/AuthenticationFilter.java:34-65",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/config/SecurityConfig.java:17",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:42",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:35",
+        "docker-compose.yml:18-19",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:31-50"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 23510,
+    "cache_read_input_tokens": 86723,
+    "output_tokens": 5623,
+    "output_tokens_details": {
+      "thinking_tokens": 838
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23510,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1645,
+        "cache_read_input_tokens": 25733,
+        "cache_creation_input_tokens": 2948,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2948
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.3179246
+  },
+  "seed": 45
+}

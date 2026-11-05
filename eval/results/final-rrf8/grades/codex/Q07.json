@@ -1,0 +1,63 @@
+{
+  "id": "Q07",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 51.6,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "DB 조회 조건과 표시 데이터, 저장 완료 후 성공 응답, 런타임 예외의 롤백·500 처리 설명이 코드와 맞습니다. 코드상 처리와 실제 장애 복구 결과·화면 정책의 확인 한계도 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:15",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "조회 기준과 동일 트랜잭션에서의 발급 처리는 맞지만, 저장 실패 시 ‘함께 처리’된다는 설명만으로는 롤백과 오류 응답을 설명하지 못하며 저장 완료가 성공 응답보다 앞선다는 핵심도 빠졌습니다. 후속 복구 처리의 확인 한계는 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "조회 기준, 동기 저장과 트랜잭션 롤백, 후속 자동 복구 부재 및 재요청의 중복 거절 설명이 코드와 맞으며 실제 장애 검증·화면 정책과도 구분했습니다. 응답 기록의 201은 인용한 6행이 아닌 9행에 있지만 주장 자체는 확인됩니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12"
+      ]
+    }
+  },
+  "usage": {
+    "input": 83884,
+    "cachedInput": 50432,
+    "output": 1703
+  },
+  "seed": 45
+}

@@ -1,0 +1,96 @@
+{
+  "id": "Q01",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 48.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "주문 접수 → 쿠폰 → 금액 계산 → 주문·주문상품 저장 → Kafka 발행 → 상품 서비스 차감으로 이어지는 큰 흐름은 코드와 맞고, 토픽 환경변수 연결이 확인되지 않는다는 점과 send 결과를 기다리지 않는다는 점도 구분해 밝혔습니다. 다만 2단계에서 상품을 조회한 '다음' 배송지를 '순서대로' 조회한다고 했는데, 코드는 CompletableFuture.supplyAsync로 두 조회를 동시에 시작한 뒤 join으로 기다립니다. 이 부분이 코드와 다릅니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:93",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:98",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/repository/jpa/BasketRepositoryJpa.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62",
+        "order/src/main/resources/application.yml:15",
+        "product/src/main/resources/application.yml:14",
+        "docker-compose.yml:90",
+        "docker-compose.yml:156",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:97"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "답이 없어 질문에 답하지 못했습니다.",
+      "evidence": []
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "상품·배송지 병렬 조회, 쿠폰 검증 후 사용, 금액 계산, 주문(CREATE 상태)→주문상품 저장, 장바구니 논리 삭제, Kafka 발행(키는 주문 ID), 201 응답, 상품 서비스의 프로모션 잔량→상품 재고 차감, 결제 요청 또는 롤백 분기까지 모두 코드와 맞습니다. 트랜잭션 커밋 순서가 보장되지 않는다는 점과 토픽 환경변수 연결(차감 경로와 취소 경로 모두)이 저장소 밖에서 정해진다는 점도 구분해 밝혔습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:38",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:88",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "order/src/main/java/com/sparta/hotdeal/order/presentation/controller/OrderController.java:41",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:64",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderProducerService.java:22",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderCalculationService.java:38",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:45",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:23",
+        "order/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:17"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 42559,
+    "cache_read_input_tokens": 208970,
+    "output_tokens": 5465,
+    "output_tokens_details": {
+      "thinking_tokens": 880
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 42559,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1811,
+        "cache_read_input_tokens": 41381,
+        "cache_creation_input_tokens": 1178,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1178
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.49163
+  },
+  "seed": 45
+}

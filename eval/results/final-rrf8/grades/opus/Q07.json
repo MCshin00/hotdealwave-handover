@@ -1,0 +1,93 @@
+{
+  "id": "Q07",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 35.9,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A의 조회 조건(userId, deletedAt IS NULL, isUsed 기본값 false), 본인 확인, 현재 CouponInfo에서 표시값을 가져오는 방식, 한 @Transactional 안에서 발급 수 증가와 저장을 한 뒤 201을 반환하는 흐름, RuntimeException을 500으로 처리하는 부분이 모두 코드와 맞습니다. 실제 장애 시의 복구 결과와 화면의 재조회 방식은 저장소로 확인할 수 없다고 따로 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:29-54",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/repository/CouponRepository.java:17",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/repository/CouponRepositoryImpl.java:9",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/Coupon.java:14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:12-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:26-54",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:35-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:34-39"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "B의 조회 조건과 표시 데이터 설명은 맞습니다. 그러나 저장 실패 시의 처리를 '함께 처리되는 구조'라고만 해 롤백이나 500 응답을 밝히지 못했습니다. Redis 락의 근거로 든 CouponIssueHelper.java:19는 @Service 줄이고, 실제 락은 CouponService.java:36-39에 있습니다. 또 저장소에 재시도·보상 처리가 없다는 것은 코드로 확인되는데도 '조각에서 확인할 수 없다'고 미뤘습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:36-44",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:123-127",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:19-27",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44-53",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30-35",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ResponseDto.java:10"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "C의 조회 조건, 현재 CouponInfo를 쓰는 표시 방식, 트랜잭션 안에서 저장한 뒤 201을 반환하는 흐름, 재요청 시 CO006(400) 거절이 모두 코드와 맞습니다. 응답 파일 인용 줄 가운데 :6은 201이 아니라 요청 body(couponInfoId) 줄이어서 줄 번호만 조금 어긋나지만, 201과 data=null이라는 주장은 맞습니다. 실제 장애 재현 결과와 화면 정책은 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34-42",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/mapper/CouponMapper.java:16-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:83",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9",
+        "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 19841,
+    "cache_read_input_tokens": 62725,
+    "output_tokens": 4112,
+    "output_tokens_details": {
+      "thinking_tokens": 981
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19841,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2684,
+        "cache_read_input_tokens": 24731,
+        "cache_creation_input_tokens": 281,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 281
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.253545
+  },
+  "seed": 45
+}

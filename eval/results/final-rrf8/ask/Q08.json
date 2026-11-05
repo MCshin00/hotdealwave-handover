@@ -1,0 +1,27 @@
+{
+  "id": "Q08",
+  "condition": "ask",
+  "question": "카카오페이 결제를 마친 뒤 어떤 주소로 돌아와서 어떤 처리를 거쳐 운영 화면으로 이동하나요?",
+  "status": "완료",
+  "answer": "준비 요청의 승인 복귀 주소는 `/payment/success`입니다. 이 주소의 GET 처리기는 결제 완료 안내 화면만 반환하며, 승인 API 호출이나 결제 상태 변경은 하지 않습니다. 실제 승인은 별도 POST `/api/v1/payments/confirm`에 `tid`와 `pgToken`을 보내 처리하며, 정상 흐름에서는 카카오페이 승인을 거쳐 결제 상태를 COMPLETE로 바꾸고 주문 COMPLETE 이벤트를 발행합니다. 다만 이 복귀 흐름이 이후 운영 화면으로 이동하는지, 이동 주소가 무엇인지는 조각에서 확인되지 않습니다. 이 설명은 안내 화면과 승인 흐름에 대한 조각의 AI 해석입니다.",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/payment-service.PaymentController.confirmPayment",
+      "title": "payment-service.PaymentController.confirmPayment",
+      "section": ""
+    },
+    {
+      "id": "C3",
+      "page": "/endpoints/payment-service.PaymentViewController.getPaymentSuccessPage",
+      "title": "payment-service.PaymentViewController.getPaymentSuccessPage",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 43222,
+    "output": 179
+  },
+  "seconds": 3.7
+}

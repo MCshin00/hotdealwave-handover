@@ -1,0 +1,97 @@
+{
+  "id": "Q15",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 42.8,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "클래스 레벨 @Transactional 안에서 product.update() 변경 감지 뒤 indexProduct를 직접 호출하고(커밋 이후 실행이 보장되지 않음), 색인 예외는 삼킨다는 점, 상세 조회는 JPA/MySQL에서 읽고 검색은 ES products 인덱스에서 읽으며 MySQL을 다시 조회하지 않는다는 점이 모두 코드와 맞습니다. 운영에서의 반영 지연과 성공 여부는 저장소로 확인할 수 없다고 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112-124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:163-189",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221-243",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-27",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryImpl.java:30-31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryJpa.java:10",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepository.java:6",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:16",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:50-51",
+        "product/src/main/resources/application-prod.yml:3"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "갱신 뒤 indexProduct를 직접 호출하고 예외를 삼킨다는 점, 상세 조회는 JPA이고 검색은 ES 문서라는 핵심 주장은 코드와 맞습니다. 다만 코드로 확인되는 사실까지 모두 'AI 해석'으로 묶어 확인된 것과 확인되지 않는 것을 구분하지 못했고, 트랜잭션 안에서 커밋 전에 색인한다는 시점도 다루지 않았습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:100",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112-122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33-47"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "직접 색인 호출, 예외 삼킴, 상세 조회는 JPA(@Where deleted_at IS NULL), 검색은 ES 문서에서 wildcard와 id 필터로 읽음, Kafka consumer는 재고 차감·복구만 담당한다는 주장이 모두 코드와 맞습니다. 저장소 밖 CDC 존재 여부는 확인할 수 없다고 구분했습니다. 다만 클래스 레벨 @Transactional로 커밋 전에 색인한다는 점은 코드로 확인되는데도 '근거가 없다'고만 해 아쉽습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:90-124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33-47",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 20908,
+    "cache_read_input_tokens": 35865,
+    "output_tokens": 4143,
+    "output_tokens_details": {
+      "thinking_tokens": 1182
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20908,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2938,
+        "cache_read_input_tokens": 19248,
+        "cache_creation_input_tokens": 6831,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6831
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.257321
+  },
+  "seed": 45
+}

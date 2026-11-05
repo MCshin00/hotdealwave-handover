@@ -1,0 +1,35 @@
+{
+  "id": "Q12",
+  "condition": "mcp",
+  "question": "결제 결과 전달이나 Order의 상태 변경에 실패하면 어디에서 재시도하고, 같은 결과가 여러 번 전달되면 어떻게 처리하나요?",
+  "status": "완료",
+  "seconds": 53.6,
+  "tokens": {
+    "input": 199430,
+    "cachedInput": 167552,
+    "output": 2085
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "trace_flow",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "**확인된 코드에서는 Order 처리 실패 시 재시도 없이 DLQ로 보내며, 같은 상태 메시지는 중복을 걸러내지 않고 다시 적용합니다.** 근거: `order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`.\n\n1. **결제 결과를 Order에 전달하다 실패한 경우**\n   - 승인 후 Order의 `COMPLETE` 상태 변경 메시지를 Kafka로 발행합니다. 하지만 `KafkaTemplate.send()`의 비동기 결과를 확인하지 않으므로, 나중에 발생하는 전송 실패를 받아 애플리케이션에서 재발행하는 처리는 확인되지 않습니다. 승인 API의 성공 반환도 Order 갱신 완료를 뜻하지 않습니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:67`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`.\n   - 통지 호출 중 **동기 예외**가 발생하면 결제를 `CANCEL`로 바꾸고 `saveAndFlush`한 뒤 `PA005` 예외를 던집니다. 이 경로에는 재시도나 카카오페이 승인 취소 호출이 없습니다. 또한 동일 트랜잭션의 런타임 예외이므로 `CANCEL`이 확정 저장됐다고 볼 수 없습니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:17`, `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26`, `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:28`, `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:29`, `payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:30`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:33`.\n\n2. **Order가 메시지를 받았지만 상태 변경에 실패한 경우**\n   - 파싱·상태 변경 예외를 리스너가 잡아 원문과 오류를 `KAFKA_DLQ_TOPIC`으로 보냅니다. 컨테이너 오류 처리기까지 전파된 예외도 `FixedBackOff(0L, 0)`, 즉 **재시도 0회** 후 DLQ로 보내도록 설정되어 있습니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:48`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:53`, `order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31`, `order/src/main/resources/application.yml:18`, `order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:64`, `order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67`.\n   - **DLQ에서 자동 재처리하는 경로도 확인되지 않습니다.** `OrderDlqConsumer`는 빈 등록 근거가 없고, 선언된 처리 내용도 원문·오류 로깅뿐입니다. 직접 DLQ 발행 역시 비동기 완료를 확인하지 않아 “전송 완료” 로그만으로 보관 성공을 보장할 수 없습니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:16`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:19`, `order/src/main/java/com/sparta/hotdeal/order/OrderApplication.java:10`, `order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31`, `order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:33`.\n\n3. **같은 결과가 여러 번 전달된 경우**\n   - Order는 미삭제 주문을 조회해 `OrderStatus.valueOf(status)`로 상태를 다시 설정합니다. 이 경로에 중복 메시지 판별이나 이전 상태에 따른 전이 검사는 없습니다. 따라서 같은 상태가 연속 도착하면 상태값은 같지만, 다른 상태로 변경된 뒤 오래된 `COMPLETE`가 재도착하면 다시 `COMPLETE`로 덮어쓸 수 있습니다. 이는 코드에 따른 해석입니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:28`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:29`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:26`, `order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30`.\n   - 승인 API 자체를 반복 호출해도 로컬에서 이미 완료된 결제를 걸러내는 상태 검사가 없어 외부 승인 호출로 다시 진행합니다. **카카오페이가 중복 승인을 어떻게 처리하는지는 외부 구현이므로 이 저장소에서 확인할 수 없습니다.** 근거: `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22`.\n\n추가로 Order 컨테이너는 수동 ACK 모드지만 상태 갱신 리스너에 ACK 호출이 없습니다. 따라서 정상 반환을 오프셋 처리 완료로 보거나, 재전달이 없다고 보장할 수 없습니다. 실제 재전달 시점·횟수와 운영 환경의 Kafka 전송 재시도 횟수는 제공된 코드 분석으로 확인할 수 없습니다. 근거: `order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58`, `order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26`, `payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

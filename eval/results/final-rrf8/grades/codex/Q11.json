@@ -1,0 +1,61 @@
+{
+  "id": "Q11",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 55.8,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "완료 화면의 표시 조건과 별도 승인 API→Payment 상태 변경→Kafka→Order 상태 변경 경로가 코드와 일치한다. 화면에서 승인으로 이어지는 연결은 확인되지 않으며, 승인 API 성공도 Order 반영 완료를 보장하지 않는다는 한계를 구분했다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18",
+        "payment/src/main/resources/templates/payment-success.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:59",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/resources/application.yml:18",
+        "order/src/main/resources/application.yml:17",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:25",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "안 밝힘",
+      "reason": "답이 없어 화면 표시 기준과 결제 결과 전달 경로에 답하지 않았고, 확인 범위도 밝히지 않았다.",
+      "evidence": []
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "핵심 흐름과 비동기 전송·수동 ACK의 한계는 맞지만, 호출 메서드명을 두 곳에서 잘못 적었다. 실제 메서드는 PaymentEventProducer.updateOrderStatus가 아니라 sendUpdateOrderStatusMessage이며, OrderStatusUpdateEventConsumer.updateStatus가 아니라 consumeUpdateOrderStatus이다; 외부 토픽 값과 실행 성공 여부의 확인 한계는 명확히 밝혔다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:26",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "docker-compose.yml:157",
+        "docker-compose.yml:196"
+      ]
+    }
+  },
+  "usage": {
+    "input": 97491,
+    "cachedInput": 66432,
+    "output": 1725
+  },
+  "seed": 45
+}

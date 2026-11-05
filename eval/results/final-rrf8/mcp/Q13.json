@@ -1,0 +1,33 @@
+{
+  "id": "Q13",
+  "condition": "mcp",
+  "question": "실패한 ECR 업로드 단계는 어떤 방식으로 AWS 인증을 받고, GitHub에 등록된 인증 설정이 워크플로에서 참조하는 값과 맞나요?",
+  "status": "완료",
+  "seconds": 28.9,
+  "tokens": {
+    "input": 132998,
+    "cachedInput": 118144,
+    "output": 676
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "search_docs",
+    "search_docs"
+  ],
+  "mcpFailed": [
+    "search_docs",
+    "search_docs",
+    "search_docs"
+  ],
+  "commands": 0,
+  "answer": "**현재 `hotdealwave` MCP가 제공한 근거만으로는 실패한 ECR 업로드의 AWS 인증 방식이나 GitHub 등록 설정과의 일치 여부를 확인할 수 없습니다.**\n\n- **확인된 설정:** product 서비스는 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`를 환경변수로 전달받으며, 애플리케이션에서는 이를 `s3.access-key`, `s3.secret-key`로 참조합니다. 이는 S3 설정의 근거입니다. (`docker-compose.yml:97`, `docker-compose.yml:98`, `product/src/main/resources/application.yml:35`, `product/src/main/resources/application.yml:36`)\n- **ECR 인증 방식은 미확인:** MCP에서 `ECR`, `.github/workflows`, `GitHub Actions`를 검색했지만 관련 문서를 찾지 못했습니다. 따라서 실패한 단계가 액세스 키를 사용하는지, OIDC로 IAM 역할을 받는지, 어떤 Secret 이름을 참조하는지는 판정할 수 없습니다. 해당 워크플로의 `파일:줄` 근거도 확보되지 않았습니다.\n- **GitHub 설정과의 일치 여부도 미확인:** 문서는 위 AWS 환경변수의 실제 값이 저장소 밖에서 정해진다고 명시합니다. GitHub에 등록된 Secrets·Variables·Environment 설정은 제시되지 않아 대조할 수 없습니다. (`docker-compose.yml:97`, `docker-compose.yml:98`)\n\n따라서 **S3용 환경변수 이름만 보고 ECR 인증 설정이 맞다거나, 불일치가 실패 원인이라고 결론 내릴 수 없습니다.** 이를 판단하려면 실패한 실행의 워크플로와 로그, GitHub 인증 설정의 이름·적용 범위가 필요합니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

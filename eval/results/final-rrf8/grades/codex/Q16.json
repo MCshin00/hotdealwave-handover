@@ -1,0 +1,60 @@
+{
+  "id": "Q16",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 59.0,
+  "order": {
+    "A": "mcp",
+    "B": "base",
+    "C": "ask"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "색인 예외를 로그만 남기고 삼키는 처리, 재고·할인 변경의 색인 누락, 조회 시 보정 부재와 Kafka DLQ의 별개 역할이 코드와 일치합니다. 자동 복구·순서 보정 구현이 확인되지 않는다는 결론과 운영 환경의 확인 한계도 명시했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:246",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "저장 실패의 예외 삼킴과 삭제 실패의 예외 전파를 정확히 구분했고, 자동 재처리·누락 복구·변경 순서 검증이 없다는 설명도 코드와 일치합니다. 애플리케이션 구현과 클라이언트 내부 동작·외부 운영 작업의 확인 범위를 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:157",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:160",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ElasticsearchConfig.java:31"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "생성·수정·상태 변경에서 색인 예외를 삼켜 성공 응답이 가능하고, 재고 변경은 색인을 갱신하지 않는다는 설명이 코드와 일치합니다. 재시도·누락·순서 보정 절차를 확인할 수 없다고 답해 핵심을 충족하며, 결론을 제공된 자료의 범위로 한정했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:136",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/ProductDocument.java:18"
+      ]
+    }
+  },
+  "usage": {
+    "input": 120205,
+    "cachedInput": 92672,
+    "output": 1752
+  },
+  "seed": 45
+}
