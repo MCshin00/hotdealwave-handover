@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${file}"></title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<nav class="top"><span><a href="/">처음</a> · <a th:href="|/endpoints/${endpoint}|" th:text="${endpoint}"></a></span><span class="target">HotDealWave · 고정 커밋 cc43016</span></nav>
+<nav class="top"><span><a href="/">처음</a> · <a th:href="|/endpoints/${endpoint}|" th:text="${endpoint}"></a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
 <h1 th:text="${file}"></h1>
 <p>저장한 응답 기록 원문</p>
 <div class="src"><div th:each="l, i : ${lines}" th:id="|L${i.count}|"><span class="ln" th:text="${i.count}"></span><span th:text="${l}"></span></div></div>

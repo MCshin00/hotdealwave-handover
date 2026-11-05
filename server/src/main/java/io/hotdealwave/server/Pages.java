@@ -80,12 +80,12 @@ class Pages {
     /** The page as HTML for the browser, with display-only markup, or null. */
     String html(String path) {
         var page = page(path);
-        return page == null ? null : Decor.html(process(page.template(), page.model()));
+        return page == null ? null : Decor.html(process(page.template(), page.model()), analysis.target());
     }
 
     /** Any other template as HTML for the browser, with display-only markup. */
     String html(String template, Map<String, Object> model) {
-        return Decor.html(process(template, model));
+        return Decor.html(process(template, model), analysis.target());
     }
 
     private Page endpoint(String id) {
@@ -133,6 +133,7 @@ class Pages {
 
     private String process(String template, Map<String, Object> model) {
         var context = new Context(Locale.KOREAN, model);
+        context.setVariable("target", analysis.target());
         context.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME, evaluation);
         return engine.process(template, context);
     }

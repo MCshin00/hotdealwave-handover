@@ -31,6 +31,18 @@ class Analysis {
 
     JsonNode checks() { return root.path("checks"); }
 
+    /** The analysed repository and its fixed commit, from the extraction's target file. */
+    record Target(String name, String repository, String commit) {
+        public String shortCommit() { return commit.substring(0, 7); }
+        /** Where an evidence path of the target opens at the fixed commit. */
+        public String source() { return repository + "/blob/" + commit + "/"; }
+    }
+
+    Target target() {
+        var target = root.path("target");
+        return new Target(target.path("name").asText(), target.path("repository").asText(), target.path("commit").asText());
+    }
+
     /** Repository-level facts (deployment, monitoring); missing when the extraction has none. */
     JsonNode repository() { return root.path("repository"); }
 

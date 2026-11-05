@@ -41,6 +41,9 @@ final class ExtractionInput {
         }
         var relations = json.readTree(directory.resolve("relations.json").toFile());
         validate(relationsSchema, relations, "relations.json", merged);
+        var target = json.readTree(directory.resolve("target.json").toFile());
+        validate(factory.getSchema(Path.of("docs/format/target.schema.json").toUri()), target, "target.json", merged);
+        merged.set("target", target);
 
         services.sort(Comparator.comparing(node -> node.path("service").path("directory").asText()));
         for (var service : services) {

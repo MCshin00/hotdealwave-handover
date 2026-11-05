@@ -20,6 +20,7 @@ class VerifierTest {
         ((ObjectNode) service.path("endpoints").get(0)).remove("httpMethod");
         JSON.writeValue(services.resolve("company-service.json").toFile(), service);
         Files.writeString(temporary.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.copy(Path.of("analysis/hotdealwave/target.json"), temporary.resolve("target.json"));
         Path output = temporary.resolve("analysis.json");
 
         Main.main(new String[]{temporary.toString(), "target/HotDealWave", output.toString()});

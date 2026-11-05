@@ -89,6 +89,8 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 서비스 하나에 속하지 않는 배포·모니터링 설정은 [저장소 스키마](repository.schema.json)를 따라 `analysis/<대상>/repository.json` 하나에 쓴다. 파일이 없으면 검증기는 이 부분 없이 진행한다. 검증기는 합친 결과의 `repository`에 그대로 넣고 상태를 정한다.
 
+대상 이름, 원본 저장소 주소, 고정 커밋은 [대상 스키마](target.schema.json)를 따라 `analysis/<대상>/target.json`에 쓴다. 대상 서브모듈을 고정할 때 함께 쓰고 추출 Skill은 쓰지 않는다. 검증기는 합친 결과의 `target`에 그대로 넣고, 서버는 페이지 머리말, 근거 링크 주소, 질의응답 지시문의 대상 이름을 여기서 읽는다.
+
 배열은 도구가 아니라 역할(범주)로 나눈다. 항목의 `tool`은 그 항목을 적은 설정 파일의 도구 이름이고(예: `GitHub Actions`, `Docker Compose`, `Prometheus`, `logback`, `Loki`), `file`은 그 설정 파일이다. 첫 근거는 `file`의 줄이다.
 
 - `pipelines` 배포 파이프라인: 파이프라인 정의 파일마다 한 항목이다. `triggers`는 이벤트와 브랜치, `env`는 파이프라인 수준 변수, `secrets`는 저장소 밖 비밀값을 쓰는 이름이다. `jobs[].steps[]`는 단계 이름, 쓰는 액션(`uses`, 없으면 키를 두지 않음), 단계 변수, 실행 명령이다. `env`의 값은 정의에 쓴 그대로(`${{ ... }}` 같은 식 포함) 둔다. `commands`는 실행 명령 줄(GitHub Actions는 SSH 액션의 `script`를 포함한 `run`)을 하나씩 앞뒤 공백만 빼고 쓴 그대로 두며 주석과 빈 줄은 뺀다.

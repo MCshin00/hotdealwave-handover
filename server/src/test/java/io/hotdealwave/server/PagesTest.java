@@ -34,7 +34,7 @@ class PagesTest {
     @Test void responseCheckReasonIsFolded() throws Exception {
         String order = page("/services/order-service");
         assertTrue(order.contains("응답 기록 있음 400 <details class=\"why\"><summary>이유</summary>(400: PENDING 주문은"));
-        assertTrue(order.contains("<a href=\"" + Decor.SOURCE + "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java#L295\">"));
+        assertTrue(order.contains("<a href=\"https://github.com/sparta-final-12th-9700/HotDealWave/blob/cc43016b907331a3ce8471475cbf44412e8a6954/order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java#L295\">"));
     }
 
     @Test void sectionsFold() throws Exception {

@@ -11,7 +11,7 @@ class Ask {
     record Answer(String status, String answer, List<Cited> citations, String reason, long inputTokens, long outputTokens) {}
 
     static final String INSTRUCTIONS = """
-            너는 HotDealWave 저장소를 넘겨받은 개발자의 질문에, 저장소 분석 문서의 조각만 근거로 답하는 도우미다.
+            너는 %s 저장소를 넘겨받은 개발자의 질문에, 저장소 분석 문서의 조각만 근거로 답하는 도우미다.
             규칙:
             - 아래에 주어진 조각만 근거로 쓴다. 상식이나 다른 프로젝트 지식으로 보충하지 않는다.
             - 조각의 상태 표시를 그대로 옮긴다. "확인 안 됨", "저장소에 근거 없음"인 값은 확정된 것처럼 쓰지 않고 그 상태와 이유를 밝힌다. 출처가 "AI 해석"인 설명·업무 규칙·함정은 AI 해석이라고 밝힌다.
@@ -29,7 +29,12 @@ class Ask {
     private final Pages pages;
     private final AskModel model;
 
-    Ask(Search search, Pages pages, AskModel model) { this.search = search; this.pages = pages; this.model = model; }
+    private final String instructions;
+
+    Ask(Search search, Pages pages, AskModel model, Analysis analysis) {
+        this.search = search; this.pages = pages; this.model = model;
+        this.instructions = INSTRUCTIONS.formatted(analysis.target().name());
+    }
 
     Answer ask(String question) {
         var results = search.search(question);
@@ -49,7 +54,7 @@ class Ask {
         input.append("질문: ").append(question);
         AskModel.Reply reply;
         try {
-            reply = model.reply(INSTRUCTIONS, input.toString());
+            reply = model.reply(instructions, input.toString());
         } catch (RuntimeException e) {
             return new Answer("오류", null, List.of(), "모델 호출 실패: " + e.getMessage(), 0, 0);
         }

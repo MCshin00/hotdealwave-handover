@@ -21,6 +21,7 @@ class KnowledgeTest {
         Path input = Files.createDirectories(temporary.resolve("analysis/hotdealwave/services"));
         Files.copy(Path.of("analysis/hotdealwave/services/order-service.json"), input.resolve("order-service.json"));
         Files.writeString(input.getParent().resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.copy(Path.of("analysis/hotdealwave/target.json"), input.getParent().resolve("target.json"));
         Path responses = Files.createDirectories(input.getParent().resolve("responses"));
         Files.copy(Path.of("analysis/hotdealwave/responses", RESPONSE), responses.resolve(RESPONSE));
         Files.createDirectories(temporary.resolve("knowledge/hotdealwave"));
