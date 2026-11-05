@@ -56,6 +56,23 @@ final class SourceText {
         return candidate;
     }
 
+    /** Why the evidence lines of a node cannot be read: file-type, file-missing or line-missing. */
+    String problem(JsonNode evidence) throws IOException {
+        for (var item : evidence) {
+            String text = item.asText();
+            if (isResponseEvidence(text)) continue;
+            int colon = text.lastIndexOf(':');
+            if (colon < 1 || !text.substring(colon + 1).matches("[1-9][0-9]*")) return "line-missing";
+            String relative = text.substring(0, colon);
+            if (path(relative) == null) {
+                var candidate = root.resolve(relative).normalize();
+                return candidate.startsWith(root) && Files.isRegularFile(candidate) ? "file-type" : "file-missing";
+            }
+            if (Integer.parseInt(text.substring(colon + 1)) > lines(relative).size()) return "line-missing";
+        }
+        return "line-missing";
+    }
+
     List<String> lines(String relative) throws IOException {
         Path file = path(relative);
         if (file == null) return List.of();

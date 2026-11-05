@@ -45,7 +45,15 @@ final class EvidenceChecks {
             return;
         }
         var lines = source.evidenceLines(object);
-        if (lines.isEmpty()) { reject(object, role + ": 근거 파일·줄을 확인하지 못함"); return; }
+        if (lines.isEmpty()) {
+            String problem = source.problem(object.path("evidence"));
+            reject(object, problem, role + ": " + switch (problem) {
+                case "file-type" -> "도구가 읽지 않는 파일 종류";
+                case "file-missing" -> "근거 파일이 없음";
+                default -> "근거 줄이 없음";
+            });
+            return;
+        }
         // Relationship facts are decided after all local facts have been checked.
         if (Set.of("target", "tokenRequired", "externalPaths", "kafkaLinks", "calls", "throws").contains(role)) return;
         if (object.has("value") && !object.path("value").isObject()) { fact(object, role, parent, lines); return; }
@@ -82,6 +90,8 @@ final class EvidenceChecks {
                     && contains(lines, object.path("reference").asText());
             case "jobs" -> contains(lines, object.path("id").asText());
             case "steps" -> contains(lines, object.path("name").asText());
+            case "unsupported" -> !object.path("mechanism").asText().isEmpty() && lines.stream()
+                    .anyMatch(l -> l.toLowerCase(Locale.ROOT).contains(object.path("mechanism").asText().toLowerCase(Locale.ROOT)));
             case "monitoringTools" -> lines.stream().anyMatch(l -> l.toLowerCase(Locale.ROOT).contains(object.path("name").asText().toLowerCase(Locale.ROOT)));
             default -> object.has("type") && contains(lines, simpleType(object.path("type").asText()));
         };
@@ -352,8 +362,10 @@ final class EvidenceChecks {
         String escaped = text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
         return lines.stream().anyMatch(l -> l.contains(text) || l.contains(escaped));
     }
-    private void reject(JsonNode node, String reason) {
+    private void reject(JsonNode node, String reason) { reject(node, "extraction-mismatch", reason); }
+
+    private void reject(JsonNode node, String code, String reason) {
         verdict(node, UNKNOWN, reason);
-        warn(analysis, "evidence-lines", node.path("evidence"), reason);
+        warn(analysis, "evidence-lines", code, node.path("evidence"), reason);
     }
 }

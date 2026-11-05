@@ -43,6 +43,11 @@
 <h2>Gateway 거부 응답</h2>
 <p class="line" th:each="r : ${gatewayRejections}" th:text="${@view.rejection(r)}"></p>
 </th:block>
+<th:block th:unless="${unsupported.isEmpty()}">
+<h2 th:text="|도구가 다루지 않는 방식 ${#lists.size(unsupported)}곳|"></h2>
+<p class="note">형식에 담을 자리가 없어 따라가지 않은 곳이다. 이 서비스의 흐름에는 이 호출이 빠져 있다.</p>
+<p class="line" th:each="u : ${unsupported}" th:text="|${u.path('mechanism').asText()}: ${u.path('description').asText()} ${@view.evidence(u)}|"></p>
+</th:block>
 <section th:replace="~{items :: items(${items})}"></section>
 <script src="/app.js"></script>
 </body>

@@ -490,7 +490,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/company-service.CompanyController.createCompany.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/companies\",", "    \"body\": {", "      \"businessRegistrationNumber\": 1421903916,", "      \"companyPhoneNumber\": 2000000000,", "      \"managerId\": \"359b7953-f393-4550-869d-a3c413a8c964\",", "      \"brandName\": \"probe-740e5181\",", "      \"companyEmail\": \"<이메일>\",", "      \"status\": \"REQUESTED\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"업체가 신청되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/companies\",", "    \"body\": {", "      \"businessRegistrationNumber\": 1421903916,", "      \"companyPhoneNumber\": 2000000000,", "      \"managerId\": \"359b7953-f393-4550-869d-a3c413a8c964\",", "      \"brandName\": \"probe-740e5181\",", "      \"companyEmail\": \"<이메일>\",", "      \"status\": \"REQUESTED\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"업체가 신청되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "company-service.CompanyController.updateCompany",
@@ -797,7 +798,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/company-service.CompanyController.updateCompany.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f\",", "    \"body\": {", "      \"companyPhoneNumber\": 2000000001,", "      \"managerId\": \"f7906275-0da9-4ea7-9fd2-c5e1937201cf\",", "      \"brandName\": \"probe-r2-8b97bbd6c0f51809\",", "      \"companyEmail\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f\",", "    \"body\": {", "      \"companyPhoneNumber\": 2000000001,", "      \"managerId\": \"f7906275-0da9-4ea7-9fd2-c5e1937201cf\",", "      \"brandName\": \"probe-r2-8b97bbd6c0f51809\",", "      \"companyEmail\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "company-service.CompanyController.updateCompanyStatus",
@@ -999,7 +1001,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/company-service.CompanyController.updateCompanyStatus.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f/status\",", "    \"body\": {", "      \"status\": \"APPROVED\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상태가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f/status\",", "    \"body\": {", "      \"status\": \"APPROVED\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상태가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "company-service.CompanyController.getCompanyById",
@@ -1413,7 +1416,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/company-service.CompanyController.getCompanyById.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체가 조회되었습니다.\",", "    \"data\": {", "      \"businessRegistrationNumber\": 8840334265,", "      \"companyPhoneNumber\": 2000000001,", "      \"managerId\": \"f7906275-0da9-4ea7-9fd2-c5e1937201cf\",", "      \"brandName\": \"probe-r2-8b97bbd6c0f51809\",", "      \"companyEmail\": \"<이메일>\",", "      \"status\": \"APPROVED\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/companies/267a9341-f993-47e4-920e-aa06a428768f\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체가 조회되었습니다.\",", "    \"data\": {", "      \"businessRegistrationNumber\": 8840334265,", "      \"companyPhoneNumber\": 2000000001,", "      \"managerId\": \"f7906275-0da9-4ea7-9fd2-c5e1937201cf\",", "      \"brandName\": \"probe-r2-8b97bbd6c0f51809\",", "      \"companyEmail\": \"<이메일>\",", "      \"status\": \"APPROVED\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "company-service.CompanyController.getCompanyList",
@@ -1875,7 +1879,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/company-service.CompanyController.getCompanyList.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/companies\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체목록이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"businessRegistrationNumber\": 1421903916,", "          \"companyPhoneNumber\": 2000000000,", "          \"managerId\": \"359b7953-f393-4550-869d-a3c413a8c964\",", "          \"brandName\": \"probe-740e5181\",", "          \"companyEmail\": \"<이메일>\",", "          \"status\": \"REQUESTED\"", "        }", "      ],", "      \"pageable\": {", "        \"pageNumber\": 0,", "        \"pageSize\": 20,", "        \"sort\": {", "          \"empty\": true,", "          \"sorted\": false,", "          \"unsorted\": true", "        },", "        \"offset\": 0,", "        \"paged\": true,", "        \"unpaged\": false", "      },", "      \"last\": true,", "      \"totalElements\": 1,", "      \"totalPages\": 1,", "      \"first\": true,", "      \"size\": 20,", "      \"number\": 0,", "      \"sort\": {", "        \"empty\": true,", "        \"sorted\": false,", "        \"unsorted\": true", "      },", "      \"numberOfElements\": 1,", "      \"empty\": false", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/companies\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"업체목록이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"businessRegistrationNumber\": 1421903916,", "          \"companyPhoneNumber\": 2000000000,", "          \"managerId\": \"359b7953-f393-4550-869d-a3c413a8c964\",", "          \"brandName\": \"probe-740e5181\",", "          \"companyEmail\": \"<이메일>\",", "          \"status\": \"REQUESTED\"", "        }", "      ],", "      \"pageable\": {", "        \"pageNumber\": 0,", "        \"pageSize\": 20,", "        \"sort\": {", "          \"empty\": true,", "          \"sorted\": false,", "          \"unsorted\": true", "        },", "        \"offset\": 0,", "        \"paged\": true,", "        \"unpaged\": false", "      },", "      \"last\": true,", "      \"totalElements\": 1,", "      \"totalPages\": 1,", "      \"first\": true,", "      \"size\": 20,", "      \"number\": 0,", "      \"sort\": {", "        \"empty\": true,", "        \"sorted\": false,", "        \"unsorted\": true", "      },", "      \"numberOfElements\": 1,", "      \"empty\": false", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
@@ -2036,7 +2041,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/issue\",", "    \"body\": {", "      \"couponInfoId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"선착순 쿠폰 발급 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/issue\",", "    \"body\": {", "      \"couponInfoId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"선착순 쿠폰 발급 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.getUserCoupons",
@@ -2595,7 +2601,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.getUserCoupons.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupons?userId=80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 목록 조회 성공\",", "    \"data\": [", "      {", "        \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "        \"name\": \"probe-r3-422a5725297d\",", "        \"discountAmount\": 1000,", "        \"minOrderAmount\": 5000,", "        \"expirationDate\": \"2026-11-10\",", "        \"usedDate\": null,", "        \"dailyIssuedDate\": \"2026-11-02\",", "        \"used\": false", "      }", "    ]", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupons?userId=80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 목록 조회 성공\",", "    \"data\": [", "      {", "        \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "        \"name\": \"probe-r3-422a5725297d\",", "        \"discountAmount\": 1000,", "        \"minOrderAmount\": 5000,", "        \"expirationDate\": \"2026-11-10\",", "        \"usedDate\": null,", "        \"dailyIssuedDate\": \"2026-11-02\",", "        \"used\": false", "      }", "    ]", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.getUserCouponDetail",
@@ -3101,7 +3108,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.getUserCouponDetail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupons/d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 상세 조회 성공\",", "    \"data\": {", "      \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "      \"name\": \"probe-r3-422a5725297d\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"usedDate\": null,", "      \"dailyIssuedDate\": \"2026-11-02\",", "      \"used\": false", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupons/d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 상세 조회 성공\",", "    \"data\": {", "      \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\",", "      \"name\": \"probe-r3-422a5725297d\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"usedDate\": null,", "      \"dailyIssuedDate\": \"2026-11-02\",", "      \"used\": false", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.validateCoupon",
@@ -3458,7 +3466,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.validateCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/5f036bbc-015d-4f68-8933-637a3852d25f/validate\",", "    \"body\": {", "      \"products\": [", "        {", "          \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "          \"quantity\": 2,", "          \"price\": 20000", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 유효성 검사 성공\",", "    \"data\": {", "      \"totalDiscountAmount\": 1000,", "      \"valid\": true", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/5f036bbc-015d-4f68-8933-637a3852d25f/validate\",", "    \"body\": {", "      \"products\": [", "        {", "          \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "          \"quantity\": 2,", "          \"price\": 20000", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 유효성 검사 성공\",", "    \"data\": {", "      \"totalDiscountAmount\": 1000,", "      \"valid\": true", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.useCoupon",
@@ -3596,7 +3605,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.useCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481/use\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 사용 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481/use\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 사용 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.recoverCoupon",
@@ -3734,7 +3744,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.recoverCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481/recover\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 회복 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481/recover\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 회복 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponController.deleteCoupon",
@@ -3872,7 +3883,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponController.deleteCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 삭제 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/coupons/a2101784-fa6b-4b10-96ce-33c613d61481\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용자 쿠폰 삭제 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponInfoController.createCoupon",
@@ -4217,7 +4229,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/coupon-service.CouponInfoController.createCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupon-infos\",", "    \"body\": {", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 10,", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"companyId\": null", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"쿠폰 정보 생성 성공\",", "    \"data\": {", "      \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/coupon-infos\",", "    \"body\": {", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 10,", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"companyId\": null", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"쿠폰 정보 생성 성공\",", "    \"data\": {", "      \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponInfoController.updateCoupon",
@@ -4540,7 +4553,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponInfoController.updateCoupon.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "    \"body\": {", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 12,", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"companyId\": null", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 수정 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "    \"body\": {", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 12,", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"companyId\": null", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 수정 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponInfoController.updateCouponStatus",
@@ -4725,7 +4739,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponInfoController.updateCouponStatus.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7/status\",", "    \"body\": {", "      \"status\": \"ISSUED\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보의 상태 변경 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7/status\",", "    \"body\": {", "      \"status\": \"ISSUED\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보의 상태 변경 성공\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponInfoController.getCouponDetail",
@@ -5323,7 +5338,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponInfoController.getCouponDetail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 상세 조회 성공\",", "    \"data\": {", "      \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 12,", "      \"issuedCount\": 0,", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"status\": \"ISSUED\",", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"companyId\": null", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupon-infos/adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 상세 조회 성공\",", "    \"data\": {", "      \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "      \"name\": \"probe-r2-bdd629051b36\",", "      \"quantity\": 12,", "      \"issuedCount\": 0,", "      \"discountAmount\": 1000,", "      \"minOrderAmount\": 5000,", "      \"expirationDate\": \"2026-11-10\",", "      \"status\": \"ISSUED\",", "      \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "      \"companyId\": null", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "coupon-service.CouponInfoController.getCoupons",
@@ -6105,7 +6121,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/coupon-service.CouponInfoController.getCoupons.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupon-infos\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "          \"name\": \"probe-r2-bdd629051b36\",", "          \"quantity\": 12,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        },", "        {", "          \"couponId\": \"ee05df31-4d60-4f76-83cb-e6b315a9ba38\",", "          \"name\": \"probe-r3-5c5d84aaca85\",", "          \"quantity\": 10,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        },", "        {", "          \"couponId\": \"5da18afe-9ea4-4c7b-ab8f-cb674b23fefd\",", "          \"name\": \"probe-r3-422a5725297d\",", "          \"quantity\": 10,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 3,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/coupon-infos\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"쿠폰 정보 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"couponId\": \"adac01c2-1e5b-47d5-9ee8-7e884bf22ac7\",", "          \"name\": \"probe-r2-bdd629051b36\",", "          \"quantity\": 12,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        },", "        {", "          \"couponId\": \"ee05df31-4d60-4f76-83cb-e6b315a9ba38\",", "          \"name\": \"probe-r3-5c5d84aaca85\",", "          \"quantity\": 10,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        },", "        {", "          \"couponId\": \"5da18afe-9ea4-4c7b-ab8f-cb674b23fefd\",", "          \"name\": \"probe-r3-422a5725297d\",", "          \"quantity\": 10,", "          \"issuedCount\": 1,", "          \"discountAmount\": 1000,", "          \"minOrderAmount\": 5000,", "          \"expirationDate\": \"2026-11-10\",", "          \"status\": \"ISSUED\",", "          \"couponType\": \"FIRST_COME_FIRST_SERVE\",", "          \"companyId\": null", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 3,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.BasketController.createBasket",
@@ -6382,7 +6399,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/order-service.BasketController.createBasket.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/baskets\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"quantity\": 1", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"장바구니가 추가되었습니다.\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/baskets\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"quantity\": 1", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"장바구니가 추가되었습니다.\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.BasketController.getBasketDetail",
@@ -7072,7 +7090,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.BasketController.getBasketDetail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 단건 조회 성공\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\",", "      \"quantity\": 2,", "      \"product\": {", "        \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "        \"productName\": \"probe-r3-98bd03f4ef18c990\",", "        \"productQuantity\": 100,", "        \"productPrice\": 20000,", "        \"productStatus\": \"ON_SALE\",", "        \"productDiscountPrice\": null,", "        \"productRating\": 0.0,", "        \"productReviewCnt\": 0,", "        \"productThumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\"", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 단건 조회 성공\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\",", "      \"quantity\": 2,", "      \"product\": {", "        \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "        \"productName\": \"probe-r3-98bd03f4ef18c990\",", "        \"productQuantity\": 100,", "        \"productPrice\": 20000,", "        \"productStatus\": \"ON_SALE\",", "        \"productDiscountPrice\": null,", "        \"productRating\": 0.0,", "        \"productReviewCnt\": 0,", "        \"productThumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\"", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.BasketController.getBasketList",
@@ -7791,7 +7810,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.BasketController.getBasketList.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/baskets\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"basketId\": \"01e0319b-d605-43da-86c8-2590261c944f\",", "          \"quantity\": 1,", "          \"product\": {", "            \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "            \"productName\": \"probe-r3-98bd03f4ef18c990\",", "            \"productQuantity\": 100,", "            \"productPrice\": 20000,", "            \"productStatus\": \"ON_SALE\",", "            \"productDiscountPrice\": null,", "            \"productRating\": 0.0,", "            \"productReviewCnt\": 0,", "            \"productThumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\"", "          }", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/baskets\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"basketId\": \"01e0319b-d605-43da-86c8-2590261c944f\",", "          \"quantity\": 1,", "          \"product\": {", "            \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "            \"productName\": \"probe-r3-98bd03f4ef18c990\",", "            \"productQuantity\": 100,", "            \"productPrice\": 20000,", "            \"productStatus\": \"ON_SALE\",", "            \"productDiscountPrice\": null,", "            \"productRating\": 0.0,", "            \"productReviewCnt\": 0,", "            \"productThumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\"", "          }", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.BasketController.updateBasket",
@@ -8057,7 +8077,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.BasketController.updateBasket.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d\",", "    \"body\": {", "      \"quantity\": 2", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 상품 수량이 수정되었습니다.\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/baskets/a129a2a7-680d-4c06-a321-fdbded6e834d\",", "    \"body\": {", "      \"quantity\": 2", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"장바구니 상품 수량이 수정되었습니다.\",", "    \"data\": {", "      \"basketId\": \"a129a2a7-680d-4c06-a321-fdbded6e834d\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.BasketController.deleteBasket",
@@ -8241,7 +8262,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.BasketController.deleteBasket.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/baskets/58c805ab-840f-4f25-ba0a-e3f78ece7ded\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"해당 장바구니가 삭제되었습니다.\",", "    \"data\": {", "      \"basketId\": \"58c805ab-840f-4f25-ba0a-e3f78ece7ded\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/baskets/58c805ab-840f-4f25-ba0a-e3f78ece7ded\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"해당 장바구니가 삭제되었습니다.\",", "    \"data\": {", "      \"basketId\": \"58c805ab-840f-4f25-ba0a-e3f78ece7ded\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.createOrder",
@@ -8534,7 +8556,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/order-service.OrderController.createOrder.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders\",", "    \"body\": {", "      \"basketList\": [", "        \"6bfbf277-2664-4a69-a1ad-6c7bfd83e2b7\"", "      ],", "      \"addressId\": \"cf4d7a67-304b-456a-aa0e-f58dfee5f837\",", "      \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"주문이 처리되었습니다.\",", "    \"data\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders\",", "    \"body\": {", "      \"basketList\": [", "        \"6bfbf277-2664-4a69-a1ad-6c7bfd83e2b7\"", "      ],", "      \"addressId\": \"cf4d7a67-304b-456a-aa0e-f58dfee5f837\",", "      \"couponId\": \"d7d6aede-15da-4e4b-adc3-8874675ac5ee\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"주문이 처리되었습니다.\",", "    \"data\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.getOrders",
@@ -9091,7 +9114,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.OrderController.getOrders.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/orders\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "          \"createdAt\": \"2026-11-02T18:59:55.930292\",", "          \"status\": \"CANCEL\",", "          \"productList\": [", "            {", "              \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "              \"productName\": \"probe-r3-98bd03f4ef18c990\",", "              \"productQuantity\": 2,", "              \"productPrice\": 20000", "            }", "          ]", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/orders\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "          \"createdAt\": \"2026-11-02T18:59:55.930292\",", "          \"status\": \"CANCEL\",", "          \"productList\": [", "            {", "              \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "              \"productName\": \"probe-r3-98bd03f4ef18c990\",", "              \"productQuantity\": 2,", "              \"productPrice\": 20000", "            }", "          ]", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.getOrderById",
@@ -9895,7 +9919,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.OrderController.getOrderById.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 상세 조회 성공\",", "    \"data\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "      \"createdAt\": \"2026-11-02T18:59:55.930292\",", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"productName\": \"probe-r3-98bd03f4ef18c990\",", "          \"productQuantity\": 100,", "          \"productPrice\": 20000", "        }", "      ],", "      \"userId\": \"80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "      \"username\": \"<닉네임>\",", "      \"orderName\": \"probe-r3-98bd03f4ef18c990\",", "      \"addressId\": \"cf4d7a67-304b-456a-aa0e-f58dfee5f837\",", "      \"totalAmount\": 40000,", "      \"discountAmount\": 1000,", "      \"orderStatus\": \"CREATE\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 상세 조회 성공\",", "    \"data\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "      \"createdAt\": \"2026-11-02T18:59:55.930292\",", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"productName\": \"probe-r3-98bd03f4ef18c990\",", "          \"productQuantity\": 100,", "          \"productPrice\": 20000", "        }", "      ],", "      \"userId\": \"80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "      \"username\": \"<닉네임>\",", "      \"orderName\": \"probe-r3-98bd03f4ef18c990\",", "      \"addressId\": \"cf4d7a67-304b-456a-aa0e-f58dfee5f837\",", "      \"totalAmount\": 40000,", "      \"discountAmount\": 1000,", "      \"orderStatus\": \"CREATE\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.updateOrderStatus",
@@ -10097,7 +10122,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.OrderController.updateOrderStatus.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/status\",", "    \"body\": {", "      \"orderStatus\": \"PENDING\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 상태가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/status\",", "    \"body\": {", "      \"orderStatus\": \"PENDING\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 상태가 수정되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.cancelOrder",
@@ -10235,7 +10261,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/order-service.OrderController.cancelOrder.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/cancel\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 취소가 처리 되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/cancel\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"주문 취소가 처리 되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "order-service.OrderController.refundOrder",
@@ -10373,7 +10400,8 @@
       "statusCode" : 400,
       "reason" : "400: PENDING 주문은 COMPLETE 상태 조건을 충족하지 않아 환불 거부. target/HotDealWave/order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:295",
       "file" : "responses/order-service.OrderController.refundOrder.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/refund\",", "    \"body\": null", "  },", "  \"statusCode\": 400,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:49.128339796\",", "    \"code\": \"O008\",", "    \"message\": \"환불 정책에 의해 환불할 수 없는 주문입니다.\"", "  },", "  \"reason\": \"400: PENDING 주문은 COMPLETE 상태 조건을 충족하지 않아 환불 거부. target/HotDealWave/order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:295\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/orders/6b654a21-8d52-464b-9cfc-a910e77ecdbe/refund\",", "    \"body\": null", "  },", "  \"statusCode\": 400,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:49.128339796\",", "    \"code\": \"O008\",", "    \"message\": \"환불 정책에 의해 환불할 수 없는 주문입니다.\"", "  },", "  \"reason\": \"400: PENDING 주문은 COMPLETE 상태 조건을 충족하지 않아 환불 거부. target/HotDealWave/order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:295\"", "}" ],
+      "comparison" : [ "비교 보류: HTTP 400 (정상 응답과 비교하지 않음)" ]
     }
   }, {
     "id" : "payment-service.PaymentController.readyPayment",
@@ -10794,7 +10822,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentController.readyPayment.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentController.confirmPayment",
@@ -11559,7 +11588,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentController.confirmPayment.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/confirm\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/confirm\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentController.getPayments",
@@ -12082,7 +12112,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/payment-service.PaymentController.getPayments.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/payments\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"결제 내역 조회 성공\",", "    \"data\": {", "      \"content\": [],", "      \"page\": {", "        \"size\": 20,", "        \"number\": 0,", "        \"totalElements\": 0,", "        \"totalPages\": 0", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/payments\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"결제 내역 조회 성공\",", "    \"data\": {", "      \"content\": [],", "      \"page\": {", "        \"size\": 20,", "        \"number\": 0,", "        \"totalElements\": 0,", "        \"totalPages\": 0", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ "비교 보류: $.data.content[] (빈 배열)" ]
     }
   }, {
     "id" : "payment-service.PaymentController.getPaymentById",
@@ -12634,7 +12665,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 실제 주문의 결제 목록 API가 빈 목록을 반환하여 사용할 결제 ID가 없다. 임의 ID나 DB 결제 삽입을 쓰지 않았다.",
       "file" : "responses/payment-service.PaymentController.getPaymentById.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/payments/{paymentId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문의 결제 목록 API가 빈 목록을 반환하여 사용할 결제 ID가 없다. 임의 ID나 DB 결제 삽입을 쓰지 않았다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/payments/{paymentId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문의 결제 목록 API가 빈 목록을 반환하여 사용할 결제 ID가 없다. 임의 ID나 DB 결제 삽입을 쓰지 않았다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentController.refundPayment",
@@ -13186,7 +13218,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentController.refundPayment.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/refund\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/refund\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 직접 카카오페이 준비·승인·환불 API는 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentController.cancelPayment",
@@ -13370,7 +13403,8 @@
       "statusCode" : 404,
       "reason" : "404: 이번 주문에 대한 결제 리소스가 없음. API 결제 목록도 비어 있음. target/HotDealWave/payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:107",
       "file" : "responses/payment-service.PaymentController.cancelPayment.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/cancel?orderId=6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "    \"body\": null", "  },", "  \"statusCode\": 404,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:49.219090558\",", "    \"code\": \"PA001\",", "    \"message\": \"존재하지 않는 결제 리소스입니다.\"", "  },", "  \"reason\": \"404: 이번 주문에 대한 결제 리소스가 없음. API 결제 목록도 비어 있음. target/HotDealWave/payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:107\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/payments/cancel?orderId=6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "    \"body\": null", "  },", "  \"statusCode\": 404,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:49.219090558\",", "    \"code\": \"PA001\",", "    \"message\": \"존재하지 않는 결제 리소스입니다.\"", "  },", "  \"reason\": \"404: 이번 주문에 대한 결제 리소스가 없음. API 결제 목록도 비어 있음. target/HotDealWave/payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:107\"", "}" ],
+      "comparison" : [ "비교 보류: HTTP 404 (정상 응답과 비교하지 않음)" ]
     }
   }, {
     "id" : "payment-service.PaymentViewController.getPaymentSuccessPage",
@@ -13427,7 +13461,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: HTML 화면은 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentViewController.getPaymentSuccessPage.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/success\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/success\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentViewController.getPaymentFailPage",
@@ -13484,7 +13519,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: HTML 화면은 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentViewController.getPaymentFailPage.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/fail\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/fail\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "payment-service.PaymentViewController.getPaymentCancelPage",
@@ -13541,7 +13577,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: HTML 화면은 호출 범위 밖이다.",
       "file" : "responses/payment-service.PaymentViewController.getPaymentCancelPage.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/cancel\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/payment/cancel\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: HTML 화면은 호출 범위 밖이다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.createProduct",
@@ -14040,7 +14077,8 @@
       "statusCode" : 500,
       "reason" : "3차 상품 생성: S3 업로드가 UnknownHostException으로 실패. 대상 코드는 수정하지 않았고 API 재성공을 꾸미지 않음. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/FileUploadService.java:43",
       "file" : "responses/product-service.ProductController.createProduct.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/products\",", "    \"body\": {", "      \"name\": \"probe-r3-98bd03f4ef18c990\",", "      \"price\": 20000,", "      \"quantity\": 100,", "      \"category\": \"BOOKS_MEDIA\",", "      \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "      \"description\": \"Local API probe fixture\",", "      \"detailImgs\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      },", "      \"thumbImg\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      }", "    }", "  },", "  \"statusCode\": 500,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T18:48:34.047425227\",", "    \"code\": \"P001\",", "    \"message\": \"Received an UnknownHostException when attempting to interact with a service. See cause for the exact endpoint that is failing to resolve. If this is happening on an endpoint that previously worked, there may be a network connectivity issue or your DNS cache could be storing endpoints for too long.\"", "  },", "  \"reason\": \"3차 상품 생성: S3 업로드가 UnknownHostException으로 실패. 대상 코드는 수정하지 않았고 API 재성공을 꾸미지 않음. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/FileUploadService.java:43\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/products\",", "    \"body\": {", "      \"name\": \"probe-r3-98bd03f4ef18c990\",", "      \"price\": 20000,", "      \"quantity\": 100,", "      \"category\": \"BOOKS_MEDIA\",", "      \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "      \"description\": \"Local API probe fixture\",", "      \"detailImgs\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      },", "      \"thumbImg\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      }", "    }", "  },", "  \"statusCode\": 500,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T18:48:34.047425227\",", "    \"code\": \"P001\",", "    \"message\": \"Received an UnknownHostException when attempting to interact with a service. See cause for the exact endpoint that is failing to resolve. If this is happening on an endpoint that previously worked, there may be a network connectivity issue or your DNS cache could be storing endpoints for too long.\"", "  },", "  \"reason\": \"3차 상품 생성: S3 업로드가 UnknownHostException으로 실패. 대상 코드는 수정하지 않았고 API 재성공을 꾸미지 않음. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/FileUploadService.java:43\"", "}" ],
+      "comparison" : [ "비교 보류: HTTP 500 (정상 응답과 비교하지 않음)" ]
     }
   }, {
     "id" : "product-service.ProductController.updateProduct",
@@ -14443,7 +14481,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.updateProduct.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": {", "      \"description\": \"Updated local API probe fixture\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": {", "      \"description\": \"Updated local API probe fixture\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.updateProductStatus",
@@ -14686,7 +14725,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.updateProductStatus.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": {", "      \"status\": \"ON_SALE\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": {", "      \"status\": \"ON_SALE\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.deleteProduct",
@@ -14824,7 +14864,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 상품 삭제는 외부 S3 이미지 삭제에 의존하며 로컬 S3 endpoint 설정 경로가 없다. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:107",
       "file" : "responses/product-service.ProductController.deleteProduct.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/products/{productId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 상품 삭제는 외부 S3 이미지 삭제에 의존하며 로컬 S3 endpoint 설정 경로가 없다. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:107\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/products/{productId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 상품 삭제는 외부 S3 이미지 삭제에 의존하며 로컬 S3 endpoint 설정 경로가 없다. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/file/SubFileService.java:107\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.reduceQuantity",
@@ -15111,7 +15152,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.reduceQuantity.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/reduce-quantity\",", "    \"body\": {", "      \"orderId\": null,", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"quantity\": 1", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"orderId\": null", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/reduce-quantity\",", "    \"body\": {", "      \"orderId\": null,", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"quantity\": 1", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"orderId\": null", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.restoreQuantity",
@@ -15398,7 +15440,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.restoreQuantity.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/restore-quantity\",", "    \"body\": {", "      \"orderId\": null,", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"quantity\": 1", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"orderId\": null", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/products/restore-quantity\",", "    \"body\": {", "      \"orderId\": null,", "      \"productList\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"quantity\": 1", "        }", "      ]", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 수정되었습니다.\",", "    \"data\": {", "      \"orderId\": null", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.getProduct",
@@ -16156,7 +16199,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.getProduct.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 조회되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"name\": \"probe-r3-98bd03f4ef18c990\",", "      \"price\": 20000,", "      \"quantity\": 100,", "      \"category\": \"BOOKS_MEDIA\",", "      \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "      \"description\": \"Local API probe fixture\",", "      \"detailImgs\": [", "        \"http://127.0.0.1:19091/probe-fixture.png\"", "      ],", "      \"thumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\",", "      \"status\": \"ON_SALE\",", "      \"rating\": 0.0,", "      \"reviewCnt\": 0,", "      \"discountPrice\": null", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/products/2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 조회되었습니다.\",", "    \"data\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"name\": \"probe-r3-98bd03f4ef18c990\",", "      \"price\": 20000,", "      \"quantity\": 100,", "      \"category\": \"BOOKS_MEDIA\",", "      \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "      \"description\": \"Local API probe fixture\",", "      \"detailImgs\": [", "        \"http://127.0.0.1:19091/probe-fixture.png\"", "      ],", "      \"thumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\",", "      \"status\": \"ON_SALE\",", "      \"rating\": 0.0,", "      \"reviewCnt\": 0,", "      \"discountPrice\": null", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ProductController.getAllProducts",
@@ -17109,7 +17153,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.ProductController.getAllProducts.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/products\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"name\": \"probe-r3-98bd03f4ef18c990\",", "          \"price\": 20000,", "          \"quantity\": 100,", "          \"category\": \"BOOKS_MEDIA\",", "          \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "          \"description\": \"Local API probe fixture\",", "          \"detailImgs\": [", "            \"http://127.0.0.1:19091/probe-fixture.png\"", "          ],", "          \"thumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\",", "          \"status\": \"ON_SALE\",", "          \"rating\": 0.0,", "          \"reviewCnt\": 0,", "          \"discountPrice\": null", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/products\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"상품이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"name\": \"probe-r3-98bd03f4ef18c990\",", "          \"price\": 20000,", "          \"quantity\": 100,", "          \"category\": \"BOOKS_MEDIA\",", "          \"companyId\": \"eb0ebde7-8d15-4c54-bcc1-349fb1f297c8\",", "          \"description\": \"Local API probe fixture\",", "          \"detailImgs\": [", "            \"http://127.0.0.1:19091/probe-fixture.png\"", "          ],", "          \"thumbImg\": \"http://127.0.0.1:19091/probe-fixture.png\",", "          \"status\": \"ON_SALE\",", "          \"rating\": 0.0,", "          \"reviewCnt\": 0,", "          \"discountPrice\": null", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.PromotionController.createPromotion",
@@ -17504,7 +17549,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/product-service.PromotionController.createPromotion.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/promotions\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-05T03:49:03\",", "      \"end\": \"2026-11-05T05:49:03\",", "      \"discountPrice\": 15000,", "      \"quantity\": 10", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"프로모션이 생성되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/promotions\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-05T03:49:03\",", "      \"end\": \"2026-11-05T05:49:03\",", "      \"discountPrice\": 15000,", "      \"quantity\": 10", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"프로모션이 생성되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.PromotionController.updatePromotion",
@@ -17827,7 +17873,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.PromotionController.updatePromotion.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-07T03:49:03\",", "      \"end\": \"2026-11-07T05:49:03\",", "      \"discountPrice\": 15000,", "      \"quantity\": 10", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 수정되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": {", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-07T03:49:03\",", "      \"end\": \"2026-11-07T05:49:03\",", "      \"discountPrice\": 15000,", "      \"quantity\": 10", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 수정되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.PromotionController.deletePromotion",
@@ -17965,7 +18012,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.PromotionController.deletePromotion.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 삭제되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 삭제되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.PromotionController.getPromotion",
@@ -18517,7 +18565,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.PromotionController.getPromotion.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 조회되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\",", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-07T03:49:03.000+00:00\",", "      \"end\": \"2026-11-07T05:49:03.000+00:00\",", "      \"discountRate\": 25,", "      \"discountPrice\": 15000,", "      \"quantity\": 10,", "      \"remaining\": 10,", "      \"status\": \"PENDING\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/promotions/202cdb26-34e2-4559-9b44-c8797bc157eb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"프로모션이 조회되었습니다.\",", "    \"data\": {", "      \"promotionId\": \"202cdb26-34e2-4559-9b44-c8797bc157eb\",", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"start\": \"2026-11-07T03:49:03.000+00:00\",", "      \"end\": \"2026-11-07T05:49:03.000+00:00\",", "      \"discountRate\": 25,", "      \"discountPrice\": 15000,", "      \"quantity\": 10,", "      \"remaining\": 10,", "      \"status\": \"PENDING\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ "비교 보류: $.data.end (추출에 내부 구조 없음: Timestamp)", "비교 보류: $.data.start (추출에 내부 구조 없음: Timestamp)" ]
     }
   }, {
     "id" : "product-service.PromotionController.getAllPromotions",
@@ -19264,7 +19313,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/product-service.PromotionController.getAllPromotions.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/promotions\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"타임 세일이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"promotionId\": \"600c8d54-b81c-457a-a6aa-5eb91899e1fb\",", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"start\": \"2026-11-10T14:16:59.000+00:00\",", "          \"end\": \"2026-11-10T16:16:59.000+00:00\",", "          \"discountRate\": 25,", "          \"discountPrice\": 15000,", "          \"quantity\": 10,", "          \"remaining\": 10,", "          \"status\": \"PENDING\"", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/promotions\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"타임 세일이 조회되었습니다.\",", "    \"data\": {", "      \"content\": [", "        {", "          \"promotionId\": \"600c8d54-b81c-457a-a6aa-5eb91899e1fb\",", "          \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "          \"start\": \"2026-11-10T14:16:59.000+00:00\",", "          \"end\": \"2026-11-10T16:16:59.000+00:00\",", "          \"discountRate\": 25,", "          \"discountPrice\": 15000,", "          \"quantity\": 10,", "          \"remaining\": 10,", "          \"status\": \"PENDING\"", "        }", "      ],", "      \"page\": {", "        \"size\": 10,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ "비교 보류: $.data.content[].end (추출에 내부 구조 없음: Timestamp)", "비교 보류: $.data.content[].start (추출에 내부 구조 없음: Timestamp)" ]
     }
   }, {
     "id" : "product-service.ReviewController.createReview",
@@ -19628,7 +19678,8 @@
       "statusCode" : 404,
       "reason" : "실제 주문 ID로 호출했으나 내부 주문 조회가 404로 실패. ReviewService의 첫 주문 조회 단계와 OrderClientErrorDecoder의 404 매핑에 해당. 내부 호출의 구체적 인증/사용자 설정 원인은 확인 안 됨. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:43; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/exception/decoder/OrderClientErrorDecoder.java:13",
       "file" : "responses/product-service.ReviewController.createReview.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/reviews\",", "    \"body\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"userId\": \"80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "      \"rating\": 4.0,", "      \"review\": \"Local probe review\",", "      \"reviewImgs\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      }", "    }", "  },", "  \"statusCode\": 404,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:38.081931754\",", "    \"code\": \"O018\",", "    \"message\": \"올바르지 않은 주문 요청 값입니다.\"", "  },", "  \"reason\": \"실제 주문 ID로 호출했으나 내부 주문 조회가 404로 실패. ReviewService의 첫 주문 조회 단계와 OrderClientErrorDecoder의 404 매핑에 해당. 내부 호출의 구체적 인증/사용자 설정 원인은 확인 안 됨. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:43; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/exception/decoder/OrderClientErrorDecoder.java:13\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/reviews\",", "    \"body\": {", "      \"orderId\": \"6b654a21-8d52-464b-9cfc-a910e77ecdbe\",", "      \"productId\": \"2ccb9a46-ada4-48a4-a286-ff947c57a9ce\",", "      \"userId\": \"80faa9ae-5b87-428f-a2b9-652e4d9db9a7\",", "      \"rating\": 4.0,", "      \"review\": \"Local probe review\",", "      \"reviewImgs\": {", "        \"filename\": \"probe.png\",", "        \"contentType\": \"image/png\",", "        \"byteLength\": 68", "      }", "    }", "  },", "  \"statusCode\": 404,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:38.081931754\",", "    \"code\": \"O018\",", "    \"message\": \"올바르지 않은 주문 요청 값입니다.\"", "  },", "  \"reason\": \"실제 주문 ID로 호출했으나 내부 주문 조회가 404로 실패. ReviewService의 첫 주문 조회 단계와 OrderClientErrorDecoder의 404 매핑에 해당. 내부 호출의 구체적 인증/사용자 설정 원인은 확인 안 됨. target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/application/service/review/ReviewService.java:43; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/exception/decoder/OrderClientErrorDecoder.java:13\"", "}" ],
+      "comparison" : [ "비교 보류: HTTP 404 (정상 응답과 비교하지 않음)" ]
     }
   }, {
     "id" : "product-service.ReviewController.updateReview",
@@ -19911,7 +19962,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.",
       "file" : "responses/product-service.ReviewController.updateReview.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PUT\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ReviewController.deleteReview",
@@ -20049,7 +20101,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.",
       "file" : "responses/product-service.ReviewController.deleteReview.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ReviewController.getReviewById",
@@ -20393,7 +20446,8 @@
       "statusCode" : null,
       "reason" : "3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.",
       "file" : "responses/product-service.ReviewController.getReviewById.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/reviews/{reviewId}\",", "    \"body\": null", "  },", "  \"statusCode\": null,", "  \"body\": null,", "  \"reason\": \"3차 완료: 실제 주문으로 리뷰 생성을 호출했으나 내부 주문 조회 404로 실패해 후속 단건 조회·수정·삭제에 사용할 리뷰 ID가 없다.\"", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "product-service.ReviewController.getReviewList",
@@ -20754,7 +20808,8 @@
       "statusCode" : 500,
       "reason" : "재호출 500. 게이트웨이는 리뷰 GET을 인증 제외하지만 product 필터는 해당 경로를 제외하지 않아 사용자 헤더 누락. target/HotDealWave/gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50",
       "file" : "responses/product-service.ReviewController.getReviewList.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/reviews\",", "    \"body\": null", "  },", "  \"statusCode\": 500,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:38.103+00:00\",", "    \"status\": 500,", "    \"error\": \"Internal Server Error\",", "    \"path\": \"/api/v1/reviews\"", "  },", "  \"reason\": \"재호출 500. 게이트웨이는 리뷰 GET을 인증 제외하지만 product 필터는 해당 경로를 제외하지 않아 사용자 헤더 누락. target/HotDealWave/gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50\"", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/reviews\",", "    \"body\": null", "  },", "  \"statusCode\": 500,", "  \"body\": {", "    \"timestamp\": \"2026-11-02T19:00:38.103+00:00\",", "    \"status\": 500,", "    \"error\": \"Internal Server Error\",", "    \"path\": \"/api/v1/reviews\"", "  },", "  \"reason\": \"재호출 500. 게이트웨이는 리뷰 GET을 인증 제외하지만 product 필터는 해당 경로를 제외하지 않아 사용자 헤더 누락. target/HotDealWave/gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12; target/HotDealWave/product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50\"", "}" ],
+      "comparison" : [ "비교 보류: HTTP 500 (정상 응답과 비교하지 않음)" ]
     }
   }, {
     "id" : "user-service.AddressController.createAddress",
@@ -21076,7 +21131,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/user-service.AddressController.createAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/address\",", "    \"body\": {", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"테스트 주소\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"배송지 등록 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/address\",", "    \"body\": {", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"테스트 주소\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"배송지 등록 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.getAddress",
@@ -21536,7 +21592,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.getAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 조회 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 조회 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.getDefaultAddress",
@@ -21972,7 +22029,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.getDefaultAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address-default\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"기본 배송지 조회 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address-default\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"기본 배송지 조회 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.getAddresses",
@@ -22449,7 +22507,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.getAddresses.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "          \"zipNum\": \"00000\",", "          \"city\": \"테스트시\",", "          \"district\": \"테스트구\",", "          \"streetName\": \"테스트로\",", "          \"streetNum\": \"1\",", "          \"detailAddr\": \"수정한 테스트 주소\"", "        }", "      ],", "      \"page\": {", "        \"size\": 20,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/address\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 목록 조회 성공\",", "    \"data\": {", "      \"content\": [", "        {", "          \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\",", "          \"zipNum\": \"00000\",", "          \"city\": \"테스트시\",", "          \"district\": \"테스트구\",", "          \"streetName\": \"테스트로\",", "          \"streetNum\": \"1\",", "          \"detailAddr\": \"수정한 테스트 주소\"", "        }", "      ],", "      \"page\": {", "        \"size\": 20,", "        \"number\": 0,", "        \"totalElements\": 1,", "        \"totalPages\": 1", "      }", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.updateAddress",
@@ -22795,7 +22854,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.updateAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": {", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 수정 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": {", "      \"zipNum\": \"00000\",", "      \"city\": \"테스트시\",", "      \"district\": \"테스트구\",", "      \"streetName\": \"테스트로\",", "      \"streetNum\": \"1\",", "      \"detailAddr\": \"수정한 테스트 주소\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 수정 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.updateDefaultAddress",
@@ -22979,7 +23039,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.updateDefaultAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/address-default/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"기본 배송지 설정 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/address-default/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"기본 배송지 설정 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AddressController.deleteAddress",
@@ -23163,7 +23224,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AddressController.deleteAddress.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 삭제 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/address/0ece61b3-8b54-487d-86cc-449e6f421deb\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"배송지 삭제 성공\",", "    \"data\": {", "      \"addressId\": \"0ece61b3-8b54-487d-86cc-449e6f421deb\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.signUp",
@@ -23526,7 +23588,8 @@
       "statusCode" : 201,
       "reason" : null,
       "file" : "responses/user-service.AuthController.signUp.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/signup\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"password\": \"<비밀번호>\",", "      \"nickname\": \"<닉네임>\",", "      \"role\": \"SELLER\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"회원가입 성공\",", "    \"data\": {", "      \"userId\": \"359b7953-f393-4550-869d-a3c413a8c964\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/signup\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"password\": \"<비밀번호>\",", "      \"nickname\": \"<닉네임>\",", "      \"role\": \"SELLER\"", "    }", "  },", "  \"statusCode\": 201,", "  \"body\": {", "    \"message\": \"회원가입 성공\",", "    \"data\": {", "      \"userId\": \"359b7953-f393-4550-869d-a3c413a8c964\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.checkEmail",
@@ -23704,7 +23767,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AuthController.checkEmail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/check-email\",", "    \"body\": {", "      \"email\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용할 수 있는 이메일입니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/check-email\",", "    \"body\": {", "      \"email\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"사용할 수 있는 이메일입니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.sendVerifyEmail",
@@ -23882,7 +23946,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AuthController.sendVerifyEmail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/email-verification\",", "    \"body\": {", "      \"email\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"이메일 인증이 요청되었습니다. 메일을 확인해주세요.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/email-verification\",", "    \"body\": {", "      \"email\": \"<이메일>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"이메일 인증이 요청되었습니다. 메일을 확인해주세요.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.confirmEmail",
@@ -24083,7 +24148,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AuthController.confirmEmail.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/email-verification/confirm\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"verificationToken\": \"<인증코드>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"이메일 인증이 처리되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/email-verification/confirm\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"verificationToken\": \"<인증코드>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"이메일 인증이 처리되었습니다.\",", "    \"data\": null", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.login",
@@ -24359,7 +24425,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AuthController.login.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/login\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"password\": \"<비밀번호>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"로그인 성공\",", "    \"data\": {", "      \"accessToken\": \"<토큰>\",", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/login\",", "    \"body\": {", "      \"email\": \"<이메일>\",", "      \"password\": \"<비밀번호>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"로그인 성공\",", "    \"data\": {", "      \"accessToken\": \"<토큰>\",", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.AuthController.refresh",
@@ -24612,7 +24679,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.AuthController.refresh.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/refresh\",", "    \"body\": {", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"토큰 재발급 성공\",", "    \"data\": {", "      \"accessToken\": \"<토큰>\",", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"POST\",", "    \"path\": \"/api/v1/auth/refresh\",", "    \"body\": {", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"토큰 재발급 성공\",", "    \"data\": {", "      \"accessToken\": \"<토큰>\",", "      \"refreshToken\": \"<토큰>\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.UserController.getUser",
@@ -24895,7 +24963,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.UserController.getUser.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원정보조회 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\",", "      \"email\": \"<이메일>\",", "      \"nickname\": \"<닉네임>\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"GET\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원정보조회 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\",", "      \"email\": \"<이메일>\",", "      \"nickname\": \"<닉네임>\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.UserController.updateUserInfos",
@@ -25133,7 +25202,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.UserController.updateUserInfos.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": {", "      \"nickname\": \"<닉네임>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원정보수정 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": {", "      \"nickname\": \"<닉네임>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원정보수정 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.UserController.updateUserPassword",
@@ -25371,7 +25441,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.UserController.updateUserPassword.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04/password\",", "    \"body\": {", "      \"password\": \"<비밀번호>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"비밀번호수정 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"PATCH\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04/password\",", "    \"body\": {", "      \"password\": \"<비밀번호>\"", "    }", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"비밀번호수정 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   }, {
     "id" : "user-service.UserController.deleteUser",
@@ -25562,7 +25633,8 @@
       "statusCode" : 200,
       "reason" : null,
       "file" : "responses/user-service.UserController.deleteUser.json",
-      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원탈퇴 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ]
+      "lines" : [ "{", "  \"request\": {", "    \"method\": \"DELETE\",", "    \"path\": \"/api/v1/users/f4a334c6-ab92-465b-972a-9370de1a4e04\",", "    \"body\": null", "  },", "  \"statusCode\": 200,", "  \"body\": {", "    \"message\": \"회원탈퇴 성공\",", "    \"data\": {", "      \"userId\": \"f4a334c6-ab92-465b-972a-9370de1a4e04\"", "    }", "  },", "  \"reason\": null", "}" ],
+      "comparison" : [ ]
     }
   } ],
   "feignClients" : [ {
@@ -36912,6 +36984,7 @@
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/ProductApplication.java:13" ],
     "status" : "확인됨"
   } ],
+  "unsupported" : [ ],
   "kafkaLinks" : [ {
     "publicationId" : "order-service.publishDlq",
     "subscriptionId" : "order-service.dlq",
@@ -38693,66 +38766,79 @@
   } ],
   "warnings" : [ {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:62", "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:61", "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:37", "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:25", "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderEventProducer.java:24", "order/src/main/resources/application.yml:15", "docker-compose.yml:156" ],
     "reason" : "구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PRODUCT_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (order-service, spring.kafka.topics.request-product)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52", "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51", "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:47", "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:27", "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:26", "payment/src/main/resources/application.yml:16", "docker-compose.yml:195" ],
     "reason" : "구독자 확인 안 됨: 같은 환경변수(KAFKA_ROLLBACK_REDUCE_QUANTITY_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (payment-service, spring.kafka.topics.rollback-reduce-quantity)"
   }, {
     "check" : "kafka-topics",
+    "code" : "unlinked",
     "status" : "확인 안 됨",
     "evidence" : [ "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:58", "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:61" ],
     "reason" : "구독자 확인 안 됨: 같은 토픽 이름(payment-dlq)을 쓰는 구독을 찾지 못함 (payment-service)"
   }, {
     "check" : "kafka-topics",
+    "code" : "unlinked",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:61" ],
     "reason" : "구독자 확인 안 됨: 같은 토픽 이름(product-dlq)을 쓰는 구독을 찾지 못함 (product-service)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:14", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:13", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:125", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:123", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:85", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:83", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:48", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:27", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:26", "product/src/main/resources/application.yml:17", "docker-compose.yml:89" ],
     "reason" : "구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_ORDER_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (product-service, spring.kafka.topics.request-order)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:18", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:17", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:134", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:132", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:32", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:31", "product/src/main/resources/application.yml:15", "docker-compose.yml:91" ],
     "reason" : "구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_PAYMENT_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (product-service, spring.kafka.topics.request-payment)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:22", "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:21", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:144", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:142", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:35", "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:34", "product/src/main/resources/application.yml:17", "docker-compose.yml:89" ],
     "reason" : "구독자 확인 안 됨: 같은 환경변수(KAFKA_REQUEST_ORDER_TOPIC)를 쓰는 구독을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (product-service, spring.kafka.topics.request-order)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:25", "order/src/main/resources/application.yml:16", "docker-compose.yml:152" ],
     "reason" : "발행자 확인 안 됨: 같은 환경변수(KAFKA_CANCEL_ORDER_TOPIC)를 쓰는 발행을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (order-service, spring.kafka.topics.cancel-order)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27", "payment/src/main/resources/application.yml:15", "docker-compose.yml:193" ],
     "reason" : "발행자 확인 안 됨: 같은 환경변수(KAFKA_READY_PAYMENT_TOPIC)를 쓰는 발행을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (payment-service, spring.kafka.topics.ready-payment)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29", "product/src/main/resources/application.yml:14", "docker-compose.yml:90" ],
     "reason" : "발행자 확인 안 됨: 같은 환경변수(KAFKA_REDUCE_QUANTITY_TOPIC)를 쓰는 발행을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (product-service, spring.kafka.topics.reduce-quantity)"
   }, {
     "check" : "kafka-topics",
+    "code" : "outside-value",
     "status" : "확인 안 됨",
     "evidence" : [ "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57", "product/src/main/resources/application.yml:16", "docker-compose.yml:88" ],
     "reason" : "발행자 확인 안 됨: 같은 환경변수(KAFKA_RESTORE_QUANTITY_TOPIC)를 쓰는 발행을 찾지 못함. 토픽 실제 값은 저장소 밖 환경에서 정해짐 (product-service, spring.kafka.topics.restore-quantity)"
   }, {
     "check" : "handler-calls",
+    "code" : "unlinked",
     "status" : "확인 안 됨",
     "evidence" : [ "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:21", "order/src/main/java/com/sparta/hotdeal/order/infrastructure/client/CouponClient.java:13" ],
     "reason" : "호출하는 곳 확인 안 됨: order-service.CouponClient.recoverCoupon"
   }, {
     "check" : "handler-calls",
+    "code" : "unlinked",
     "status" : "확인 안 됨",
     "evidence" : [ "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:18", "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:14" ],
     "reason" : "호출하는 곳 확인 안 됨: payment-service.OrderClient.updateOrderStatus"
@@ -39862,6 +39948,32 @@
     "schema" : {
       "warningCount" : 0
     }
+  },
+  "warningCodes" : {
+    "outside-value" : {
+      "title" : "저장소 밖 값",
+      "action" : "값이 배포 환경의 환경변수에서 정해져 저장소만으로는 잇지 못한다. 배포 환경에서 양쪽 값을 확인한다."
+    },
+    "unlinked" : {
+      "title" : "저장소 안에서 잇지 못함",
+      "action" : "저장소 안에 상대(구독·발행, 부르는 곳, 외부 경로, 받는 처리기)가 없다. 근거 줄을 보고 끊긴 연결인지, 저장소 밖에서 쓰는지 확인한다."
+    }
+  },
+  "confirmed" : {
+    "services" : "서비스 이름이 근거 줄(설정 파일의 spring.application.name)에 있다.",
+    "endpoints" : "HTTP 메서드와 전체 경로가 클래스·메서드 매핑 어노테이션 줄에서 나온다.",
+    "fields" : "필드 이름·타입이 근거 줄에 있고, JSON 이름은 형식 문서의 순서(@JsonProperty, record, Lombok·getter, public 필드)로 정했다. 응답 근거면 저장된 응답의 그 줄에 JSON 키가 있다.",
+    "feignCalls" : "대상 엔드포인트가 같은 서비스 이름·HTTP 메서드·경로로 하나만 있다.",
+    "externalPaths" : "게이트웨이 경로 규칙의 Path와 경로 필터를 거쳐 그 컨트롤러 경로에 닿는다.",
+    "tokenRequired" : "허용 목록과 그 비교 방식(앞부분 일치와 HTTP 메서드)으로 판정했다.",
+    "kafka" : "토픽 이름이 근거 줄에 있거나, 설정 키에서 설정 파일과 compose까지 환경변수 이름이 이어진다.",
+    "kafkaLinks" : "양쪽이 같은 환경변수 이름(양쪽 compose 줄) 또는 같은 토픽 이름을 쓴다.",
+    "calls" : "출발 항목의 첫 줄과 도착 줄(Feign 메서드 호출, 발행 줄)만 확인했다. 중간 줄이 실제로 이어지는지는 보지 않는다.",
+    "throws" : "출발 엔드포인트와 마지막 줄의 예외 생성·오류 코드·받는 처리기만 확인했다. 중간 줄은 보지 않는다.",
+    "errors" : "오류 코드·처리기·거부 응답의 값이 근거 줄에 쓴 그대로 있다.",
+    "environmentVariables" : "이름이 근거 줄에 있다. 값은 저장소 밖에서 정해진다.",
+    "repository" : "항목의 설정 파일에 첫 근거가 있고 근거 줄에 이름·값이 있다.",
+    "unsupported" : "근거 줄에 그 방식 이름이 있다. 도구는 그 방식을 따라가지 않는다."
   },
   "knowledge" : [ {
     "service" : "company-service",

@@ -75,19 +75,25 @@ final class KafkaChecks {
             }
             verdict(link, same ? CONFIRMED : UNKNOWN, same ? null : environment.isEmpty()
                     ? "발행·구독의 토픽 이름과 양쪽 근거가 일치하지 않음" : "발행·구독의 환경변수 이름과 양쪽 compose 근거가 일치하지 않음");
-            if (!same) warn(analysis, "kafka-topics", link.path("evidence"), link.path("reason").asText());
+            if (!same) warn(analysis, "kafka-topics", "extraction-mismatch", link.path("evidence"), link.path("reason").asText());
         }
         for (var publication : analysis.path("kafkaPublications")) {
             if (items(analysis.path("kafkaLinks")).stream().noneMatch(l -> known(l) && l.path("publicationId").asText().equals(publication.path("id").asText()))) {
-                warn(analysis, "kafka-topics", publication.path("evidence"), "구독자 확인 안 됨: " + reason(publication, "구독"));
+                warn(analysis, "kafka-topics", code(publication), publication.path("evidence"), "구독자 확인 안 됨: " + reason(publication, "구독"));
             }
         }
         for (var subscription : analysis.path("kafkaSubscriptions")) {
             if (items(analysis.path("kafkaLinks")).stream().noneMatch(l -> known(l) && l.path("subscriptionId").asText().equals(subscription.path("id").asText()))) {
-                warn(analysis, "kafka-topics", subscription.path("evidence"), "발행자 확인 안 됨: " + reason(subscription, "발행"));
+                warn(analysis, "kafka-topics", code(subscription), subscription.path("evidence"), "발행자 확인 안 됨: " + reason(subscription, "발행"));
             }
         }
         count(analysis, "kafka-topics");
+    }
+
+    /** An environment variable chain leaves the value to the deployment; a topic name or a broken chain is a gap inside the repository. */
+    private static String code(JsonNode endpoint) {
+        String environment = value(endpoint.path("environment"));
+        return known(endpoint.path("environment")) && environment != null && !environment.isEmpty() ? "outside-value" : "unlinked";
     }
 
     /** Why no link is confirmed: nothing on the other side uses the same topic name or environment variable. */

@@ -155,6 +155,15 @@ class CommonSpringTest {
                     environment:
                       ORDER_TOPIC: ${ORDER_TOPIC}
                 """);
+        write(ORDER + "StockClient.java", """
+                package shop.order;
+
+                public class StockClient {
+                    private final RestTemplate restTemplate = new RestTemplate();
+                    int stock(Long id) { return restTemplate.getForObject("http://stock-service/stocks/" + id, Integer.class); }
+                }
+                """);
+        write("services/order/src/main/kotlin/shop/order/Legacy.kt", "class Legacy(val name: String)");
     }
 
     private void write(String file, String text) throws Exception {
@@ -165,7 +174,7 @@ class CommonSpringTest {
         var root = JSON.createObjectNode().put("schemaVersion", 1);
         for (String key : new String[]{"services", "endpoints", "feignClients", "feignCalls", "gatewayRoutes", "allowedPaths",
                 "declarations", "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions", "kafkaLinks",
-                "environmentVariables", "externalResources", "exceptionHandlers"}) root.putArray(key);
+                "environmentVariables", "externalResources", "exceptionHandlers", "unsupported"}) root.putArray(key);
         return root;
     }
 
@@ -207,6 +216,55 @@ class CommonSpringTest {
         assertFalse(warnings.contains("Generated.java"));
         assertEquals(2, output.at("/checks/kafka-declarations/sendCount").asInt());
         assertEquals(1, output.at("/checks/kafka-declarations/listenerCount").asInt());
+    }
+
+    private String code(JsonNode output, String evidence) {
+        return Checks.items(output.path("warnings")).stream().filter(w -> w.path("evidence").toString().contains(evidence))
+                .map(w -> w.path("code").asText()).findFirst().orElse("");
+    }
+
+    @Test void evidenceWarningsNameWhyTheLineCouldNotBeRead() throws Exception {
+        var input = document();
+        for (String evidence : new String[]{"services/order/src/main/kotlin/shop/order/Legacy.kt:1", ORDER + "Missing.java:1",
+                PROPERTIES + ":99", PROPERTIES + ":2"}) {
+            var service = item(evidence).put("directory", "services/order");
+            service.set("name", fact("order-service", evidence));
+            input.withArray("services").add(service);
+        }
+        var output = verify(input);
+        assertEquals("file-type", code(output, "Legacy.kt:1"));
+        assertEquals("file-missing", code(output, "Missing.java:1"));
+        assertEquals("line-missing", code(output, "application.properties:99"));
+        assertEquals("extraction-mismatch", code(output, "application.properties:2"));
+        for (String code : new String[]{"file-type", "file-missing", "line-missing", "extraction-mismatch"})
+            assertFalse(output.at("/warningCodes/" + code + "/action").asText().isEmpty(), code);
+        assertFalse(output.at("/confirmed/services").asText().isEmpty());
+    }
+
+    @Test void unsupportedMechanismIsKeptWithItsLineAndCarriedThroughTheWorkspace() throws Exception {
+        String line = ORDER + "StockClient.java:5";
+        var unsupported = item(line).put("service", "order-service").put("mechanism", "RestTemplate")
+                .put("description", "stock-service의 재고를 HTTP로 조회한다");
+        var input = document();
+        input.withArray("unsupported").add(unsupported);
+        assertEquals(Checks.CONFIRMED, verify(input).at("/unsupported/0/status").asText());
+        unsupported.put("mechanism", "WebClient");
+        assertEquals("extraction-mismatch", code(verify(input), line));
+
+        Path workspace = Files.createDirectories(repository.resolveSibling("workspace").resolve("services"));
+        var file = JSON.createObjectNode().put("schemaVersion", 1);
+        file.set("service", orderService());
+        for (String key : new String[]{"endpoints", "feignClients", "feignCalls", "gatewayRoutes", "allowedPaths", "declarations",
+                "kafkaDeclarations", "kafkaPublications", "kafkaSubscriptions", "environmentVariables", "externalResources",
+                "errorCodes", "exceptionHandlers", "gatewayRejections", "pageSerialization"}) file.putArray(key);
+        file.putArray("unsupported").add(unsupported.put("mechanism", "RestTemplate"));
+        JSON.writeValue(workspace.resolve("order-service.json").toFile(), file);
+        Files.writeString(workspace.resolveSibling("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(workspace.resolveSibling("target.json"),
+                "{\"schemaVersion\":1,\"name\":\"shop\",\"repository\":\"https://github.com/acme/shop\",\"commit\":\"0123456789abcdef0123456789abcdef01234567\"}");
+        var output = new Verifier().verify(workspace.getParent(), repository);
+        assertEquals(0, output.at("/checks/schema/warningCount").asInt(), output.path("warnings").toString());
+        assertEquals(Checks.CONFIRMED, output.at("/unsupported/0/status").asText());
     }
 
     @Test void propertiesAndYamlNamesAreConfirmed() throws Exception {

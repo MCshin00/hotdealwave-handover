@@ -30,7 +30,7 @@ final class ThrowChecks {
             else if (find(analysis.path("exceptionHandlers"), "id", link.path("handlerId").asText()).isMissingNode())
                 reason = "처리기 ID가 추출 결과에 없음";
             verdict(link, reason == null ? CONFIRMED : UNKNOWN, reason);
-            if (reason != null) warn(analysis, "error-throws", link.path("evidence"),
+            if (reason != null) warn(analysis, "error-throws", "받는 처리기 없음".equals(reason) ? "unlinked" : "extraction-mismatch", link.path("evidence"),
                     reason + ": " + fromId + " -> " + exception + (errorCode.isEmpty() ? "" : " " + errorCode));
         }
         count(analysis, "error-throws");

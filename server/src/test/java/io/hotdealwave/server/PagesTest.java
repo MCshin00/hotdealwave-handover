@@ -27,6 +27,9 @@ class PagesTest {
         String home = page("/");
         assertTrue(home.contains("엔드포인트 11 · Feign 8 · 발행 5 · 구독 3"));
         assertTrue(home.contains("<h2>확인 안 된 연결 13개</h2>"));
+        assertTrue(home.contains("<h3>저장소 밖 값 9개</h3>"));
+        assertTrue(home.contains("<h3>저장소 안에서 잇지 못함 4개</h3>"));
+        assertTrue(home.contains("할 일: 값이 배포 환경의 환경변수에서 정해져"));
         assertTrue(home.contains("<a href=\"/topics/KAFKA_REQUEST_PRODUCT_TOPIC\">KAFKA_REQUEST_PRODUCT_TOPIC</a>"));
         assertFalse(home.contains("evidence-lines"));
     }
@@ -59,17 +62,28 @@ class PagesTest {
     @Test void flowStepsAreBoxesUnknownStepsToo() throws Exception {
         String createOrder = page("/endpoints/order-service.OrderController.createOrder");
         assertTrue(createOrder.contains("<span class=\"node\">order-service.requestProduct</span>"));
-        assertTrue(createOrder.contains("<span class=\"node unknown\"><span class=\"pill unknown\">확인 안 됨</span> — 구독자 확인 안 됨"));
+        assertTrue(createOrder.contains("<span class=\"node unknown\"><span class=\"pill unknown\">확인 안 됨</span> <details class=\"why\"><summary>이유</summary>구독자 확인 안 됨"));
     }
 
-    @Test void linesAndItemsAreColoredByStatus() throws Exception {
+    @Test void onlyUnconfirmedValuesCarryAStatusAndTheLegendSaysWhatConfirmedMeans() throws Exception {
         String createOrder = page("/endpoints/order-service.OrderController.createOrder");
-        assertTrue(createOrder.contains("<div class=\"line ok\"><span class=\"k\">확인 상태:</span> <span class=\"pill ok\">확인됨</span>"));
+        assertTrue(createOrder.contains("<div class=\"line\"><span class=\"k\">확인 상태:</span> <details class=\"ev\">"));
+        assertFalse(createOrder.contains("pill ok"));
+        assertTrue(createOrder.contains("<details class=\"legend\"><summary>확인됨의 뜻</summary>"));
+        assertTrue(createOrder.contains("중간 줄이 실제로 이어지는지는 보지 않는다"));
+        assertTrue(page("/services/order-service").contains("createOrder · 응답 확인:"));
         assertTrue(createOrder.contains("<span class=\"tag trap\">함정</span> <span class=\"tag ai\">AI 해석</span>"));
         assertTrue(page("/topics/payment-dlq").contains("<span class=\"tag trap\">함정</span> <span class=\"tag checked\">판정 · 확인함</span>"));
         String topic = page("/topics/KAFKA_REQUEST_PRODUCT_TOPIC");
-        assertTrue(topic.contains("<div class=\"line none\"><span class=\"k\">토픽 실제 값:</span> <span class=\"pill none\">저장소에 근거 없음</span>"));
+        assertTrue(topic.contains("<div class=\"line none\"><span class=\"k\">토픽 실제 값:</span> <span class=\"pill none\">저장소에 근거 없음</span> "
+                + "<details class=\"why\"><summary>이유</summary>실제 값은 저장소 밖의 환경변수에서 정해짐</details>"));
         assertTrue(topic.contains("<div class=\"line unknown\">order-service.requestProduct → (구독) <span class=\"pill unknown\">확인 안 됨</span>"));
+    }
+
+    @Test void endpointShowsHowTheObservedResponseComparesWithTheCode() throws Exception {
+        assertTrue(pages.text("/endpoints/coupon-service.CouponController.getUserCoupons").contains("코드와 실제 응답: 차이 없음"));
+        assertTrue(pages.text("/endpoints/product-service.ReviewController.getReviewList").contains("코드와 실제 응답: 비교 보류: HTTP 500"));
+        assertFalse(pages.text("/endpoints/payment-service.PaymentController.readyPayment").contains("코드와 실제 응답"));
     }
 
     @Test void bodyTextKeepsEvidenceAsPlainText() {

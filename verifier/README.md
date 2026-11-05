@@ -6,6 +6,10 @@
 
 Kafka 선언 검사(`kafka-declarations`)도 주석을 지운 줄에서 정규식 검색으로 종류와 `파일:줄`을 대조한다. `@KafkaListener`, 같은 파일에 선언한 `KafkaTemplate` 필드·파라미터(와 `kafkaTemplate`)의 `send(...)`, `new DeadLetterPublishingRecoverer(...)`를 세며 메일 등 다른 `send`는 세지 않는다. 같은 위치의 선언은 한 번만 센다. `kafka-topics`는 확인된 연결이 없는 발행·구독 항목마다 경고를 낸다. 같은 서비스·토픽이라도 서로 다른 발행 경로이면 경고도 별개다. `handler-calls`는 `relations.json`의 `calls`를 검사한다. 출발·도착 ID가 추출 결과에 있고, 첫 근거가 출발 항목의 첫 근거이며, 마지막 근거가 Feign 메서드를 부르는 줄(`.메서드(`)이거나, 도착 발행 항목의 첫 근거(`send` 선언 줄)이면서 사슬에 다른 `kafkaTemplate.send` 발행과 겹치지 않는 그 발행의 근거 줄이 있으면 그 연결은 `확인됨`이다. 아니면 `확인 안 됨`과 경고다. 사슬 중간 줄이 실제로 이어지는지는 보지 않는다. 확인된 연결의 도착이 아닌 Feign 호출과 `kafkaTemplate.send` 발행은 `호출하는 곳 확인 안 됨` 경고를 낸다. `error-throws`는 `relations.json`의 `throws`를 검사한다. 출발 엔드포인트가 있고, 첫 근거가 그 엔드포인트의 첫 근거이며, 마지막 근거 줄에서 문장 끝(`;`)까지 `new <예외>(`와 넘기는 오류 코드·메시지가 있고, 오류 코드가 같은 서비스의 `errorCodes`에 있고, `handlerId`가 `exceptionHandlers`에 있으면 `확인됨`이다. 아니면 `확인 안 됨`과 경고다. 예외 처리기의 상태·오류 코드·메시지는 근거 줄에서 `source`대로 값이나 읽는 곳(`getErrorCode()`, `getMessage()`, `getDefaultMessage()`)을 확인하고, 예외 메시지와 검증 메시지는 값이 다른 곳에서 정해지고, 분기는 처리기 안의 조건(`if (`)에 따라 값이 갈리므로 `확인 안 됨`과 이유를 남긴다. 실행 끝에 스키마·근거 줄 검사와 일곱 교차 검사 각각의 경고 수를 출력한다.
 
+경고마다 이유 코드(`code`)가 붙는다. 검사 이름과 원인은 일대일이 아니어서(같은 `kafka-topics`라도 값이 저장소 밖인 경우와 저장소 안에 상대가 없는 경우가 있다) 사용자는 코드로 할 일을 정한다. 출력의 `warningCodes`에는 나온 코드마다 제목과 할 일 한 줄이, `confirmed`에는 배열마다 "확인됨"이 무엇을 확인했는지 한 줄이 있다. 근거 줄을 읽지 못한 경우는 `file-missing`(파일 없음), `file-type`(읽지 않는 파일 종류), `line-missing`(줄 없음)으로, 줄에 이름·값이 없으면 `extraction-mismatch`로 갈린다.
+
+`responses/`의 응답 파일은 관찰 기록이다. 엔드포인트의 `responseCheck`에 응답 상태·원문과 함께 `comparison`(저장된 응답의 키와 추출한 응답 필드의 JSON 이름 비교: 응답에만 있음, 추출에만 있음, 이름 다름, 비교 보류)을 붙이고, 확인 상태는 바꾸지 않는다. 오류 응답·빈 배열·`null`은 비교하지 않는다. `Page<T>`·`PagedModel<T>`는 `content` 항목만 `T`와 비교한다. 서비스 파일의 필드가 응답 근거(`responses/<파일>.json:줄`)를 쓰면 그 줄에 필드의 JSON 키가 있어야 "확인됨"이다. `unsupported` 항목은 근거 줄에 방식 이름이 있는지 본다.
+
 경고는 실행 실패가 아니며 개발자가 판정한다.
 
 ## 업무 규칙·함정 검사

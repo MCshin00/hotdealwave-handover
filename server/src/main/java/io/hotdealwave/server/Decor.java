@@ -19,6 +19,10 @@ final class Decor {
     private static final Pattern KEY = Pattern.compile("^([가-힣A-Za-z()· ]{1,16}): ");
     /** A status standing on its own, not part of a sentence such as "구독자 확인 안 됨:". */
     private static final Pattern STATUS = Pattern.compile("(?<=^|[\\s>(])(확인됨|확인 안 됨|저장소에 근거 없음)(?=$|[\\s<\\[])");
+    /** A status the page does not mark: the value standing alone is confirmed, and the legend says so. */
+    private static final Pattern CONFIRMED = Pattern.compile("(?:\\s·)?\\s?(?<=^|[\\s>(])확인됨(?=$|[\\s<\\[])");
+    /** The reason after an unconfirmed status, up to its evidence or the end of the line. */
+    private static final Pattern WHY = Pattern.compile("(확인 안 됨|저장소에 근거 없음) — (.+?)(?=\\s\\[|\\s·\\s|<|$)");
     private static final Pattern METHOD = Pattern.compile("(?<=^|<span class=\"k\">HTTP 메서드:</span> |>)(GET|POST|PUT|PATCH|DELETE)(?= |<|$)");
     /** The reason after a response check in a service page row. The endpoint page shows it whole. */
     private static final Pattern REASON = Pattern.compile("(응답 확인: [^(<]*?) \\(([^<]+)\\)(?=</span>)");
@@ -42,7 +46,6 @@ final class Decor {
         String text = inner.replaceAll("<[^>]+>", "");
         if (text.contains("저장소에 근거 없음")) return " none";
         if (text.contains("확인 안 됨")) return " unknown";
-        if (text.contains("확인됨")) return " ok";
         return "";
     }
 
@@ -51,11 +54,11 @@ final class Decor {
                 + " <details class=\"why\"><summary>이유</summary>(" + TARGET_LINE.matcher(m.group(2)).replaceAll(t -> Matcher.quoteReplacement(
                         "<a href=\"" + source + t.group(1) + "#L" + t.group(2) + "\">" + t.group() + "</a>")) + ")</details>"));
         marked = KEY.matcher(marked).replaceFirst(m -> Matcher.quoteReplacement("<span class=\"k\">" + m.group(1) + ":</span> "));
-        marked = STATUS.matcher(marked).replaceAll(m -> "<span class=\"pill " + switch (m.group(1)) {
-            case "확인됨" -> "ok";
-            case "확인 안 됨" -> "unknown";
-            default -> "none";
-        } + "\">" + m.group(1) + "</span>");
+        marked = CONFIRMED.matcher(marked).replaceAll("");
+        marked = WHY.matcher(marked).replaceAll(m -> Matcher.quoteReplacement(m.group(1)
+                + " <details class=\"why\"><summary>이유</summary>" + m.group(2) + "</details>"));
+        marked = STATUS.matcher(marked).replaceAll(m -> "<span class=\"pill " + (m.group(1).equals("확인 안 됨") ? "unknown" : "none")
+                + "\">" + m.group(1) + "</span>");
         marked = METHOD.matcher(marked).replaceAll(m -> "<span class=\"method " + m.group(1).toLowerCase() + "\">" + m.group(1) + "</span>");
         return evidence(marked, source);
     }

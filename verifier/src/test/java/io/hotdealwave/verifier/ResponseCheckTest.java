@@ -44,6 +44,75 @@ class ResponseCheckTest {
         assertEquals(11, analysis.at("/checks/kafka-topics/warningCount").asInt());
     }
 
+    @Test void exampleWarningsSplitIntoValuesOutsideTheRepositoryAndLinksMissingInside() throws Exception {
+        var analysis = run(Example.WORKSPACE);
+        var codes = new java.util.TreeMap<String, Integer>();
+        for (var warning : analysis.path("warnings")) codes.merge(warning.path("code").asText(), 1, Integer::sum);
+        assertEquals(java.util.Map.of("outside-value", 9, "unlinked", 4), codes);
+        assertFalse(analysis.at("/warningCodes/outside-value/action").asText().isEmpty());
+        assertFalse(analysis.at("/confirmed/calls").asText().isEmpty());
+    }
+
+    @Test void storedResponsesAreComparedWithTheExtractedFields() throws Exception {
+        var analysis = run(Example.WORKSPACE);
+        var coupons = check(analysis, "coupon-service.CouponController.getUserCoupons");
+        assertTrue(coupons.path("comparison").isArray());
+        assertTrue(coupons.path("comparison").isEmpty(), coupons.path("comparison").toString());
+        assertEquals("비교 보류: HTTP 500 (정상 응답과 비교하지 않음)",
+                check(analysis, "product-service.ReviewController.getReviewList").path("comparison").get(0).asText());
+
+        var service = JSON.readTree(Path.of("examples/hotdealwave/services/coupon-service.json").toFile());
+        var endpoint = Checks.find(service.path("endpoints"), "id", "coupon-service.CouponController.getUserCoupons");
+        var body = (ObjectNode) JSON.readTree(Example.WORKSPACE.resolve("responses/coupon-service.CouponController.getUserCoupons.json").toFile()).path("body");
+        var coupon = (ObjectNode) body.path("data").get(0);
+        coupon.set("isUsed", coupon.remove("used"));
+        assertEquals(java.util.List.of("이름 다름: $.data[].isUsed ↔ $.data[].used"),
+                ResponseComparison.compare(endpoint.path("response"), java.util.List.of(body), "$"));
+
+        service = JSON.readTree(Path.of("examples/hotdealwave/services/company-service.json").toFile());
+        endpoint = Checks.find(service.path("endpoints"), "id", "company-service.CompanyController.getCompanyList");
+        body = (ObjectNode) JSON.readTree(Example.WORKSPACE.resolve("responses/company-service.CompanyController.getCompanyList.json").toFile()).path("body");
+        var company = (ObjectNode) body.path("data").path("content").get(0);
+        company.set("brand_name", company.remove("brandName"));
+        company.put("logo", "x");
+        assertEquals(java.util.List.of("이름 다름: $.data.content[].brand_name ↔ $.data.content[].brandName", "응답에만 있음: $.data.content[].logo"),
+                ResponseComparison.compare(endpoint.path("response"), java.util.List.of(body), "$"));
+    }
+
+    @Test void responseEvidenceMustHoldTheFieldNameOnItsLine() throws Exception {
+        Path workspace = temporary.resolve("workspace");
+        Path services = Files.createDirectories(workspace.resolve("services"));
+        Files.createDirectories(workspace.resolve("responses"));
+        String id = "coupon-service.CouponController.getUserCoupons";
+        Files.copy(Example.WORKSPACE.resolve("responses/" + id + ".json"), workspace.resolve("responses/" + id + ".json"));
+        var service = (ObjectNode) JSON.readTree(Path.of("examples/hotdealwave/services/coupon-service.json").toFile());
+        var endpoint = Checks.find(service.path("endpoints"), "id", id);
+        var used = Checks.items(endpoint.at("/response/fields/1/schema/arguments/0/fields")).stream()
+                .filter(f -> f.path("name").asText().equals("isUsed")).map(f -> (ObjectNode) f).findFirst().orElseThrow();
+        String usedLine = "responses/" + id + ".json:19", otherLine = "responses/" + id + ".json:12";
+        for (var node : new ObjectNode[]{used, (ObjectNode) used.path("jsonName"), (ObjectNode) used.path("schema")})
+            node.putArray("evidence").add(usedLine);
+        JSON.writeValue(services.resolve("coupon-service.json").toFile(), service);
+        Files.writeString(workspace.resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.copy(Example.WORKSPACE.resolve("target.json"), workspace.resolve("target.json"));
+        var field = Checks.find(run(workspace).path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
+        assertEquals(Checks.CONFIRMED, field.path("jsonName").path("status").asText());
+
+        for (var node : new ObjectNode[]{used, (ObjectNode) used.path("jsonName"), (ObjectNode) used.path("schema")})
+            node.putArray("evidence").add(otherLine);
+        JSON.writeValue(services.resolve("coupon-service.json").toFile(), service);
+        var analysis = run(workspace);
+        field = Checks.find(analysis.path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
+        assertEquals(Checks.UNKNOWN, field.path("jsonName").path("status").asText());
+        assertEquals(Checks.UNKNOWN, field.path("schema").path("status").asText());
+        assertTrue(analysis.path("warnings").toString().contains(otherLine));
+
+        ((ObjectNode) used.path("jsonName")).putNull("value");
+        JSON.writeValue(services.resolve("coupon-service.json").toFile(), service);
+        field = Checks.find(run(workspace).path("endpoints"), "id", id).at("/response/fields/1/schema/arguments/0/fields/5");
+        assertEquals(Checks.UNKNOWN, field.path("status").asText());
+    }
+
     @Test void endpointWithoutStoredResponseIsCodeOnly() throws Exception {
         Path services = Files.createDirectories(temporary.resolve("hotdealwave/services"));
         Files.copy(Path.of("examples/hotdealwave/services/order-service.json"), services.resolve("order-service.json"));

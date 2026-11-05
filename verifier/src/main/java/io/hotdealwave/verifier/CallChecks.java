@@ -36,13 +36,13 @@ final class CallChecks {
                 if (!reaches) reason = "마지막 근거가 도착 지점 줄이 아님";
             }
             verdict(call, reason == null ? CONFIRMED : UNKNOWN, reason);
-            if (reason != null) warn(analysis, "handler-calls", call.path("evidence"), reason + ": " + fromId + " -> " + toId);
+            if (reason != null) warn(analysis, "handler-calls", "extraction-mismatch", call.path("evidence"), reason + ": " + fromId + " -> " + toId);
         }
         var targets = Stream.concat(items(analysis.path("feignCalls")).stream(), sends.stream()).toList();
         for (var target : targets) {
             String id = target.path("id").asText();
             if (items(analysis.path("calls")).stream().noneMatch(c -> known(c) && c.path("toId").asText().equals(id)))
-                warn(analysis, "handler-calls", target.path("evidence"), "호출하는 곳 확인 안 됨: " + id);
+                warn(analysis, "handler-calls", "unlinked", target.path("evidence"), "호출하는 곳 확인 안 됨: " + id);
         }
         count(analysis, "handler-calls");
     }

@@ -28,7 +28,7 @@ final class KnowledgeChecks {
                 var document = json.readTree(file.toFile());
                 String location = "knowledge/" + file.getFileName();
                 schema.validate(document).stream().sorted(Comparator.comparing(message -> message.toString()))
-                        .forEach(message -> warn(analysis, "schema", json.createArrayNode(), location + ": " + message));
+                        .forEach(message -> warn(analysis, "schema", "schema-invalid", json.createArrayNode(), location + ": " + message));
                 for (var item : document.path("items")) {
                     String label = location + ": " + item.path("title").asText();
                     for (var evidence : item.path("evidence")) {
@@ -38,11 +38,12 @@ final class KnowledgeChecks {
                                 ? SourceText.isResponseEvidence(reference)
                                     && lineExists(extraction.resolve("responses"), reference.substring(prefix.length()))
                                 : lineExists(target, reference);
-                        if (!exists) warn(analysis, "knowledge-evidence", json.createArrayNode().add(reference),
+                        if (!exists) warn(analysis, "knowledge-evidence", fileExists(reference.startsWith(prefix) ? extraction : target, reference)
+                                        ? "line-missing" : "file-missing", json.createArrayNode().add(reference),
                                 label + ": 근거 파일·줄을 확인하지 못함");
                     }
                     for (var id : item.path("affectedIds")) {
-                        if (!ids.contains(id.asText())) warn(analysis, "knowledge-affected-ids", item.path("evidence"),
+                        if (!ids.contains(id.asText())) warn(analysis, "knowledge-affected-ids", "unknown-id", item.path("evidence"),
                                 label + ": 추출 결과에 영향 ID 없음: " + id.asText());
                     }
                     if (!"틀림".equals(item.path("confirmationStatus").asText())) knowledge.add(item);
@@ -54,7 +55,7 @@ final class KnowledgeChecks {
             var a = interpreted.get(i).getValue();
             var b = interpreted.get(j).getValue();
             if (!a.path("service").equals(b.path("service")) && affectedIds(a).equals(affectedIds(b)))
-                warn(analysis, "knowledge-duplicates", json.createArrayNode(),
+                warn(analysis, "knowledge-duplicates", "duplicate-item", json.createArrayNode(),
                         "서비스가 다른 항목의 영향 ID 목록이 같음: " + interpreted.get(i).getKey() + " / " + interpreted.get(j).getKey());
         }
         count(analysis, "knowledge-evidence");
@@ -66,6 +67,11 @@ final class KnowledgeChecks {
         var ids = new TreeSet<String>();
         for (var id : item.path("affectedIds")) ids.add(id.asText());
         return ids;
+    }
+
+    private static boolean fileExists(Path root, String evidence) throws IOException {
+        int colon = evidence.lastIndexOf(':');
+        return colon > 0 && !evidence.contains("\\") && SourceText.fileUnder(root, evidence.substring(0, colon)) != null;
     }
 
     private boolean lineExists(Path root, String evidence) throws IOException {

@@ -22,9 +22,10 @@ class Mcp {
     private final Pages pages;
     private final Search search;
     private final View view;
+    private final Legend legend;
 
-    Mcp(Analysis analysis, Queries queries, Pages pages, Search search, View view) {
-        this.analysis = analysis; this.queries = queries; this.pages = pages; this.search = search; this.view = view;
+    Mcp(Analysis analysis, Queries queries, Pages pages, Search search, View view, Legend legend) {
+        this.analysis = analysis; this.queries = queries; this.pages = pages; this.search = search; this.view = view; this.legend = legend;
     }
 
     @Bean HttpServletStatelessServerTransport mcpTransport() {
@@ -40,6 +41,7 @@ class Mcp {
         return McpServer.sync(transport).serverInfo("hotdealwave-handover", "1")
                 .instructions(target.name() + " 저장소의 고정 커밋 " + target.shortCommit() + "을 분석한 문서다. "
                         + "도구 결과의 값마다 확인 상태(확인됨, 확인 안 됨, 저장소에 근거 없음)와 이유, 근거 파일:줄이 붙는다. "
+                        + "결과 머리의 \"확인됨의 뜻\"은 확인됨이 무엇을 확인했는지 밝힌다. "
                         + "답할 때 확인되지 않은 값은 그 상태와 이유를 함께 밝힌다.")
                 .capabilities(ServerCapabilities.builder().tools(false).build())
                 .tools(
@@ -66,11 +68,16 @@ class Mcp {
         });
     }
 
-    private String page(String path) { return pages.text(path); }
+    private String page(String path) {
+        String text = pages.text(path);
+        var page = pages.page(path);
+        return text == null ? null : legend.text(page.kind()) + text;
+    }
 
     private String findEndpoint(String query) {
         var found = queries.findEndpoint(query);
-        return found.isEmpty() ? null : String.join("\n\n---\n\n", found.stream().map(e -> page("/endpoints/" + e.path("id").asText())).toList());
+        return found.isEmpty() ? null : legend.text("엔드포인트")
+                + String.join("\n\n---\n\n", found.stream().map(e -> pages.text("/endpoints/" + e.path("id").asText())).toList());
     }
 
     private String traceFlow(String id) {
@@ -81,7 +88,15 @@ class Mcp {
         lines.addAll(flow.forward().isEmpty() ? List.of("확인된 호출 없음") : flow.forward().stream().map(view::step).toList());
         lines.add("부르는 곳");
         lines.addAll(flow.callers().isEmpty() ? List.of("확인된 호출 없음") : flow.callers().stream().map(view::step).toList());
-        return String.join("\n", lines);
+        var services = new TreeSet<String>();
+        for (var step : Stream.concat(flow.forward().stream(), flow.callers().stream()).toList())
+            for (var node : Arrays.asList(step.from(), step.to())) if (node != null && node.contains(".")) services.add(node.substring(0, node.indexOf('.')));
+        if (services.isEmpty()) services.add(id.substring(0, Math.max(0, id.indexOf('.'))));
+        var unsupported = analysis.list("unsupported").stream().filter(u -> services.contains(u.path("service").asText())).toList();
+        if (!unsupported.isEmpty()) lines.add("도구가 다루지 않는 방식 " + unsupported.size() + "곳: " + String.join(", ", unsupported.stream()
+                .map(u -> u.path("service").asText() + " " + u.path("mechanism").asText() + " " + view.evidence(u)).toList())
+                + ". 이 흐름에는 그 호출이 빠져 있을 수 있다.");
+        return legend.text("흐름") + String.join("\n", lines);
     }
 
     private String searchDocs(String query) {
@@ -94,6 +109,7 @@ class Mcp {
                     .append("페이지: ").append(r.page()).append(" · 점수 ").append(r.score()).append('\n')
                     .append(r.preview()).append("\n\n");
         }
-        return text.toString().strip();
+        String[] kinds = results.stream().map(r -> pages.page(r.page()).kind()).distinct().toArray(String[]::new);
+        return legend.text(kinds) + text.toString().strip();
     }
 }

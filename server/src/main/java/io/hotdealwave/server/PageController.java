@@ -17,6 +17,8 @@ class PageController {
     record ServiceCard(String name, long endpoints, long feignCalls, long publications, long subscriptions, long responded) {}
     record TopicCard(String name, int publications, int subscriptions) {}
     /** A verifier warning: a connection the repository alone cannot make, with the page to look at. */
+    /** Warnings of one reason code, with what the reader does about them. */
+    record GapGroup(String code, String title, String action, List<Gap> gaps) {}
     record Gap(String kind, String reason, String evidence, String page, String target) {
         /** The status part of the reason, such as "구독자 확인 안 됨". */
         public String title() { int i = reason.indexOf(": "); return i < 0 ? reason : reason.substring(0, i); }
@@ -45,8 +47,11 @@ class PageController {
             var topic = queries.findSubscribers(name);
             return new TopicCard(name, topic.publications().size(), topic.subscriptions().size());
         }).toList();
-        var gaps = analysis.list("warnings").stream().map(this::gap).toList();
-        return pages.html("index", Map.of("cards", cards, "topics", topics, "gaps", gaps,
+        var gaps = new ArrayList<GapGroup>();
+        analysis.get("warningCodes").properties().forEach(code -> gaps.add(new GapGroup(code.getKey(), code.getValue().path("title").asText(),
+                code.getValue().path("action").asText(), analysis.list("warnings").stream()
+                .filter(w -> w.path("code").asText().equals(code.getKey())).map(this::gap).toList())));
+        return pages.html("index", Map.of("cards", cards, "topics", topics, "gaps", gaps, "gapCount", analysis.list("warnings").size(),
                 "endpointCount", analysis.list("endpoints").size(), "responded", cards.stream().mapToLong(ServiceCard::responded).sum()));
     }
 

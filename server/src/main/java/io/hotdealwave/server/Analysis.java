@@ -31,6 +31,9 @@ class Analysis {
 
     JsonNode checks() { return root.path("checks"); }
 
+    /** Any other top-level part of the output, such as the warning codes and what "확인됨" means. */
+    JsonNode get(String key) { return root.path(key); }
+
     /** The analysed repository and its fixed commit, from the extraction's target file. */
     record Target(String name, String repository, String commit) {
         public String shortCommit() { return commit.substring(0, 7); }
