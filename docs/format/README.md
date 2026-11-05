@@ -89,12 +89,14 @@ DTO의 검증 어노테이션을 보존한다. 어노테이션 인자의 숫자�
 
 서비스 하나에 속하지 않는 배포·모니터링 설정은 [저장소 스키마](repository.schema.json)를 따라 `analysis/<대상>/repository.json` 하나에 쓴다. 파일이 없으면 검증기는 이 부분 없이 진행한다. 검증기는 합친 결과의 `repository`에 그대로 넣고 상태를 정한다.
 
-- `workflows`: `.github/workflows/`의 파일마다 한 항목이다. `triggers`는 이벤트와 브랜치, `env`는 워크플로 수준 변수, `secrets`는 `${{ secrets.X }}`로 쓰는 이름이다. `jobs[].steps[]`는 단계 이름, 쓰는 액션(`uses`, 없으면 키를 두지 않음), 단계 변수, 실행 명령이다. `env`의 값은 워크플로에 쓴 그대로(`${{ ... }}` 식 포함) 둔다. `commands`는 `run`(SSH 액션의 `script` 포함)의 명령 줄을 하나씩 앞뒤 공백만 빼고 쓴 그대로 두며 주석과 빈 줄은 뺀다.
-- `secrets[].secretValue`는 `null`이며 검증기가 `저장소에 근거 없음`으로 둔다. 근거는 그 이름을 쓰는 줄이다.
-- `images`: compose 서비스마다 이미지 이름(compose `image` 줄), 그 서비스의 `Dockerfile`의 `FROM` 이미지, 빌드 명령(`RUN`), `EXPOSE` 포트다. 첫 근거는 compose 서비스 키 줄이다.
-- `scrapeTargets`: Prometheus `scrape_configs`의 작업마다 대상 주소(`address`), 수집 경로, 수집 주기(작업에 없으면 `global`)다. 첫 근거는 `job_name` 줄이다.
-- `logShipping`: 서비스의 logback 설정에서 로그를 외부로 보내는 appender다. `url`·`labels`는 쓴 그대로 두고, 주소에 쓰인 변수 이름을 `hostVariable`, 그 값을 `hostValue`(`null`, `저장소에 근거 없음`)로 둔다.
-- `lokiConfig`: Loki 설정 파일의 HTTP 포트와 저장소 종류다.
+배열은 도구가 아니라 역할(범주)로 나눈다. 항목의 `tool`은 그 항목을 적은 설정 파일의 도구 이름이고(예: `GitHub Actions`, `Docker Compose`, `Prometheus`, `logback`, `Loki`), `file`은 그 설정 파일이다. 첫 근거는 `file`의 줄이다.
+
+- `pipelines` 배포 파이프라인: 파이프라인 정의 파일마다 한 항목이다. `triggers`는 이벤트와 브랜치, `env`는 파이프라인 수준 변수, `secrets`는 저장소 밖 비밀값을 쓰는 이름이다. `jobs[].steps[]`는 단계 이름, 쓰는 액션(`uses`, 없으면 키를 두지 않음), 단계 변수, 실행 명령이다. `env`의 값은 정의에 쓴 그대로(`${{ ... }}` 같은 식 포함) 둔다. `commands`는 실행 명령 줄(GitHub Actions는 SSH 액션의 `script`를 포함한 `run`)을 하나씩 앞뒤 공백만 빼고 쓴 그대로 두며 주석과 빈 줄은 뺀다.
+- `secrets[].reference`는 그 도구에서 비밀값을 쓰는 모양 그대로다(GitHub Actions는 `secrets.X`). `secretValue`는 `null`이며 검증기가 `저장소에 근거 없음`으로 둔다. 근거는 `reference`를 쓰는 줄이다.
+- `containers` 컨테이너 실행 정의: 실행 정의 파일의 서비스마다 이미지 이름, 그 서비스 디렉터리의 빌드 정의(Docker는 `Dockerfile`)에 있는 기반 이미지(`FROM`), 빌드 명령(`RUN`), 노출 포트(`EXPOSE`)다. 첫 근거는 서비스 키 줄이다.
+- `metrics` 메트릭 수집: 수집 설정의 작업마다 대상 주소(`address`), 수집 경로, 수집 주기(Prometheus는 작업에 없으면 `global`)다. 첫 근거는 작업 이름 줄이다.
+- `logShipping` 로그 전송: 서비스의 로그 설정에서 로그를 외부로 보내는 설정(`appender`는 그 이름)이다. `url`·`labels`는 쓴 그대로 두고, 주소에서 실행 환경 값을 쓰는 모양을 `hostReference`(예: `${HOST}`), 그 값을 `hostValue`(`null`, `저장소에 근거 없음`)로 둔다. `hostValue`의 근거는 주소 줄과, 컨테이너 실행 정의에서 그 값을 넘기는 줄이다.
+- `toolConfigs` 도구 자체 설정: 모니터링 도구의 설정 파일마다 HTTP로 듣는 포트 번호(`port`)와 데이터를 두는 저장소 종류(`storage`, Loki는 `object_store` 값)다.
 - `monitoringTools`: 저장소에 설정이나 언급이 있는 모니터링 도구마다 한 항목이다. 첫 근거는 설정 파일이나 언급 줄이다. `runDefinition`은 그 도구를 띄우는 정의(compose 서비스 등)이며, 저장소에서 찾지 못하면 `value: null`, 근거 없음(빈 배열)으로 두고 검증기가 `저장소에 근거 없음`으로 둔다.
 
 ## 업무 규칙·함정

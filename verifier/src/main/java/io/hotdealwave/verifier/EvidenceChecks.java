@@ -70,16 +70,16 @@ final class EvidenceChecks {
             case "exceptionHandlers" -> lines.get(0).contains("@ExceptionHandler");
             case "gatewayRejections" -> contains(lines, value(object.path("condition")));
             case "pageSerialization" -> lines.get(0).contains("@EnableSpringDataWebSupport");
-            case "workflows" -> lines.get(0).contains("name:");
+            // Category items name their tool's file; the values on the lines are checked as facts.
+            case "pipelines", "logShipping", "toolConfigs" -> inFile(object);
+            case "containers" -> inFile(object) && contains(lines, object.path("service").asText());
+            case "metrics" -> inFile(object) && contains(lines, object.path("job").asText());
             case "triggers" -> contains(lines, object.path("event").asText());
             case "env" -> contains(lines, object.path("name").asText());
-            case "secrets" -> contains(lines, "secrets." + object.path("name").asText());
-            case "jobs" -> contains(lines, object.path("id").asText() + ":");
+            case "secrets" -> object.path("reference").asText().contains(object.path("name").asText())
+                    && contains(lines, object.path("reference").asText());
+            case "jobs" -> contains(lines, object.path("id").asText());
             case "steps" -> contains(lines, object.path("name").asText());
-            case "images" -> contains(lines, object.path("composeService").asText() + ":");
-            case "scrapeTargets" -> contains(lines, object.path("job").asText());
-            case "logShipping" -> lines.get(0).contains("<appender");
-            case "lokiConfig" -> contains(lines, "http_listen_port");
             case "monitoringTools" -> lines.stream().anyMatch(l -> l.toLowerCase(Locale.ROOT).contains(object.path("name").asText().toLowerCase(Locale.ROOT)));
             default -> object.has("type") && contains(lines, simpleType(object.path("type").asText()));
         };
@@ -98,14 +98,18 @@ final class EvidenceChecks {
         verdict(object, resolved ? CONFIRMED : UNKNOWN, resolved ? null : "하위 값을 확정할 수 없음");
     }
 
+    private static boolean inFile(JsonNode item) {
+        return items(item.path("evidence")).get(0).asText().startsWith(item.path("file").asText() + ":");
+    }
+
     private void fact(ObjectNode fact, String role, JsonNode parent, List<String> lines) throws IOException {
         String value = value(fact);
         if (fact.has("source")) { sourced(fact, role, value, parent, lines); return; }
         if (role.equals("secretValue") || role.equals("hostValue")) {
-            // Values that only the deployment environment holds: the line must use that name.
-            String used = role.equals("secretValue") ? "secrets." + parent.path("name").asText() : "${" + parent.path("hostVariable").asText() + "}";
-            if (contains(lines, used)) verdict(fact, ABSENT, role.equals("secretValue")
-                    ? "실제 값은 저장소 밖의 GitHub Secrets에서 정해짐" : "실제 값은 저장소 밖의 환경변수에서 정해짐");
+            // Values that only the deployment environment holds: the line must use them the way the item writes.
+            String used = parent.path(role.equals("secretValue") ? "reference" : "hostReference").asText();
+            if (!used.isEmpty() && contains(lines, used)) verdict(fact, ABSENT, role.equals("secretValue")
+                    ? "실제 값은 저장소 밖에 등록된 비밀값에서 정해짐" : "실제 값은 저장소 밖의 환경변수에서 정해짐");
             else reject(fact, role + ": 근거 줄에서 이름을 쓰는 곳을 확인하지 못함");
             return;
         }
