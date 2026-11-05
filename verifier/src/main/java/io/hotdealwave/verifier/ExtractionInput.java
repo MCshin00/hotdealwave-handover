@@ -14,9 +14,9 @@ import java.util.Comparator;
 import java.util.List;
 
 final class ExtractionInput {
-    private static final List<String> SERVICE_ARRAYS = List.of("endpoints", "feignClients", "feignCalls",
-            "gatewayRoutes", "allowedPaths", "declarations", "kafkaDeclarations", "kafkaPublications",
-            "kafkaSubscriptions", "environmentVariables", "externalResources", "errorCodes", "exceptionHandlers",
+    private static final List<String> SERVICE_ARRAYS = List.of("endpoints", "httpClients", "httpCalls",
+            "gatewayRoutes", "allowedPaths", "declarations", "messageDeclarations", "messagePublications",
+            "messageSubscriptions", "environmentVariables", "externalResources", "errorCodes", "exceptionHandlers",
             "gatewayRejections", "pageSerialization", "unsupported");
     private final ObjectMapper json = new ObjectMapper();
 
@@ -27,7 +27,7 @@ final class ExtractionInput {
         var merged = json.createObjectNode().put("schemaVersion", 1);
         merged.putArray("services");
         SERVICE_ARRAYS.forEach(merged::putArray);
-        merged.putArray("kafkaLinks");
+        merged.putArray("messageLinks");
         merged.putArray("calls");
         merged.putArray("throws");
         merged.putArray("warnings");
@@ -51,7 +51,7 @@ final class ExtractionInput {
             merged.withArray("services").add(service.path("service"));
             for (var key : SERVICE_ARRAYS) service.path(key).forEach(merged.withArray(key)::add);
         }
-        relations.path("kafkaLinks").forEach(merged.withArray("kafkaLinks")::add);
+        relations.path("messageLinks").forEach(merged.withArray("messageLinks")::add);
         relations.path("calls").forEach(merged.withArray("calls")::add);
         relations.path("throws").forEach(merged.withArray("throws")::add);
         var repository = directory.resolve("repository.json");

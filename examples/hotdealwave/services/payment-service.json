@@ -4137,7 +4137,7 @@
       ]
     }
   ],
-  "feignClients": [
+  "httpClients": [
     {
       "id": "payment-service.KakaoPayClient",
       "service": "payment-service",
@@ -4165,7 +4165,8 @@
       },
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "payment-service.OrderClient",
@@ -4194,10 +4195,11 @@
       },
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
-  "feignCalls": [
+  "httpCalls": [
     {
       "id": "payment-service.KakaoPayClient.ready",
       "clientId": "payment-service.KakaoPayClient",
@@ -4229,7 +4231,8 @@
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:16",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "payment-service.KakaoPayClient.approve",
@@ -4262,7 +4265,8 @@
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "payment-service.KakaoPayClient.cancel",
@@ -4295,7 +4299,8 @@
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:28",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "payment-service.OrderClient.getOrderById",
@@ -4332,7 +4337,8 @@
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:16",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     },
     {
       "id": "payment-service.OrderClient.updateOrderStatus",
@@ -4369,7 +4375,8 @@
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:18",
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/OrderClient.java:14"
-      ]
+      ],
+      "kind": "feign"
     }
   ],
   "gatewayRoutes": [],
@@ -4472,55 +4479,55 @@
       ]
     }
   ],
-  "kafkaDeclarations": [
+  "messageDeclarations": [
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentCancelEventConsumer.java:25"
       ]
     },
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentDlqConsumer.java:16"
       ]
     },
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:27"
       ]
     },
     {
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:25"
       ]
     },
     {
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentDlqProducer.java:31"
       ]
     },
     {
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52"
       ]
     },
     {
-      "kind": "DeadLetterPublishingRecoverer",
+      "kind": "kafka",
       "evidence": [
         "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ConsumerApplicationKafkaConfig.java:58"
       ]
     }
   ],
-  "kafkaPublications": [
+  "messagePublications": [
     {
       "id": "payment-service.publishDlq",
       "service": "payment-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.dlq",
@@ -4556,7 +4563,7 @@
     {
       "id": "payment-service.updateOrderStatus",
       "service": "payment-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.update-order-status",
@@ -4594,7 +4601,7 @@
     {
       "id": "payment-service.rollbackProduct",
       "service": "payment-service",
-      "kind": "kafkaTemplate.send",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.rollback-reduce-quantity",
@@ -4632,7 +4639,7 @@
     {
       "id": "payment-service.literalDlq",
       "service": "payment-service",
-      "kind": "DeadLetterPublishingRecoverer",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "",
@@ -4661,11 +4668,11 @@
       ]
     }
   ],
-  "kafkaSubscriptions": [
+  "messageSubscriptions": [
     {
       "id": "payment-service.cancel",
       "service": "payment-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.cancel-payment",
@@ -4699,7 +4706,7 @@
     {
       "id": "payment-service.dlq",
       "service": "payment-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.dlq",
@@ -4733,7 +4740,7 @@
     {
       "id": "payment-service.ready",
       "service": "payment-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.ready-payment",
@@ -4767,7 +4774,7 @@
     {
       "id": "payment-service.refund",
       "service": "payment-service",
-      "kind": "KafkaListener",
+      "kind": "kafka",
       "profile": "base",
       "topicKey": {
         "value": "spring.kafka.topics.refund-payment",

@@ -20,7 +20,7 @@ class KnowledgeTest {
     private ObjectNode prepare() throws Exception {
         Path input = Files.createDirectories(temporary.resolve("workspace/services"));
         Files.copy(Example.WORKSPACE.resolve("services/order-service.json"), input.resolve("order-service.json"));
-        Files.writeString(input.getParent().resolve("relations.json"), "{\"schemaVersion\":1,\"kafkaLinks\":[],\"calls\":[],\"throws\":[]}");
+        Files.writeString(input.getParent().resolve("relations.json"), "{\"schemaVersion\":1,\"messageLinks\":[],\"calls\":[],\"throws\":[]}");
         Files.copy(Example.WORKSPACE.resolve("target.json"), input.getParent().resolve("target.json"));
         Path responses = Files.createDirectories(input.getParent().resolve("responses"));
         Files.copy(Example.WORKSPACE.resolve("responses").resolve(RESPONSE), responses.resolve(RESPONSE));

@@ -10,11 +10,11 @@ import org.springframework.web.util.HtmlUtils;
 @Component
 class Legend {
     private static final Map<String, List<String>> ARRAYS = Map.of(
-            "엔드포인트", List.of("endpoints", "fields", "externalPaths", "tokenRequired", "feignCalls", "calls", "throws", "errors"),
-            "토픽", List.of("kafka", "kafkaLinks", "calls"),
-            "서비스", List.of("services", "endpoints", "feignCalls", "kafka", "environmentVariables", "errors", "unsupported"),
+            "엔드포인트", List.of("endpoints", "fields", "externalPaths", "tokenRequired", "httpCalls", "calls", "throws", "errors"),
+            "토픽", List.of("messagePublications", "messageSubscriptions", "messageLinks", "calls"),
+            "서비스", List.of("services", "endpoints", "httpCalls", "messagePublications", "messageSubscriptions", "environmentVariables", "errors", "unsupported"),
             "배포·모니터링", List.of("repository"),
-            "흐름", List.of("calls", "feignCalls", "kafkaLinks"));
+            "흐름", List.of("calls", "httpCalls", "messageLinks"));
 
     private final Analysis analysis;
 

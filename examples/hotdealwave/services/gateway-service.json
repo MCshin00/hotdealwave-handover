@@ -24,8 +24,8 @@
     ]
   },
   "endpoints": [],
-  "feignClients": [],
-  "feignCalls": [],
+  "httpClients": [],
+  "httpCalls": [],
   "gatewayRoutes": [
     {
       "id": "user-service",
@@ -503,9 +503,9 @@
     }
   ],
   "declarations": [],
-  "kafkaDeclarations": [],
-  "kafkaPublications": [],
-  "kafkaSubscriptions": [],
+  "messageDeclarations": [],
+  "messagePublications": [],
+  "messageSubscriptions": [],
   "environmentVariables": [
     {
       "service": "gateway-service",

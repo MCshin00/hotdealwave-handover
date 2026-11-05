@@ -19,7 +19,7 @@ final class KnowledgeChecks {
         var json = new ObjectMapper();
         var schema = ExtractionInput.registry().getSchema(ExtractionInput.schema("knowledge"));
         var ids = new HashSet<String>();
-        for (String key : List.of("endpoints", "feignCalls", "kafkaPublications", "kafkaSubscriptions"))
+        for (String key : List.of("endpoints", "httpCalls", "messagePublications", "messageSubscriptions"))
             for (var item : analysis.path(key)) ids.add(item.path("id").asText());
         var knowledge = analysis.putArray("knowledge");
         var interpreted = new ArrayList<Map.Entry<String, JsonNode>>();
