@@ -149,8 +149,8 @@ class PagesTest {
         String page = pages.text("/repository");
         assertNotNull(page);
         assertTrue(page.contains("docker-compose up -d 확인됨"), page);
-        assertTrue(page.contains("EC2_PRIVATE_KEY 값: 저장소에 근거 없음"), page);
-        assertTrue(page.contains("gateway-service: gateway-service:19091 /actuator/prometheus 주기 15s 확인됨"), page);
+        assertTrue(page.contains("EC2_PRIVATE_KEY(secrets.EC2_PRIVATE_KEY) 값: 저장소에 근거 없음"), page);
+        assertTrue(page.contains("Prometheus · gateway-service: gateway-service:19091 /actuator/prometheus 주기 15s 확인됨"), page);
         assertTrue(page.contains("Grafana 실행 정의: 저장소에 근거 없음"), page);
         assertTrue(search.search("ECR").stream().anyMatch(r -> r.page().equals("/repository")));
     }

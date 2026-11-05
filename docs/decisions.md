@@ -97,7 +97,7 @@ knowledge/<대상>/*.json (있을 때) -----------------+--> verifier
 
 AI 세션이 Skill을 따라 대상 코드를 읽고 [정해진 형식](format/README.md)으로 쓴다. 항목마다 근거 `파일:줄`을 붙인다. 결과는 다시 만들 수 없어 `analysis/<대상>/`에 커밋한다.
 
-서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결과 핸들러의 나가는 호출은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`, `calls`, `throws`를 담는다. 서비스 하나에 속하지 않는 배포 워크플로·서비스 이미지·모니터링 설정은 `analysis/<대상>/repository.json`에 둔다(#49). `calls`는 엔드포인트·Kafka 구독에서 같은 서비스의 Feign 호출·발행까지 이어지는 연결이다. 넘겨받는 사람이 "이 API를 부르면 어디까지 이어지는가"를 따라가려면 필요하고, 이미 응답 비교를 거친 서비스 파일을 다시 추출하지 않으려고 관계 파일에 둔다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
+서비스 파일은 `analysis/<대상>/services/<spring.application.name>.json`, Kafka 연결과 핸들러의 나가는 호출은 `analysis/<대상>/relations.json`에 둔다. 서비스 파일에는 서비스 하나와 그 서비스의 추출 배열을 담고, 관계 파일에는 `kafkaLinks`, `calls`, `throws`를 담는다. 서비스 하나에 속하지 않는 배포 워크플로·서비스 이미지·모니터링 설정은 `analysis/<대상>/repository.json`에 둔다(#49). 다른 저장소에도 쓰도록 배열은 도구 이름이 아니라 역할(배포 파이프라인, 컨테이너, 메트릭 수집, 로그 전송, 도구 자체 설정, 모니터링 도구)로 나누고, 도구 이름은 항목의 값으로 둔다(#51). `calls`는 엔드포인트·Kafka 구독에서 같은 서비스의 Feign 호출·발행까지 이어지는 연결이다. 넘겨받는 사람이 "이 API를 부르면 어디까지 이어지는가"를 따라가려면 필요하고, 이미 응답 비교를 거친 서비스 파일을 다시 추출하지 않으려고 관계 파일에 둔다. 검증기는 스키마 검사 뒤 합쳐 `out/analysis.json` 하나를 낸다.
 
 업무 규칙·함정은 별도 `rules-msa-java-spring` Skill로 추출 결과에서 출발해 코드와 저장된 응답을 읽고 `knowledge/<대상>/<spring.application.name>.json`에 쓴다. 관계 추출 형식은 그대로 두고, 검증기가 항목도 같은 출력에 합친다.
 

@@ -5,24 +5,24 @@
   "properties": {
     "schemaVersion": {
       "type": "integer",
-      "const": 1
+      "const": 2
     },
-    "workflows": {
+    "pipelines": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/Workflow"
+        "$ref": "#/$defs/Pipeline"
       }
     },
-    "images": {
+    "containers": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/Image"
+        "$ref": "#/$defs/Container"
       }
     },
-    "scrapeTargets": {
+    "metrics": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/ScrapeTarget"
+        "$ref": "#/$defs/MetricsTarget"
       }
     },
     "logShipping": {
@@ -31,10 +31,10 @@
         "$ref": "#/$defs/LogShipping"
       }
     },
-    "lokiConfig": {
+    "toolConfigs": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/LokiConfig"
+        "$ref": "#/$defs/ToolConfig"
       }
     },
     "monitoringTools": {
@@ -46,18 +46,21 @@
   },
   "required": [
     "schemaVersion",
-    "workflows",
-    "images",
-    "scrapeTargets",
+    "pipelines",
+    "containers",
+    "metrics",
     "logShipping",
-    "lokiConfig",
+    "toolConfigs",
     "monitoringTools"
   ],
   "additionalProperties": false,
   "$defs": {
-    "Workflow": {
+    "Pipeline": {
       "type": "object",
       "properties": {
+        "tool": {
+          "type": "string"
+        },
         "file": {
           "type": "string"
         },
@@ -102,6 +105,7 @@
         }
       },
       "required": [
+        "tool",
         "file",
         "name",
         "triggers",
@@ -179,6 +183,9 @@
         "name": {
           "type": "string"
         },
+        "reference": {
+          "type": "string"
+        },
         "secretValue": {
           "$ref": "service.schema.json#/$defs/Fact"
         },
@@ -197,6 +204,7 @@
       },
       "required": [
         "name",
+        "reference",
         "secretValue",
         "evidence"
       ],
@@ -283,10 +291,16 @@
       ],
       "additionalProperties": false
     },
-    "Image": {
+    "Container": {
       "type": "object",
       "properties": {
-        "composeService": {
+        "tool": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "service": {
           "type": "string"
         },
         "image": {
@@ -318,7 +332,9 @@
         }
       },
       "required": [
-        "composeService",
+        "tool",
+        "file",
+        "service",
         "image",
         "baseImages",
         "buildCommand",
@@ -327,9 +343,15 @@
       ],
       "additionalProperties": false
     },
-    "ScrapeTarget": {
+    "MetricsTarget": {
       "type": "object",
       "properties": {
+        "tool": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
         "job": {
           "type": "string"
         },
@@ -356,6 +378,8 @@
         }
       },
       "required": [
+        "tool",
+        "file",
         "job",
         "address",
         "metricsPath",
@@ -367,7 +391,13 @@
     "LogShipping": {
       "type": "object",
       "properties": {
+        "tool": {
+          "type": "string"
+        },
         "service": {
+          "type": "string"
+        },
+        "file": {
           "type": "string"
         },
         "appender": {
@@ -376,7 +406,7 @@
         "url": {
           "$ref": "service.schema.json#/$defs/StringFact"
         },
-        "hostVariable": {
+        "hostReference": {
           "type": "string"
         },
         "hostValue": {
@@ -399,23 +429,28 @@
         }
       },
       "required": [
+        "tool",
         "service",
+        "file",
         "appender",
         "url",
-        "hostVariable",
+        "hostReference",
         "hostValue",
         "labels",
         "evidence"
       ],
       "additionalProperties": false
     },
-    "LokiConfig": {
+    "ToolConfig": {
       "type": "object",
       "properties": {
+        "tool": {
+          "type": "string"
+        },
         "file": {
           "type": "string"
         },
-        "httpPort": {
+        "port": {
           "$ref": "service.schema.json#/$defs/StringFact"
         },
         "storage": {
@@ -435,8 +470,9 @@
         }
       },
       "required": [
+        "tool",
         "file",
-        "httpPort",
+        "port",
         "storage",
         "evidence"
       ],

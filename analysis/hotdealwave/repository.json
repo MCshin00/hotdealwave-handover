@@ -1,7 +1,8 @@
 {
-  "schemaVersion": 1,
-  "workflows": [
+  "schemaVersion": 2,
+  "pipelines": [
     {
+      "tool": "GitHub Actions",
       "file": ".github/workflows/actions.yml",
       "name": {
         "value": "Build & Deploy to ECR",
@@ -55,6 +56,7 @@
       "secrets": [
         {
           "name": "AWS_ACCESS_KEY_ID",
+          "reference": "secrets.AWS_ACCESS_KEY_ID",
           "secretValue": {
             "value": null,
             "evidence": [
@@ -69,6 +71,7 @@
         },
         {
           "name": "AWS_SECRET_ACCESS_KEY",
+          "reference": "secrets.AWS_SECRET_ACCESS_KEY",
           "secretValue": {
             "value": null,
             "evidence": [
@@ -83,6 +86,7 @@
         },
         {
           "name": "EC2_HOST",
+          "reference": "secrets.EC2_HOST",
           "secretValue": {
             "value": null,
             "evidence": [
@@ -95,6 +99,7 @@
         },
         {
           "name": "EC2_USER",
+          "reference": "secrets.EC2_USER",
           "secretValue": {
             "value": null,
             "evidence": [
@@ -107,6 +112,7 @@
         },
         {
           "name": "EC2_PRIVATE_KEY",
+          "reference": "secrets.EC2_PRIVATE_KEY",
           "secretValue": {
             "value": null,
             "evidence": [
@@ -415,9 +421,11 @@
       ]
     }
   ],
-  "images": [
+  "containers": [
     {
-      "composeService": "company-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "company-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:company-latest",
         "evidence": [
@@ -463,7 +471,9 @@
       ]
     },
     {
-      "composeService": "coupon-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "coupon-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:coupon-latest",
         "evidence": [
@@ -509,7 +519,9 @@
       ]
     },
     {
-      "composeService": "eureka-server",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "eureka-server",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:server-latest",
         "evidence": [
@@ -555,7 +567,9 @@
       ]
     },
     {
-      "composeService": "gateway-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "gateway-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:gateway-latest",
         "evidence": [
@@ -601,7 +615,9 @@
       ]
     },
     {
-      "composeService": "order-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "order-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:order-latest",
         "evidence": [
@@ -647,7 +663,9 @@
       ]
     },
     {
-      "composeService": "payment-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "payment-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:payment-latest",
         "evidence": [
@@ -693,7 +711,9 @@
       ]
     },
     {
-      "composeService": "product-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "product-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:product-latest",
         "evidence": [
@@ -739,7 +759,9 @@
       ]
     },
     {
-      "composeService": "user-service",
+      "tool": "Docker Compose",
+      "file": "docker-compose.yml",
+      "service": "user-service",
       "image": {
         "value": "${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:user-latest",
         "evidence": [
@@ -785,8 +807,10 @@
       ]
     }
   ],
-  "scrapeTargets": [
+  "metrics": [
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "company-service",
       "address": {
         "value": "company-service:19097",
@@ -814,6 +838,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "coupon-service",
       "address": {
         "value": "coupon-service:19096",
@@ -841,6 +867,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "gateway-service",
       "address": {
         "value": "gateway-service:19091",
@@ -868,6 +896,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "order-service",
       "address": {
         "value": "order-service:19094",
@@ -895,6 +925,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "payment-service",
       "address": {
         "value": "payment-service:19095",
@@ -922,6 +954,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "product-service",
       "address": {
         "value": "product-service:19093",
@@ -949,6 +983,8 @@
       ]
     },
     {
+      "tool": "Prometheus",
+      "file": "monitoring/prometheus/prometheus.yml",
       "job": "user-service",
       "address": {
         "value": "user-service:19092",
@@ -978,7 +1014,9 @@
   ],
   "logShipping": [
     {
+      "tool": "logback",
       "service": "company-service",
+      "file": "company/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -991,7 +1029,7 @@
           "company/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1010,12 +1048,13 @@
         "company/src/main/resources/logback.xml:4",
         "company/src/main/resources/logback.xml:8",
         "company/src/main/resources/logback.xml:15",
-        "company/src/main/resources/application.yml:3",
-        "docker-compose.yml:64"
+        "company/src/main/resources/application.yml:3"
       ]
     },
     {
+      "tool": "logback",
       "service": "coupon-service",
+      "file": "coupon/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1028,7 +1067,7 @@
           "coupon/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1047,12 +1086,13 @@
         "coupon/src/main/resources/logback.xml:4",
         "coupon/src/main/resources/logback.xml:8",
         "coupon/src/main/resources/logback.xml:15",
-        "coupon/src/main/resources/application.yml:3",
-        "docker-compose.yml:128"
+        "coupon/src/main/resources/application.yml:3"
       ]
     },
     {
+      "tool": "logback",
       "service": "gateway-service",
+      "file": "gateway/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1065,7 +1105,7 @@
           "gateway/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1084,12 +1124,13 @@
         "gateway/src/main/resources/logback.xml:4",
         "gateway/src/main/resources/logback.xml:8",
         "gateway/src/main/resources/logback.xml:15",
-        "gateway/src/main/resources/application.yml:10",
-        "docker-compose.yml:20"
+        "gateway/src/main/resources/application.yml:10"
       ]
     },
     {
+      "tool": "logback",
       "service": "order-service",
+      "file": "order/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1102,7 +1143,7 @@
           "order/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1121,12 +1162,13 @@
         "order/src/main/resources/logback.xml:4",
         "order/src/main/resources/logback.xml:8",
         "order/src/main/resources/logback.xml:15",
-        "order/src/main/resources/application.yml:3",
-        "docker-compose.yml:149"
+        "order/src/main/resources/application.yml:3"
       ]
     },
     {
+      "tool": "logback",
       "service": "payment-service",
+      "file": "payment/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1139,7 +1181,7 @@
           "payment/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1158,12 +1200,13 @@
         "payment/src/main/resources/logback.xml:4",
         "payment/src/main/resources/logback.xml:8",
         "payment/src/main/resources/logback.xml:15",
-        "payment/src/main/resources/application.yml:3",
-        "docker-compose.yml:188"
+        "payment/src/main/resources/application.yml:3"
       ]
     },
     {
+      "tool": "logback",
       "service": "product-service",
+      "file": "product/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1176,7 +1219,7 @@
           "product/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1195,12 +1238,13 @@
         "product/src/main/resources/logback.xml:4",
         "product/src/main/resources/logback.xml:8",
         "product/src/main/resources/logback.xml:15",
-        "product/src/main/resources/application.yml:3",
-        "docker-compose.yml:85"
+        "product/src/main/resources/application.yml:3"
       ]
     },
     {
+      "tool": "logback",
       "service": "user-service",
+      "file": "user/src/main/resources/logback.xml",
       "appender": {
         "value": "LOKI",
         "evidence": [
@@ -1213,7 +1257,7 @@
           "user/src/main/resources/logback.xml:4"
         ]
       },
-      "hostVariable": "HOST",
+      "hostReference": "${HOST}",
       "hostValue": {
         "value": null,
         "evidence": [
@@ -1232,15 +1276,15 @@
         "user/src/main/resources/logback.xml:4",
         "user/src/main/resources/logback.xml:8",
         "user/src/main/resources/logback.xml:15",
-        "user/src/main/resources/application.yml:3",
-        "docker-compose.yml:47"
+        "user/src/main/resources/application.yml:3"
       ]
     }
   ],
-  "lokiConfig": [
+  "toolConfigs": [
     {
+      "tool": "Loki",
       "file": "monitoring/loki/loki-config.yml",
-      "httpPort": {
+      "port": {
         "value": "3100",
         "evidence": [
           "monitoring/loki/loki-config.yml:4"
@@ -1249,30 +1293,16 @@
       "storage": {
         "value": "filesystem",
         "evidence": [
-          "monitoring/loki/loki-config.yml:11",
           "monitoring/loki/loki-config.yml:30"
         ]
       },
       "evidence": [
         "monitoring/loki/loki-config.yml:4",
-        "monitoring/loki/loki-config.yml:11",
         "monitoring/loki/loki-config.yml:30"
       ]
     }
   ],
   "monitoringTools": [
-    {
-      "name": "Prometheus",
-      "runDefinition": {
-        "value": null,
-        "evidence": []
-      },
-      "evidence": [
-        "README.md:57",
-        "monitoring/prometheus/prometheus.yml:2",
-        "monitoring/prometheus/prometheus.yml:4"
-      ]
-    },
     {
       "name": "Grafana",
       "runDefinition": {
@@ -1291,8 +1321,7 @@
       },
       "evidence": [
         "README.md:59",
-        "monitoring/loki/loki-config.yml:4",
-        "monitoring/loki/loki-config.yml:11"
+        "monitoring/loki/loki-config.yml:4"
       ]
     },
     {
@@ -1303,6 +1332,17 @@
       },
       "evidence": [
         "monitoring/loki/loki-config.yml:37"
+      ]
+    },
+    {
+      "name": "Prometheus",
+      "runDefinition": {
+        "value": null,
+        "evidence": []
+      },
+      "evidence": [
+        "monitoring/prometheus/prometheus.yml:5",
+        "README.md:57"
       ]
     }
   ]
