@@ -1,0 +1,66 @@
+{
+  "id": "Q20",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 73.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "서비스별 오류 처리와 리뷰 500의 원인을 확정하지 않은 설명은 타당합니다. 그러나 코드에 명시된 Gateway의 본문 없는 401 종료를 확인 불가로 처리했고, 라우트와 체인에서 확인되는 프록시 위임 흐름도 빠뜨렸습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:46",
+        "gateway/src/main/resources/application.yml:13",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50",
+        "responses/product-service.ReviewController.getReviewList.json:7"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "Gateway의 토큰 누락·검증 실패 분기가 본문 없는 401로 종료된다는 설명은 맞습니다. 확인하지 못한 범위는 밝혔지만, 저장소에 존재하는 서비스 예외 처리와 Gateway를 통한 반환 흐름을 설명하지 않아 질문의 핵심 일부가 빠졌습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAuthenticationHandler.java:14",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:46",
+        "gateway/src/main/resources/application.yml:43"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Gateway의 직접 종료, 서비스의 예외·보안 처리기, 내부 호출 오류 변환과 기본 프록시 위임을 코드에 맞게 설명했습니다. JWT 예외 포착 범위, 헤더 누락 예외와 401 처리기의 연결 한계, 라이브러리에 위임된 장애 응답도 구분했습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:47",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:48",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:29",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/SecurityConfig.java:35",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/filter/AuthenticationFilter.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAuthenticationHandler.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAccessDeniedHandler.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/decoder/ProductClientErrorDecoder.java:11",
+        "gateway/src/main/resources/application.yml:43",
+        "gateway/build.gradle:45",
+        "gateway/src/test/java/com/sparta/hotdeal/gateway/GatewayApplicationTests.java:10"
+      ]
+    }
+  },
+  "usage": {
+    "input": 182054,
+    "cachedInput": 146560,
+    "output": 2230
+  },
+  "seed": 45
+}

@@ -1,0 +1,33 @@
+{
+  "id": "Q07",
+  "condition": "ask",
+  "question": "보유 쿠폰 목록은 어떤 데이터를 기준으로 조회하고, 발급 성공 후 저장이나 조회 반영에 실패하면 어떻게 처리하나요?",
+  "status": "완료",
+  "answer": "보유 쿠폰 목록은 요청한 `userId`, 삭제되지 않은 쿠폰(`deletedAt`이 null), `isUsed` 값으로 조회합니다. `isUsed`를 생략하면 미사용 쿠폰만 조회하며, 만료일이나 쿠폰 정보 상태는 목록 제외 조건이 아닙니다. 이름·할인액·최소 주문액·만료일은 연결된 현재 쿠폰 정보에서 가져옵니다. 이 조회 기준 설명은 AI 해석입니다. (coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:123, coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:124, coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:126)\n\n발급은 쿠폰 정보별 Redis 락을 얻은 뒤 트랜잭션 메서드에서 발급 수 증가와 사용자 쿠폰 저장을 함께 처리합니다. 따라서 해당 트랜잭션 안에서 저장이 실패하면 발급 수 변경과 사용자 쿠폰 저장도 함께 처리되는 구조입니다(AI 해석). 다만 발급 성공 응답은 `data=null`이므로 응답만으로 사용자 쿠폰 ID를 얻을 수 없습니다. 이후 목록 조회에 실패했을 때 발급을 되돌리거나 재시도하는 별도 처리 여부는 조각에서 확인할 수 없습니다. (coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:19, coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:44, coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:46, coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:50, coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:30, coupon/src/main/java/com/sparta/hotdeal/coupon/presentation/controller/CouponController.java:34, coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ResponseDto.java:10)",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C1",
+      "page": "/endpoints/coupon-service.CouponController.getUserCoupons",
+      "title": "coupon-service.CouponController.getUserCoupons",
+      "section": ""
+    },
+    {
+      "id": "C2",
+      "page": "/services/coupon-service",
+      "title": "coupon-service",
+      "section": "업무 규칙·함정 21개"
+    },
+    {
+      "id": "C6",
+      "page": "/endpoints/coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "title": "coupon-service.CouponController.issueFirstComeFirstServeCoupon",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 71065,
+    "output": 487
+  },
+  "seconds": 5.7
+}

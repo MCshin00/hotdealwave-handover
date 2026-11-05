@@ -1,0 +1,70 @@
+{
+  "id": "Q19",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 64.8,
+  "order": {
+    "A": "ask",
+    "B": "base",
+    "C": "mcp"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "밝힘",
+      "reason": "확인할 수 없다는 한계는 밝혔지만, 저장소에는 라우팅·경로 재작성·인증·헤더 변경 코드가 모두 있어 질문의 핵심에 답하지 못했습니다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:13",
+        "gateway/src/main/resources/application.yml:19",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:40"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "라우트와 재작성 규칙, 인증 예외, JWT 실패 시 401, 사용자 헤더 덮어쓰기 및 reviews의 서비스 간 인증 불일치를 코드대로 설명했습니다. 명시되지 않은 필터 순서와 런타임 인스턴스·최종 전송 헤더도 확인 범위와 구분했습니다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:14",
+        "gateway/src/main/resources/application.yml:47",
+        "gateway/src/main/resources/application.yml:52",
+        "gateway/src/main/resources/application.yml:54",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:28",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:15",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:40",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "라우팅 사례와 인증 생략·헤더 덮어쓰기, 대상 서비스의 권한 처리는 맞습니다. 확인 한계와 환경 의존 값은 밝혔지만, 저장소에서 확인되는 RewritePath 규칙과 인증 실패 시 401, 전체 인증 예외 목록을 확인 불가로 남겨 핵심 설명이 빠졌습니다.",
+      "evidence": [
+        "gateway/src/main/resources/application.yml:19",
+        "gateway/src/main/resources/application.yml:47",
+        "gateway/src/main/resources/application.yml:54",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:6",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:40",
+        "company/src/main/java/com/sparta/hotdeal/company/infrastructure/config/SecurityConfig.java:17",
+        "company/src/main/java/com/sparta/hotdeal/company/presentation/controller/CompanyController.java:42",
+        "docker-compose.yml:18",
+        "docker-compose.yml:19"
+      ]
+    }
+  },
+  "usage": {
+    "input": 86574,
+    "cachedInput": 59008,
+    "output": 1816
+  },
+  "seed": 45
+}

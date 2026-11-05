@@ -1,0 +1,96 @@
+{
+  "id": "Q09",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 30.1,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "A는 콘솔 위치·등록값·운영 일치 여부를 저장소로 확인할 수 없다고 밝혔습니다. 또 PAY_* 환경변수 주입, 복귀 URL 세 개, cancel_url과 fail_url이 서로 뒤바뀐 점, 각 경로가 연결되는 화면을 모두 코드와 맞게 짚었습니다. KakaoPayClient의 URL을 콘솔이 아닌 API 주소로 구분했고, 프로필도 외부에서 주입된다는 점을 확인되지 않는 부분으로 분리했습니다.",
+      "evidence": [
+        "README.md:125",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14",
+        "payment/src/main/resources/application.yml:5",
+        "payment/src/main/resources/application.yml:26-29",
+        "docker-compose.yml:175",
+        "docker-compose.yml:185-187",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:62",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:23",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:28",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9"
+      ]
+    },
+    "ask": {
+      "accuracy": "틀림",
+      "scope": "일부",
+      "reason": "B는 복귀 주소를 확인할 수 없다고 했지만, 저장소의 ReqPostKakaoPayReadyDto에 approval·cancel·fail 경로가 있고 취소·실패 경로가 뒤바뀐 사실도 확인됩니다. 그래서 질문의 핵심에 답하지 못했습니다. 운영값을 확인된 것처럼 말하지는 않았지만, 코드로 확인되는 부분과 확인되지 않는 부분을 구분하지 않았습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/resources/application.yml:29",
+        "docker-compose.yml:187"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "C는 콘솔 위치·등록값·운영 일치 여부를 확인할 수 없다고 밝혔고, PAY_HOST_DOMAIN이 어댑터에 주입되는 경로를 코드와 맞게 설명했습니다. 복귀 경로 세 개, 취소·실패가 뒤바뀐 점, 도착 화면의 문구도 코드와 일치합니다. /payment/success는 화면만 돌려주고 실제 승인은 POST /api/v1/payments/confirm에서 처리된다는 추가 설명도 맞습니다. 운영값은 저장소 밖에서 정해진다고 구분했습니다.",
+      "evidence": [
+        "docker-compose.yml:185-187",
+        "payment/src/main/resources/application.yml:29",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41-43",
+        "payment/src/main/resources/templates/payment-fail.html:9",
+        "payment/src/main/resources/templates/payment-cancel.html:9",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:18-21",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61-64"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 13503,
+    "cache_read_input_tokens": 49362,
+    "output_tokens": 3237,
+    "output_tokens_details": {
+      "thinking_tokens": 273
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13503,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1877,
+        "cache_read_input_tokens": 18436,
+        "cache_creation_input_tokens": 238,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 238
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.1826684
+  },
+  "seed": 45
+}

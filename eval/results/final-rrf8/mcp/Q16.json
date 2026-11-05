@@ -1,0 +1,40 @@
+{
+  "id": "Q16",
+  "condition": "mcp",
+  "question": "Elasticsearch 반영에 실패하면 어떻게 재시도하고, 누락되거나 순서가 뒤바뀐 변경 사항은 어떻게 맞추나요?",
+  "status": "완료",
+  "seconds": 54.3,
+  "tokens": {
+    "input": 227794,
+    "cachedInput": 201216,
+    "output": 1729
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page"
+  ],
+  "mcpFailed": [
+    "search_docs"
+  ],
+  "commands": 0,
+  "answer": "**확인된 색인 경로에서는 실패를 로그로 남기고 끝냅니다. 자동 재시도나 누락·순서 역전을 보정하는 체계는 MCP 문서에서 확인할 수 없습니다.** 색인 실패 처리는 코드 기반 분석이며, 장애 후 복구를 실제로 검증한 결과는 아닙니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24`.\n\n- **실패 시 처리:** 상품 생성·일반 수정·상태 변경은 `indexProduct`를 호출합니다. 이 메서드는 문서 변환·저장의 모든 `Exception`을 로그만 남기고 삼키므로, 색인 단계만 실패하면 상품 변경 API는 성공 응답을 만들 수 있습니다. 이 경로에서 애플리케이션 수준 재시도는 확인되지 않습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:83`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:136`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24`.\n\n- **누락된 변경:** 재고 차감·복구는 DB만 변경하고 색인을 호출하지 않습니다. 프로모션 시작·종료에 따른 할인값 변경도 마찬가지입니다. 따라서 이후 별도 상품 수정 등으로 다시 색인하기 전까지 검색 목록에 이전 값이 남을 수 있습니다. 이는 자동 누락 복구가 아닙니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:99`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:109`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:246`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:250`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:122`.\n\n- **조회하면서 맞추지도 않습니다:** 상세 조회는 DB를, 목록 조회는 Elasticsearch를 사용하며 목록 변환에서 DB를 다시 조회하지 않습니다. 따라서 조회 자체가 불일치를 복구하지 않습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221`.\n\n- **Kafka DLQ가 색인 복구를 담당한다는 근거는 없습니다:** product의 Kafka 공통 오류 처리기는 밖으로 전달된 소비 오류에 대해 **재시도 0회**, `product-dlq`의 원래 파티션으로 발행하도록 설정되어 있습니다. 문서에는 해당 DLQ의 구독자가 확인되지 않습니다. 앞서 설명한 색인 예외는 자체적으로 삼키므로 이 설정을 Elasticsearch 재시도 장치로 볼 수 없습니다. 근거: `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:55`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:61`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24`.\n\n**순서가 뒤바뀐 변경을 버전·시퀀스로 판별하거나, 누락을 주기적으로 대조·재색인하는 구현은 확인할 수 없습니다.** 확인된 변환·저장 경로만으로는 최신 변경이 최종적으로 남는다는 보장을 할 수 없습니다. 관련 확인 범위: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24`. 저장소 밖 운영 작업이나 별도 복구 시스템의 존재·동작도 확인할 수 없습니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

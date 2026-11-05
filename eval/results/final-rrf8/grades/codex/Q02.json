@@ -1,0 +1,67 @@
+{
+  "id": "Q02",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 71.3,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "주문 저장과 재고 차감 요청의 순서, 결제 준비 실패 시 보상 처리, 복구 실패의 로그·ACK 및 외부 전파 예외의 DLQ 설정을 정확히 설명했다. 환경변수로 정해지는 토픽 연결과 실제 복구 완료도 코드상 처리와 구분했다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "복구 소비자의 예외 처리와 비동기 발행의 한계는 맞지만, 주문 저장이 먼저라는 핵심과 결제 준비 실패 시 복구 요청 경로를 빠뜨렸다. 또한 두 후속 토픽으로 설명했으나 실제로 차감 실패와 복구 성공 모두 같은 request-order 설정을 사용하며, 연결·완료 여부의 불확실성은 밝혔다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:48",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:22"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "주문 저장 순서, 결제 준비 실패 시 재조회와 복구 요청, 수량 증가 및 복구 실패 처리는 코드와 맞는다. 실제 복구 완료와 운영자 재처리의 불확실성은 밝혔지만, 결제 발행과 상품 구독의 토픽 연결 자체도 외부 환경변수에 달렸다는 점은 구분하지 않았다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:103",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:41",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:66",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    }
+  },
+  "usage": {
+    "input": 125356,
+    "cachedInput": 87040,
+    "output": 2184
+  },
+  "seed": 45
+}

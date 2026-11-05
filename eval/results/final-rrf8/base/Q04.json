@@ -1,0 +1,21 @@
+{
+  "id": "Q04",
+  "condition": "base",
+  "question": "운영 RDS와 Redis의 실제 접속 대상과 인증 정보는 어디서 확인하고, 배포된 서비스가 그 대상으로 접속하는지는 어떻게 확인하나요?",
+  "status": "완료",
+  "seconds": 91.1,
+  "tokens": {
+    "input": 165357,
+    "cachedInput": 132864,
+    "output": 2918
+  },
+  "mcpTools": [],
+  "commands": 7,
+  "answer": "**仓库只能确认接속값의 전달 경로이며, 운영 주소·계정·비밀번호의 실제 값과 현재 연결 성공 여부는 확인할 수 없습니다.** 운영 설정은 모두 환경변수를 참조합니다. (`user/src/main/resources/application-prod.yml:3`, `user/src/main/resources/application-prod.yml:15`)\n\n**어디서 확인하나요?**\n\n| 대상 | 확인할 변수 | 저장소 근거 |\n|---|---|---|\n| RDS/MySQL 접속 대상 | `PROD_DB_ENDPOINT` — JDBC URL에 들어가는 주소 부분 | `user/src/main/resources/application-prod.yml:3` |\n| DB 인증 | `PROD_DB_USERNAME`, `PROD_DB_PASSWORD` | `user/src/main/resources/application-prod.yml:4`, `user/src/main/resources/application-prod.yml:5` |\n| Redis 접속 대상 | `REDIS_PROD_HOST`, `REDIS_PROD_PORT` | `user/src/main/resources/application-prod.yml:15`, `user/src/main/resources/application-prod.yml:16` |\n| Redis 인증 | `REDIS_PROD_USERNAME`, `REDIS_PROD_PASSWORD` | `user/src/main/resources/application-prod.yml:17`, `user/src/main/resources/application-prod.yml:18` |\n\n확인할 운영 위치는 **배포 대상 EC2의 `/home/ubuntu/HotDealWave`와 그곳에서 실행한 Compose의 환경변수 공급원**입니다. 워크플로는 `EC2_HOST`, `EC2_USER`, `EC2_PRIVATE_KEY`로 접속한 뒤 해당 디렉터리에서 `docker-compose pull`, `docker-compose up -d`를 실행합니다. (`.github/workflows/actions.yml:74`, `.github/workflows/actions.yml:87`, `.github/workflows/actions.yml:94`)\n\n그 디렉터리의 **`.env`와 배포 실행 셸의 환경변수를 우선 확인**하면 됩니다. 다만 이는 확인할 후보이며, 운영 `.env`의 존재나 내용은 저장소로 확정할 수 없습니다. `.env`는 Git에서 제외되고, Compose는 외부 값을 치환하며, 배포 스크립트에는 DB·Redis 변수 생성이나 비밀 저장소 조회 단계가 없습니다. 따라서 “DB·Redis 비밀번호는 GitHub Secrets에 있다”거나 “AWS Secrets Manager에 있다”고 단정할 근거도 없습니다. (`.gitignore:2`, `docker-compose.yml:37`, `docker-compose.yml:41`, `.github/workflows/actions.yml:77`)\n\n**배포된 서비스가 실제로 그 대상으로 접속하는지는 다음 순서로 확인합니다.** 아래는 저장소 설정에 근거한 운영 점검 절차이며, 이번에 실행한 결과는 아닙니다.\n\n1. **실행 컨테이너에 전달된 값과 활성 프로필을 확인합니다.**  \n   `docker inspect <컨테이너명>`의 환경변수에서 위 변수들과 `ACTIVE_PROFILE=prod`를 확인하고, 시작 로그의 활성 프로필과 대조합니다. 파일의 현재 값만 보지 말고 실행 중 컨테이너의 값을 확인해야 합니다. Compose가 변수를 전달하고 Spring이 `ACTIVE_PROFILE`을 사용하도록 되어 있습니다. 비밀번호는 보호된 운영 환경에서 대조하고 출력물을 공유하지 않습니다. (`docker-compose.yml:28`, `docker-compose.yml:32`, `docker-compose.yml:37`, `docker-compose.yml:41`, `user/src/main/resources/application.yml:5`)\n\n2. **애플리케이션의 최종 설정과 클라이언트 구성을 확인합니다.**  \n   JDBC URL·사용자와 Redis 주소·사용자가 기대값인지 확인합니다. Redis는 user의 `RedisTemplate`, order의 `RedisCacheManager`, coupon의 별도 `RedissonClient`를 각각 봐야 합니다. 특히 coupon은 `redis://host:port`로 연결하고 사용자명·비밀번호가 비어 있지 않을 때 인증을 설정합니다. (`user/src/main/java/com/sparta/hotdeal/user/infrastructure/config/RedisConfig.java:13`, `order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/CacheConfig.java:19`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:27`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:28`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:33`)\n\n3. **서비스 자체의 연결 상태를 확인합니다.**  \n   인증 조건을 충족해 `/actuator/health`를 조회하고, 응답에 있는 DB·Redis 구성요소의 상태와 연결·인증 오류 로그를 확인합니다. Health 상세 표시 설정은 있지만 실제 응답은 저장소에서 확인할 수 없습니다. 또한 coupon의 `/actuator/health`는 익명 허용 목록에 없으므로, 인증 실패를 DB·Redis 장애로 해석하면 안 됩니다. (`user/src/main/resources/application.yml:30`, `coupon/src/main/resources/application.yml:15`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:25`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/SecurityConfig.java:33`)\n\n4. **접속 대상의 신원까지 운영 환경에서 대조합니다.**  \n   Health 성공만으로 의도한 운영 인스턴스임이 증명되지는 않습니다. 확인한 주소를 AWS RDS의 엔드포인트 및 실제 Redis 운영 설정과 대조하고, 가능하면 애플리케이션 연결의 MySQL 서버·DB·계정 정보와 서버 측 세션, Redis의 클라이언트 연결 정보를 함께 확인합니다. 이는 추가 운영 검증 제안입니다. 저장소에는 변수 참조만 있어 실제 RDS 인스턴스, Redis 제공 방식, 현재 연결 세션은 확인할 수 없습니다. (`user/src/main/resources/application-prod.yml:3`, `user/src/main/resources/application-prod.yml:15`, `coupon/src/main/java/com/sparta/hotdeal/coupon/infrastructure/config/RedissonConfig.java:27`)",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

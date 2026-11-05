@@ -1,0 +1,103 @@
+{
+  "id": "Q12",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 79.4,
+  "order": {
+    "A": "ask",
+    "B": "mcp",
+    "C": "base"
+  },
+  "grades": {
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "FixedBackOff(0L,0)로 재시도 없이 DLQ로 보낸다는 점, send() 결과를 확인하지 않는다는 점, 이전 상태를 검사하지 않는다는 점은 코드와 맞습니다. 그러나 코드상 updateStatus가 상태를 그대로 덮어쓰므로 중복 처리 결과는 판단할 수 있는데도 '확인할 수 없다'고 해 질문의 핵심 하나를 비워 두었습니다. DLQ를 다시 처리하는 경로가 없다는 점(OrderDlqConsumer가 빈으로 등록되지 않음), MANUAL ACK인데 acknowledge 호출이 없다는 점, Payment 쪽 동기 예외 처리도 빠졌습니다. 또한 '내부에서 잡은 오류는 컨테이너 오류 처리기로 가지 않는다'는 단정은 의심스럽습니다. 리스너와 서비스가 둘 다 @Transactional이라, 상태 변경 예외가 나면 롤백 전용으로 표시된 트랜잭션이 커밋 시점에 예외를 낼 수 있기 때문입니다. 근거도 파일:줄 없이 조각 번호만 달았습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:24",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderCancelEventConsumer.java:32",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentRefundEventConsumer.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "다음 주장이 모두 코드와 맞습니다. 발행 결과를 확인하지 않음, 동기 예외가 나면 CANCEL로 바꾸고 saveAndFlush한 뒤 PA005를 던지지만 같은 트랜잭션이라 CANCEL 저장이 확정되지 않음, 리스너가 잡은 오류는 DLQ로 보내고 컨테이너 쪽은 재시도 0회, OrderDlqConsumer는 빈으로 등록되지 않고 로그만 남김, 중복 메시지를 덮어씀, 승인 API를 다시 부를 때 상태 검사가 없음, MANUAL ACK인데 ACK 호출이 없음. 카카오페이의 중복 승인 처리와 운영 환경의 Kafka 재시도·재전달 값은 저장소 밖이라 확인할 수 없다고 구분해 밝혔습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:33",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:58",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:65",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:28",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderStatusUpdateEventConsumer.java:26",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/event/service/OrderConsumerService.java:30",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:22"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "다음 주장이 코드와 맞습니다. 메시지 키는 orderId이고 메시지에는 orderId·status만 담김, send() 콜백이 없고 Producer 설정에 retries가 없음, ApplicationException이 RuntimeException이라 CANCEL로 바꾼 것이 확정 저장되지 않음, 상태 변경 오류는 DLQ로 보내고 재시도 0회, DLQ 소비자에 @Component가 없고 로그만 남김, this.status = status로 덮어씀, MANUAL ACK인데 ACK 호출이 없음. Kafka 클라이언트 내부 재시도 횟수, 운영자의 외부 재처리, 실제 재전달 여부는 저장소만으로 확인할 수 없다고 구분해 밝혔습니다.",
+      "evidence": [
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:38",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/config/ProducerApplicationKafkaConfig.java:21",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/service/PaymentProducerService.java:24",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ApplicationException.java:8",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/message/order/ReqOrderUpdateStatusMessage.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/ConsumerApplicationKafkaConfig.java:67",
+        "order/src/main/java/com/sparta/hotdeal/order/event/consumer/OrderDlqConsumer.java:10",
+        "order/src/main/java/com/sparta/hotdeal/order/event/producer/OrderDlqProducer.java:31",
+        "order/src/main/java/com/sparta/hotdeal/order/domain/entity/order/Order.java:70"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 29920,
+    "cache_read_input_tokens": 191696,
+    "output_tokens": 7472,
+    "output_tokens_details": {
+      "thinking_tokens": 2482
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 29920,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4008,
+        "cache_read_input_tokens": 33802,
+        "cache_creation_input_tokens": 1289,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1289
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.42720320000000006
+  },
+  "seed": 45
+}

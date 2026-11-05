@@ -1,0 +1,90 @@
+{
+  "id": "Q18",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 55.4,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "상태 코드 매핑(CO004/CO005/CO006, 400)과 소진 뒤 OUT_OF_STOCK이 되어 CO004가 나는 흐름, 발급 경로에 만료일 검사가 없다는 점은 코드와 맞습니다. 그러나 오류 본문의 필드와 메시지가 확인되지 않는다고 했는데, ErrorResponseDto와 ErrorCode를 보면 timestamp/code/message와 각 메시지가 정해져 있습니다. 코드로 확인되는 것을 확인할 수 없다고 잘못 나눴고, 스케줄러가 쿠폰 정보를 삭제한 뒤 404/CO001이 나는 경우도 빠졌습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9-16",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63-64"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "CO005·CO006의 상태 코드와 메시지는 ErrorCode와 맞습니다. 다만 소진 뒤에는 상태가 OUT_OF_STOCK이 되어 대부분 CO004가 나는데, 이를 CO005로 단정했습니다. 오류 본문 구조(timestamp/code/message)도 없습니다. 기간 종료는 코드로 확인할 수 있는 내용(발급 경로에 만료 검사가 없음, 삭제 뒤 404/CO001)을 확인할 수 없다고 했고, 근거로 든 파일:줄도 없습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:12-14",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31-36",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25-31"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소진 시 상태에 따라 CO004 또는 CO005, 중복 발급 CO006, 만료 뒤 스케줄러가 소프트 삭제한 경우 404/CO001, 오류 본문 형태 {timestamp, code, message}, CO008은 validateCoupon에서만 난다는 점이 모두 코드와 맞습니다. 스케줄러가 운영에서 실제로 실행됐는지는 저장소로 확인할 수 없다고 구분해 밝혔습니다.",
+      "evidence": [
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:27-41",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75-76",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/SchedulerService.java:25-31",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponInfoService.java:110-112",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/dto/ErrorResponseDto.java:14-19",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19-24",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63-64",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/scheduler/CouponExpirationScheduler.java:17",
+        "coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:9-16"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 19249,
+    "cache_read_input_tokens": 79037,
+    "output_tokens": 4335,
+    "output_tokens_details": {
+      "thinking_tokens": 912
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19249,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2451,
+        "cache_read_input_tokens": 23438,
+        "cache_creation_input_tokens": 982,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 982
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.2565394
+  },
+  "seed": 45
+}

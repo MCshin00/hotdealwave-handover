@@ -1,0 +1,102 @@
+{
+  "id": "Q20",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 89.3,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "서비스 쪽 오류 처리 설명은 코드와 맞습니다. 결제 PA001→404 처리, user의 IllegalArgumentException→400 errorMessage 변환, 리뷰 GET에서 Gateway와 product 필터가 어긋나는 점이 그렇습니다. 하지만 Gateway 자체 거부의 상태와 본문을 확인할 수 없다고 한 것은 틀렸습니다. AuthenticationFilter:30-32에 본문 없는 401 응답과 setComplete()가 그대로 있어, 코드로 확인되는 것을 확인되지 않는다고 잘못 나눴습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:31",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AllowedPath.java:12",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/filter/AuthenticationFilter.java:50",
+        "payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:72",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/ErrorCode.java:20",
+        "payment/src/main/java/com/sparta/hotdeal/payment/common/exception/GlobalExceptionHandler.java:23",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AuthService.java:161",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "responses/product-service.ReviewController.getReviewList.json:7"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "일부",
+      "reason": "Gateway 자체 거부(토큰 없음 또는 검증 실패 시 본문 없는 401)는 코드와 맞습니다. 하지만 대상 서비스 실패의 처리 과정은 근거가 없다고 했는데, 저장소에는 서비스별 @RestControllerAdvice와 Security 처리기가 있습니다. 질문의 절반을 근거 없음으로 잘못 처리했습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:32",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:24",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/config/SecurityConfig.java:35"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "Gateway의 본문 없는 401 즉시 종료(chain.filter 미호출), JwtUtil의 catch 범위, order의 예외 처리기 표와 ErrorResponseDto 필드, user의 errorMessage 형식, order Security의 401·403 처리기, javax AuthenticationException 불일치, Feign ErrorDecoder 변환, Gateway에 응답 재작성 처리가 없는 점이 모두 코드와 맞습니다. 연결 실패·타임아웃 같은 라이브러리 동작과 테스트 부재는 확인 한계로 따로 밝혔습니다.",
+      "evidence": [
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:24",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:30",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/filter/AuthenticationFilter.java:46",
+        "gateway/src/main/java/com/sparta/hotdeal/gateway/security/JwtUtil.java:47",
+        "gateway/src/main/resources/application.yml:13",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/application/dtos/ErrorResponseDto.java:12",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:8",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAuthenticationHandler.java:16",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/handler/CustomAccessDeniedHandler.java:17",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/filter/AuthenticationFilter.java:48",
+        "order/src/main/java/com/sparta/hotdeal/order/infrastructure/exception/decoder/ProductClientErrorDecoder.java:11",
+        "gateway/build.gradle:45",
+        "gateway/src/test/java/com/sparta/hotdeal/gateway/GatewayApplicationTests.java:10"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 29079,
+    "cache_read_input_tokens": 183582,
+    "output_tokens": 7666,
+    "output_tokens_details": {
+      "thinking_tokens": 908
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 29079,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2118,
+        "cache_read_input_tokens": 31710,
+        "cache_creation_input_tokens": 2540,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2540
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.4227324
+  },
+  "seed": 45
+}

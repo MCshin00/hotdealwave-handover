@@ -37,7 +37,7 @@ SCHEMA = {
 }
 
 PROMPT = """이 디렉터리는 HotDealWave 저장소의 고정 커밋(cc43016)이다. 아래 질문에 대한 답 A·B·C를 채점한다.
-- 답이 인용한 `analysis/hotdealwave/responses/` 응답 파일은 `{responses}` 아래 같은 경로에 있다. 이 두 곳 밖의 파일은 열지 않는다.
+- 답이 인용한 `responses/` 응답 파일은 `{responses}` 아래 같은 경로에 있다. 이 두 곳 밖의 파일은 열지 않는다.
 - 파일을 고치지 않는다.
 - 세 답은 같은 질문에 서로 다른 방식으로 쓴 답이다. 답의 출처나 말투가 아니라, 주장과 근거 `파일:줄`을 코드와 대조한 결과로만 매긴다.
 
@@ -110,7 +110,7 @@ def grade_question(grader, question_id, records, checkout, seed, timeout):
     directory = checkout.parent / f"grade-{grader}-{question_id}-{os.getpid()}"
     directory.mkdir()
     try:
-        shutil.copytree(RESPONSES, directory / "analysis/hotdealwave/responses")
+        shutil.copytree(RESPONSES, directory / "responses")
         schema, last_message = directory / "schema.json", directory / "answer.json"
         schema.write_text(json.dumps(SCHEMA), encoding="utf-8")
         prompt = grading_prompt(records["base"]["question"], records, label_order, directory.as_posix())

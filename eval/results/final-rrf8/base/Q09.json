@@ -1,0 +1,21 @@
+{
+  "id": "Q09",
+  "condition": "base",
+  "question": "운영 결제에 사용하는 카카오페이 콘솔은 어디서 확인하고, 등록된 도메인과 복귀 관련 주소가 실제 운영 설정과 일치하나요?",
+  "status": "완료",
+  "seconds": 71.7,
+  "tokens": {
+    "input": 228730,
+    "cachedInput": 193664,
+    "output": 2009
+  },
+  "mcpTools": [],
+  "commands": 11,
+  "answer": "**콘솔 등록값과 실제 운영 설정의 일치 여부는 저장소만으로 확인할 수 없습니다. 다만 코드에서는 취소·실패 복귀 주소가 서로 뒤바뀌어 있습니다.** 근거는 아래와 같습니다.\n\n1. **운영 콘솔 위치는 확인할 수 없습니다.** README에는 카카오페이 연동만 명시되어 있고, 운영 콘솔 URL·계정·앱 식별 안내는 찾을 수 없습니다. 코드에 있는 `https://open-api.kakaopay.com/online/v1/payment`는 결제 API 주소이며 콘솔 주소가 아닙니다.  \n   근거: `README.md:125`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14`\n\n2. **운영 도메인과 가맹점의 실제 값도 확인할 수 없습니다.** 결제 키·CID·복귀 기준 도메인은 각각 `PAY_KEY`, `PAY_CID`, `PAY_HOST_DOMAIN` 환경변수로 주입됩니다. 따라서 저장소로는 어떤 운영 가맹점인지, 콘솔에 어떤 도메인이 등록되었는지 대조할 수 없습니다.  \n   근거: `payment/src/main/resources/application.yml:26`, `payment/src/main/resources/application.yml:27`, `payment/src/main/resources/application.yml:29`, `docker-compose.yml:185`, `docker-compose.yml:186`, `docker-compose.yml:187`\n\n3. **결제 준비 요청에 넣는 복귀 주소는 다음과 같습니다.** 여기서 `D`는 주입된 `PAY_HOST_DOMAIN`입니다.  \n   근거: `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:62`\n\n   | 항목 | 코드가 생성하는 주소 | 근거 |\n   |---|---|---|\n   | 승인 `approval_url` | `D/payment/success` | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41` |\n   | 취소 `cancel_url` | `D/payment/fail` | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:42` |\n   | 실패 `fail_url` | `D/payment/cancel` | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:43` |\n\n4. **취소·실패 주소는 화면 처리 의미와 불일치합니다.** `/payment/fail`은 실패 화면, `/payment/cancel`은 취소 화면으로 연결되므로 위 코드대로라면 취소 시 실패 안내, 실패 시 취소 안내가 표시됩니다.  \n   근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:23`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:28`, `payment/src/main/resources/templates/payment-fail.html:9`, `payment/src/main/resources/templates/payment-cancel.html:9`\n\n실제 일치 여부를 확정하려면 **운영 콘솔의 등록 도메인·주소와 실행 중인 결제 서비스의 `PAY_HOST_DOMAIN`, 적용 프로필을 대조해야 합니다.** 프로필도 `${ACTIVE_PROFILE}`로 외부 주입되므로 저장소의 설정이 현재 운영에 그대로 적용됐는지는 확인할 수 없습니다.  \n근거: `payment/src/main/resources/application.yml:5`, `docker-compose.yml:175`, `docker-compose.yml:187`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

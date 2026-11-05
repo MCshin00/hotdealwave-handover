@@ -1,0 +1,30 @@
+{
+  "id": "Q18",
+  "condition": "mcp",
+  "question": "쿠폰 소진이나 중복 발급, 발급 기간 종료로 발급이 실패하면 각각 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "seconds": 37.7,
+  "tokens": {
+    "input": 187230,
+    "cachedInput": 165120,
+    "output": 1521
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "search_docs"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "**코드상 소진·중복·발급 불가 상태는 HTTP 400이지만, “기간 종료”를 날짜로 직접 검사하는 발급 로직은 없습니다. 정확한 오류 JSON 본문은 MCP 문서에서 확인되지 않아 단정할 수 없습니다.**\n\n| 실패 조건 | HTTP 상태와 오류 코드 | 근거 |\n|---|---|---|\n| 수량 검사에서 `issuedCount >= quantity` | **400 / CO005** | `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:13` |\n| 같은 사용자가 같은 쿠폰 정보를 이미 발급받음 | **400 / CO006**. 앞선 상태·수량 검사를 통과해야 이 분기에 도달합니다. | `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:14` |\n| 발급 상태가 `ISSUED`가 아님 | **400 / CO004** | `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:12` |\n\n위 HTTP 상태 매핑의 공통 근거는 `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:19`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:23`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/GlobalExceptionHandler.java:24`입니다.\n\n**소진 후 요청이 항상 CO005인 것은 아닙니다.** 마지막 발급으로 수량에 도달하면 상태가 `OUT_OF_STOCK`으로 바뀌므로, 이후 요청은 수량 검사보다 앞선 상태 검사에서 **400 / CO004**로 거절됩니다. 근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:75`, `coupon/src/main/java/com/sparta/hotdeal/coupon/domain/entity/CouponInfo.java:76`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`.\n\n**기간 종료는 별도 구분이 필요합니다.** 발급 경로는 `expirationDate`를 검사하지 않아, 만료됐어도 삭제 전이고 상태·수량·중복 조건을 통과하면 발급될 수 있습니다. **400 / CO008은 발급 API가 아니라 쿠폰 검증 로직의 만료 오류**입니다. 근거: `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:29`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:31`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:35`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponIssueHelper.java:39`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:63`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/service/CouponService.java:64`, `coupon/src/main/java/com/sparta/hotdeal/coupon/application/exception/ErrorCode.java:16`.\n\n오류 본문의 **필드명·정확한 메시지·전체 JSON은 확인 불가**입니다. 제공된 발급 응답 기록은 성공 **201**이며, 위 실패들의 실제 응답 본문을 입증하지 않습니다. 따라서 CO004·CO005·CO006을 임의로 `{\"code\": \"...\", \"message\": \"...\"}` 형태로 제시할 수는 없습니다. 근거: `responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:6`, `responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:9`, `responses/coupon-service.CouponController.issueFirstComeFirstServeCoupon.json:12`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

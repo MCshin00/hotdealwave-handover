@@ -1,0 +1,28 @@
+{
+  "id": "Q05",
+  "condition": "mcp",
+  "question": "상품 목록 응답에는 어떤 상품 정보와 페이지 정보가 들어가고, 검색 결과가 없을 때는 어떤 형식으로 내려오나요?",
+  "status": "완료",
+  "seconds": 39.9,
+  "tokens": {
+    "input": 132958,
+    "cachedInput": 118272,
+    "output": 1378
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "find_endpoint"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "상품 목록 응답은 **`message`와 `data`로 감싼 구조**이며, `data`의 타입은 `Page<ResGetProductDto>`입니다.  \n근거: `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:9`, `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:10`\n\n각 상품에는 다음 정보가 들어갑니다.\n\n| 필드 | 정보·타입 | 근거 `파일:줄` |\n|---|---|---|\n| `productId` | 상품 ID · UUID | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:17` |\n| `name` | 상품명 · String | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:18` |\n| `price` | 가격 · Integer | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:19` |\n| `quantity` | 수량 · Integer | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:20` |\n| `category` | 카테고리 · ProductCategoryEnum | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:21` |\n| `companyId` | 업체 ID · UUID | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:22` |\n| `description` | 상품 설명 · String | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:23` |\n| `detailImgs` | 상세 이미지 목록 · List&lt;String&gt; | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:24` |\n| `thumbImg` | 썸네일 이미지 · String | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:25` |\n| `status` | 상품 상태 · ProductStatusEnum | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:26` |\n| `rating` | 평점 · double | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:27` |\n| `reviewCnt` | 리뷰 수 · Integer | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:28` |\n| `discountPrice` | 할인 가격 · Integer | `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/product/ResGetProductDto.java:29` |\n\n**페이지 정보는 확인 범위에 제한이 있습니다.** `Page`를 반환하는 것은 확인되지만, MCP 문서는 외부 타입인 `Page`의 내부 구조를 “확인 안 됨”으로 표시합니다. 따라서 `content`, `number`, `size`, `first`, `last` 등의 정확한 JSON 필드 구성을 저장소 근거만으로 확정할 수 없습니다.  \n근거: `product/src/main/java/com/sparta/hotdeal/product/application/dtos/res/ResponseDto.java:10`\n\n또한 페이지 생성 시 전체 검색 건수가 아닌 **현재 검색 결과의 `searchResults.size()`를 `PageImpl`의 total 인자로 전달**합니다. 문서는 이 때문에 `totalElements`·`totalPages`가 전체 일치 건수를 제대로 나타내지 못할 수 있다고 지적합니다.  \n근거: `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:53`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:54`, `product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:71`, `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:188`\n\n**검색 결과가 없을 때의 정확한 응답 JSON은 확인할 수 없습니다.** 위 페이지 생성 로직으로는 빈 결과 목록과 total 인자 `0`으로 페이지를 만드는 것으로 해석할 수 있지만, 이는 코드 설명에 따른 추론입니다. 도구가 제공한 문서에는 무검색 결과 응답 본문이 없으므로, `content: []`, `empty: true`, 메시지 문구 및 HTTP 상태를 해당 경우의 확정된 응답으로 제시할 수 없습니다.  \n추론 근거: `product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:188`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

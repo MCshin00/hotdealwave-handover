@@ -1,0 +1,73 @@
+{
+  "id": "Q10",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 56.8,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "필드 누락에 대한 400 검증 응답이 보장되지 않는다는 설명과 소유자 불일치 시 400이라는 설명은 맞습니다. 다만 코드에서 확정할 수 있는 오류 본문 {\"errorMessage\":\"접근 권한이 없습니다.\"}을 확인하지 못해 핵심 답변이 빠졌습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:11",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:53",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:19",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소유자 검사에서 발생하는 예외, HTTP 400, 오류 메시지와 별도 오류 코드·MASTER 예외가 없다는 설명이 코드와 맞습니다. 수정 필드의 무조건 덮어쓰기와 필드 누락 응답의 확인 한계도 올바르게 구분했습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:53"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소유자 검사에 도달하는 조건과 HTTP 400 및 정확한 JSON 본문을 코드에 맞게 설명했습니다. 배송지 요청의 검증 설정 부재, nullable=false와 영속화 실패 가능성, 공통 검증 처리기의 적용 여부 및 실제 누락 응답의 확정 한계를 정확히 구분했습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:81",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:19",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:11",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:42",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:45",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:62"
+      ]
+    }
+  },
+  "usage": {
+    "input": 59827,
+    "cachedInput": 37120,
+    "output": 1757
+  },
+  "seed": 45
+}

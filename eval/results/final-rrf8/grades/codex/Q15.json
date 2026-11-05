@@ -1,0 +1,64 @@
+{
+  "id": "Q15",
+  "grader": "codex",
+  "status": "완료",
+  "seconds": 42.6,
+  "order": {
+    "A": "base",
+    "B": "ask",
+    "C": "mcp"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "트랜잭션 안의 엔티티 수정과 직접 색인 호출, 색인 예외 처리, 상세·검색의 조회 원천을 정확히 설명했다. MySQL 커밋 이후 실행을 보장하지 않는다는 점과 실제 운영 반영 여부·시간의 확인 한계도 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:88-124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-55",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryImpl.java:30-31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryJpa.java:10",
+        "product/src/main/resources/application-prod.yml:3-6",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:163-243",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:50-73"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "직접 색인 호출과 예외 삼킴, 상세는 JPA·검색은 Elasticsearch라는 핵심 주장은 코드와 맞는다. 다만 색인 실패 가능성은 밝혔지만, 질문에 전제된 MySQL 커밋 완료 후 실행이 보장되지 않는다는 점은 구분하지 않았다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112-124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:163-185",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221-243",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductRepositoryImpl.java:30-31",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:50-73"
+      ]
+    },
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "직접 색인 호출·문서 저장·예외 처리와 두 조회 경로를 정확히 설명했고, 삭제 제외 조건과 검색 조건도 코드에 부합한다. 커밋 이후 실행이나 Kafka·외부 CDC를 통한 동기화는 확인된 흐름과 구분했다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:44",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:88-124",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19-26",
+        "product/src/main/java/com/sparta/hotdeal/product/domain/entity/product/Product.java:31",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:163-185",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:221-243",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33-73",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:29-38",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:57-66"
+      ]
+    }
+  },
+  "usage": {
+    "input": 42722,
+    "cachedInput": 15744,
+    "output": 1641
+  },
+  "seed": 45
+}

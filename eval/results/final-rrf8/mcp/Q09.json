@@ -1,0 +1,33 @@
+{
+  "id": "Q09",
+  "condition": "mcp",
+  "question": "운영 결제에 사용하는 카카오페이 콘솔은 어디서 확인하고, 등록된 도메인과 복귀 관련 주소가 실제 운영 설정과 일치하나요?",
+  "status": "완료",
+  "seconds": 43.1,
+  "tokens": {
+    "input": 182926,
+    "cachedInput": 162944,
+    "output": 1324
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "**운영 카카오페이 콘솔의 위치·계정과 등록 도메인은 저장소에서 확인할 수 없으며, 실제 운영 설정과 일치한다고 판정할 수도 없습니다.** MCP 문서에서 확인되는 것은 외부 환경변수 연결입니다. `PAY_KEY`, `PAY_CID`, `PAY_HOST_DOMAIN`의 실제 값은 저장소 밖에서 정해집니다. 근거: `docker-compose.yml:185`, `docker-compose.yml:186`, `docker-compose.yml:187`.\n\n확인된 설정과 복귀 경로는 다음과 같습니다.\n\n| 항목 | 저장소에서 확인된 내용 | 근거 |\n|---|---|---|\n| 도메인 설정 | `PAY_HOST_DOMAIN`을 `pay.host.domain`으로 받아 카카오페이 어댑터에 주입합니다. 실제 운영 도메인 값은 확인 불가입니다. | `payment/src/main/resources/application.yml:29`, `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java:35` |\n| 승인 후 복귀 | `approvalUrl`의 경로는 `/payment/success`입니다. | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:41` |\n| 취소 후 복귀 | `cancelUrl`의 경로가 `/payment/fail`로 지정되어 있습니다. | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:42` |\n| 실패 후 복귀 | `failUrl`의 경로가 `/payment/cancel`로 지정되어 있습니다. | `payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/dto/kakaopay/req/ReqPostKakaoPayReadyDto.java:43` |\n\n**코드에서는 취소·실패 복귀 주소의 의미가 뒤바뀐 문제가 확인됩니다.** 도착 화면도 각각 “결제 실패”, “결제 취소”를 표시하므로 단순한 경로 이름 차이가 아닙니다. 근거: `payment/src/main/resources/templates/payment-fail.html:9`, `payment/src/main/resources/templates/payment-cancel.html:9`, 위 DTO의 `:42`, `:43`.\n\n또한 `/payment/success`는 안내 템플릿만 반환하며 승인 처리를 하지 않습니다. 실제 승인은 별도 `POST /api/v1/payments/confirm`에서 수행하므로 성공 화면 도착만으로 결제 완료를 확인할 수 없습니다. 근거: `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentViewController.java:20`, `payment/src/main/java/com/sparta/hotdeal/payment/presentation/controller/PaymentController.java:44`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:61`, `payment/src/main/java/com/sparta/hotdeal/payment/application/service/PaymentService.java:64`.\n\n일치 여부를 확정하려면 **운영 담당자가 사용하는 카카오페이 콘솔의 등록값과 배포 환경의 실제 `PAY_CID`·`PAY_HOST_DOMAIN` 값을 대조**해야 합니다. 이는 추가 확인 절차이며, 현재 도구가 제공한 저장소 근거만으로 콘솔 URL·메뉴·등록값이나 운영 일치 여부를 제시할 수는 없습니다. 환경변수 연결 근거: `docker-compose.yml:186`, `docker-compose.yml:187`.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

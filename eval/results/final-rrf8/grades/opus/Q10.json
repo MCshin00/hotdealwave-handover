@@ -1,0 +1,103 @@
+{
+  "id": "Q10",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 45.5,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "소유자 불일치 시 400을 반환하고 errorMessage 필드를 쓴다는 점과 필수값 누락 시 결과를 확정할 수 없다는 점은 코드와 맞습니다. 그러나 오류 메시지 문자열은 ErrorMessage.java:18의 \"접근 권한이 없습니다.\"로 확인되는데도 확인할 수 없다고 해서 오류 본문이라는 핵심이 빠졌습니다. 또 소유자 검사 근거로 든 AddressService.java:143은 checkDeletedAddress 위치입니다. 확인되지 않은 것을 확정한 주장은 없습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:143",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51"
+      ]
+    },
+    "ask": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소유자 불일치가 IllegalArgumentException을 거쳐 400과 \"접근 권한이 없습니다.\"로 이어진다는 설명이 코드와 맞습니다. 오류 코드가 없고 MASTER 예외도 없다는 점도 코드와 맞습니다. 필수값 누락의 실제 응답은 확인할 수 없다고 구분했고, PATCH가 필드 여섯 개를 모두 덮어쓴다는 점도 맞습니다. 다만 근거 파일:줄을 제시하지 않았고 등록 요청과 본문 키 이름(errorMessage)은 다루지 않았습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "소유자 불일치 시 400과 {\"errorMessage\":\"접근 권한이 없습니다.\"}가 내려간다는 설명이 코드와 정확히 맞습니다. DTO에 검증 애너테이션이 없고 컨트롤러에 @Valid가 없다는 점, 엔티티 컬럼이 nullable=false라는 점, 검증 처리기의 형식까지 근거 줄과 일치합니다. 영속화 실패 시의 실제 응답은 확정할 수 없다고 구분했습니다.",
+      "evidence": [
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:40",
+        "user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:45",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:51",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:62",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/ErrorMessage.java:18",
+        "user/src/main/java/com/sparta/hotdeal/user/application/exception/RestApiException.java:9",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:10",
+        "user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:8",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:42",
+        "user/src/main/java/com/sparta/hotdeal/user/presentation/controller/AddressController.java:87",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33",
+        "user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:51"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 16065,
+    "cache_read_input_tokens": 49010,
+    "output_tokens": 4818,
+    "output_tokens_details": {
+      "thinking_tokens": 1755
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16065,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2249,
+        "cache_read_input_tokens": 19275,
+        "cache_creation_input_tokens": 1961,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1961
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.234714
+  },
+  "seed": 45
+}

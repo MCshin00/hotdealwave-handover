@@ -1,0 +1,14 @@
+{
+  "id": "Q01",
+  "condition": "ask",
+  "question": "주문 요청이 들어오면 어떤 순서로 서비스를 거쳐 주문을 저장하고 재고를 차감하나요?",
+  "status": "보류",
+  "answer": null,
+  "reason": "인용 검사: 인용한 조각에 없는 order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderEventProducer.java:40",
+  "citations": [],
+  "tokens": {
+    "input": 81635,
+    "output": 654
+  },
+  "seconds": 14.4
+}

@@ -1,0 +1,114 @@
+{
+  "id": "Q03",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 36.3,
+  "order": {
+    "A": "base",
+    "B": "mcp",
+    "C": "ask"
+  },
+  "grades": {
+    "base": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "설정 파일과 Compose에서 필요한 환경변수를 정확히 짚었습니다. 배포 경로도 코드와 맞게 설명합니다. GitHub Actions Secrets로 SSH 접속과 aws configure를 하고, EC2에서 git pull 후 docker-compose를 실행합니다. EC2에서 실제 값을 어디서 공급하는지(.env 여부)와 Secrets 등록 여부는 확인할 수 없다고 구분했습니다. 다른 job의 steps.login-ecr를 참조하는 결함도 코드와 일치합니다.",
+      "evidence": [
+        ".github/workflows/actions.yml:8-10",
+        ".github/workflows/actions.yml:22-23",
+        ".github/workflows/actions.yml:27",
+        ".github/workflows/actions.yml:65-66",
+        ".github/workflows/actions.yml:72-81",
+        ".github/workflows/actions.yml:87-95",
+        "docker-compose.yml:5",
+        "docker-compose.yml:17-20",
+        "docker-compose.yml:31-47",
+        "docker-compose.yml:81-101",
+        "docker-compose.yml:185-196",
+        "gateway/src/main/resources/application.yml:6",
+        "gateway/src/main/resources/application.yml:80",
+        "gateway/src/main/resources/application-prod.yml:1",
+        "user/src/main/resources/application.yml:10-11",
+        "user/src/main/resources/application.yml:28",
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/application-prod.yml:15-18",
+        "user/src/main/resources/logback.xml:4",
+        "product/src/main/resources/application.yml:13-17",
+        "product/src/main/resources/application.yml:29-39",
+        "product/src/main/resources/application-prod.yml:15",
+        "product/src/main/resources/application-prod.yml:21-23",
+        "order/src/main/resources/application.yml:14-20",
+        "payment/src/main/resources/application.yml:14-29",
+        ".gitignore:2"
+      ]
+    },
+    "mcp": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "Compose environment에 있는 변수 목록과 인용한 줄은 모두 맞습니다. 그러나 저장소의 .github/workflows/actions.yml을 찾지 못해 배포 경로를 빠뜨렸습니다. 이 경로는 GitHub Secrets로 EC2에 SSH 접속한 뒤 docker-compose를 실행하는 방식이며, 배포 자격 증명 Secrets와 ECR_REGISTRY도 함께 빠졌습니다. HOST는 logback에서 쓰이는데도 사용처를 확정할 수 없다고 했습니다. 확인하지 못한 부분을 단정하지 않고 구분한 점은 맞습니다.",
+      "evidence": [
+        "docker-compose.yml:19-20",
+        "docker-compose.yml:32-47",
+        "docker-compose.yml:87-101",
+        "docker-compose.yml:125-127",
+        "docker-compose.yml:151-157",
+        "docker-compose.yml:185-196",
+        "coupon/src/main/resources/application.yml:11-13",
+        "payment/src/main/resources/application.yml:26",
+        "user/src/main/resources/application-prod.yml:3-5",
+        "user/src/main/resources/logback.xml:4",
+        ".github/workflows/actions.yml:69-95"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "DB, Redis, Kafka, ES, 토픽, JWT, 결제, AWS 값을 뭉뚱그려 언급했고 인용한 줄도 맞습니다. 하지만 변수 목록이 대부분 구체적이지 않습니다. 저장소에 있는 GitHub Actions → EC2 → docker-compose 배포 경로와 Secrets도 빠뜨리고 '구체적인 위치는 확인할 수 없다'고만 답했습니다. Compose에 연결된 것과 확인할 수 없는 공급원을 구분한 점은 맞습니다.",
+      "evidence": [
+        "docker-compose.yml:32",
+        "docker-compose.yml:37",
+        "payment/src/main/resources/application-prod.yml:3",
+        "product/src/main/resources/application-prod.yml:21",
+        "product/src/main/resources/application.yml:35",
+        "user/src/main/resources/application.yml:28",
+        ".github/workflows/actions.yml:74-95"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 21619,
+    "cache_read_input_tokens": 38415,
+    "output_tokens": 4072,
+    "output_tokens_details": {
+      "thinking_tokens": 1408
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 21619,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2935,
+        "cache_read_input_tokens": 19988,
+        "cache_creation_input_tokens": 6802,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6802
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.26209899999999997
+  },
+  "seed": 45
+}

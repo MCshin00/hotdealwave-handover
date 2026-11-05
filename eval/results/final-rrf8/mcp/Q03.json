@@ -1,0 +1,40 @@
+{
+  "id": "Q03",
+  "condition": "mcp",
+  "question": "저장소 설정에서 운영 환경에 별도로 주입해야 하는 값은 무엇이고, 실제 배포에는 어디서 주입하나요?",
+  "status": "완료",
+  "seconds": 64.7,
+  "tokens": {
+    "input": 165193,
+    "cachedInput": 136064,
+    "output": 2030
+  },
+  "mcpTools": [
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs"
+  ],
+  "mcpFailed": [
+    "search_docs",
+    "search_docs"
+  ],
+  "commands": 0,
+  "answer": "**확인되는 주입 지점은 `docker-compose.yml`의 각 서비스 `environment`입니다.** 애플리케이션은 이 환경변수를 설정에 연결합니다. 예를 들어 DB 값은 Compose에서 전달하고 운영용 설정에서 읽습니다. 다만 **실제 운영 배포에서 누가, 어떤 시스템으로 값을 공급하는지는 확인할 수 없습니다.** 도구 문서도 실제 값은 “저장소 밖의 환경변수에서 정해짐”으로 표시합니다. (`docker-compose.yml:37`, `docker-compose.yml:38`, `docker-compose.yml:39`, `user/src/main/resources/application-prod.yml:3`, `user/src/main/resources/application-prod.yml:4`, `user/src/main/resources/application-prod.yml:5`)\n\n운영용 설정과 공통 설정에서 외부 공급이 필요한 값은 다음과 같습니다. 아래 근거는 모두 저장소 루트 기준입니다.\n\n| 구분 | 별도로 공급해야 하는 환경변수 | 근거 |\n|---|---|---|\n| 활성 프로필 | `ACTIVE_PROFILE` — `spring.profiles.active`에 연결되며 실제 설정값은 미확인 | `docker-compose.yml:32`, `user/src/main/resources/application.yml:5` |\n| DB | `PROD_DB_ENDPOINT`, `PROD_DB_USERNAME`, `PROD_DB_PASSWORD` | `docker-compose.yml:37`, `docker-compose.yml:38`, `docker-compose.yml:39` |\n| Redis | `REDIS_PROD_HOST`, `REDIS_PROD_PORT`, `REDIS_PROD_USERNAME`, `REDIS_PROD_PASSWORD` | `docker-compose.yml:41`, `docker-compose.yml:42`, `docker-compose.yml:43`, `docker-compose.yml:44` |\n| JWT | `JWT_SECRET_KEY` — user와 gateway에 전달 | `docker-compose.yml:46`, `docker-compose.yml:19` |\n| 이메일 | `EMAIL_SERVICE_USERNAME`, `EMAIL_SERVICE_PASSWORD` | `docker-compose.yml:34`, `docker-compose.yml:35` |\n| 내부 호출용 관리자 정보 | `ADMIN_USER_ID`, `ADMIN_EMAIL`, `ADMIN_ROLE` — `admin.*` 설정에 연결 | `coupon/src/main/resources/application.yml:11`, `coupon/src/main/resources/application.yml:12`, `coupon/src/main/resources/application.yml:13`, `docker-compose.yml:125`, `docker-compose.yml:126`, `docker-compose.yml:127` |\n| Elasticsearch | `PROD_ELASTICSEARCH_ENDPOINT`, `PROD_ELASTICSEARCH_PASSWORD`, `PROD_ELASTICSEARCH_USERNAME` | `docker-compose.yml:93`, `docker-compose.yml:94`, `docker-compose.yml:95` |\n| S3 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET_NAME`, `AWS_REGION`, `AWS_DOMAIN` | `docker-compose.yml:97`, `docker-compose.yml:98`, `docker-compose.yml:99`, `docker-compose.yml:100`, `docker-compose.yml:101` |\n| 결제 | `PAY_KEY`, `PAY_CID`, `PAY_HOST_DOMAIN` | `docker-compose.yml:185`, `docker-compose.yml:186`, `docker-compose.yml:187` |\n| Kafka 브로커 | `PROD_KAFKA_ENDPOINT` — product·order·payment에 전달 | `docker-compose.yml:87`, `docker-compose.yml:151`, `docker-compose.yml:190` |\n| 기타 호스트 값 | `HOST` — Compose 전달은 확인되지만, 제공 문서의 근거만으로 구체적인 사용처는 확정할 수 없음 | `docker-compose.yml:20`, `docker-compose.yml:47` |\n\nKafka는 **브로커 주소뿐 아니라 토픽 이름도 외부 공급 대상**입니다. 서비스별 전달 변수는 다음과 같습니다.\n\n| 서비스 | 토픽 변수와 근거 |\n|---|---|\n| product | `KAFKA_RESTORE_QUANTITY_TOPIC` (`docker-compose.yml:88`), `KAFKA_REQUEST_ORDER_TOPIC` (`docker-compose.yml:89`), `KAFKA_REDUCE_QUANTITY_TOPIC` (`docker-compose.yml:90`), `KAFKA_REQUEST_PAYMENT_TOPIC` (`docker-compose.yml:91`) |\n| order | `KAFKA_CANCEL_ORDER_TOPIC` (`docker-compose.yml:152`), `KAFKA_CANCEL_PAYMENT_TOPIC` (`docker-compose.yml:153`), `KAFKA_DLQ_TOPIC` (`docker-compose.yml:154`), `KAFKA_REFUND_PAYMENT_TOPIC` (`docker-compose.yml:155`), `KAFKA_REQUEST_PRODUCT_TOPIC` (`docker-compose.yml:156`), `KAFKA_UPDATE_ORDER_STATUS_TOPIC` (`docker-compose.yml:157`) |\n| payment | `KAFKA_CANCEL_PAYMENT_TOPIC` (`docker-compose.yml:191`), `KAFKA_DLQ_TOPIC` (`docker-compose.yml:192`), `KAFKA_READY_PAYMENT_TOPIC` (`docker-compose.yml:193`), `KAFKA_REFUND_PAYMENT_TOPIC` (`docker-compose.yml:194`), `KAFKA_ROLLBACK_REDUCE_QUANTITY_TOPIC` (`docker-compose.yml:195`), `KAFKA_UPDATE_ORDER_STATUS_TOPIC` (`docker-compose.yml:196`) |\n\n“실제 배포에는 어디서 주입하나요?”에 대해서는 **컨테이너에 전달되는 위치까지 확인됨**이 정확한 답입니다. 예컨대 결제 키는 `docker-compose.yml`의 환경변수 전달 지점을 거쳐 애플리케이션의 `pay.key` 설정으로 연결됩니다. (`docker-compose.yml:185`, `payment/src/main/resources/application.yml:26`)\n\n그 앞단이 **배포 서버의 환경변수인지, `.env` 파일인지, CI/CD Secrets인지, 별도 비밀 관리 서비스인지**는 제공된 MCP 문서에서 확인할 수 없습니다. `.env`와 `.github` 검색에서도 근거를 찾지 못했으므로 특정 주입 방식을 단정할 수 없으며, 검색 실패만으로 해당 파일이나 배포 구성이 저장소에 없다고 단정할 수도 없습니다. 이 미확인 부분에는 인용할 `파일:줄` 근거가 없습니다.",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

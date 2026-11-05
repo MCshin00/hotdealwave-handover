@@ -1,0 +1,34 @@
+{
+  "id": "Q10",
+  "condition": "mcp",
+  "question": "배송지 요청의 필수값이 빠졌거나 다른 사용자의 배송지를 수정·삭제하려고 하면 어떤 상태 코드와 오류 본문이 내려오나요?",
+  "status": "완료",
+  "seconds": 52.1,
+  "tokens": {
+    "input": 229874,
+    "cachedInput": 199424,
+    "output": 1324
+  },
+  "mcpTools": [
+    "search_docs",
+    "get_page",
+    "get_page",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "get_page",
+    "search_docs",
+    "search_docs",
+    "search_docs",
+    "get_page"
+  ],
+  "mcpFailed": [],
+  "commands": 0,
+  "answer": "- **배송지 필드 누락: 정확한 상태 코드와 오류 본문을 확인할 수 없습니다.** 등록·수정 DTO의 주소 필드에는 필수값 검증 어노테이션이 없습니다. 따라서 누락 시 곧바로 검증 오류 `400`이 내려온다고 단정할 수 없습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPostAddressDto.java:11`, `user/src/main/java/com/sparta/hotdeal/user/application/dtos/address/request/ReqPatchAddressByIdDto.java:9`  \n  특히 수정은 생략한 필드도 기존 값을 보존하지 않고 덮어쓰며, 주소 컬럼은 `nullable=false`입니다. 다만 이로 인한 실패의 최종 HTTP 상태와 본문은 제공된 저장소 분석 문서에서 확인되지 않습니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:87`, `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:53`, `user/src/main/java/com/sparta/hotdeal/user/domain/entity/Address.java:33`\n\n- **다른 사용자의 배송지 수정·삭제: 소유자 불일치 검사에 도달하면 코드상 HTTP `400 Bad Request`입니다.** 수정과 삭제 모두 배송지 소유자의 회원 ID와 요청자 ID를 비교합니다.  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:83`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:128`, `user/src/main/java/com/sparta/hotdeal/user/application/service/AddressService.java:143`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25`  \n  공통 예외 처리 문서는 오류 메시지를 **`errorMessage` 필드**로 반환한다고 설명합니다. 다만 **소유자 불일치의 정확한 메시지 문자열과 전체 JSON 본문은 도구가 보여 준 문서에서 확인할 수 없습니다.**  \n  근거: `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:14`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:19`, `user/src/main/java/com/sparta/hotdeal/user/application/exception/GlobalExceptionHandler.java:25`",
+  "settings": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "serviceTier": "fast",
+    "timeout": 300
+  }
+}

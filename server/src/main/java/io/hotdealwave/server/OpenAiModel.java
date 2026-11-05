@@ -6,16 +6,24 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.core.JsonSchemaLocalValidation;
 import com.openai.models.Reasoning;
 import com.openai.models.ReasoningEffort;
+import com.openai.models.embeddings.Embedding;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import com.openai.models.embeddings.EmbeddingModel;
 import com.openai.models.responses.ResponseCreateParams;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/** gpt-6-luna through the Responses API with a fixed output format. The key comes from OPENAI_API_KEY. */
+/** gpt-6-luna through the Responses API with a fixed output format, and text-embedding-3-large. The key comes from OPENAI_API_KEY. */
 @Component
 class OpenAiModel implements AskModel {
     static final String MODEL = "gpt-6-luna";
     static final long MAX_OUTPUT_TOKENS = 1500;
+    static final EmbeddingModel EMBEDDING_MODEL = EmbeddingModel.TEXT_EMBEDDING_3_LARGE;
+    /** Characters and inputs per embedding request, kept under the request limits even for Korean text. */
+    static final int REQUEST_CHARS = 60_000, REQUEST_INPUTS = 2048;
 
     record Output(
             @JsonPropertyDescription("질문에 대한 답. 보류할 때는 확인할 수 없는 이유") String answer,
@@ -30,7 +38,7 @@ class OpenAiModel implements AskModel {
 
     @Override
     public Reply reply(String instructions, String input) {
-        if (client == null) throw new IllegalStateException("OPENAI_API_KEY 환경변수가 없어 모델을 부를 수 없다");
+        requireKey();
         var params = ResponseCreateParams.builder().model(MODEL).instructions(instructions).input(input)
                 .reasoning(Reasoning.builder().effort(ReasoningEffort.NONE).build()).maxOutputTokens(MAX_OUTPUT_TOKENS)
                 .text(Output.class, JsonSchemaLocalValidation.YES).build();
@@ -42,5 +50,29 @@ class OpenAiModel implements AskModel {
         var usage = response.usage();
         return new Reply(output.answer(), output.citations(), output.abstain(),
                 usage.map(u -> u.inputTokens()).orElse(0L), usage.map(u -> u.outputTokens()).orElse(0L));
+    }
+
+    @Override
+    public List<float[]> embed(List<String> texts) {
+        requireKey();
+        var vectors = new ArrayList<float[]>();
+        for (int from = 0; from < texts.size(); ) {
+            int to = from, chars = 0;
+            while (to < texts.size() && to - from < REQUEST_INPUTS && (to == from || chars + texts.get(to).length() <= REQUEST_CHARS)) chars += texts.get(to++).length();
+            var params = EmbeddingCreateParams.builder().model(EMBEDDING_MODEL).inputOfArrayOfStrings(texts.subList(from, to)).build();
+            var data = client.embeddings().create(params).data().stream().sorted(Comparator.comparingLong(Embedding::index)).toList();
+            for (var embedding : data) {
+                var values = embedding.embedding();
+                var vector = new float[values.size()];
+                for (int i = 0; i < vector.length; i++) vector[i] = values.get(i);
+                vectors.add(vector);
+            }
+            from = to;
+        }
+        return vectors;
+    }
+
+    private void requireKey() {
+        if (client == null) throw new IllegalStateException("OPENAI_API_KEY 환경변수가 없어 모델을 부를 수 없다");
     }
 }

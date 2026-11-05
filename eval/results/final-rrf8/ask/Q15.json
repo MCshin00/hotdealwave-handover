@@ -1,0 +1,33 @@
+{
+  "id": "Q15",
+  "condition": "ask",
+  "question": "상품 수정 내용이 MySQL에 저장된 뒤 Elasticsearch에 반영되기까지 어떤 처리를 거치고, 상세 조회와 검색 조회는 각각 어디서 데이터를 읽나요?",
+  "status": "완료",
+  "answer": "상품 수정은 서비스에서 상품 정보를 갱신한 뒤 `indexProduct`를 호출해 Elasticsearch 색인을 시도하고, 이어 정상 응답을 만듭니다. 다만 색인 과정의 예외는 로그만 남기고 삼키므로, MySQL 수정이 성공해도 Elasticsearch 반영은 실패할 수 있습니다. 이 흐름은 AI 해석으로 제시된 함정 설명입니다. (product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:100, product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:112, product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:19, product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductIndexService.java:24)\n상세 조회는 JPA 상품을 읽고, 검색·목록 조회는 Elasticsearch 문서에서 읽습니다. 따라서 색인이 실패하면 두 조회 결과가 달라질 수 있습니다. 이 조회 경로 설명도 AI 해석입니다. (product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:166, product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductService.java:179, product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:33, product/src/main/java/com/sparta/hotdeal/product/infrastructure/repository/product/ProductSearchRepositoryCustomImpl.java:40)",
+  "reason": null,
+  "citations": [
+    {
+      "id": "C5",
+      "page": "/endpoints/product-service.ProductController.updateProduct",
+      "title": "product-service.ProductController.updateProduct",
+      "section": ""
+    },
+    {
+      "id": "C1",
+      "page": "/endpoints/product-service.ProductController.getProduct",
+      "title": "product-service.ProductController.getProduct",
+      "section": ""
+    },
+    {
+      "id": "C2",
+      "page": "/endpoints/product-service.ProductController.getAllProducts",
+      "title": "product-service.ProductController.getAllProducts",
+      "section": ""
+    }
+  ],
+  "tokens": {
+    "input": 58842,
+    "output": 345
+  },
+  "seconds": 5.2
+}

@@ -1,0 +1,102 @@
+{
+  "id": "Q02",
+  "grader": "opus",
+  "status": "완료",
+  "seconds": 59.6,
+  "order": {
+    "A": "mcp",
+    "B": "ask",
+    "C": "base"
+  },
+  "grades": {
+    "mcp": {
+      "accuracy": "맞음",
+      "scope": "밝힘",
+      "reason": "주문 저장 후 Kafka로 차감을 요청하는 순서라 질문의 전제와 다르다고 짚었습니다. 결제 준비 실패 시 복구 메시지 발행, 상품 측 수량·프로모션 잔량 가산, 복구 후 주문 취소 발행, 실패 시 로그·ACK만 남기는 처리와 DLQ 설정 범위를 코드대로 설명했습니다. 결제 측 발행 토픽(KAFKA_ROLLBACK_REDUCE_QUANTITY_TOPIC)과 상품 측 구독 토픽(KAFKA_RESTORE_QUANTITY_TOPIC)의 환경변수가 달라 연결을 확인할 수 없다는 점도 구분했습니다. 다만 ProductInventoryService.java:41과 PaymentReadyEventConsumer.java:50 두 인용은 줄이 조금 어긋납니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:55",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:52",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:61",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16",
+        "docker-compose.yml:88",
+        "docker-compose.yml:195"
+      ]
+    },
+    "ask": {
+      "accuracy": "부분",
+      "scope": "밝힘",
+      "reason": "복구 실패 시 로그·ACK만 하고, try 밖 예외에만 재시도 0회와 product-dlq가 적용되며, ProductKafkaProducer 전송을 확인하지 않는다는 점은 코드와 맞습니다. 그러나 재고 복구를 누가 어떻게 트리거하는지(결제 준비 실패 경로)와 복구 방식(수량 가산)이라는 핵심이 빠졌습니다. 차감 실패 시와 복구 성공 시 메시지는 실제로 같은 request-order 토픽으로 가는데 '두 후속 토픽'이라고 했고, 근거 줄도 제시하지 않았습니다. 구독자와 토픽 값을 확인할 수 없다는 점은 구분했습니다.",
+      "evidence": [
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:47",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:70",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:144",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaProducer.java:22",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:64",
+        "product/src/main/resources/application.yml:17"
+      ]
+    },
+    "base": {
+      "accuracy": "맞음",
+      "scope": "일부",
+      "reason": "createOrder에 복구 처리가 없다는 점, 결제 준비 실패 시 주문을 다시 조회해 복구 메시지를 발행한다는 점, 수량·프로모션 잔량 가산 후 ACK와 주문 취소 발행, 양쪽 실패 처리가 로그·ACK뿐이라는 점이 코드와 맞습니다. 다만 결제 측 발행 토픽과 상품 측 복구 구독 토픽은 서로 다른 환경변수인데, '상품 서비스가 복구 메시지를 받아'라고 써서 둘이 연결된 것처럼 말했습니다. 운영 재처리를 확인할 수 없다는 점만 구분했습니다.",
+      "evidence": [
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:108",
+        "order/src/main/java/com/sparta/hotdeal/order/application/service/order/OrderService.java:122",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:60",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/consumer/PaymentReadyEventConsumer.java:62",
+        "payment/src/main/java/com/sparta/hotdeal/payment/event/producer/PaymentEventProducer.java:51",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/product/ProductInventoryService.java:100",
+        "product/src/main/java/com/sparta/hotdeal/product/application/service/ProductPromotionHelperService.java:40",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/kafka/ProductKafkaConsumer.java:74",
+        "product/src/main/java/com/sparta/hotdeal/product/infrastructure/config/ConsumerApplicationKafkaConfig.java:58",
+        "payment/src/main/resources/application.yml:16",
+        "product/src/main/resources/application.yml:16"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 14,
+    "cache_creation_input_tokens": 33604,
+    "cache_read_input_tokens": 147325,
+    "output_tokens": 6338,
+    "output_tokens_details": {
+      "thinking_tokens": 2251
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 33604,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4151,
+        "cache_read_input_tokens": 33162,
+        "cache_creation_input_tokens": 442,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 442
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null,
+    "costUSD": 0.425113
+  },
+  "seed": 45
+}
