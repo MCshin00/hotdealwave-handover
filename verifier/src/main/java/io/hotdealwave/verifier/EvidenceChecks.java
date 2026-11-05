@@ -9,7 +9,6 @@ import static io.hotdealwave.verifier.Checks.*;
 
 final class EvidenceChecks {
     private static final Pattern ENV = Pattern.compile("\\$\\{[A-Z][A-Z0-9_]*(?::[^}]*)?}");
-    private static final Pattern QUOTED = Pattern.compile("\"((?:\\\\.|[^\"\\\\])*)\"");
     private static final Pattern SETTINGS = Pattern.compile("/src/main/resources/application\\.(?:yml|yaml|properties):");
     private static final Pattern JSON_PROPERTY = Pattern.compile("@JsonProperty\\(\\s*(?:value\\s*=\\s*)?\"([^\"]*)\"");
     private static final Pattern MAPPING = Pattern.compile("@(?:\\w*Mapping|FeignClient)\\b");
@@ -151,6 +150,11 @@ final class EvidenceChecks {
             String reason = namingOverride(parent);
             if (reason != null) { verdict(fact, UNKNOWN, reason); return; }
         }
+        if (role.equals("url") && parent.path("kind").asText().equals("feign")
+                && value != null && value.contains("${") && contains(lines, value)) {
+            verdict(fact, ABSENT, "실제 주소는 저장소 밖 설정값에서 정해짐");
+            return;
+        }
         boolean externalValue = switch (role) {
             case "topicName" -> known(parent.path("environment")) && !Objects.toString(value(parent.path("environment")), "").isEmpty()
                     || lines.stream().anyMatch(l -> ENV.matcher(l).find());
@@ -160,6 +164,10 @@ final class EvidenceChecks {
         if (externalValue) { verdict(fact, ABSENT, "실제 값은 저장소 밖의 환경변수에서 정해짐"); return; }
         if (communicationFact(fact, role, parent, lines)) return;
         if (value == null) { verdict(fact, UNKNOWN, role + ": 값 없음"); return; }
+        if (role.equals("httpMethod") && value.isEmpty()) {
+            reject(fact, "httpMethod: 빈 문자열은 HTTP 메서드가 아님");
+            return;
+        }
         boolean matches = switch (role) {
             case "jsonName" -> value.equals(jsonName(parent, lines));
             case "httpMethod" -> method(lines, value) || contains(lines, "\"" + value + "\"") || contains(lines, "HttpMethod." + value)
@@ -393,7 +401,7 @@ final class EvidenceChecks {
     }
 
     private static boolean method(List<String> lines, String method) {
-        if (method == null) return false;
+        if (method == null || method.isEmpty()) return false;
         String annotation = method.equals("*") ? "RequestMapping" : method.charAt(0) + method.substring(1).toLowerCase(Locale.ROOT) + "Mapping";
         return lines.stream().anyMatch(l -> l.contains("@" + annotation) || l.contains("RequestMethod." + method));
     }
@@ -404,9 +412,23 @@ final class EvidenceChecks {
     private static boolean mappingPath(List<String> lines, String path) {
         var pieces = new ArrayList<String>();
         for (String line : lines) {
-            if (!MAPPING.matcher(line).find()) return false;
-            var matcher = QUOTED.matcher(line);
-            while (matcher.find()) if (line.contains("Mapping") || matcher.group(1).startsWith("/")) pieces.add(matcher.group(1));
+            var mapping = MAPPING.matcher(line);
+            if (!mapping.find()) return false;
+            boolean feign = mapping.group().equals("@FeignClient");
+            var arguments = CommunicationRules.arguments(line, Pattern.quote(mapping.group()));
+            for (int i = 0; i < arguments.size(); i++) {
+                String argument = arguments.get(i);
+                var attribute = Pattern.compile("^(\\w+)\\s*=\\s*(.*)$").matcher(argument);
+                String expression;
+                if (attribute.matches()) {
+                    if (!attribute.group(1).equals("path") && (feign || !attribute.group(1).equals("value"))) continue;
+                    expression = attribute.group(2);
+                } else if (!feign && i == 0 && !argument.isEmpty()) expression = argument;
+                else continue;
+                String piece = CommunicationRules.literal(expression);
+                if (piece == null) return false;
+                pieces.add(piece);
+            }
         }
         if (pieces.isEmpty()) return path.equals("/");
         String joined = ("/" + String.join("/", pieces)).replaceAll("/{2,}", "/");

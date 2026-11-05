@@ -107,9 +107,9 @@ class GeneralCallsTest {
                 + "client.getForObject(\"${STOCK_URL}\", String.class);\nclient.getForObject(base + suffix, String.class);\n"
                 + "@Value(\"${stock.url}\") String configuredUrl;\nclient.getForObject(configuredUrl, String.class);");
         endpoint();
-        call("restTemplate", "https://outside.example/items", 3);
+        call("restTemplate", "https://outside.example/items", 3).put("external", true);
         call("restTemplate", "${STOCK_URL}", 4).put("id", "shop.Calls.env");
-        call("restTemplate", null, 5).put("id", "shop.Calls.dynamic");
+        call("restTemplate", null, 5).put("id", "shop.Calls.dynamic").put("external", true);
         var configured = call("restTemplate", null, 7).put("id", "shop.Calls.configured");
         ((ObjectNode)configured.path("path")).withArray("evidence").add(FILE + ":6");
         var output = verify();
@@ -118,7 +118,54 @@ class GeneralCallsTest {
         assertEquals(Checks.ABSENT, output.at("/httpCalls/0/target/status").asText());
         assertEquals(Checks.ABSENT, output.at("/httpCalls/1/target/status").asText());
         assertEquals(Checks.UNKNOWN, output.at("/httpCalls/2/target/status").asText());
+        assertTrue(output.at("/httpCalls/2/external").asBoolean());
         assertFalse(Checks.items(output.path("warnings")).stream().anyMatch(w -> w.path("code").asText().equals("target-mismatch")));
+    }
+
+    @Test void mappingPathsUseOnlyThePathArgument() throws Exception {
+        setup("""
+                @GetMapping("/x/{id}") String stock();
+                @FeignClient(name = "stock") interface Calls {
+                @GetMapping(value = "/x/{id}", headers = {"A=B"}, params = {"q=yes"}, produces = "application/json", consumes = "application/json", name = "lookup") String get();
+                }
+                """);
+        endpoint();
+        ((ObjectNode) input.at("/endpoints/0/path")).put("value", "/x/{id}");
+        client("feign", "", "", 2);
+        var call = call("feign", "/x/{id}", 3).put("clientId", "shop.Calls");
+        input.withArray("declarations").add(item(3).put("kind", "GetMapping"));
+        var output = verify();
+        assertEquals(Checks.CONFIRMED, output.at("/httpCalls/0/path/status").asText());
+        assertEquals(Checks.CONFIRMED, output.at("/httpCalls/0/target/status").asText());
+        assertEquals(0, output.at("/checks/http-declarations/warningCount").asInt());
+        assertEquals(0, output.at("/checks/declarations/warningCount").asInt());
+        Files.writeString(target.resolve(FILE), Files.readString(target.resolve(FILE)).replace("value =", "path ="));
+        assertEquals(Checks.CONFIRMED, verify().at("/httpCalls/0/path/status").asText());
+        ((ObjectNode) call.path("path")).put("value", "/x/{id}/A=B");
+        assertEquals(Checks.UNKNOWN, verify().at("/httpCalls/0/path/status").asText());
+    }
+
+    @Test void configuredFeignUrlPreservesExternalAndWarnsOnFalse() throws Exception {
+        setup("""
+                @FeignClient(name = "gemini", url = "${gemini.url}") interface Calls {
+                @GetMapping("/items") String get();
+                }
+                """);
+        client("feign", "${gemini.url}", "", 1);
+        ((ObjectNode) input.at("/httpClients/0/name")).put("value", "gemini");
+        var call = call("feign", "/items", 2).put("clientId", "shop.Calls").put("external", true);
+        ((ObjectNode) call.path("target")).putNull("value");
+        var output = verify();
+        assertTrue(output.at("/httpCalls/0/external").asBoolean());
+        assertEquals(Checks.ABSENT, output.at("/httpCalls/0/target/status").asText());
+        assertFalse(Checks.items(output.path("warnings")).stream().anyMatch(w -> w.path("check").asText().equals("http-targets")));
+
+        call.put("external", false);
+        output = verify();
+        assertFalse(output.at("/httpCalls/0/external").asBoolean());
+        assertEquals(Checks.UNKNOWN, output.at("/httpCalls/0/status").asText());
+        assertTrue(Checks.items(output.path("warnings")).stream().anyMatch(w ->
+                w.path("check").asText().equals("http-targets") && w.path("code").asText().equals("extraction-mismatch")));
     }
 
     ObjectNode message(String array, String kind, String name, int line) {

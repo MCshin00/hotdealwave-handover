@@ -25,19 +25,30 @@ final class HttpChecks {
             boolean hasClient = !call.path("clientId").asText().isEmpty();
             boolean absent = ABSENT.equals(call.path("path").path("status").asText())
                     || hasClient && ABSENT.equals(client.path("url").path("status").asText());
-            ((ObjectNode)call).put("external", false);
+            String address = callPath == null ? null : callPath.contains("://") ? callPath : hasClient && url != null && !url.isEmpty()
+                    ? url.replaceFirst("/$", "") + "/" + callPath.replaceFirst("^/", "") : callPath;
+            String service = address != null && address.contains("://") ? host(address) : value(client.path("name"));
+            boolean declaredFeignUrl = client.path("kind").asText().equals("feign")
+                    && (known(client.path("url")) && url != null && !url.isEmpty()
+                        || ABSENT.equals(client.path("url").path("status").asText()));
+            boolean externalUrl = known(call.path("path")) && address != null && address.contains("://")
+                    && service != null && !services.contains(service) && !address.startsWith("lb://");
+            if ((declaredFeignUrl || externalUrl) && !call.path("external").asBoolean()) {
+                String reason = "클라이언트 url 또는 외부 URL이 있는데 external이 false임";
+                verdict(call, UNKNOWN, reason);
+                var evidence = call.path("evidence").deepCopy();
+                for (var ev : client.path("url").path("evidence"))
+                    if (!items(evidence).contains(ev)) ((com.fasterxml.jackson.databind.node.ArrayNode) evidence).add(ev);
+                warn(analysis, "http-targets", "extraction-mismatch", evidence, reason);
+            }
             if (absent) { verdict(target, ABSENT, "실제 주소는 저장소 밖 설정값에서 정해짐"); continue; }
             if (callPath == null || !known(call.path("httpMethod")) || hasClient && (!known(client.path("url")) || !known(client))) {
                 verdict(target, UNKNOWN, "클라이언트 주소·호출 경로·메서드를 확정할 수 없음");
                 verdict(call, UNKNOWN, "하위 값을 확정할 수 없음");
                 continue;
             }
-            String address = callPath.contains("://") ? callPath : hasClient && url != null && !url.isEmpty()
-                    ? url.replaceFirst("/$", "") + "/" + callPath.replaceFirst("^/", "") : callPath;
-            String service = address.contains("://") ? host(address) : value(client.path("name"));
             String endpointPath = address.contains("://") ? path(address) : callPath;
-            if (address.contains("://") && service != null && !services.contains(service) && !address.startsWith("lb://")) {
-                ((ObjectNode)call).put("external", true);
+            if (declaredFeignUrl || externalUrl) {
                 if (!UNKNOWN.equals(target.path("status").asText())) verdict(target, ABSENT, "명시된 외부 URL의 컨트롤러는 분석 저장소에 없음");
                 continue;
             }

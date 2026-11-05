@@ -152,7 +152,7 @@ public final class Handover {
 
                 어디까지 했는지는 이 폴더의 파일을 보고 정한다.
 
-                1. 서비스: `%4$s/.claude/skills/extract-msa-java-spring/SKILL.md`를 따라 대상 `source`, 결과 디렉터리 `.`로 `services/`에 서비스 파일을 쓴다. 서비스끼리는 독립이라 세션을 나눠 동시에 돌려도 된다.
+                1. 서비스: `%4$s/.claude/skills/extract-msa-java-spring/SKILL.md`를 따라 먼저 서비스 목록과 서비스 수를 확인한다. "서비스별 하위 에이전트로 동시에"와 "한 세션에서 차례로" 중 무엇으로 할지 사용자에게 묻고 답을 기다린 뒤 고른 대로 한다. 하위 에이전트가 없는 도구에서는 서비스 목록을 나눠 세션을 여러 개 연다고 안내한다. 대상 `source`, 결과 디렉터리 `.`로 `services/`에 서비스 파일을 쓴다.
                 2. 관계: 모든 서비스 파일이 있으면 같은 Skill의 관계 단계로 `relations.json`을 쓴다. 서비스를 하나라도 다시 추출했으면 다시 쓴다.
                 3. 저장소 수준: 같은 Skill의 저장소 수준 단계로 `repository.json`을 쓴다.
                 4. 응답 확인(테스트 서버 주소와 테스트 계정을 받았을 때만): `%4$s/.claude/skills/probe-msa-java-spring/SKILL.md`를 따라 `responses/`에 응답을 저장한다.

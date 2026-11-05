@@ -44,6 +44,20 @@ class HandoverTest {
         assertEquals("changed by the user\n", Files.readString(checkout.resolve("README.md")));
     }
 
+    @Test void instructionsAskHowToSplitServiceExtraction() throws Exception {
+        Path workspace = temporary.resolve("shop-work");
+        Handover.run(TOOL, "init", "--repo", checkout.toString(), "--commit", commit, "--workspace", workspace.toString());
+        String instructions = Files.readString(workspace.resolve("AGENTS.md"));
+        assertAll(
+                () -> assertTrue(instructions.contains("서비스 수")),
+                () -> assertTrue(instructions.contains("서비스별 하위 에이전트로 동시에")),
+                () -> assertTrue(instructions.contains("한 세션에서 차례로")),
+                () -> assertTrue(instructions.contains("사용자에게 묻고")),
+                () -> assertTrue(instructions.contains("고른 대로")),
+                () -> assertTrue(instructions.contains("하위 에이전트가 없는 도구")),
+                () -> assertTrue(instructions.contains("서비스 목록을 나눠 세션을 여러 개")));
+    }
+
     @Test void initTakesAnAddressAndStopsWhenItIsNotGitHub() {
         Path workspace = temporary.resolve("shop-work");
 
