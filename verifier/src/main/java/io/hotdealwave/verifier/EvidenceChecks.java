@@ -131,11 +131,13 @@ final class EvidenceChecks {
             case "던진 오류 코드" -> value == null && contains(lines, "getErrorCode()") ? null : "근거 줄에서 오류 코드를 읽는 곳을 확인하지 못함";
             case "예외 메시지" -> value == null && contains(lines, "getMessage()") ? null : "근거 줄에서 예외 메시지를 읽는 곳을 확인하지 못함";
             case "검증 메시지" -> value == null && contains(lines, "getDefaultMessage()") ? null : "근거 줄에서 검증 메시지를 읽는 곳을 확인하지 못함";
+            case "분기" -> value == null && lines.stream().anyMatch(l -> Pattern.compile("\\bif\\s*\\(").matcher(l).find()) ? null : "근거 줄에서 분기를 확인하지 못함";
             default -> "알 수 없는 source";
         };
         if (reason != null) reject(fact, role + ": " + reason);
         else if (source.equals("예외 메시지")) verdict(fact, UNKNOWN, "예외 메시지를 그대로 씀, 값은 던지는 곳에서 정해짐");
         else if (source.equals("검증 메시지")) verdict(fact, UNKNOWN, "검증 어노테이션의 메시지를 씀, 값은 필드 어노테이션에서 정해짐");
+        else if (source.equals("분기")) verdict(fact, UNKNOWN, "처리기 안에서 조건에 따라 값이 갈림, 근거 줄의 분기를 볼 것");
         else verdict(fact, CONFIRMED, null);
     }
 

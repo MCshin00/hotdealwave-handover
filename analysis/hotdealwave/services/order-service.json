@@ -9133,7 +9133,7 @@
         ]
       },
       "httpStatus": {
-        "source": "던진 오류 코드",
+        "source": "분기",
         "value": null,
         "evidence": [
           "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:50",
@@ -9142,10 +9142,10 @@
           "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:27",
           "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:55"
         ],
-        "reason": "원인이 ApplicationException이면 위임한 처리기가 오류 코드의 HTTP 상태를 사용하고, 그 밖에는 INTERNAL_SERVER_ERROR를 사용함. 단일 source로 두 분기를 모두 표현할 수 없어 value를 확정하지 않음."
+        "reason": "원인이 ApplicationException이면 위임한 처리기가 오류 코드의 HTTP 상태를 사용하고, 그 밖에는 INTERNAL_SERVER_ERROR를 사용함."
       },
       "errorCode": {
-        "source": "던진 오류 코드",
+        "source": "분기",
         "value": null,
         "evidence": [
           "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:50",
@@ -9159,7 +9159,7 @@
         "reason": "원인이 ApplicationException이면 위임한 처리기가 원인의 오류 코드를 사용하고, 그 밖에는 문자열 생성자가 INTERNAL_SERVER_EXCEPTION을 사용함."
       },
       "message": {
-        "source": "던진 오류 코드",
+        "source": "분기",
         "value": null,
         "evidence": [
           "order/src/main/java/com/sparta/hotdeal/order/common/exception/GlobalExceptionHandler.java:50",
@@ -9278,7 +9278,7 @@
         "order/src/main/java/com/sparta/hotdeal/order/application/dtos/ErrorResponseDto.java:20",
         "order/src/main/java/com/sparta/hotdeal/order/application/dtos/ErrorResponseDto.java:21"
       ],
-      "reason": "조건별 응답을 하나의 source/value로 표현할 수 없음. 각 필드 reason에 두 분기를 기록함."
+      "reason": "원인이 ApplicationException인지에 따라 응답 상태와 본문의 오류 코드·메시지가 달라짐."
     }
   ],
   "gatewayRejections": [],

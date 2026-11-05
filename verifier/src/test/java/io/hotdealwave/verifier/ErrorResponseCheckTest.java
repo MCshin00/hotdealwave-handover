@@ -50,6 +50,11 @@ class ErrorResponseCheckTest {
         assertEquals(Checks.CONFIRMED, user.path("errorCode").path("status").asText());
         assertEquals("", Checks.value(user.path("errorCode")));
 
+        // The status depends on whether the cause is an ApplicationException.
+        var completion = only(analysis.path("exceptionHandlers"), h -> h.path("id").asText().equals("order-service.GlobalExceptionHandler.handleCompletionException"));
+        assertEquals(Checks.UNKNOWN, completion.path("httpStatus").path("status").asText());
+        assertTrue(completion.path("httpStatus").path("reason").asText().contains("조건에 따라"));
+
         var rejection = only(analysis.path("gatewayRejections"), r -> true);
         assertEquals(Checks.CONFIRMED, rejection.path("status").asText());
         assertEquals("UNAUTHORIZED", Checks.value(rejection.path("httpStatus")));
@@ -75,6 +80,9 @@ class ErrorResponseCheckTest {
         assertEquals(Checks.CONFIRMED, owner.path("status").asText());
         assertEquals("IllegalArgumentException", owner.path("exception").asText());
         assertEquals("user-service.GlobalExceptionHandler.illegalArgumentException", owner.path("handlerId").asText());
+        // Exceptions caught on the way (logged, or rethrown as another exception) never reach a handler.
+        assertTrue(Checks.items(analysis.path("throws")).stream().map(x -> x.path("evidence").path(x.path("evidence").size() - 1).asText())
+                .noneMatch(line -> line.endsWith("OrderEventProducer.java:56") || line.endsWith("PaymentEventProducer.java:40")));
         // The error code is on the line after "new ApplicationException(".
         var company = only(analysis.path("throws"), t -> t.path("fromId").asText().equals("company-service.CompanyController.updateCompany")
                 && t.path("evidence").path(t.path("evidence").size() - 1).asText().endsWith("CompanyService.java:46"));
