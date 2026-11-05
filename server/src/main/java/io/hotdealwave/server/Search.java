@@ -21,6 +21,8 @@ class Search {
     }
     private static final double K1 = 1.2, B = 0.75;
     static final int LIMIT = 5;
+    /** The answer path takes more: with five, RRF pushed out sections BM25 ranked second and fourth that the answer needed. */
+    static final int ASK_LIMIT = 8;
     /** Reciprocal rank fusion constant. */
     static final int RRF = 60;
     /** Characters per embedded piece of a section, under the embedding input limit even for Korean text. */
@@ -84,7 +86,7 @@ class Search {
     /** Top sections by BM25, one per page. Filters are dropped one at a time, kind first, while nothing matches. */
     List<Result> search(String query) { return search(query, null); }
 
-    /** For /api/ask: BM25 and embedding ranks fused by RRF, otherwise as search. Throws when the embedding call fails. */
+    /** For /api/ask: BM25 and embedding ranks fused by RRF, top ASK_LIMIT, otherwise as search. Throws when the embedding call fails. */
     List<Result> hybrid(String query) { return search(query, embeddings.query(query)); }
 
     private List<Result> search(String query, float[] question) {
@@ -139,7 +141,7 @@ class Search {
             scored.sort(Comparator.comparingDouble(Scored::score).reversed());
         }
         var seen = new HashSet<String>();
-        return scored.stream().filter(s -> seen.add(s.section().page())).limit(LIMIT)
+        return scored.stream().filter(s -> seen.add(s.section().page())).limit(question == null ? LIMIT : ASK_LIMIT)
                 .map(s -> new Result(s.section().page(), s.section().title(), s.section().heading(), s.score(),
                         preview(s.section().text(), terms), s.section().services())).toList();
     }

@@ -97,6 +97,14 @@ class AskTest {
         assertTrue(model.lastInput.contains(" — 환경변수 (/services/order-service)\n"));
     }
 
+    @Test void askPassesEightChunksWhileSearchKeepsFive() {
+        assertEquals(5, search.search("주문 취소").size());
+        model.next = reply("조각에 없다.", true);
+        ask.ask("주문 취소");
+        assertTrue(model.lastInput.contains("\n[C8] "));
+        assertFalse(model.lastInput.contains("[C9]"));
+    }
+
     @Test void onlyNewOrChangedTextsAreEmbeddedAgain(@TempDir Path folder) {
         var fake = new FakeModel();
         String file = folder.resolve("embeddings.json").toString();

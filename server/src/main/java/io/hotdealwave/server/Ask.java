@@ -18,7 +18,7 @@ class Ask {
             - 근거는 조각에 적힌 `파일:줄`을 그대로 옮겨 붙인다. 조각에 없는 `파일:줄`을 만들지 않는다.
             - 조각이 질문의 핵심에 답하면 abstain을 false로 하고 결론부터 답한다. 조각으로 확인되지 않는 부분은 답 안에서 그 부분만 확인할 수 없다고 밝힌다.
             - 질문이 묻는 것에 대한 답이 조각에 없으면 abstain을 true로 하고 answer에 확인할 수 없는 이유를 짧게 쓴다.
-            - 답에 쓴 근거 조각의 번호(C1~C5)를 citations에 모두 적는다.
+            - 답에 쓴 근거 조각의 번호(C1~C8)를 citations에 모두 적는다.
             - 한국어로 간결하게 답한다.""";
     private static final Pattern FILE_LINES = Pattern.compile("([A-Za-z0-9_.\\-/]+\\.[A-Za-z0-9]+):(\\d+(?:\\s*,\\s*\\d+)*)");
 
