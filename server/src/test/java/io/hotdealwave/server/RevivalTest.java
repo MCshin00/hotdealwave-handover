@@ -32,6 +32,7 @@ class RevivalTest {
     @Test void pageGathersResourcesVariablesSecretsContainersWarningsTrapsAndUnsupported() throws Exception {
         String text = pages.text("/revival");
         assertTrue(text.contains("payment-service · KakaoPay"));
+        assertTrue(text.contains("payment-service · 외부 API payment-service.KakaoPayClient.ready (feign) · 주소 https://open-api.kakaopay.com/online/v1/payment [payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/client/KakaoPayClient.java:14] · 경로 /ready"));
         assertTrue(text.contains("LOCAL_DB_ENDPOINT: 저장소에 근거 없음 — 실제 값은 저장소 밖의 환경변수에서 정해짐 · 서비스 company-service, coupon-service, order-service, payment-service, product-service, user-service · 프로필 local · 위치 spring.datasource.url"));
         assertTrue(text.contains("AWS_ACCESS_KEY_ID(secrets.AWS_ACCESS_KEY_ID) 값: 저장소에 근거 없음 — 실제 값은 저장소 밖에 등록된 비밀값에서 정해짐 [.github/workflows/actions.yml:22, .github/workflows/actions.yml:79]"));
         assertTrue(text.contains("company-service: 이미지 ${ECR_REGISTRY}/${ECR_REPOSITORY_PREFIX}:company-latest"));

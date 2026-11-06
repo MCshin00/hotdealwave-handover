@@ -63,7 +63,7 @@ class PageController {
         String reason = warning.path("reason").asText(), check = warning.path("check").asText();
         var topic = TOPIC.matcher(reason);
         var caller = CALLER.matcher(reason);
-        String kind = switch (check) { case "message-destinations" -> "Kafka 연결"; case "handler-calls" -> "HTTP 호출"; default -> check; };
+        String kind = switch (check) { case "message-destinations" -> "메시지 연결"; case "handler-calls" -> "HTTP 호출"; default -> check; };
         if (topic.find()) return new Gap(kind, reason, view.evidence(warning), "/topics/" + topic.group(1), topic.group(1));
         if (caller.find()) return new Gap(kind, reason, view.evidence(warning), "/services/" + caller.group(1), caller.group(1));
         return new Gap(kind, reason, view.evidence(warning), null, null);

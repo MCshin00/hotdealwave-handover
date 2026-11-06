@@ -15,14 +15,14 @@
 </p>
 <h2>HTTP 호출</h2>
 <p class="line" th:each="f : ${httpCalls}" th:text="|${f.path('id').asText()} → ${@view.fact(f.path('target'))}|"></p>
-<h2>Kafka 발행</h2>
+<h2>메시지 발행</h2>
 <p class="line" th:each="p : ${messagePublications}" th:with="t=${@view.topic(p)}">
   <span th:text="|${p.path('id').asText()} (${p.path('kind').asText()}) ${@view.status(p)} ${@view.evidence(p)} 토픽 |"></span>
   <a th:if="${t != null}" th:href="|/topics/${t}|" th:text="${t}"></a>
 </p>
-<h2>Kafka 구독</h2>
+<h2>메시지 구독</h2>
 <p class="line" th:each="s : ${messageSubscriptions}" th:with="t=${@view.topic(s)}">
-  <span th:text="|${s.path('id').asText()} ${@view.status(s)} ${@view.evidence(s)} 토픽 |"></span>
+  <span th:text="|${s.path('id').asText()} (${s.path('kind').asText()}) ${@view.status(s)} ${@view.evidence(s)} 토픽 |"></span>
   <a th:if="${t != null}" th:href="|/topics/${t}|" th:text="${t}"></a>
 </p>
 <h2>환경변수</h2>
