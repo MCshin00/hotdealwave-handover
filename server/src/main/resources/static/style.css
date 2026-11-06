@@ -71,7 +71,7 @@ header.summary .line { padding: 0.2rem 0.6rem; border-top: 0; }
 .line.op-patch { border-color: var(--patch); background: var(--patch-bg); }
 .line.op-delete { border-color: var(--delete); background: var(--delete-bg); }
 
-details.ev, details.why { display: inline; }
+details.ev, details.why { display: inline-block; }
 :is(details.ev, details.why) > summary { display: inline; cursor: pointer; list-style: none; font: 0.75rem/1.5 var(--sans); color: var(--muted);
   padding: 0 0.45em; border: 1px solid var(--rule); border-radius: 4px; }
 :is(details.ev, details.why) > summary::-webkit-details-marker { display: none; }

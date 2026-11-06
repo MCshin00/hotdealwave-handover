@@ -9,7 +9,7 @@
 </header>
 <h2>외부 자원</h2>
 <p class="line" th:if="${resources.isEmpty() and externalCalls.isEmpty()}">없음</p>
-<p class="line" th:each="r : ${resources}" th:text="|${r.path('service').asText()} · ${r.path('kind').asText()} ${@view.status(r)} · 설정 ${@view.brief(r.path('configurationEvidence'))} · 코드 ${@view.brief(r.path('codeEvidence'))}|"></p>
+<p class="line" th:each="r : ${resources}" th:text="|${r.path('service').asText()} · ${r.path('kind').asText()} ${@view.status(r)} · 설정 ${@view.count(r.path('configurationEvidence'))}줄 · 코드 ${@view.count(r.path('codeEvidence'))}줄 ${@view.texts(r.path('configurationEvidence'), r.path('codeEvidence'))}|"></p>
 <p class="line" th:each="c : ${externalCalls}" th:text="|${c.service()} · 외부 API ${c.id()} (${c.kind()}) · 주소 ${c.address()} · 경로 ${c.path()}|"></p>
 <h2>채워야 할 환경변수</h2>
 <p class="line" th:if="${variables.isEmpty()}">없음</p>

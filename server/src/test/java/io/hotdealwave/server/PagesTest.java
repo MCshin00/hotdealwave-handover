@@ -27,6 +27,7 @@ class PagesTest {
         String home = page("/");
         assertTrue(home.contains("엔드포인트 11 · HTTP 8 · 발행 5 · 구독 3"));
         assertTrue(home.contains("<h2>확인 안 된 연결 13개</h2>"));
+        assertTrue(home.contains("<b>13</b><span>확인 안 된 연결</span>"));
         assertTrue(home.contains("<h3>저장소 밖 값 9개</h3>"));
         assertTrue(home.contains("<h3>저장소 안에서 잇지 못함 4개</h3>"));
         assertTrue(home.contains("할 일: 값이 배포 환경의 환경변수에서 정해져"));

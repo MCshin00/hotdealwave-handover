@@ -44,7 +44,8 @@ class RevivalTest {
 
         String page = html("/revival");
         assertTrue(page.contains("/payment/src/main/java/com/sparta/hotdeal/payment/infrastructure/adapter/KakaoPayClientAdapter.java#L29\">"));
-        assertTrue(page.contains(" 외 12줄"));
+        assertTrue(text.contains("company-service · DB 확인됨 · 설정 14줄 · 코드 4줄 [company/src/main/resources/application-local.yml:3, "));
+        assertTrue(page.contains("company-service · DB · 설정 14줄 · 코드 4줄 <details class=\"ev\"><summary>근거 18개</summary>"));
         assertTrue(html("/").contains("<a href=\"/revival\">"));
         assertTrue(html("/repository").contains("<a href=\"/revival\">"));
     }
