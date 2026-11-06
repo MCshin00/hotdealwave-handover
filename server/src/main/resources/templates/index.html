@@ -5,12 +5,12 @@
 <nav class="top"><span><a href="/search">검색·질문</a> · <a href="/repository">배포·모니터링</a> · <a href="/revival">되살리기</a></span><span class="target">[[${target.name()}]] · 고정 커밋 [[${target.shortCommit()}]]</span></nav>
 <header class="summary home">
   <h1>[[${target.name()}]]</h1>
-  <p class="lede">팀이 남긴 저장소(고정 커밋 [[${target.shortCommit()}]])에서 뽑은 서비스·API·Kafka 흐름 문서다. 값마다 확인 상태와 근거 줄이 붙고, 저장소만으로 이을 수 없는 곳은 "확인 안 됨"으로 남는다.</p>
+  <p class="lede">팀이 남긴 저장소(고정 커밋 [[${target.shortCommit()}]])에서 뽑은 서비스·API·메시지 흐름 문서다. 값마다 확인 상태와 근거 줄이 붙고, 저장소만으로 이을 수 없는 곳은 "확인 안 됨"으로 남는다.</p>
   <div class="stats">
     <div><b th:text="${#lists.size(cards)}"></b><span>서비스</span></div>
     <div><b th:text="${endpointCount}"></b><span>엔드포인트</span></div>
     <div><b th:text="${responded}"></b><span>실제 응답 기록</span></div>
-    <div><b th:text="${#lists.size(topics)}"></b><span>Kafka 토픽</span></div>
+    <div><b th:text="${#lists.size(topics)}"></b><span>메시지 목적지</span></div>
     <div class="warn"><b th:text="${#lists.size(gaps)}"></b><span>확인 안 된 연결</span></div>
   </div>
   <form method="get" action="/search"><input id="q" type="text" name="q" size="40" placeholder="찾을 말 (예: createOrder, 쿠폰 복구)" aria-label="찾을 말"><button type="submit">검색</button></form>
@@ -23,7 +23,7 @@
     <span class="sub" th:text="${c.endpoints() == 0} ? '엔드포인트 없음' : |실제 응답 ${c.responded()}/${c.endpoints()}|"></span>
   </a>
 </div>
-<h2>Kafka 토픽</h2>
+<h2>메시지 목적지</h2>
 <div class="table-wrap">
 <table class="list">
   <thead><tr><th>토픽 (환경변수 또는 코드의 토픽 이름)</th><th class="num">발행</th><th class="num">구독</th></tr></thead>

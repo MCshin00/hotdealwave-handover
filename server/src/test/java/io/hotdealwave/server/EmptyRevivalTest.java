@@ -11,7 +11,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static org.junit.jupiter.api.Assertions.*;
 
-/** An output without the repository-level file and without rules and traps, as right after extraction. */
+/** An output without the repository-level file, rules and traps, external resources or HTTP calls. */
 @SpringBootTest
 class EmptyRevivalTest {
     @DynamicPropertySource static void analysis(DynamicPropertyRegistry registry) throws Exception {
@@ -19,6 +19,8 @@ class EmptyRevivalTest {
         var root = (ObjectNode) json.readTree(Path.of("examples/hotdealwave/out/analysis.json").toFile());
         root.remove("repository");
         root.remove("knowledge");
+        root.remove("externalResources");
+        root.remove("httpCalls");
         Path file = Files.createTempFile("analysis", ".json");
         file.toFile().deleteOnExit();
         json.writeValue(file.toFile(), root);
@@ -32,6 +34,6 @@ class EmptyRevivalTest {
         assertTrue(text.contains("저장소 밖 비밀값\n없음"));
         assertTrue(text.contains("컨테이너\n없음"));
         assertTrue(text.contains("운영 함정\n없음"));
-        assertTrue(text.contains("payment-service · KakaoPay"));
+        assertTrue(text.contains("외부 자원\n없음"));
     }
 }
