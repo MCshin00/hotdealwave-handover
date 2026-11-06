@@ -110,7 +110,7 @@ java -jar build/handover.jar serve --workspace examples/hotdealwave
 다른 저장소는 이렇게 쓴다.
 
 1. 대상 받기: `java -jar build/handover.jar init --repo <경로 또는 GitHub 주소> --commit <커밋> --workspace <작업 폴더>`. 작업 폴더의 `source/`에 대상을 복제해 그 커밋으로 고정하고, `target.json`과 AI 세션용 지시 파일(`AGENTS.md`, `CLAUDE.md`)을 쓴다. 준 체크아웃은 바꾸지 않는다.
-2. 추출: 작업 폴더에서 AI 세션을 열고 "추출해 줘"라고 한다. 세션은 서비스 목록과 서비스 수를 확인한 뒤 "서비스별 하위 에이전트로 동시에"와 "한 세션에서 차례로" 중 무엇으로 할지 사용자에게 묻고 답을 기다린 뒤 고른 대로 한다. 하위 에이전트가 없는 도구에서는 서비스 목록을 나눠 세션을 여러 개 연다고 안내한다. 지시 파일이 순서와 Skill 위치를 알려 주고, 세션은 마칠 때 `verify`를 불러 `out/analysis.json`을 쓴다. Claude Code에서 Skill을 슬래시 명령으로도 쓰려면 이 도구 폴더를 세션에 더한다(`claude --add-dir <도구 폴더>`).
+2. 추출: 작업 폴더에서 AI 세션을 열고 "지시 파일대로 끝까지 해 줘"라고 한다. 지시 파일은 추출부터 업무 규칙·함정과 마지막 `verify`까지의 순서다. 세션은 서비스 목록과 서비스 수를 확인한 뒤 "서비스별 하위 에이전트로 동시에"와 "한 세션에서 차례로" 중 무엇으로 할지 사용자에게 묻고 답을 기다린 뒤 고른 대로 한다. 하위 에이전트가 없는 도구에서는 서비스 목록을 나눠 세션을 여러 개 연다고 안내한다. 지시 파일이 순서와 Skill 위치를 알려 주고, 세션은 마칠 때 `verify`를 불러 `out/analysis.json`을 쓴다. Claude Code에서 Skill을 슬래시 명령으로도 쓰려면 이 도구 폴더를 세션에 더한다(`claude --add-dir <도구 폴더>`).
 3. 결과 보기: `java -jar <도구 폴더>/build/handover.jar serve --workspace <작업 폴더>`
 
 ## 검사
