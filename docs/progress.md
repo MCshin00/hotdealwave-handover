@@ -7,14 +7,14 @@
 | 0 | 저장소 준비: 규칙, Skill, 양식, 분석 대상 서브모듈 | 완료 | 이 저장소 |
 | 1 | 최종 질문: 개발자가 지금 실제로 궁금한 것을 쓰고 고정 | 완료 | `eval/questions/final.csv` |
 | 2 | 파서 추출(HotDealWave 기준선): REST·Feign·Kafka·설정 → `out/analysis.json`, 교차 검증 경고 | 완료 | `docs/reports/` (파서는 #18에서 삭제) |
-| 3 | AI 추출과 검증(HotDealWave): 추출 Skill, `verifier`, 파서 기준선과 대조 | 완료 | `analysis/`, `verifier/`, `docs/reports/` |
-| 4 | 배포된 서비스 응답 검증: 떠 있는 서버의 실제 응답을 추출과 비교. HotDealWave는 고정 커밋을 띄워 대신 | 완료 | `analysis/`, `verifier/`, `docs/reports/` |
-| 5 | 업무 규칙·함정: AI 해석과 필요한 경고의 판정을 모아 쓰고 개발자가 확인 | 완료(#21·#23) | `knowledge/`, `eval/facts.csv`, `docs/reports/` |
-| 6 | 서버와 문서 본문: 조회 계층(관계 조회 3개), 엔드포인트·토픽·서비스 본문(값·상태·근거 `파일:줄`·업무 규칙·함정을 텍스트로) | 완료(#30·#28) | `analysis/`, `verifier/`, `server/`, `docs/reports/` |
+| 3 | AI 추출과 검증(HotDealWave): 추출 Skill, `verifier`, 파서 기준선과 대조 | 완료 | `examples/hotdealwave/`, `verifier/`, `docs/reports/` |
+| 4 | 배포된 서비스 응답 검증: 떠 있는 서버의 실제 응답을 추출과 비교. HotDealWave는 고정 커밋을 띄워 대신 | 완료 | `examples/hotdealwave/`, `verifier/`, `docs/reports/` |
+| 5 | 업무 규칙·함정: AI 해석과 필요한 경고의 판정을 모아 쓰고 개발자가 확인 | 완료(#21·#23) | `examples/hotdealwave/knowledge/`, `eval/facts.csv`, `docs/reports/` |
+| 6 | 서버와 문서 본문: 조회 계층(관계 조회 3개), 엔드포인트·토픽·서비스 본문(값·상태·근거 `파일:줄`·업무 규칙·함정을 텍스트로) | 완료(#30·#28) | `examples/hotdealwave/`, `verifier/`, `server/`, `docs/reports/` |
 | 7 | 검색과 MCP: 본문으로 `search_docs`(BM25)·`/api/search`, 관계 조회 3개와 `search_docs`를 `/mcp`로 노출, Claude Code·Codex에서 확인 | 완료(#33) | `server/`, `docs/reports/` |
 | 8 | 질의응답과 페이지: `/api/ask`(고정 RAG), 검색·질문 페이지, 문서 페이지 꾸미기(흐름 그림, 근거 접기, 고정 커밋·응답 원문 링크) | 완료(#35·#37·#39) | `server/`, `docs/reports/` |
 | 9 | 비교 실험: 서비스가 떠 있고 문서가 없는 상황에서 코드를 가진 에이전트 vs 문서 기반 답변(MCP·질의응답) | 완료(#41·#43·#45) | `eval/results/`, `docs/reports/` |
-| 10 | 두 번째 대상: 개발자의 공개 저장소에 같은 도구를 돌려 검증 경고와 깨진 곳 확인 | 시작 전 | `analysis/` |
+| 10 | 두 번째 대상과 일반화: 도구를 대상과 떼어 내고 서비스 간 통신 형식을 일반화한 뒤, SpartaHub에 처음 쓰는 사람의 순서로 돌려 결함을 고치고 경고를 판정. 질의응답 RRF, 되살리기 페이지 | 완료(#54·#56·#58·#60·#62·#63·#66·#68) | `docs/reports/general-msa-spartahub.md` |
 | 11 | 배포(선택) | 시작 전 | |
 
 각 단계는 개발자가 시작하라고 할 때 시작한다.
@@ -51,3 +51,5 @@
 #70에서 첫 화면·서비스 페이지의 Kafka 문구를 메시지로 바꾸고(메시지 목적지, 메시지 발행·구독, 메시지 연결), 되살리기 페이지의 외부 자원 절에 외부 HTTP 호출(서비스·ID·종류·주소·경로)을 더했다.
 
 #71에서 `init` 완료 안내와 README가 AI 세션에 "지시 파일대로 끝까지 해 줘"라고 하게 바꿨다("추출해 줘"만으로는 세션이 업무 규칙·함정 단계 전에 멈췄다). `relations.json` 없이 `verify`를 부르면 오류 스택 대신 관계 단계를 먼저 하라는 한 줄로 끝난다.
+
+README를 쓰는 순서(하는 일 → 빠른 시작 → 구조 → 지원 범위 → 두 저장소에서 써 본 결과)로 다시 짜고, `verify` 검사 항목과 비교 실험·채점 명령은 [개발 문서](development.md)로 옮겼다. 다음 할 일: 보고서 7절의 남은 과제 중 고칠 것을 고르는 일.
