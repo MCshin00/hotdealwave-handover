@@ -11,7 +11,7 @@
     <div><b th:text="${endpointCount}"></b><span>엔드포인트</span></div>
     <div><b th:text="${responded}"></b><span>실제 응답 기록</span></div>
     <div><b th:text="${#lists.size(topics)}"></b><span>메시지 목적지</span></div>
-    <div class="warn"><b th:text="${#lists.size(gaps)}"></b><span>확인 안 된 연결</span></div>
+    <div class="warn"><b th:text="${gapCount}"></b><span>확인 안 된 연결</span></div>
   </div>
   <form method="get" action="/search"><input id="q" type="text" name="q" size="40" placeholder="찾을 말 (예: createOrder, 쿠폰 복구)" aria-label="찾을 말"><button type="submit">검색</button></form>
 </header>
