@@ -110,7 +110,7 @@ public final class Handover {
         Files.writeString(workspace.resolve("AGENTS.md"), instructions(name, repository, pinned, toolPath));
         Files.writeString(workspace.resolve("CLAUDE.md"), "@AGENTS.md\n");
         System.out.println("준비됨: " + workspace + "\n"
-                + "이 폴더에서 AI 세션(Claude Code 또는 Codex)을 열고 \"추출해 줘\"라고 한다.\n"
+                + "이 폴더에서 AI 세션(Claude Code 또는 Codex)을 열고 \"지시 파일대로 끝까지 해 줘\"라고 한다.\n"
                 + "Claude Code에서 Skill을 슬래시 명령으로도 쓰려면 도구 폴더(" + tool + ")를 세션에 더한다.");
     }
 
@@ -174,6 +174,7 @@ public final class Handover {
         String changes = Git.run(source, "status", "--porcelain");
         if (!changes.isEmpty()) throw new Stop("source/에 바뀐 파일이 있다. 대상 코드는 읽기만 한다. 되돌린 뒤 다시 부른다.\n" + changes);
 
+        if (!Files.exists(workspace.resolve("relations.json"))) throw new Stop("relations.json이 없다. 지시 파일의 관계 단계를 먼저 한다.");
         var analysis = new Verifier().verify(workspace, source);
         Path output = workspace.resolve("out/analysis.json");
         Files.createDirectories(output.getParent());

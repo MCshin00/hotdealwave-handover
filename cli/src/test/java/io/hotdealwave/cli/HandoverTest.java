@@ -91,6 +91,28 @@ class HandoverTest {
         assertFalse(Files.exists(workspace.resolve("out/analysis.json")));
     }
 
+    @Test void initTellsTheSessionToFollowTheInstructionsToTheEnd() throws Exception {
+        var printed = new java.io.ByteArrayOutputStream();
+        var out = System.out;
+        System.setOut(new java.io.PrintStream(printed, true, java.nio.charset.StandardCharsets.UTF_8));
+        try {
+            Handover.run(TOOL, "init", "--repo", checkout.toString(), "--commit", commit, "--workspace", temporary.resolve("shop-work").toString());
+        } finally {
+            System.setOut(out);
+        }
+        assertTrue(printed.toString(java.nio.charset.StandardCharsets.UTF_8).contains("\"지시 파일대로 끝까지 해 줘\""));
+    }
+
+    @Test void verifyBeforeTheRelationsStepSaysToWriteThemFirst() throws Exception {
+        Path workspace = temporary.resolve("shop-work");
+        Handover.run(TOOL, "init", "--repo", checkout.toString(), "--commit", commit, "--workspace", workspace.toString());
+        Files.createDirectories(workspace.resolve("services"));
+
+        var stop = assertThrows(Handover.Stop.class, () -> Handover.run(TOOL, "verify", "--workspace", workspace.toString()));
+
+        assertEquals("relations.json이 없다. 지시 파일의 관계 단계를 먼저 한다.", stop.getMessage());
+    }
+
     private static void delete(Path directory) throws Exception {
         try (var paths = Files.walk(directory)) {
             for (var path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
