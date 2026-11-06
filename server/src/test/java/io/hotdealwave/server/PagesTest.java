@@ -34,6 +34,17 @@ class PagesTest {
         assertFalse(home.contains("evidence-lines"));
     }
 
+    @Test void messageWordingDoesNotNameOneBroker() throws Exception {
+        String home = page("/");
+        assertTrue(home.contains("서비스·API·메시지 흐름 문서"));
+        assertTrue(home.contains("<h2>메시지 목적지</h2>"));
+        String order = pages.text("/services/order-service");
+        assertTrue(order.contains("메시지 발행\n"));
+        assertTrue(order.contains("메시지 구독\n"));
+        assertTrue(order.contains("order-service.cancelOrder (kafka) "));
+        assertFalse(order.contains("Kafka 발행"));
+    }
+
     @Test void responseCheckReasonIsFolded() throws Exception {
         String order = page("/services/order-service");
         assertTrue(order.contains("응답 기록 있음 400 <details class=\"why\"><summary>이유</summary>(400: PENDING 주문은"));

@@ -19,6 +19,8 @@ class Pages {
     record Section(String page, String title, String heading, String text, String kind, Set<String> services) {}
     /** An environment variable name with every place that reads it, when its value is not confirmed. */
     record Variable(String name, String status, String services, String profiles, String locations, String evidence) {}
+    /** An HTTP call outside the repository, with the client address or, without a client, the target status. */
+    record ExternalCall(String service, String id, String kind, String address, String path) {}
     /** Warnings of one reason code as lines, with what to do about them. */
     record WarningGroup(String title, String action, List<String> lines) {}
 
@@ -157,12 +159,21 @@ class Pages {
         var repository = analysis.repository();
         return new Page(REVIVAL, "revival", Map.of(
                 "resources", analysis.list("externalResources"),
+                "externalCalls", externalCalls(),
                 "variables", variables.entrySet().stream().map(e -> variable(e.getKey(), e.getValue())).toList(),
                 "secrets", Analysis.listOf(repository.path("pipelines")).stream().flatMap(p -> Analysis.listOf(p.path("secrets")).stream()).toList(),
                 "containers", Analysis.listOf(repository.path("containers")),
                 "warnings", warnings,
                 "traps", analysis.list("knowledge").stream().filter(k -> k.path("kind").asText().equals("함정")).toList(),
                 "unsupported", analysis.list("unsupported")), "되살리기", Set.of());
+    }
+
+    private List<ExternalCall> externalCalls() {
+        return analysis.list("httpCalls").stream().filter(c -> c.path("external").asBoolean()).map(c -> {
+            var client = analysis.find("httpClients", c.path("clientId").asText());
+            var address = client.isMissingNode() ? c.path("target") : client.path("url");
+            return new ExternalCall(c.path("service").asText(), c.path("id").asText(), c.path("kind").asText(), view.fact(address), view.fact(c.path("path")));
+        }).toList();
     }
 
     private Variable variable(String name, List<JsonNode> uses) {
