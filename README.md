@@ -19,6 +19,12 @@
 - **검색·질의응답**: 문서를 BM25와 임베딩으로 찾고, 찾은 조각 안에서만 답한다. 근거가 없으면 답하지 않고 보류한다.
 - **MCP**: 문서 검색·페이지 읽기에 더해, 엔드포인트에서 HTTP 호출·메시지 흐름을 따라가는 도구를 Claude Code·Codex에 연다.
 
+| 첫 화면 | 엔드포인트 페이지 | 되살리기 페이지 |
+|---|---|---|
+| ![첫 화면](docs/images/home.png) | ![엔드포인트 페이지](docs/images/endpoint.png) | ![되살리기 페이지](docs/images/revival.png) |
+
+예시 HotDealWave의 화면이다. 근거 표시를 펼치면 고정 커밋의 해당 줄로 가는 링크가 나온다.
+
 | 상태 | 뜻 |
 |---|---|
 | 확인됨 | 저장소 안의 코드·설정으로 확정된다 |
@@ -42,7 +48,7 @@ JDK 17 이상, Git, 코딩 에이전트 하나(Claude Code 또는 Codex)가 필�
    java -jar build/handover.jar init --repo <경로 또는 GitHub 주소> --commit <커밋> --workspace <작업 폴더>
    ```
 3. **추출**: 작업 폴더에서 AI 세션을 열고 "지시 파일대로 끝까지 해 줘"라고 한다.
-4. **결과 보기**: `http://localhost:8080`에서 본다.
+4. **결과 보기**: `http://localhost:8080`에서 본다. 첫 화면에서 서비스·엔드포인트·메시지 목적지·배포 페이지로 들어가고, 띄우는 데 필요한 것은 되살리기 페이지(`/revival`)에 모여 있다.
    ```bash
    java -jar <도구 폴더>/build/handover.jar serve --workspace <작업 폴더>
    ```
