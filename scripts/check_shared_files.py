@@ -31,8 +31,11 @@ def main() -> int:
             print(f"{name}:1")
             failed = True
             continue
+        content = path.read_bytes()
+        if b"\0" in content:  # 이미지 같은 바이너리는 바이트가 우연히 경로 모양일 수 있어 읽지 않는다
+            continue
         patterns = PATTERNS if quotes_target(name) else PATTERNS + [HOME]
-        for number, line in enumerate(path.read_bytes().splitlines(), 1):
+        for number, line in enumerate(content.splitlines(), 1):
             if any(pattern.search(line) for pattern in patterns):
                 print(f"{name}:{number}")
                 failed = True
